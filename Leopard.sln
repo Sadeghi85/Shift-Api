@@ -3,9 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{067D1B09-727B-414A-8A02-FB0813032CC9}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C3A56872-473C-46CC-AA1D-9A8DEA2E24EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leopard.Repository", "src\Leopard.Repository\Leopard.Repository.csproj", "{E0F92059-A41B-4B97-B900-2B749CC6DE07}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E0F92059-A41B-4B97-B900-2B749CC6DE07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0F92059-A41B-4B97-B900-2B749CC6DE07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0F92059-A41B-4B97-B900-2B749CC6DE07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0F92059-A41B-4B97-B900-2B749CC6DE07}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E0F92059-A41B-4B97-B900-2B749CC6DE07} = {C3A56872-473C-46CC-AA1D-9A8DEA2E24EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8DA31256-ED50-4EA6-B8A4-FBA3D7289933}
