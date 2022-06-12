@@ -23,7 +23,7 @@ namespace Leopard.Repository {
 		}
 
 		public Task<int> SaveChangesAsync() {
-			var res =  Task.FromResult(-1);
+			var res = Task.FromResult(-1);
 			try {
 				res = _ctx.Instance.SaveChangesAsync();
 			} catch (Exception ex) {
@@ -56,6 +56,12 @@ namespace Leopard.Repository {
 			var res = Task.FromResult(-1);
 			try {
 				//entity.CreateDateTime = DateTime.Now;
+				var theType = entity.GetType();
+				var CreateDateTimeProp = theType.GetProperty("CreateDateTime");
+				if (CreateDateTimeProp != null) {
+					CreateDateTimeProp.SetValue(entity, DateTime.Now);
+				}
+
 				TEntity.Add(entity);
 
 				res = _ctx.Instance.SaveChangesAsync();
@@ -70,7 +76,11 @@ namespace Leopard.Repository {
 				List<T> newEntities = new List<T>();
 				var now = DateTime.Now;
 				foreach (var entity in entities) {
-					//entity.CreateDateTime = now;
+					var theType = entity.GetType();
+					var CreateDateTimeProp = theType.GetProperty("CreateDateTime");
+					if (CreateDateTimeProp != null) {
+						CreateDateTimeProp.SetValue(entity, DateTime.Now);
+					}
 					newEntities.Add(entity);
 				}
 				//res = _ctx.Instance.BulkInsert(newEntities);
@@ -84,7 +94,7 @@ namespace Leopard.Repository {
 
 						return 0;
 					}
-					
+
 				});
 			} catch (Exception ex) {
 				_logger.Error(ex, "db error, method: 'InsertAsync'");
@@ -143,6 +153,12 @@ namespace Leopard.Repository {
 			return res;
 		}
 
+		public IQueryable<T> GetAll() {
+
+			IQueryable<T> query = TEntity;
+			return query;
+		}
+
 		public List<Expression<Func<T, bool>>> ExpressionMaker() {
 			return new List<Expression<Func<T, bool>>>();
 		}
@@ -150,6 +166,21 @@ namespace Leopard.Repository {
 			_ctx.Instance.Dispose();
 		}
 
-		
+		public async Task<int> Update(T entity) {
+			var theType = entity.GetType();
+			var LastModifiedDateTime = theType.GetProperty("LastModifiedDateTime");
+			if (LastModifiedDateTime != null) {
+				LastModifiedDateTime.SetValue(entity, DateTime.Now);
+			}
+
+			TEntity.Update(entity);
+			return await _ctx.Instance.SaveChangesAsync();
+
+		}
+
+		public T FindById(object id) {
+			var res = TEntity.Find(id);
+			return res;
+		}
 	}
 }

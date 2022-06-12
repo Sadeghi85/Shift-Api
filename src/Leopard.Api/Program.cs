@@ -11,6 +11,8 @@ using Leopard.Bussiness;
 using Leopard.Api;
 using Lamar.Microsoft.DependencyInjection;
 using Microsoft.IdentityModel.Logging;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 try {
 
@@ -90,7 +92,7 @@ try {
 		registry.IncludeRegistry<LamarServiceRegistry>();
 		registry.IncludeRegistry<LamarStoreRegistry>();
 
-		
+
 
 		registry.AddMemoryCache();
 		////////
@@ -103,6 +105,7 @@ try {
 			.AddJsonOptions(jsonOptions => {
 				// null to leave property names unchanged
 				jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
+				jsonOptions.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 				//jsonOptions.JsonSerializerOptions.Converters.Add(UnixTimeStampDateConverter)
 			})
 			//.AddFluentValidation()
@@ -118,16 +121,25 @@ try {
 					"https://httpstatuses.com/404";
 			});
 
+		JsonSerializerOptions options = new() {
+			ReferenceHandler = ReferenceHandler.IgnoreCycles,
+			WriteIndented = true
+		};
+
+
 		// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 		registry.AddEndpointsApiExplorer();
 		registry.AddSwaggerGen();
+		//registry.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest).AddNewtonsoftJson(opt => {
+		//	opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+		//});
 	});
 
 
 	var app = builder.Build();
 
-	
-	
+
+
 	// Configure the HTTP request pipeline.
 	if (app.Environment.IsDevelopment()) {
 		//app.UseSwagger();
@@ -149,7 +161,7 @@ try {
 	}
 
 	app.UseCors("TemporaryCorsPolicy");
-	
+
 	app.UseRouting();
 
 	app.UseAuthentication();
