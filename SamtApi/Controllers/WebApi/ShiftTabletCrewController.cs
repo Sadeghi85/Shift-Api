@@ -16,6 +16,18 @@ namespace SamtApi.Controllers.WebApi {
 			_shiftTabletCrewService = shiftTabletCrewService;
 		}
 
+		[HttpGet("GetReport")]
+		public IActionResult GetReport() {
+
+			var fromDate = DateTime.Parse("2022-06-12 00:00:00.000");
+			var toDate = DateTime.Parse("2022-07-12 00:00:00.00");
+
+			var res = _shiftTabletCrewService.GetAll().Where(pp=> (pp.ShiftShiftTablet.ShiftDate>=fromDate && pp.ShiftShiftTablet.ShiftDate<= toDate)   ).Select(pp=> new {pp.Id,  shiftTitle= pp.ShiftShiftTablet.ShiftShift.Title, firstName= pp.SamtAgent.FirstName , lastName = pp.SamtAgent.LastName, jobName = pp.SamtResourceType.Title , pp.ShiftShiftTablet.ShiftDate , WeekDay= pp.ShiftShiftTablet.ShiftDate.Value.DayOfWeek.ToString()  }) ;
+
+			return Ok(res);
+
+		}
+
 
 
 		// GET: api/<ShiftTabletCrewController>

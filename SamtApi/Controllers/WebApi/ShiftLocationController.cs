@@ -1,4 +1,5 @@
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +24,10 @@ namespace SamtApi.Controllers.WebApi {
 		// GET: api/<ShiftLocationController>
 		[HttpGet]
 		public IActionResult Get() {
-			IQueryable<ShiftLocation>? res = _shiftLocationService.GetAll();
+			List<ShiftLocationReturnModel> res = _shiftLocationService.GetAll();
 
 			if (res.Count() > 0) {
-				return Ok(OperationResult<IQueryable<ShiftLocation>>.SuccessResult(res, res.Count()));
+				return Ok(OperationResult<List<ShiftLocationReturnModel>>.SuccessResult(res, res.Count()));
 			}
 			return Ok(OperationResult<string>.FailureResult(""));
 

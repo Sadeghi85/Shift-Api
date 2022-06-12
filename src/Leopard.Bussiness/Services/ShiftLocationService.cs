@@ -1,4 +1,5 @@
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using System;
@@ -16,9 +17,9 @@ namespace Leopard.Bussiness.Services {
 			_shiftLocationStore = shiftLocationStore;
 		}
 
-		public IQueryable<ShiftLocation> GetAll() {
+		public List<ShiftLocationReturnModel> GetAll() {
 
-			IQueryable<ShiftLocation>? res = _shiftLocationStore.GetAll();
+			List<ShiftLocationReturnModel>? res = _shiftLocationStore.GetAll().Select(pp=> new ShiftLocationReturnModel { Id= pp.Id, PortalId = pp.PortalId.Value , PortalTitle= pp.Portal.Title , Title = pp.Title }).ToList();
 			return res;
 
 		}

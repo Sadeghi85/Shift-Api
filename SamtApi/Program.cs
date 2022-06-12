@@ -18,23 +18,23 @@ var serilogLogger = new LoggerConfiguration()
 		.ReadFrom.Configuration(configuration)
 		.CreateLogger();
 var builder = WebApplication.CreateBuilder(args);
+var corsAllowedUrls = configuration.GetSection("AllowedCorsUrls").Get<List<string>>();
 
+builder.Services.AddCors(options => {
+	options.AddPolicy("TemporaryCorsPolicy",
+		policyBuilder => {
+			policyBuilder.WithOrigins(corsAllowedUrls.ToArray())
+								.AllowAnyHeader()
+								.AllowAnyMethod();
+		});
+});
 builder.Host.UseSerilog(serilogLogger, true);
 // Add services to the container.
 //builder.Services.AddControllersWithViews();
 builder.Host.UseLamar((context, registry) => {
 
 
-	var corsAllowedUrls = configuration.GetSection("AllowedCorsUrls").Get<List<string>>();
-
-	registry.AddCors(options => {
-		options.AddPolicy("TemporaryCorsPolicy",
-			policyBuilder => {
-				policyBuilder.WithOrigins(corsAllowedUrls.ToArray())
-									.AllowAnyHeader()
-									.AllowAnyMethod();
-			});
-	});
+	
 
 	registry.AddApiVersioning(options => {
 		options.ReportApiVersions = true;
@@ -86,6 +86,7 @@ app.UseSwaggerUI();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCors("TemporaryCorsPolicy");
 
 app.UseAuthorization();
 

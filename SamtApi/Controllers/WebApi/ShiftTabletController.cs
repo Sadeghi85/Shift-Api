@@ -39,6 +39,8 @@ namespace SamtApi.Controllers.WebApi {
 
 		}
 
+		
+
 		// GET api/<ShiftTabletController>/5
 		[HttpGet("{portalId}")]
 		public IActionResult Get(int portalId) {
