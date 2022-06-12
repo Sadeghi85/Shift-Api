@@ -28,18 +28,25 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpGet]
 		public IActionResult Get() {
 
-			
-		
-			var res = _shiftTabletService.GetAll();
-			return Ok(res);
+
+
+			IQueryable<ShiftShiftTablet>? res = _shiftTabletService.GetAll();
+			if (res.Count() > 0) {
+				return Ok(OperationResult<IQueryable<ShiftShiftTablet>>.SuccessResult(res, res.Count()));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
+
 
 		}
 
 		// GET api/<ShiftTabletController>/5
 		[HttpGet("{portalId}")]
 		public IActionResult Get(int portalId) {
-			var res = _shiftTabletService.GetTabletShiftByPortalId(portalId);
-			return Ok(res);
+			List<ShiftShiftTablet>? res = _shiftTabletService.GetTabletShiftByPortalId(portalId);
+			if (res.Count() > 0) {
+				return Ok(OperationResult<List<ShiftShiftTablet>>.SuccessResult(res, res.Count()));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 
 		}
 
@@ -48,7 +55,10 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<OkObjectResult> Post(ShiftTabletModel model) {
 			
 			var res = await _shiftTabletService.RegisterShiftTablet(model);
-			return Ok(res);
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 
 		}
 
@@ -56,7 +66,10 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPut]
 		public async Task<OkObjectResult> Put(ShiftTabletModel model) {
 			var res = await _shiftTabletService.UpdateShifTablet(model);
-			return Ok(res);
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 
 		}
 

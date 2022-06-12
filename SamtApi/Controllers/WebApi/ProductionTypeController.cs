@@ -29,8 +29,11 @@ namespace SamtApi.Controllers.WebApi {
 
 
 
-			var res = _shiftProductionTypeService.GetAll();
-			return Ok(res);
+			IQueryable<ShiftProductionType>? res = _shiftProductionTypeService.GetAll();
+			if (res.Count() > 0) {
+				return Ok(OperationResult<IQueryable<ShiftProductionType>>.SuccessResult(res, res.Count()));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 
 
 
@@ -42,9 +45,14 @@ namespace SamtApi.Controllers.WebApi {
 		// GET api/<ProductionTypeController>/5
 		[HttpGet("{id}")]
 		public IActionResult Get(int id) {
-			var res = _shiftProductionTypeService.FindById(id);
+			ShiftProductionType? res = _shiftProductionTypeService.FindById(id);
 
-			return Ok(res);
+			if (res !=null) {
+				return Ok(OperationResult<ShiftProductionType>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
+
+			
 		}
 
 		// POST api/<ProductionTypeController>
@@ -52,7 +60,10 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<IActionResult> Post(ShiftProductionTypeModel model) {
 			var res = await _shiftProductionTypeService.Register(model);
 
-			return Ok(res);
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 		}
 
 		// PUT api/<ProductionTypeController>/5
@@ -61,7 +72,10 @@ namespace SamtApi.Controllers.WebApi {
 
 			var res = await _shiftProductionTypeService.Update(model);
 
-			return Ok(res);
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 		}
 
 		// DELETE api/<ProductionTypeController>/5

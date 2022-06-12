@@ -23,8 +23,12 @@ namespace SamtApi.Controllers.WebApi {
 		// GET: api/<ShiftLocationController>
 		[HttpGet]
 		public IActionResult Get() {
-			var res = _shiftLocationService.GetAll();
-			return Ok(res);
+			IQueryable<ShiftLocation>? res = _shiftLocationService.GetAll();
+
+			if (res.Count() > 0) {
+				return Ok(OperationResult<IQueryable<ShiftLocation>>.SuccessResult(res, res.Count()));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 
 		}
 
@@ -32,9 +36,12 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpGet("{id}")]
 		public IActionResult Get(int portalId) {
 
-			var res = _shiftLocationService.GetShiftLocationByPortalId(portalId);
+			List<ShiftLocation>? res = _shiftLocationService.GetShiftLocationByPortalId(portalId);
 
-			return  Ok(res);
+			if (res.Count() > 0) {
+				return Ok(OperationResult<List<ShiftLocation>>.SuccessResult(res, res.Count()));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 		}
 
 
@@ -44,7 +51,10 @@ namespace SamtApi.Controllers.WebApi {
 
 			ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId };
 			var res = await _shiftLocationService.RegisterShiftLocation(model);
-			return Ok(res);
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 
 		}
 
@@ -52,7 +62,10 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPut]
 		public async Task<OkObjectResult> Put( ShiftLocationModel model) {
 			var res = await _shiftLocationService.Update(model);
-			return Ok(res);
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 
 
 		}

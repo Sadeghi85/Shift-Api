@@ -23,16 +23,26 @@ namespace SamtApi.Controllers.WebApi {
 		[ProducesDefaultResponseType]
 		public IActionResult Get() {
 
-			var res = _shiftService.GetAll();
-			return Ok(res);
+			IQueryable<ShiftShift>? res = _shiftService.GetAll();
+
+			if (res.Count() > 0) {
+				return Ok(OperationResult<IQueryable<ShiftShift>>.SuccessResult(res, res.Count()));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 		}
 
 		// GET api/<ShiftController>/5
 		[HttpGet("{portalId}")]
 		public IActionResult Get(int portalId) {
 
-			var res = _shiftService.FindByPortalId(portalId);
-			return Ok(res);
+			List<ShiftShift>? res = _shiftService.FindByPortalId(portalId);
+
+			if (res.Count() > 0) {
+				return Ok(OperationResult<List<ShiftShift>>.SuccessResult(res, res.Count()));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
+
+			
 			
 
 		}
@@ -42,26 +52,36 @@ namespace SamtApi.Controllers.WebApi {
 		// POST api/<ShiftController>
 		[HttpPost]
 		public async Task<IActionResult> Post(ShiftModel model) {
-			var res = await _shiftService.Register(model);
-			return Ok(res);
-			
+			int res = await _shiftService.Register(model);
+
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
+
 		}
 
 
 		// PUT api/<ShiftController>/5
 		[HttpPut]
-		public async Task<OkObjectResult> PutAsync(ShiftModel model) {
+		public async Task<IActionResult> PutAsync(ShiftModel model) {
 
-			var res = await _shiftService.Update(model);
-			return Ok(res);
+			int res = await _shiftService.Update(model);
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 		}
 
 		// DELETE api/<ShiftController>/5
 		[HttpDelete]
-		public async Task<OkObjectResult> Delete(int id) {
+		public async Task<IActionResult> Delete(int id) {
 
-			var res = await _shiftService.Delete(id);
-			return Ok(res);
+			int res = await _shiftService.Delete(id);
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 		}
 	}
 }

@@ -1,5 +1,6 @@
 using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Services.Interface;
+using Leopard.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -20,32 +21,42 @@ namespace SamtApi.Controllers.WebApi {
 		// GET: api/<ShiftTabletLocationController>
 		[HttpGet]
 		public IActionResult Get() {
-			var res = _shiftTabletLocationService.GetAll();
-			return Ok(res);
+			IQueryable<ShiftShiftTabletLocation>? res = _shiftTabletLocationService.GetAll();
+			if (res.Count() > 0) {
+				return Ok(OperationResult<IQueryable<ShiftShiftTabletLocation>>.SuccessResult(res, res.Count()));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 		}
 
 		// GET api/<ShiftTabletLocationController>/5
 		[HttpGet("{shiftTabletId}")]
 		public IActionResult Get(int shiftTabletId) {
-			var res =_shiftTabletLocationService.GetShiftLocattionsByshiftTabletId(shiftTabletId);
-			return Ok(res);
-
-
+			List<ShiftShiftTabletLocation>? res =_shiftTabletLocationService.GetShiftLocattionsByshiftTabletId(shiftTabletId);
+			if (res.Count() > 0) {
+				return Ok(OperationResult<List<ShiftShiftTabletLocation>>.SuccessResult(res, res.Count()));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 		}
 
 		// POST api/<ShiftTabletLocationController>
 		[HttpPost]
-		public async Task<OkObjectResult> Post(ShiftTabletLocationModel model) {
+		public async Task<IActionResult> Post(ShiftTabletLocationModel model) {
 			var res = await  _shiftTabletLocationService.RegisterShiftTabletLocation(model);
-			return Ok(res);
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 
 		}
 
 		// PUT api/<ShiftTabletLocationController>/5
 		[HttpPut]
-		public async Task<OkObjectResult> Put(ShiftTabletLocationModel model) {
+		public async Task<IActionResult> Put(ShiftTabletLocationModel model) {
 			var res = await _shiftTabletLocationService.Update(model);
-			return Ok(res);
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 
 		}
 

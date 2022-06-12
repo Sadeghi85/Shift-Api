@@ -2,6 +2,7 @@
 
 using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Services.Interface;
+using Leopard.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -24,9 +25,14 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpGet]
 		public IActionResult Get() {
 
-			var res =_shiftCrewRewardFineService.GetAll();
-			return Ok(res);
-			
+			IQueryable<ShiftCrewRewardFine>? res =_shiftCrewRewardFineService.GetAll();
+
+
+			if (res.Count() > 0) {
+				return Ok(OperationResult<IQueryable<ShiftCrewRewardFine>>.SuccessResult(res, res.Count()));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
+
 		}
 
 		// GET api/<ShiftCrewRewardFineController>/5
@@ -37,25 +43,34 @@ namespace SamtApi.Controllers.WebApi {
 
 		// POST api/<ShiftCrewRewardFineController>
 		[HttpPost]
-		public async Task<OkObjectResult> Post(ShiftCrewRewardFineModel model) {
+		public async Task<IActionResult> Post(ShiftCrewRewardFineModel model) {
 			var res = await _shiftCrewRewardFineService.Register(model);
-			return Ok(res);
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 		}
 
 		// PUT api/<ShiftCrewRewardFineController>/5
 		[HttpPut]
-		public async Task<OkObjectResult> Put(ShiftCrewRewardFineModel model) {
+		public async Task<IActionResult> Put(ShiftCrewRewardFineModel model) {
 
 			var res =await _shiftCrewRewardFineService.Update(model);
-			return Ok(res);
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 		}
 
 		// DELETE api/<ShiftCrewRewardFineController>/5
 		[HttpDelete("{id}")]
-		public async Task<OkObjectResult> Delete(int id) {
+		public async Task<IActionResult> Delete(int id) {
 
 			var res = await _shiftCrewRewardFineService.Delete(id);
-			return Ok(res);
+			if (res > 0) {
+				return Ok(OperationResult<int>.SuccessResult(res));
+			}
+			return Ok(OperationResult<string>.FailureResult(""));
 		}
 	}
 }
