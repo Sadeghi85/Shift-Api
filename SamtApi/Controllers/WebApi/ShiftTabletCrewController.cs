@@ -42,7 +42,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// PUT api/<ShiftTabletCrewController>/5
 		[HttpPut]
-		public async Task<OkObjectResult> Put(ShiftTabletCrewModel model) {
+		public async Task<IActionResult> Put(ShiftTabletCrewModel model) {
 			var res = await _shiftTabletCrewService.Update(model);
 			return Ok(res);
 		}
@@ -55,9 +55,9 @@ namespace SamtApi.Controllers.WebApi {
 
 		// DELETE api/<ShiftTabletCrewController>/5
 		[HttpDelete("{id}")]
-		public async Task<OperationResult> Delete(int id) {
+		public async Task<IActionResult> Delete(int id) {
 			var res = await _shiftTabletCrewService.Delete(id);
-			return res;
+			return Ok(res);
 		}
 	}
 }

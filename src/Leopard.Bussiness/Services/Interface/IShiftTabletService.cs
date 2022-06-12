@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services.Interface {
 	public interface IShiftTabletService {
-		public Task<OperationResult> RegisterShiftTablet(ShiftTabletModel model);
-		public OperationResult GetTabletShiftByPortalId(int portalId);
-		public OperationResult GetAll();
+		public Task<int> RegisterShiftTablet(ShiftTabletModel model);
+		public List<ShiftShiftTablet> GetTabletShiftByPortalId(int portalId);
+		public IQueryable<ShiftShiftTablet> GetAll();
 
-		public Task<OperationResult> UpdateShifTablet(ShiftTabletModel model);
+		public Task<int> UpdateShifTablet(ShiftTabletModel model);
 	}
 }

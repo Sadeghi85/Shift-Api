@@ -10,11 +10,9 @@ namespace Leopard.Bussiness.Services.Interface {
 	public interface IShiftProductionTypeService {
 
 		
-
-		public OperationResult GetAll();
-		public OperationResult FindById(int id);
-		public Task<OperationResult> Register(ShiftProductionTypeModel model);
-
-		public Task<OperationResult> Update(ShiftProductionTypeModel model);
+		public IQueryable<ShiftProductionType> GetAll();
+		public ShiftProductionType FindById(int id);
+		public Task<int> Register(ShiftProductionTypeModel model);
+		public Task<int> Update(ShiftProductionTypeModel model);
 	}
 }

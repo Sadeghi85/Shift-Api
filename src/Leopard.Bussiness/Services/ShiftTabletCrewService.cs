@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftTabletCrewService : BaseService, IShiftTabletCrewService {
+	public class ShiftTabletCrewService : IShiftTabletCrewService {
 
 		readonly private IShiftShiftTabletCrewStore _shiftShiftTabletCrewStore;
 		readonly private IShiftShiftTabletCrewReplacementStore _shiftShiftTabletCrewReplacementStore;
@@ -18,102 +18,71 @@ namespace Leopard.Bussiness.Services {
 			_shiftShiftTabletCrewReplacementStore = shiftShiftTabletCrewReplacementStore;
 		}
 
-		public async Task<OperationResult> Delete(int id) {
+		public async Task<int> Delete(int id) {
 
-			try {
-				var found = _shiftShiftTabletCrewStore.FindById(id);
 
-				found.IsDeleted = true;
-				var res = await _shiftShiftTabletCrewStore.Update(found);
-				OperationResult.Data = res;
+			var found = _shiftShiftTabletCrewStore.FindById(id);
 
-			} catch (Exception ex) {
+			found.IsDeleted = true;
+			var res = await _shiftShiftTabletCrewStore.Update(found);
 
-				OperationResult.Success = false;
-				OperationResult.Message = ex.Message;
+			return res;
 
+		}
+
+		public IQueryable<ShiftShiftTabletCrew> GetAll() {
+			IQueryable<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll();
+
+			return res;
+		}
+
+		public List<ShiftShiftTabletCrew> GetByShiftId(int shifTabletId) {
+
+			List<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll().Where(pp => pp.ShifTabletId == shifTabletId).ToList();
+
+			return res;
+
+		}
+
+		public async Task<int> Register(ShiftTabletCrewModel model) {
+
+			ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew { AgentId = model.AgentId, EntranceTime = model.EntranceTime, ExitTime = model.ExitTime, IsReplaced = false, ResourceId = model.ResourceId, ShifTabletId = model.ShifTabletId };
+			var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
+
+
+			return res;
+		}
+
+		public async Task<int> Replace(int replaced, int replacedBy) {
+
+			var found = _shiftShiftTabletCrewStore.FindById(replaced);
+			if (found != null) {
+				found.IsReplaced = true;
+				_shiftShiftTabletCrewStore.Update(found).Wait();
 			}
-			return OperationResult;
+			var res = await _shiftShiftTabletCrewReplacementStore.InsertAsync(new ShiftShiftTabletCrewReplacement { ShiftTabletCrewId = replaced, ShiftTabletCrewIdReplaceMent = replacedBy });
+			return res;
 
 		}
 
-		public OperationResult GetAll() {
-			var res = _shiftShiftTabletCrewStore.GetAll();
-			OperationResult.Data = res;
-			return OperationResult;
-		}
+		public async Task<int> Update(ShiftTabletCrewModel model) {
 
-		public OperationResult GetByShiftId(int shifTabletId) {
-			try {
-				var res = _shiftShiftTabletCrewStore.GetAll().Where(pp => pp.ShifTabletId == shifTabletId).ToList();
-				OperationResult.Data = res;
-			} catch (Exception ex) {
+			var found = _shiftShiftTabletCrewStore.FindById(model.Id);
 
+			found.ShifTabletId = model.ShifTabletId;
+			found.EntranceTime = model.EntranceTime;
+			found.ExitTime = model.ExitTime;
+			found.ResourceId = model.ResourceId;
+			found.AgentId = model.AgentId;
 
-				OperationResult.Success = false;
-				OperationResult.Message = ex.Message;
-			}
-			return OperationResult;
+			var res = await _shiftShiftTabletCrewStore.Update(found);
 
-		}
-
-		public async Task<OperationResult> Register(ShiftTabletCrewModel model) {
-			try {
-				ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew { AgentId = model.AgentId, EntranceTime = model.EntranceTime, ExitTime = model.ExitTime, IsReplaced = false, ResourceId = model.ResourceId, ShifTabletId = model.ShifTabletId };
-				var res =await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
-				OperationResult.Data = res;
-			} catch (Exception ex) {
-				OperationResult.Success = false;
-				OperationResult.Message = ex.Message;
-				
-			}
-			return OperationResult;
-		}
-
-		public async Task<OperationResult> Replace(int replaced, int replacedBy) {
-			try {
-				var found = _shiftShiftTabletCrewStore.FindById(replaced);
-				if (found != null) {
-					found.IsReplaced = true;
-					_shiftShiftTabletCrewStore.Update(found).Wait();
-				}
-				var res = await _shiftShiftTabletCrewReplacementStore.InsertAsync(new ShiftShiftTabletCrewReplacement { ShiftTabletCrewId = replaced, ShiftTabletCrewIdReplaceMent = replacedBy });
-				OperationResult.Data = res;
-
-			} catch (Exception ex) {
-
-				OperationResult.Success = false;
-				OperationResult.Message = ex.Message;
-			}
-			return OperationResult;
-
-		}
-
-		public async Task<OperationResult> Update(ShiftTabletCrewModel model) {
-			try {
-				var found = _shiftShiftTabletCrewStore.FindById(model.Id);
-
-				found.ShifTabletId = model.ShifTabletId;
-				found.EntranceTime = model.EntranceTime;
-				found.ExitTime = model.ExitTime;
-				found.ResourceId = model.ResourceId;
-				found.AgentId = model.AgentId;
-
-				var res = await _shiftShiftTabletCrewStore.Update(found);
-				OperationResult.Data = res;	
-			} catch (Exception ex) {
-
-				OperationResult.Success = false;
-				OperationResult.Message = ex.Message;
-
-			}
-
-			return OperationResult;
+			return res;
 
 
 		}
 
-		
+
 	}
 
 

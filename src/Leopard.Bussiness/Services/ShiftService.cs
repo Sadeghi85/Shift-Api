@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftService : BaseService, IShiftService {
+	public class ShiftService : IShiftService {
 
 		private readonly IShiftShiftStore _shiftShiftStore;
 
@@ -18,91 +18,63 @@ namespace Leopard.Bussiness.Services {
 
 
 
-		public async Task<OperationResult> Delete(int id) {
-			try {
-				var found = _shiftShiftStore.FindById(id);
-				found.IsDeleted = true;
-				var res =await _shiftShiftStore.Update(found);
-				OperationResult.Data = res;
-				
+		public async Task<int> Delete(int id) {
 
-			} catch (Exception ex) {
+			var found = _shiftShiftStore.FindById(id);
+			found.IsDeleted = true;
+			var res = await _shiftShiftStore.Update(found);
 
-				OperationResult.Success = false;
-				OperationResult.Message = ex.Message;
-			}
-			return OperationResult;
+			return res;
 
 		}
 
-		public OperationResult FindByPortalId(int portalId) {
+		public List<ShiftShift> FindByPortalId(int portalId) {
 
+			List<ShiftShift>? res = _shiftShiftStore.GetAll().Where(pp => pp.PortalId == portalId).ToList();
 
-			try {
-				var res = _shiftShiftStore.GetAll().Where(pp => pp.PortalId == portalId).ToList();
-				OperationResult.Data = res;
-			} catch (Exception ex) {
-
-				OperationResult.Success=false;
-				OperationResult.Message=ex.Message;
-			}
-			return OperationResult;
+			return res;
 
 		}
 
-		public OperationResult GetAll() {
+		public IQueryable<ShiftShift> GetAll() {
 
-			try {
-				
-				var res = _shiftShiftStore.GetAll();
-				OperationResult.Data = res;
-			} catch (Exception ex) {
 
-				OperationResult.Success = false;
-				OperationResult.Message = ex.Message;
 
-			}
-			return OperationResult;
+			IQueryable<ShiftShift>? res = _shiftShiftStore.GetAll();
+
+			return res;
 		}
 
-		public OperationResult GetByPortalId(int portalId) {
-			throw new NotImplementedException();
+		public IQueryable<ShiftShift> GetByPortalId(int portalId) {
+			//throw new NotImplementedException();
+			IQueryable<ShiftShift>? res = _shiftShiftStore.GetAll().Where(pp => pp.PortalId == portalId);
+			return res;
+
 		}
 
-		public async Task<OperationResult> Register(ShiftModel model) {
-			try {
-				ShiftShift shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId, ShiftType = model.ShiftType, StartTime = model.StartTime, EndTime = model.EndTime, IsDeleted = false };
+		public async Task<int> Register(ShiftModel model) {
 
-				var res = await _shiftShiftStore.InsertAsync(shiftShift);
-				OperationResult.Data = res;
-			} catch (Exception ex) {
+			ShiftShift shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId, ShiftType = model.ShiftType, StartTime = model.StartTime, EndTime = model.EndTime, IsDeleted = false };
 
-				OperationResult.Success= false;
-				OperationResult.Message = ex.Message;
-			}
-			return OperationResult;
+			var res = await _shiftShiftStore.InsertAsync(shiftShift);
+			return res;
 		}
 
-		public async Task<OperationResult> Update(ShiftModel model) {
-			try {
-				var found = _shiftShiftStore.FindById(model.Id);
-				if (found != null) {
+		public async Task<int> Update(ShiftModel model) {
 
-					found.Title = model.Title;
-					found.StartTime = model.StartTime;
-					found.EndTime = model.EndTime;
-					found.ShiftType = model.ShiftType;
-					found.PortalId = model.PortalId;
-					var res =await _shiftShiftStore.Update(found);
-					OperationResult.Data = res;
+			var found = _shiftShiftStore.FindById(model.Id);
+			var res = 0;
+			if (found != null) {
 
-				}
-			} catch (Exception ex) {
+				found.Title = model.Title;
+				found.StartTime = model.StartTime;
+				found.EndTime = model.EndTime;
+				found.ShiftType = model.ShiftType;
+				found.PortalId = model.PortalId;
+				res = await _shiftShiftStore.Update(found);
 
-				OperationResult.Success = false;
-				OperationResult.Message = ex.Message;
 			}
-			return OperationResult;
+			return res;
 		}
 	}
 }

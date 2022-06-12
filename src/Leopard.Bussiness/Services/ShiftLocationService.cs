@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftLocationService:BaseService, IShiftLocationService {
+	public class ShiftLocationService : IShiftLocationService {
 
 		readonly private IShiftLocationStore _shiftLocationStore;
 
@@ -16,65 +16,35 @@ namespace Leopard.Bussiness.Services {
 			_shiftLocationStore = shiftLocationStore;
 		}
 
-		public OperationResult GetAll() {
+		public IQueryable<ShiftLocation> GetAll() {
 
-			try {
-				var res = _shiftLocationStore.GetAll();
-				OperationResult.Data = res;
-			} catch (Exception ex) {
-				OperationResult.Success = false;	
-				OperationResult.Message= ex.Message;
-				
-			}
-			return OperationResult;
+			IQueryable<ShiftLocation>? res = _shiftLocationStore.GetAll();
+			return res;
 
 		}
 
-		public OperationResult GetShiftLocationByPortalId(int portalId) {
-			try {
-				var res = _shiftLocationStore.GetAll().Where(pp => pp.PortalId == portalId).ToList();
-				OperationResult.Data = res;
-			} catch (Exception ex) {
+		public List<ShiftLocation> GetShiftLocationByPortalId(int portalId) {
 
-				OperationResult.Success= false;
-				OperationResult.Message = ex.Message;
-			}
-			return OperationResult;
-			
-		}
-
-		public async Task<OperationResult> RegisterShiftLocation(ShiftLocationModel model) {
-			try {
-				ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId };
-				var res = await _shiftLocationStore.InsertAsync(shiftLocation);
-				OperationResult.Data = res;
-			} catch (Exception ex) {
-
-				OperationResult.Success=false;
-				OperationResult.Message = ex.Message;
-			}
-			return OperationResult;
+			List<ShiftLocation>? res = _shiftLocationStore.GetAll().Where(pp => pp.PortalId == portalId).ToList();
+			return res;
 
 		}
 
-		public async Task<OperationResult> Update(ShiftLocationModel model) {
-			try {
-				var found = _shiftLocationStore.FindById(model.Id);
+		public async Task<int> RegisterShiftLocation(ShiftLocationModel model) {
 
-				found.Title = model.Title;
-				found.PortalId = model.PortalId;
-				var res = await _shiftLocationStore.Update(found);
-				OperationResult.Data = res;
-			} catch (Exception ex) {
+			ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId };
+			var res = await _shiftLocationStore.InsertAsync(shiftLocation);
+			return res;
 
-
-				OperationResult.Success= false;
-				OperationResult.Message = ex.Message;
-
-			}
-			return OperationResult;
-
-			
 		}
-	}
+
+		public async Task<int> Update(ShiftLocationModel model) {
+
+			var found = _shiftLocationStore.FindById(model.Id);
+			found.Title = model.Title;
+			found.PortalId = model.PortalId;
+			var res = await _shiftLocationStore.Update(found);
+			return res;
+		}
+}
 }

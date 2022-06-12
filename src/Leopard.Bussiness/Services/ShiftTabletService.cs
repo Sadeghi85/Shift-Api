@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftTabletService :BaseService, IShiftTabletService {
+	public class ShiftTabletService : IShiftTabletService {
 
 		readonly private IShiftShiftTabletStore _shiftShiftTabletStore;
 		readonly private IShiftShiftStore _shiftShiftStore;
@@ -18,75 +18,50 @@ namespace Leopard.Bussiness.Services {
 			_shiftShiftStore = shiftShiftStore;
 		}
 
-		public OperationResult GetTabletShiftByPortalId(int portalId) {
-			try {
-				var res = _shiftShiftTabletStore.GetAll().Where(pp => pp.ShiftShift.PortalId == portalId && pp.IsDeleted == false).ToList();
-				OperationResult.Data = res;
-			} catch (Exception ex) {
+		public List<ShiftShiftTablet> GetTabletShiftByPortalId(int portalId) {
 
-				OperationResult.Success=false;
-				OperationResult.Message = ex.Message;
-			}
+			List<ShiftShiftTablet>? res = _shiftShiftTabletStore.GetAll().Where(pp => pp.ShiftShift.PortalId == portalId && pp.IsDeleted == false).ToList();
 
-			return OperationResult;
+			return res;
 		}
 
-		public OperationResult GetAll() {
-			try {
-				var res = _shiftShiftTabletStore.GetAll();
-				OperationResult.Data = res;
-			} catch (Exception ex) {
-				OperationResult.Success=false;	
-				OperationResult.Message = ex.Message;
-				
-			}
+		public IQueryable<ShiftShiftTablet> GetAll() {
 
-			return OperationResult;
+			IQueryable<ShiftShiftTablet>? res = _shiftShiftTabletStore.GetAll();
+
+
+			return res;
 		}
 
 
 
 
-		public async Task<OperationResult> RegisterShiftTablet(ShiftTabletModel model) {
-			try {
-				ShiftShiftTablet shiftTablet = new ShiftShiftTablet { ShiftId = model.ShiftId, ShiftDate = model.ShiftDate, ProductionTypeId = model.ProductionTypeId, ShiftWorthPercent = model.ShiftWorthPercent, IsDeleted = false };
-				var foundShift = _shiftShiftStore.FindById(model.ShiftId);
-				shiftTablet.ShiftTime = foundShift.EndTime - foundShift.StartTime;
+		public async Task<int> RegisterShiftTablet(ShiftTabletModel model) {
 
+			ShiftShiftTablet shiftTablet = new ShiftShiftTablet { ShiftId = model.ShiftId, ShiftDate = model.ShiftDate, ProductionTypeId = model.ProductionTypeId, ShiftWorthPercent = model.ShiftWorthPercent, IsDeleted = false };
+			var foundShift = _shiftShiftStore.FindById(model.ShiftId);
+			shiftTablet.ShiftTime = foundShift.EndTime - foundShift.StartTime;
 
+			int res = await _shiftShiftTabletStore.InsertAsync(shiftTablet);
 
-				var res = await _shiftShiftTabletStore.InsertAsync(shiftTablet);
-				OperationResult.Data = res; 
-			} catch (Exception ex) {
-
-				OperationResult.Success = false;
-				OperationResult.Message=ex.Message;	
-
-			}
-			return OperationResult;
+			return res;
 
 		}
 
-		public async Task<OperationResult> UpdateShifTablet(ShiftTabletModel model) {
+		public async Task<int> UpdateShifTablet(ShiftTabletModel model) {
 
-			try {
-				var found = _shiftShiftTabletStore.FindById(model.Id);
 
-				found.ShiftId = model.ShiftId;
-				found.ShiftDate = model.ShiftDate;
-				found.ProductionTypeId = model.ProductionTypeId;
-				found.ShiftWorthPercent = model.ShiftWorthPercent;
+			var found = _shiftShiftTabletStore.FindById(model.Id);
 
-				var res = await _shiftShiftTabletStore.Update(found);
-				OperationResult.Data = res;
-			} catch (Exception ex) {
+			found.ShiftId = model.ShiftId;
+			found.ShiftDate = model.ShiftDate;
+			found.ProductionTypeId = model.ProductionTypeId;
+			found.ShiftWorthPercent = model.ShiftWorthPercent;
 
-				OperationResult.Success=false;	
-				OperationResult.Message = ex.Message;	
+			var res = await _shiftShiftTabletStore.Update(found);
 
-			}
-			return OperationResult;
+			return res;
 
 		}
-	}
+}
 }

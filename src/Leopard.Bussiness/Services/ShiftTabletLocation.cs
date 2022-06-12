@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftTabletLocationService : BaseService, IShiftTabletLocationService {
+	public class ShiftTabletLocationService : IShiftTabletLocationService {
 
 		readonly private ShiftShiftTabletLocationStore _shiftShiftTabletLocationStore;
 
@@ -16,62 +16,39 @@ namespace Leopard.Bussiness.Services {
 			_shiftShiftTabletLocationStore = shiftShiftTabletLocationStore;
 		}
 
-		public OperationResult GetAll() {
-			try {
-				var res = _shiftShiftTabletLocationStore.GetAll();
-				OperationResult.Data = res;
-			} catch (Exception ex) {
+		public IQueryable<ShiftShiftTabletLocation> GetAll() {
 
-				OperationResult.Success = false;
-				OperationResult.Message = ex.Message;
-			}
-			return OperationResult;
+			IQueryable<ShiftShiftTabletLocation>? res = _shiftShiftTabletLocationStore.GetAll();
+
+			return res;
 		}
 
-		public OperationResult GetShiftLocattionsByshiftTabletId(int shiftTablettId) {
-			try {
-				var res = _shiftShiftTabletLocationStore.GetAll().Where(pp => pp.ShiftTabletId == shiftTablettId).ToList();
-				OperationResult.Data = res;
-			} catch (Exception ex) {
+		public List<ShiftShiftTabletLocation> GetShiftLocattionsByshiftTabletId(int shiftTablettId) {
 
-				OperationResult.Success = false;
-				OperationResult.Message = ex.Message;
-			}
-			return OperationResult;
+			List<ShiftShiftTabletLocation>? res = _shiftShiftTabletLocationStore.GetAll().Where(pp => pp.ShiftTabletId == shiftTablettId).ToList();
+
+			return res;
 		}
 
-		public async Task<OperationResult> RegisterShiftTabletLocation(ShiftTabletLocationModel model) {
+		public async Task<int> RegisterShiftTabletLocation(ShiftTabletLocationModel model) {
 
-			try {
-				ShiftShiftTabletLocation tabletLocation = new ShiftShiftTabletLocation { LocationId = model.LocationId, ShiftTabletId = model.ShiftTabletId };
-				var res = await _shiftShiftTabletLocationStore.InsertAsync(tabletLocation);
-				OperationResult.Data = res;
-			} catch (Exception ex) {
 
-				OperationResult.Success=false;
-				OperationResult.Message = ex.Message;
-			}
-			return OperationResult;
+			ShiftShiftTabletLocation tabletLocation = new ShiftShiftTabletLocation { LocationId = model.LocationId, ShiftTabletId = model.ShiftTabletId };
+			var res = await _shiftShiftTabletLocationStore.InsertAsync(tabletLocation);
+
+			return res;
 
 		}
 
-		public async Task<OperationResult> Update(ShiftTabletLocationModel model) {
-			try {
-				var found = _shiftShiftTabletLocationStore.FindById(model.Id);
+		public async Task<int> Update(ShiftTabletLocationModel model) {
 
-				found.ShiftTabletId = model.ShiftTabletId;
-				found.LocationId = model.LocationId;
-				var res = await _shiftShiftTabletLocationStore.Update(found);
-				OperationResult.Data = res;
+			var found = _shiftShiftTabletLocationStore.FindById(model.Id);
 
-			} catch (Exception ex) {
-
-				OperationResult.Success = false;
-				OperationResult.Message = ex.Message;
-			}
-			return OperationResult;
-			
+			found.ShiftTabletId = model.ShiftTabletId;
+			found.LocationId = model.LocationId;
+			var res = await _shiftShiftTabletLocationStore.Update(found);
+			return res;
 
 		}
-	}
+}
 }

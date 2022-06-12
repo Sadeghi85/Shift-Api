@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
 	public class BaseService {
-		public OperationResult OperationResult { get; set; } = new OperationResult();
+		//public OperationResult OperationResult { get; set; } = new OperationResult();
 	}
 }

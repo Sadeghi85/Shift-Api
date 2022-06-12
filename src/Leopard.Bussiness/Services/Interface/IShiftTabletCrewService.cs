@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services.Interface {
 	public interface IShiftTabletCrewService {
-		public Task<OperationResult> Register(ShiftTabletCrewModel model);
-		public Task<OperationResult> Update(ShiftTabletCrewModel model);
+		public Task<int> Register(ShiftTabletCrewModel model);
+		public Task<int> Update(ShiftTabletCrewModel model);
 
-		public Task<OperationResult> Delete(int id);
+		public Task<int> Delete(int id);
 
-		public Task<OperationResult> Replace(int replaced, int replacedBy);
+		public Task<int> Replace(int replaced, int replacedBy);
 
-		public OperationResult GetAll();
+		public IQueryable<ShiftShiftTabletCrew> GetAll();
 
-		public OperationResult GetByShiftId(int shifTabletId);
+		public List<ShiftShiftTabletCrew> GetByShiftId(int shifTabletId);
 
 
 	}
