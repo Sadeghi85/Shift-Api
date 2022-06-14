@@ -31,7 +31,7 @@ namespace SamtApi.Controllers.WebApi {
 		// GET api/<ShiftTabletLocationController>/5
 		[HttpGet("{shiftTabletId}")]
 		public IActionResult Get(int shiftTabletId) {
-			List<ShiftShiftTabletLocation>? res =_shiftTabletLocationService.GetShiftLocattionsByshiftTabletId(shiftTabletId);
+			List<ShiftShiftTabletLocation>? res = _shiftTabletLocationService.GetShiftLocattionsByshiftTabletId(shiftTabletId);
 			if (res.Count() > 0) {
 				return Ok(OperationResult<List<ShiftShiftTabletLocation>>.SuccessResult(res, res.Count()));
 			}
@@ -41,12 +41,11 @@ namespace SamtApi.Controllers.WebApi {
 		// POST api/<ShiftTabletLocationController>
 		[HttpPost]
 		public async Task<IActionResult> Post(ShiftTabletLocationModel model) {
-			var res = await  _shiftTabletLocationService.RegisterShiftTabletLocation(model);
+			var res = await _shiftTabletLocationService.RegisterShiftTabletLocation(model);
 			if (res > 0) {
 				return Ok(OperationResult<int>.SuccessResult(res));
 			}
 			return Ok(OperationResult<string>.FailureResult(""));
-
 		}
 
 		// PUT api/<ShiftTabletLocationController>/5

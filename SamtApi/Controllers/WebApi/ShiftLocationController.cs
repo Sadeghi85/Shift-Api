@@ -22,9 +22,9 @@ namespace SamtApi.Controllers.WebApi {
 
 
 		// GET: api/<ShiftLocationController>
-		[HttpGet]
-		public IActionResult Get() {
-			List<ShiftLocationReturnModel> res = _shiftLocationService.GetAll();
+		[HttpPost("GetAll")]
+		public IActionResult GetAll(ShiftLocationSearchModel model) {
+			List<ShiftLocationReturnModel> res = _shiftLocationService.GetAll(model);
 
 			if (res.Count() > 0) {
 				return Ok(OperationResult<List<ShiftLocationReturnModel>>.SuccessResult(res, res.Count()));
@@ -34,7 +34,7 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// GET api/<ShiftLocationController>/5
-		[HttpGet("{id}")]
+		[HttpPost("{portalId}")]
 		public IActionResult Get(int portalId) {
 
 			List<ShiftLocation>? res = _shiftLocationService.GetShiftLocationByPortalId(portalId);
@@ -47,8 +47,8 @@ namespace SamtApi.Controllers.WebApi {
 
 
 		// POST api/<ShiftLocationController>
-		[HttpPost]
-		public async Task<OkObjectResult> PostAsync(ShiftLocationModel model) {
+		[HttpPost("Register")]
+		public async Task<OkObjectResult> Register(ShiftLocationModel model) {
 
 			ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId };
 			var res = await _shiftLocationService.RegisterShiftLocation(model);
@@ -60,8 +60,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// PUT api/<ShiftLocationController>/5
-		[HttpPut]
-		public async Task<OkObjectResult> Put( ShiftLocationModel model) {
+		[HttpPost("Update")]
+		public async Task<OkObjectResult> Update( ShiftLocationModel model) {
 			var res = await _shiftLocationService.Update(model);
 			if (res > 0) {
 				return Ok(OperationResult<int>.SuccessResult(res));
@@ -72,8 +72,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// DELETE api/<ShiftLocationController>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id) {
-		}
+		//[HttpDelete("{id}")]
+		//public void Delete(int id) {
+		//}
 	}
 }

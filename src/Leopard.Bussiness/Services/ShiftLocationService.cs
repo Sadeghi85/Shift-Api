@@ -17,9 +17,11 @@ namespace Leopard.Bussiness.Services {
 			_shiftLocationStore = shiftLocationStore;
 		}
 
-		public List<ShiftLocationReturnModel> GetAll() {
+		public List<ShiftLocationReturnModel> GetAll(ShiftLocationSearchModel model) {
 
-			List<ShiftLocationReturnModel>? res = _shiftLocationStore.GetAll().Select(pp=> new ShiftLocationReturnModel { Id= pp.Id, PortalId = pp.PortalId.Value , PortalTitle= pp.Portal.Title , Title = pp.Title }).ToList();
+			
+
+			List<ShiftLocationReturnModel>? res = _shiftLocationStore.GetAll().Skip(model.PageNo*model.PageSize).Take(model.PageSize).Where(pp=>(pp.Title.Contains(model.Title) || string.IsNullOrEmpty(model.Title)) && pp.PortalId==model.PortalId).Select(pp=> new ShiftLocationReturnModel { Id= pp.Id, PortalId = pp.PortalId.Value , PortalTitle= pp.Portal.Title , Title = pp.Title }).ToList();
 			return res;
 
 		}

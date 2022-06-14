@@ -36,15 +36,22 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public IQueryable<ShiftShift> GetAll() {
+		public IQueryable<ShiftShift> GetAll(ShiftSearchModel model) {
 
 
 
-			IQueryable<ShiftShift>? res = _shiftShiftStore.GetAll();
+			IQueryable<ShiftShift>? res = _shiftShiftStore.GetAll().Where(pp => pp.Title.Contains(model.Title) && pp.PortalId == model.PortalId).Skip(model.PageNo*model.PageSize).Take(model.PageSize);
+			if (model.desc == false) {
+
+				res = res.OrderBy(pp => pp.Title);
+			} else {
+				res = res.OrderByDescending(pp => pp.Title);
+			}
 
 			return res;
 		}
 
+		
 		public IQueryable<ShiftShift> GetByPortalId(int portalId) {
 			//throw new NotImplementedException();
 			IQueryable<ShiftShift>? res = _shiftShiftStore.GetAll().Where(pp => pp.PortalId == portalId);

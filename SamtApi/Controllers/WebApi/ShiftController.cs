@@ -19,20 +19,20 @@ namespace SamtApi.Controllers.WebApi {
 
 
 		// GET: api/<ShiftController>
-		[HttpGet]
+		[HttpPost("GetAll")]
 		[ProducesDefaultResponseType]
-		public IActionResult Get() {
+		public IActionResult GetAll(ShiftSearchModel model) {
 
-			IQueryable<ShiftShift>? res = _shiftService.GetAll();
+			List<ShiftShift>? res = _shiftService.GetAll(model).ToList();
 
 			if (res.Count() > 0) {
-				return Ok(OperationResult<IQueryable<ShiftShift>>.SuccessResult(res, res.Count()));
+				return Ok(OperationResult<List<ShiftShift>?>.SuccessResult(res, res.Count()));
 			}
 			return Ok(OperationResult<string>.FailureResult(""));
 		}
 
 		// GET api/<ShiftController>/5
-		[HttpGet("{portalId}")]
+		[HttpPost("FindByPortalId/{portalId}")]
 		public IActionResult Get(int portalId) {
 
 			List<ShiftShift>? res = _shiftService.FindByPortalId(portalId);
@@ -50,8 +50,8 @@ namespace SamtApi.Controllers.WebApi {
 
 
 		// POST api/<ShiftController>
-		[HttpPost]
-		public async Task<IActionResult> Post(ShiftModel model) {
+		[HttpPost("Register")]
+		public async Task<IActionResult> Register(ShiftModel model) {
 			int res = await _shiftService.Register(model);
 
 			if (res > 0) {
@@ -63,8 +63,8 @@ namespace SamtApi.Controllers.WebApi {
 
 
 		// PUT api/<ShiftController>/5
-		[HttpPut]
-		public async Task<IActionResult> PutAsync(ShiftModel model) {
+		[HttpPost("Update")]
+		public async Task<IActionResult> Update(ShiftModel model) {
 
 			int res = await _shiftService.Update(model);
 			if (res > 0) {
@@ -74,7 +74,7 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// DELETE api/<ShiftController>/5
-		[HttpDelete]
+		[HttpPost("Delete/{id}")]
 		public async Task<IActionResult> Delete(int id) {
 
 			int res = await _shiftService.Delete(id);

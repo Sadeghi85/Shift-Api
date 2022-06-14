@@ -10,7 +10,7 @@ namespace Leopard.Bussiness.Services.Interface {
 	public interface IShiftService {
 
 		public List<ShiftShift> FindByPortalId(int Id);
-		public IQueryable<ShiftShift> GetAll();
+		public IQueryable<ShiftShift> GetAll(ShiftSearchModel model);
 
 		public IQueryable<ShiftShift> GetByPortalId(int portalId);
 
