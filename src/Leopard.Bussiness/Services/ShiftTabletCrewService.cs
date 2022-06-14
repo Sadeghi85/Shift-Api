@@ -1,4 +1,5 @@
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using System;
@@ -64,6 +65,16 @@ namespace Leopard.Bussiness.Services {
 			return res;
 
 		}
+
+		public List<ShfitTabletReportResult> ShfitTabletReport(DateTime fromDate, DateTime toDate, int PortalId, int take=10 , int skip=10) {
+			var res = _shiftShiftTabletCrewStore.GetAll().Where(pp => (pp.ShiftShiftTablet.ShiftDate >= fromDate && pp.ShiftShiftTablet.ShiftDate <= toDate)).Take(take).Skip(skip) .Select(pp => new ShfitTabletReportResult { id=pp.Id,shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, firstName = pp.SamtAgent.FirstName, lastName = pp.SamtAgent.LastName, jobName =  pp.SamtResourceType.Title,  shiftDate=pp.ShiftShiftTablet.ShiftDate.Value, }).OrderBy(pp => pp.shiftDate).ToList();
+
+			
+
+			return res;
+		}
+
+		
 
 		public async Task<int> Update(ShiftTabletCrewModel model) {
 

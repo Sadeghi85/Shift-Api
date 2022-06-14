@@ -1,4 +1,5 @@
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ namespace Leopard.Bussiness.Services.Interface {
 		public IQueryable<ShiftShiftTabletCrew> GetAll();
 
 		public List<ShiftShiftTabletCrew> GetByShiftId(int shifTabletId);
+
+		public List<ShfitTabletReportResult> ShfitTabletReport(DateTime fromDate, DateTime toDate, int PortalId, int take = 10, int skip = 10);
 
 
 	}
