@@ -22,28 +22,28 @@ namespace SamtApi.Controllers.WebApi {
 
 
 		// GET: api/<ShiftCrewRewardFineController>
-		[HttpGet]
-		public IActionResult Get() {
+		[HttpPost("GetAll")]
+		public async Task< IActionResult> GetAll(ShiftCrewRewardFineSearchModel model) {
 
-			IQueryable<ShiftCrewRewardFine>? res =_shiftCrewRewardFineService.GetAll();
+			List<ShiftCrewRewardFine>? res = await _shiftCrewRewardFineService.GetAll(model);
 
 
 			if (res.Count() > 0) {
-				return Ok(OperationResult<IQueryable<ShiftCrewRewardFine>>.SuccessResult(res, res.Count()));
+				return Ok(OperationResult<List<ShiftCrewRewardFine>>.SuccessResult(res, res.Count()));
 			}
 			return Ok(OperationResult<string>.FailureResult(""));
 
 		}
 
 		// GET api/<ShiftCrewRewardFineController>/5
-		[HttpGet("{id}")]
-		public string Get(int id) {
-			return "value";
-		}
+		//[HttpGet("{id}")]
+		//public string Get(int id) {
+		//	return "value";
+		//}
 
 		// POST api/<ShiftCrewRewardFineController>
-		[HttpPost]
-		public async Task<IActionResult> Post(ShiftCrewRewardFineModel model) {
+		[HttpPost("Register")]
+		public async Task<IActionResult> Register(ShiftCrewRewardFineModel model) {
 			var res = await _shiftCrewRewardFineService.Register(model);
 			if (res > 0) {
 				return Ok(OperationResult<int>.SuccessResult(res));
@@ -52,8 +52,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// PUT api/<ShiftCrewRewardFineController>/5
-		[HttpPut]
-		public async Task<IActionResult> Put(ShiftCrewRewardFineModel model) {
+		[HttpPost("Update")]
+		public async Task<IActionResult> Update(ShiftCrewRewardFineModel model) {
 
 			var res =await _shiftCrewRewardFineService.Update(model);
 			if (res > 0) {
@@ -63,7 +63,7 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// DELETE api/<ShiftCrewRewardFineController>/5
-		[HttpDelete("{id}")]
+		[HttpPost("Delete/{id}")]
 		public async Task<IActionResult> Delete(int id) {
 
 			var res = await _shiftCrewRewardFineService.Delete(id);

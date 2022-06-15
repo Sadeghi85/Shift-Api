@@ -19,8 +19,8 @@ namespace SamtApi.Controllers.WebApi {
 
 
 		// GET: api/<ShiftTabletLocationController>
-		[HttpGet]
-		public IActionResult Get() {
+		[HttpPost("GetAll")]
+		public IActionResult GetAll() {
 			IQueryable<ShiftShiftTabletLocation>? res = _shiftTabletLocationService.GetAll();
 			if (res.Count() > 0) {
 				return Ok(OperationResult<IQueryable<ShiftShiftTabletLocation>>.SuccessResult(res, res.Count()));
@@ -29,8 +29,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// GET api/<ShiftTabletLocationController>/5
-		[HttpGet("{shiftTabletId}")]
-		public IActionResult Get(int shiftTabletId) {
+		[HttpPost("GetByTabletId/{shiftTabletId}")]
+		public IActionResult GetByTabletId(int shiftTabletId) {
 			List<ShiftShiftTabletLocation>? res = _shiftTabletLocationService.GetShiftLocattionsByshiftTabletId(shiftTabletId);
 			if (res.Count() > 0) {
 				return Ok(OperationResult<List<ShiftShiftTabletLocation>>.SuccessResult(res, res.Count()));
@@ -39,8 +39,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// POST api/<ShiftTabletLocationController>
-		[HttpPost]
-		public async Task<IActionResult> Post(ShiftTabletLocationModel model) {
+		[HttpPost("Register")]
+		public async Task<IActionResult> Register(ShiftTabletLocationModel model) {
 			var res = await _shiftTabletLocationService.RegisterShiftTabletLocation(model);
 			if (res > 0) {
 				return Ok(OperationResult<int>.SuccessResult(res));
@@ -49,8 +49,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// PUT api/<ShiftTabletLocationController>/5
-		[HttpPut]
-		public async Task<IActionResult> Put(ShiftTabletLocationModel model) {
+		[HttpPost("Update")]
+		public async Task<IActionResult> Update(ShiftTabletLocationModel model) {
 			var res = await _shiftTabletLocationService.Update(model);
 			if (res > 0) {
 				return Ok(OperationResult<int>.SuccessResult(res));
@@ -60,8 +60,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// DELETE api/<ShiftTabletLocationController>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id) {
-		}
+		//[HttpDelete("{id}")]
+		//public void Delete(int id) {
+		//}
 	}
 }

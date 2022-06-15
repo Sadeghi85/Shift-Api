@@ -1,5 +1,6 @@
 
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 
@@ -21,12 +22,12 @@ namespace SamtApi.Controllers.WebApi {
 		// GET: api/<ShiftController>
 		[HttpPost("GetAll")]
 		[ProducesDefaultResponseType]
-		public IActionResult GetAll(ShiftSearchModel model) {
+		public async Task< IActionResult> GetAll(ShiftSearchModel model) {
 
-			List<ShiftShift>? res = _shiftService.GetAll(model).ToList();
+			var res =await _shiftService.GetAll(model);
 
 			if (res.Count() > 0) {
-				return Ok(OperationResult<List<ShiftShift>?>.SuccessResult(res, res.Count()));
+				return Ok(OperationResult<List<ShiftResultModel>?>.SuccessResult(res, _shiftService.GetAllCount()));
 			}
 			return Ok(OperationResult<string>.FailureResult(""));
 		}
@@ -41,9 +42,6 @@ namespace SamtApi.Controllers.WebApi {
 				return Ok(OperationResult<List<ShiftShift>>.SuccessResult(res, res.Count()));
 			}
 			return Ok(OperationResult<string>.FailureResult(""));
-
-			
-			
 
 		}
 

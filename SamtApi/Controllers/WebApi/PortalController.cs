@@ -1,3 +1,4 @@
+using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +17,12 @@ namespace SamtApi.Controllers.WebApi {
 
 
 		// GET: api/<PortalController>
-		[HttpGet]
-		public IActionResult Get() {
-			IQueryable<Portal>? res = _portal.GetAll();
+		[HttpPost("GetAll")]
+		public async  Task<IActionResult> GetAll(PortalSearchModel model) {
+			var res = await _portal.GetAll( model);
 
-			if (res.Count() > 0) {
-				return Ok(OperationResult<IQueryable<Portal>>.SuccessResult(res, res.Count()));
+			if (res.Count > 0) {
+				return Ok(OperationResult<List<Portal>?>.SuccessResult(res, res.Count()));
 			}
 			return Ok(OperationResult<string>.FailureResult(""));
 
@@ -29,29 +30,29 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// GET api/<PortalController>/5
-		[HttpGet("{id}")]
-		public IActionResult Get(int id) {
+		//[HttpGet("{id}")]
+		//public IActionResult Get(int id) {
 
-			Portal res = _portal.GetById(id);
-			if (res!=null) {
-				return Ok(OperationResult<Portal>.SuccessResult(res));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
-		}
+		//	Portal res = _portal.GetById(id);
+		//	if (res!=null) {
+		//		return Ok(OperationResult<Portal>.SuccessResult(res));
+		//	}
+		//	return Ok(OperationResult<string>.FailureResult(""));
+		//}
 
-		// POST api/<PortalController>
-		[HttpPost]
-		public void Post([FromBody] string value) {
-		}
+		//// POST api/<PortalController>
+		//[HttpPost]
+		//public void Post([FromBody] string value) {
+		//}
 
-		// PUT api/<PortalController>/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value) {
-		}
+		//// PUT api/<PortalController>/5
+		//[HttpPut("{id}")]
+		//public void Put(int id, [FromBody] string value) {
+		//}
 
-		// DELETE api/<PortalController>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id) {
-		}
+		//// DELETE api/<PortalController>/5
+		//[HttpDelete("{id}")]
+		//public void Delete(int id) {
+		//}
 	}
 }

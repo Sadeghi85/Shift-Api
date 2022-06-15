@@ -23,11 +23,11 @@ namespace SamtApi.Controllers.WebApi {
 
 		// GET: api/<ShiftLocationController>
 		[HttpPost("GetAll")]
-		public IActionResult GetAll(ShiftLocationSearchModel model) {
-			List<ShiftLocationReturnModel> res = _shiftLocationService.GetAll(model);
+		public async Task< IActionResult> GetAll(ShiftLocationSearchModel model) {
+			List<ShiftLocationReturnModel>? res = await _shiftLocationService.GetAll(model);
 
 			if (res.Count() > 0) {
-				return Ok(OperationResult<List<ShiftLocationReturnModel>>.SuccessResult(res, res.Count()));
+				return Ok(OperationResult<List<ShiftLocationReturnModel>>.SuccessResult(res, _shiftLocationService.GetAllTotal()));
 			}
 			return Ok(OperationResult<string>.FailureResult(""));
 

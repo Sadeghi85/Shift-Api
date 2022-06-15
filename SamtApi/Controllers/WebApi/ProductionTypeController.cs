@@ -22,8 +22,8 @@ namespace SamtApi.Controllers.WebApi {
 
 
 		// GET: api/<ProductionTypeController>
-		[HttpGet]
-		public IActionResult Get() {
+		[HttpPost("GetAll")]
+		public IActionResult GetAll() {
 
 
 
@@ -43,7 +43,7 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// GET api/<ProductionTypeController>/5
-		[HttpGet("{id}")]
+		[HttpPost("Get/{id}")]
 		public IActionResult Get(int id) {
 			ShiftProductionType? res = _shiftProductionTypeService.FindById(id);
 
@@ -56,8 +56,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// POST api/<ProductionTypeController>
-		[HttpPost]
-		public async Task<IActionResult> Post(ShiftProductionTypeModel model) {
+		[HttpPost("Register")]
+		public async Task<IActionResult> Register(ShiftProductionTypeModel model) {
 			var res = await _shiftProductionTypeService.Register(model);
 
 			if (res > 0) {
@@ -67,8 +67,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// PUT api/<ProductionTypeController>/5
-		[HttpPut]
-		public async Task<OkObjectResult> PutAsync(ShiftProductionTypeModel model) {
+		[HttpPost("Update")]
+		public async Task<OkObjectResult> UpDate(ShiftProductionTypeModel model) {
 
 			var res = await _shiftProductionTypeService.Update(model);
 
@@ -79,8 +79,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// DELETE api/<ProductionTypeController>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id) {
-		}
+		//[HttpDelete("{id}")]
+		//public void Delete(int id) {
+		//}
 	}
 }

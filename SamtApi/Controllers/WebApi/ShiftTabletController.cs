@@ -1,4 +1,5 @@
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -25,25 +26,26 @@ namespace SamtApi.Controllers.WebApi {
 
 
 		// GET: api/<ShiftTabletController>
-		[HttpGet]
-		public IActionResult Get() {
+		[HttpPost("GetAll")]
+		public async Task< IActionResult> GetAll(ShiftTabletSearchModel model) {
 
 
 
-			IQueryable<ShiftShiftTablet>? res = _shiftTabletService.GetAll();
+			//IQueryable<ShiftShiftTablet>? res = _shiftTabletService.GetAll();
+			List<ShiftTabletResult>? res = await _shiftTabletService.GetAll(model);
+
 			if (res.Count() > 0) {
-				return Ok(OperationResult<IQueryable<ShiftShiftTablet>>.SuccessResult(res, res.Count()));
+				return Ok(OperationResult<List<ShiftTabletResult>?>.SuccessResult(res,_shiftTabletService.GetShiftTabletCount()));
 			}
 			return Ok(OperationResult<string>.FailureResult(""));
-
 
 		}
 
 		
 
 		// GET api/<ShiftTabletController>/5
-		[HttpGet("{portalId}")]
-		public IActionResult Get(int portalId) {
+		[HttpPost("GetByPortalId/{portalId}")]
+		public IActionResult GetByPortalId(int portalId) {
 			List<ShiftShiftTablet>? res = _shiftTabletService.GetTabletShiftByPortalId(portalId);
 			if (res.Count() > 0) {
 				return Ok(OperationResult<List<ShiftShiftTablet>>.SuccessResult(res, res.Count()));
@@ -53,8 +55,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// POST api/<ShiftTabletController>
-		[HttpPost]
-		public async Task<OkObjectResult> Post(ShiftTabletModel model) {
+		[HttpPost("Register")]
+		public async Task<OkObjectResult> Register(ShiftTabletModel model) {
 			
 			var res = await _shiftTabletService.RegisterShiftTablet(model);
 			if (res > 0) {
@@ -65,8 +67,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// PUT api/<ShiftTabletController>/5
-		[HttpPut]
-		public async Task<OkObjectResult> Put(ShiftTabletModel model) {
+		[HttpPost("Update")]
+		public async Task<OkObjectResult> Update(ShiftTabletModel model) {
 			var res = await _shiftTabletService.UpdateShifTablet(model);
 			if (res > 0) {
 				return Ok(OperationResult<int>.SuccessResult(res));
@@ -76,8 +78,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// DELETE api/<ShiftTabletController>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id) {
-		}
+		//[HttpDelete("{id}")]
+		//public void Delete(int id) {
+		//}
 	}
 }
