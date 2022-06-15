@@ -153,6 +153,52 @@ namespace Leopard.Repository {
 			return res;
 		}
 
+		public virtual int TotalCount(List<Expression<Func<T, bool>>> predicate) {
+			var res = 0;
+			try {
+				if (predicate.Count <= 0) {
+					return 0;
+				}
+				var queryresult = TEntity.Where(predicate[0]);
+				for (int i = 1; i < predicate.Count; i++) {
+					queryresult = queryresult.Where(predicate[i]);
+				}
+
+
+
+				res = queryresult.Count();
+			} catch (Exception ex) {
+				_logger.Error(ex, "db error, method: 'GetAllAsync'");
+			}
+			return res;
+		}
+
+
+		public Task<List<TResult>> GetAllWithPagingAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, int pageSize, int pageNumber, string orderDirection = "asc") {
+			var res = Task.FromResult(new List<TResult>());
+			try {
+				if (predicate.Count <= 0) {
+					return null;
+				}
+				var queryresult = TEntity.Where(predicate[0]);
+				for (int i = 1; i < predicate.Count; i++) {
+					queryresult = queryresult.Where(predicate[i]);
+				}
+
+				if (orderDirection == "asc") {
+					queryresult = queryresult.OrderBy(orderKeySelector);
+				} else {
+					queryresult = queryresult.OrderByDescending(orderKeySelector);
+				}
+
+
+				res = queryresult.Select(selectList).Skip(pageSize * pageNumber).Take(pageSize).ToListAsync();
+			} catch (Exception ex) {
+				_logger.Error(ex, "db error, method: 'GetAllAsync'");
+			}
+			return res;
+		}
+
 		public IQueryable<T> GetAll() {
 
 			IQueryable<T> query = TEntity;
@@ -182,5 +228,7 @@ namespace Leopard.Repository {
 			var res = TEntity.Find(id);
 			return res;
 		}
+
+		
 	}
 }
