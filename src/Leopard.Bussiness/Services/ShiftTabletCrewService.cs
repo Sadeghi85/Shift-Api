@@ -16,6 +16,7 @@ namespace Leopard.Bussiness.Services {
 
 		readonly private IShiftShiftTabletCrewStore _shiftShiftTabletCrewStore;
 		readonly private IShiftShiftTabletCrewReplacementStore _shiftShiftTabletCrewReplacementStore;
+		private List<Expression<Func<ShiftShiftTabletCrew, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftShiftTabletCrew, bool>>>();
 
 		public ShiftTabletCrewService(IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewReplacementStore shiftShiftTabletCrewReplacementStore) {
 			_shiftShiftTabletCrewStore = shiftShiftTabletCrewStore;
@@ -34,11 +35,57 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public IQueryable<ShiftShiftTabletCrew> GetAll() {
-			IQueryable<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll();
+		public Task<List<ShiftTabletCrewSearchResult>>? GetAll(ShiftTabletCrewSearchModel model) {
+
+
+			if(model.ShifTabletId==0 && model.AgentId==0 && model.EntranceTime==null && model.ExitTime == null && model.IsReplaced==null && string.IsNullOrWhiteSpace(model.AgentName) && string.IsNullOrWhiteSpace(model.ShiftTitle) && model.FromDate==null && model.ToDate == null) {
+				GetAllExpressions.Add(pp => true);
+
+			} else {
+				if (model.ShifTabletId != 0) {
+					GetAllExpressions.Add(pp => pp.ShifTabletId == model.ShifTabletId);
+				}
+				if (model.AgentId!=0) {
+					GetAllExpressions.Add(pp => pp.AgentId == model.AgentId);
+				}
+				if (model.EntranceTime!=null) {
+					GetAllExpressions.Add(pp=> pp.EntranceTime==model.EntranceTime);
+				}
+				if (model.IsReplaced != null) {
+					GetAllExpressions.Add(pp => pp.IsReplaced == model.IsReplaced);
+				}
+				if(!string.IsNullOrWhiteSpace( model.AgentName))
+				{	
+					GetAllExpressions.Add(PP =>  model.AgentName.Contains(PP.SamtAgent.FirstName) || model.AgentName.Contains(PP.SamtAgent.LastName));
+
+				}
+				if (string.IsNullOrWhiteSpace(model.ShiftTitle)) {
+					GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftShift.Title.Contains(model.ShiftTitle));
+				}
+
+				if(model.FromDate!=null && model.ToDate != null) {
+					GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftDate >= model.FromDate && pp.ShiftShiftTablet.ShiftDate <= model.ToDate);
+				}
+
+			}
+
+			Task<List<ShiftTabletCrewSearchResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletCrewSearchResult {ShifTabletId=pp.ShifTabletId , EntranceTime= pp.EntranceTime , ExitTime= pp.ExitTime , FisrtName= pp.SamtAgent.FirstName, LastName=pp.SamtAgent.LastName, AgentId=pp.AgentId, ShiftTitle= pp.ShiftShiftTablet.ShiftShift.Title , ResourceTitle= pp.SamtResourceType.Title} , pp => pp.Id, model.PageSize, model.PageNo);
+
+			//IQueryable<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll();
 
 			return res;
 		}
+
+		public int GetAllCount() {
+			var res = _shiftShiftTabletCrewStore.TotalCount(GetAllExpressions);
+			return res;
+		}
+
+		//public IQueryable<ShiftShiftTabletCrew> GetAll() {
+		//	IQueryable<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll();
+
+		//	return res;
+		//}
 
 		public List<ShiftShiftTabletCrew> GetByShiftId(int shifTabletId) {
 

@@ -1,4 +1,5 @@
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Leopard.Bussiness.Services.Interface {
 	public interface IShiftService {
 
 		public List<ShiftShift> FindByPortalId(int Id);
-		public IQueryable<ShiftShift> GetAll(ShiftSearchModel model);
+		public Task<List<ShiftResultModel>> GetAll(ShiftSearchModel model);
 
 		public IQueryable<ShiftShift> GetByPortalId(int portalId);
 
@@ -19,6 +20,8 @@ namespace Leopard.Bussiness.Services.Interface {
 		public Task<int> Update(ShiftModel model);
 
 		public Task<int> Delete(int id);
+
+		public int GetAllCount();
 
 
 

@@ -11,7 +11,7 @@ namespace Leopard.Bussiness.Services.Interface {
 		public  Task <int> Register(ShiftCrewRewardFineModel model);
 		public Task<int> Update(ShiftCrewRewardFineModel model);
 
-		public IQueryable<ShiftCrewRewardFine> GetAll();
+		public Task<List<ShiftCrewRewardFine>>? GetAll(ShiftCrewRewardFineSearchModel model);
 
 		public Task<int> Delete(int id);
 	}

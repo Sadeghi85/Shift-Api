@@ -4,6 +4,7 @@ using Leopard.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace Leopard.Bussiness.Services {
 	public class ShiftCrewRewardFineService : IShiftCrewRewardFineService {
 
 		readonly private IShiftCrewRewardFineStore _shiftCrewRewardFineStore;
+		List<Expression<Func<ShiftCrewRewardFine, bool>>> Expressions = new List<Expression<Func<ShiftCrewRewardFine, bool>>>();
 
 		public ShiftCrewRewardFineService(IShiftCrewRewardFineStore shiftCrewRewardFineStore) {
 			_shiftCrewRewardFineStore = shiftCrewRewardFineStore;
@@ -31,8 +33,42 @@ namespace Leopard.Bussiness.Services {
 		}
 
 		public IQueryable<ShiftCrewRewardFine> GetAll() {
-			return _shiftCrewRewardFineStore.GetAll();
+			throw new NotImplementedException();
 		}
+
+		public Task<List<ShiftCrewRewardFine>>? GetAll(ShiftCrewRewardFineSearchModel model) {
+
+			
+
+			if (model.IsRewardFine == null && model.RewardFineDate == null && string.IsNullOrWhiteSpace(model.Description) && string.IsNullOrWhiteSpace(model.CrewName)) {
+				Expressions.Add(pp => true);
+			} else {
+				if (model.IsRewardFine != null) {
+					Expressions.Add(pp => pp.IsReward == model.IsRewardFine);
+				}
+				if (model.RewardFineDate != null) {
+					Expressions.Add(pp => pp.CreateDateTime.Value.ToShortDateString() == model.RewardFineDate.Value.ToShortDateString());
+				}
+				if (!string.IsNullOrWhiteSpace(model.Description)) {
+					Expressions.Add(pp => pp.Description.Contains(model.Description));
+				}
+				if (!string.IsNullOrWhiteSpace(model.CrewName)) {
+					Expressions.Add(pp => model.CrewName.Contains(pp.ShiftShiftTabletCrew.SamtAgent.FirstName) || model.CrewName.Contains(pp.ShiftShiftTabletCrew.SamtAgent.LastName));
+				}
+				//expressions.Add(pp=> pp.IsDeleted==false);
+
+			}
+
+			Task<List<ShiftCrewRewardFine>>? res = _shiftCrewRewardFineStore.GetAllWithPagingAsync(Expressions, pp => new ShiftCrewRewardFine {Id= pp.Id , Ammount= pp.Ammount }, pp=> pp.Id , model.PageSize,model.PageNo );
+
+
+
+			//_shiftCrewRewardFineStore.GetAllAsync()
+
+			return res;
+		}
+
+		
 
 		public async Task<int> Register(ShiftCrewRewardFineModel model) {
 

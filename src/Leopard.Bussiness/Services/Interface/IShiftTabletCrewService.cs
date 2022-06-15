@@ -16,11 +16,14 @@ namespace Leopard.Bussiness.Services.Interface {
 
 		public Task<int> Replace(int replaced, int replacedBy);
 
-		public IQueryable<ShiftShiftTabletCrew> GetAll();
+		//public IQueryable<ShiftShiftTabletCrew> GetAll();
 
 		public List<ShiftShiftTabletCrew> GetByShiftId(int shifTabletId);
 
 		public List<ShfitTabletReportResult> ShfitTabletReport(DateTime fromDate, DateTime toDate, int PortalId, int take = 10, int skip = 10);
+
+		public Task<List<ShiftTabletCrewSearchResult>>? GetAll(ShiftTabletCrewSearchModel model);
+		public int GetAllCount();
 
 
 	}

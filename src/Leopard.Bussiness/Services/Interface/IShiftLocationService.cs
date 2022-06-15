@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services.Interface {
 	public interface IShiftLocationService {
-		public List<ShiftLocationReturnModel> GetAll(ShiftLocationSearchModel model);
+		public Task<List<ShiftLocationReturnModel>> GetAll(ShiftLocationSearchModel model);
 		public List<ShiftLocation> GetShiftLocationByPortalId(int portalId);
 
 		public Task<int> RegisterShiftLocation(ShiftLocationModel model);
 
 		public Task<int> Update(ShiftLocationModel model);
+
+		public int GetAllTotal();
 
 
 	}
