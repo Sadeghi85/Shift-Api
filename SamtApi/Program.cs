@@ -25,7 +25,8 @@ builder.Services.AddCors(options => {
 		policyBuilder => {
 			policyBuilder.WithOrigins(corsAllowedUrls.ToArray())
 								.AllowAnyHeader()
-								.AllowAnyMethod();
+								.AllowAnyMethod()
+								.AllowCredentials();
 		});
 });
 builder.Host.UseSerilog(serilogLogger, true);
