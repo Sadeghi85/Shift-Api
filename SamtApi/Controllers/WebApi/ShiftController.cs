@@ -50,12 +50,12 @@ namespace SamtApi.Controllers.WebApi {
 		// POST api/<ShiftController>
 		[HttpPost("Register")]
 		public async Task<IActionResult> Register(ShiftModel model) {
-			int res = await _shiftService.Register(model);
+			BaseResult? res = await _shiftService.Register(model);
 
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			if (res.Success) {
+				return Ok(OperationResult<BaseResult>.SuccessResult(res));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<BaseResult>.FailureResult(res.Message));
 
 		}
 
