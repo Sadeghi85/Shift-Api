@@ -35,7 +35,19 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public Task<List<ShiftTabletCrewSearchResult>>? GetAll(ShiftTabletCrewSearchModel model) {
+		public List<ShfitTabletReportResult> ShfitTabletReport(DateTime fromDate, DateTime toDate, int PortalId, int take = 10, int skip = 10) {
+			var res = _shiftShiftTabletCrewStore.GetAll().Where(pp => (pp.ShiftShiftTablet.ShiftDate >= fromDate && pp.ShiftShiftTablet.ShiftDate <= toDate)).Skip(skip).Take(take).Select(pp => new ShfitTabletReportResult { id = pp.Id, shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, firstName = pp.SamtAgent.FirstName, lastName = pp.SamtAgent.LastName, jobName = pp.SamtResourceType.Title, shiftDate = pp.ShiftShiftTablet.ShiftDate.Value, }).ToList();
+			//var list = new List<int>() { 1, 2, 3, 4, 5 };
+
+			//list.OrderBy()
+			//var list2 = list.Where(x => "x > 2");
+			//var list3 = list.Where(x => "x > X", new { X = 2 }); // with parameter
+
+
+			return res;
+		}
+
+		public Task<List<ShfitTabletReportResult>>? GetAll(ShiftTabletCrewSearchModel model) {
 
 
 			if(model.ShifTabletId==0 && model.AgentId==0 && model.EntranceTime==null && model.ExitTime == null && model.IsReplaced==null && string.IsNullOrWhiteSpace(model.AgentName) && string.IsNullOrWhiteSpace(model.ShiftTitle) && model.FromDate==null && model.ToDate == null) {
@@ -69,7 +81,9 @@ namespace Leopard.Bussiness.Services {
 
 			}
 
-			Task<List<ShiftTabletCrewSearchResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletCrewSearchResult {ShifTabletId=pp.ShifTabletId , EntranceTime= pp.EntranceTime , ExitTime= pp.ExitTime , FisrtName= pp.SamtAgent.FirstName, LastName=pp.SamtAgent.LastName, AgentId=pp.AgentId, ShiftTitle= pp.ShiftShiftTablet.ShiftShift.Title , ResourceTitle= pp.SamtResourceType.Title} , pp => pp.Id, model.PageSize, model.PageNo);
+			//Task<List<ShiftTabletCrewSearchResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletCrewSearchResult {ShifTabletId=pp.ShifTabletId , EntranceTime= pp.EntranceTime , ExitTime= pp.ExitTime , FisrtName= pp.SamtAgent.FirstName, LastName=pp.SamtAgent.LastName, AgentId=pp.AgentId, ShiftTitle= pp.ShiftShiftTablet.ShiftShift.Title , ResourceTitle= pp.SamtResourceType.Title} , pp => pp.Id, model.PageSize, model.PageNo, "desc");
+
+			Task<List<ShfitTabletReportResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShfitTabletReportResult  { id = pp.Id, shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, firstName = pp.SamtAgent.FirstName, lastName = pp.SamtAgent.LastName, jobName = pp.SamtResourceType.Title, shiftDate = pp.ShiftShiftTablet.ShiftDate.Value, }, pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo, "desc");
 
 			//IQueryable<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll();
 
@@ -116,17 +130,7 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public List<ShfitTabletReportResult> ShfitTabletReport(DateTime fromDate, DateTime toDate, int PortalId, int take=10 , int skip=10) {
-			var res = _shiftShiftTabletCrewStore.GetAll().Where(pp => (pp.ShiftShiftTablet.ShiftDate >= fromDate && pp.ShiftShiftTablet.ShiftDate <= toDate)).Skip(skip).Take(take) .Select(pp => new ShfitTabletReportResult { id=pp.Id,shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, firstName = pp.SamtAgent.FirstName, lastName = pp.SamtAgent.LastName, jobName =  pp.SamtResourceType.Title,  shiftDate=pp.ShiftShiftTablet.ShiftDate.Value, }).ToList();
-			//var list = new List<int>() { 1, 2, 3, 4, 5 };
-
-			//list.OrderBy()
-			//var list2 = list.Where(x => "x > 2");
-			//var list3 = list.Where(x => "x > X", new { X = 2 }); // with parameter
-
-
-			return res;
-		}
+		
 
 		
 

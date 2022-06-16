@@ -54,7 +54,7 @@ namespace Leopard.Bussiness.Services {
 				}
 			}
 
-			Task<List<ShiftResultModel>>? res = _shiftShiftStore.GetAllWithPagingAsync(Expressions, pp => new ShiftResultModel { Id= pp.Id, Title= pp.Title, PotalTitle=pp.Portal.Title , PortalId= pp.PortalId, EndTime= pp.EndTime, StartTime= pp.StartTime }, pp => pp.Title, model.PageSize, model.PageNo);
+			Task<List<ShiftResultModel>>? res = _shiftShiftStore.GetAllWithPagingAsync(Expressions, pp => new ShiftResultModel { Id= pp.Id, Title= pp.Title, PortalTitle=pp.Portal.Title , PortalId= pp.PortalId, EndTime= pp.EndTime, StartTime= pp.StartTime , ShiftTypeId=pp.ShiftType.Value , ShiftTypeTitle= GetShiftTypeTitleByShiftTypeId(pp.ShiftType) }, pp => pp.Id, model.PageSize, model.PageNo,"desc");
 
 
 
@@ -67,6 +67,17 @@ namespace Leopard.Bussiness.Services {
 			//}
 
 			return res;
+		}
+
+		private static string  GetShiftTypeTitleByShiftTypeId(int? ShiftTypeId) {
+			switch (ShiftTypeId) {
+				case 1: return "رژی";
+					break;
+				case 2: return "هماهنگی";
+					break;
+				default: return "نامشخص";
+
+			}
 		}
 
 		public int GetAllCount() {
@@ -82,12 +93,24 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public async Task<int> Register(ShiftModel model) {
+		public async Task<BaseResult> Register(ShiftModel model) {
 
-			ShiftShift shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId, ShiftType = model.ShiftType, StartTime = model.StartTime, EndTime = model.EndTime, IsDeleted = false };
+			BaseResult baseResult = new BaseResult();
 
-			var res = await _shiftShiftStore.InsertAsync(shiftShift);
-			return res;
+			var found= _shiftShiftStore.GetAll().Any(pp => pp.Title == model.Title);
+
+			if (found) {
+				baseResult.Success = false;
+				baseResult.Message = "نام انتخاب شده برای شیفت تکراری است.";
+			} else {
+
+				ShiftShift shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId, ShiftType = model.ShiftType, StartTime = model.StartTime, EndTime = model.EndTime, IsDeleted = false };
+
+				var res = await _shiftShiftStore.InsertAsync(shiftShift);
+
+			}
+			return baseResult;
+
 		}
 
 		public async Task<int> Update(ShiftModel model) {

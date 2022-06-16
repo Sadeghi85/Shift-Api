@@ -38,7 +38,7 @@ namespace Leopard.Bussiness.Services {
 
 			//var resCnt = _shiftLocationStore.TotalCount(Expressions);
 
-			var res = _shiftLocationStore.GetAllWithPagingAsync(Expressions, pp => new ShiftLocationReturnModel { Id = pp.Id, PortalId = pp.PortalId.Value, Title=pp.Title , PortalTitle = pp.Portal.Title }, pp=> pp.Id,model.PageSize,model.PageNo);
+			var res = _shiftLocationStore.GetAllWithPagingAsync(Expressions, pp => new ShiftLocationReturnModel { Id = pp.Id, PortalId = pp.PortalId.Value, Title=pp.Title , PortalTitle = pp.Portal.Title }, pp=> pp.Id,model.PageSize,model.PageNo, "desc");
 
 			return res;
 

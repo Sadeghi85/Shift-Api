@@ -15,7 +15,7 @@ namespace Leopard.Bussiness.Services.Interface {
 
 		public IQueryable<ShiftShift> GetByPortalId(int portalId);
 
-		public Task<int> Register(ShiftModel model);
+		public Task<BaseResult> Register(ShiftModel model);
 
 		public Task<int> Update(ShiftModel model);
 

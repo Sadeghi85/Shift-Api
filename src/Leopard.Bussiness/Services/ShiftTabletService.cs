@@ -42,7 +42,7 @@ namespace Leopard.Bussiness.Services {
 					GetAllExpressions.Add((pp) => pp.ProductionTypeId == model.ProductionTypeId);
 				}
 			}
-			Task<List<ShiftTabletResult>>? res =  _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletResult {Id= pp.Id, ProductionTypeId= pp.ProductionTypeId, ProductionTypeTitle= pp.ShiftProductionType.Title , ShiftDate= pp.ShiftDate, ShiftTitle= pp.ShiftShift.Title, ShiftId= pp.ShiftId }, pp => pp.Id, model.PageSize, model.PageSize);
+			Task<List<ShiftTabletResult>>? res =  _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletResult {Id= pp.Id, ProductionTypeId= pp.ProductionTypeId, ProductionTypeTitle= pp.ShiftProductionType.Title , ShiftDate= pp.ShiftDate, ShiftTitle= pp.ShiftShift.Title, ShiftId= pp.ShiftId , ShiftWorthPercent= pp.ShiftWorthPercent}, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 			
 			//IQueryable<ShiftShiftTablet>? res = _shiftShiftTabletStore.GetAll();
 			//_shiftShiftStore.GetAllAsync
@@ -66,6 +66,8 @@ namespace Leopard.Bussiness.Services {
 
 
 			public async Task<int> RegisterShiftTablet(ShiftTabletModel model) {
+
+			
 
 			ShiftShiftTablet shiftTablet = new ShiftShiftTablet { ShiftId = model.ShiftId, ShiftDate = model.ShiftDate, ProductionTypeId = model.ProductionTypeId, ShiftWorthPercent = model.ShiftWorthPercent, IsDeleted = false };
 			var foundShift = _shiftShiftStore.FindById(model.ShiftId);

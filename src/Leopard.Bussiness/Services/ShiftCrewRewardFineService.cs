@@ -59,7 +59,7 @@ namespace Leopard.Bussiness.Services {
 
 			}
 
-			Task<List<ShiftCrewRewardFine>>? res = _shiftCrewRewardFineStore.GetAllWithPagingAsync(Expressions, pp => new ShiftCrewRewardFine {Id= pp.Id , Ammount= pp.Ammount }, pp=> pp.Id , model.PageSize,model.PageNo );
+			Task<List<ShiftCrewRewardFine>>? res = _shiftCrewRewardFineStore.GetAllWithPagingAsync(Expressions, pp => new ShiftCrewRewardFine {Id= pp.Id , Ammount= pp.Ammount }, pp=> pp.Id , model.PageSize,model.PageNo , "desc" );
 
 
 

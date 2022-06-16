@@ -22,7 +22,7 @@ namespace Leopard.Bussiness.Services.Interface {
 
 		public List<ShfitTabletReportResult> ShfitTabletReport(DateTime fromDate, DateTime toDate, int PortalId, int take = 10, int skip = 10);
 
-		public Task<List<ShiftTabletCrewSearchResult>>? GetAll(ShiftTabletCrewSearchModel model);
+		public Task<List<ShfitTabletReportResult>>? GetAll(ShiftTabletCrewSearchModel model);
 		public int GetAllCount();
 
 
