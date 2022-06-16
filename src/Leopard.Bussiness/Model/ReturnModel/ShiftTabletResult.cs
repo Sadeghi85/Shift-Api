@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Model.ReturnModel {
-	public class ShiftTabletResult {
+	public class ShiftTabletResult  {
 		public int Id { get; set; } // ID (Primary key)
 		public int? ShiftId { get; set; } // ShiftID
 		public DateTime? ShiftDate { get; set; } // ShiftDate
@@ -13,5 +13,6 @@ namespace Leopard.Bussiness.Model.ReturnModel {
 
 		public string ShiftTitle { get; set; }
 		public string ProductionTypeTitle { get; set; }
+		public int? ShiftWorthPercent { get; set; }
 	}
 }
