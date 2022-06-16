@@ -14,7 +14,7 @@ namespace Leopard.Repository
             builder.ToTable("SAMT_Agents", "dbo");
             builder.HasKey(x => x.Id).HasName("PK_TelavatAgents").IsClustered();
 
-            builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
+            builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedNever();
             builder.Property(x => x.FirstName).HasColumnName(@"FirstName").HasColumnType("nvarchar(1000)").IsRequired(false).HasMaxLength(1000);
             builder.Property(x => x.LastName).HasColumnName(@"LastName").HasColumnType("nvarchar(1000)").IsRequired(false).HasMaxLength(1000);
             builder.Property(x => x.NationalCode).HasColumnName(@"NationalCode").HasColumnType("nvarchar(20)").IsRequired(false).HasMaxLength(20);
@@ -42,8 +42,9 @@ namespace Leopard.Repository
             builder.Property(x => x.SimaFilm).HasColumnName(@"SimaFilm").HasColumnType("bit").IsRequired(false);
             builder.Property(x => x.IsCompany).HasColumnName(@"IsCompany").HasColumnType("bit").IsRequired(false);
             builder.Property(x => x.PersonImage).HasColumnName(@"PersonImage").HasColumnType("nvarchar(500)").IsRequired(false).HasMaxLength(500);
-
-            builder.HasIndex(x => new { x.FirstName, x.LastName }).HasDatabaseName("IX_NAME");
+            builder.Property(x => x.NamMasterOfficeId).HasColumnName(@"NamMasterOfficeID").HasColumnType("int").IsRequired(false);
+            builder.Property(x => x.NamJobId).HasColumnName(@"NamJobID").HasColumnType("int").IsRequired(false);
+            builder.Property(x => x.NamCooperationTypeId).HasColumnName(@"NamCooperationTypeID").HasColumnType("int").IsRequired(false);
 
             InitializePartial(builder);
         }

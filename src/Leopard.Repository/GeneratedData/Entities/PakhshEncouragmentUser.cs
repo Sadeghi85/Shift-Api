@@ -28,11 +28,6 @@ namespace Leopard.Repository
         /// </summary>
         public virtual PakhshTabletShift PakhshTabletShift { get; set; } // FK_Pakhsh_EncouragmentUsers_Pakhsh_TabletShifts
 
-        /// <summary>
-        /// Parent SamtAgent pointed by [Pakhsh_EncouragmentUsers].([AgentId]) (FK_Pakhsh_EncouragmentUsers_SAMT_Agents)
-        /// </summary>
-        public virtual SamtAgent SamtAgent { get; set; } // FK_Pakhsh_EncouragmentUsers_SAMT_Agents
-
         public PakhshEncouragmentUser()
         {
             InitializePartial();

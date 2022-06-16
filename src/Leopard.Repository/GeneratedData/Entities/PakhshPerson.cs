@@ -31,13 +31,6 @@ namespace Leopard.Repository
         /// </summary>
         public virtual ICollection<PakhshTabletShiftLog> PakhshTabletShiftLogs_PreAgentId { get; set; } // Pakhsh_TabletShiftLogs.FK_Pakhsh_TabletShiftLogs_Pakhsh_Persons
 
-        // Foreign keys
-
-        /// <summary>
-        /// Parent SamtAgent pointed by [Pakhsh_Persons].([AgentId]) (FK_Pakhsh_Persons_SAMT_Agents)
-        /// </summary>
-        public virtual SamtAgent SamtAgent { get; set; } // FK_Pakhsh_Persons_SAMT_Agents
-
         public PakhshPerson()
         {
             PakhshTabletShiftLogs_NextAgentId = new List<PakhshTabletShiftLog>();

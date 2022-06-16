@@ -22,9 +22,6 @@ namespace Leopard.Repository
             builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.LastModifiedDateTime).HasColumnName(@"LastModifiedDateTime").HasColumnType("datetime").IsRequired(false);
 
-            // Foreign keys
-            builder.HasOne(a => a.SamtAgent).WithMany(b => b.PakhshPersons).HasForeignKey(c => c.AgentId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Pakhsh_Persons_SAMT_Agents");
-
             InitializePartial(builder);
         }
 

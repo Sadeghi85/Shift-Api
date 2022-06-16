@@ -55,7 +55,7 @@ namespace Leopard.Bussiness.Services {
 
 			} else {
 				if (model.ShifTabletId != 0) {
-					GetAllExpressions.Add(pp => pp.ShifTabletId == model.ShifTabletId);
+					GetAllExpressions.Add(pp => pp.ShiftTabletId == model.ShifTabletId);
 				}
 				if (model.AgentId!=0) {
 					GetAllExpressions.Add(pp => pp.AgentId == model.AgentId);
@@ -83,7 +83,7 @@ namespace Leopard.Bussiness.Services {
 
 			//Task<List<ShiftTabletCrewSearchResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletCrewSearchResult {ShifTabletId=pp.ShifTabletId , EntranceTime= pp.EntranceTime , ExitTime= pp.ExitTime , FisrtName= pp.SamtAgent.FirstName, LastName=pp.SamtAgent.LastName, AgentId=pp.AgentId, ShiftTitle= pp.ShiftShiftTablet.ShiftShift.Title , ResourceTitle= pp.SamtResourceType.Title} , pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
-			Task<List<ShfitTabletReportResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShfitTabletReportResult  { id = pp.Id, shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, firstName = pp.SamtAgent.FirstName, lastName = pp.SamtAgent.LastName, jobName = pp.SamtResourceType.Title, shiftDate = pp.ShiftShiftTablet.ShiftDate.Value, }, pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo, "desc");
+			Task<List<ShfitTabletReportResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShfitTabletReportResult  { id = pp.Id, shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, firstName = pp.SamtAgent.FirstName, lastName = pp.SamtAgent.LastName, jobName = pp.SamtResourceType.Title, shiftDate = pp.ShiftShiftTablet.ShiftDate.Value, PortalName= pp.ShiftShiftTablet.ShiftShift.Portal.Title , EntranceTime= pp.EntranceTime , ExitTime = pp.ExitTime }, pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo, "desc");
 
 			//IQueryable<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll();
 
@@ -103,7 +103,7 @@ namespace Leopard.Bussiness.Services {
 
 		public List<ShiftShiftTabletCrew> GetByShiftId(int shifTabletId) {
 
-			List<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll().Where(pp => pp.ShifTabletId == shifTabletId).ToList();
+			List<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll().Where(pp => pp.ShiftTabletId == shifTabletId).ToList();
 
 			return res;
 
@@ -111,7 +111,7 @@ namespace Leopard.Bussiness.Services {
 
 		public async Task<int> Register(ShiftTabletCrewModel model) {
 
-			ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew { AgentId = model.AgentId, EntranceTime = model.EntranceTime, ExitTime = model.ExitTime, IsReplaced = false, ResourceId = model.ResourceId, ShifTabletId = model.ShifTabletId };
+			ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew { AgentId = model.AgentId, EntranceTime = model.EntranceTime, ExitTime = model.ExitTime, IsReplaced = false, ResourceId = model.ResourceTypeId, ShiftTabletId = model.ShiftTabletId };
 			var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
 
 
@@ -138,10 +138,10 @@ namespace Leopard.Bussiness.Services {
 
 			var found = _shiftShiftTabletCrewStore.FindById(model.Id);
 
-			found.ShifTabletId = model.ShifTabletId;
+			found.ShiftTabletId = model.ShiftTabletId;
 			found.EntranceTime = model.EntranceTime;
 			found.ExitTime = model.ExitTime;
-			found.ResourceId = model.ResourceId;
+			found.ResourceId = model.ResourceTypeId;
 			found.AgentId = model.AgentId;
 
 			var res = await _shiftShiftTabletCrewStore.Update(found);

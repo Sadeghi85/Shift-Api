@@ -39,35 +39,19 @@ namespace Leopard.Repository
         public bool? SimaFilm { get; set; } // SimaFilm
         public bool? IsCompany { get; set; } // IsCompany
         public string PersonImage { get; set; } // PersonImage (length: 500)
+        public int? NamMasterOfficeId { get; set; } // NamMasterOfficeID
+        public int? NamJobId { get; set; } // NamJobID
+        public int? NamCooperationTypeId { get; set; } // NamCooperationTypeID
 
         // Reverse navigation
 
         /// <summary>
-        /// Child PakhshEncouragmentUsers where [Pakhsh_EncouragmentUsers].[AgentID] point to this entity (FK_Pakhsh_EncouragmentUsers_SAMT_Agents)
+        /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[AgentId] point to this entity (FK_Shift_ShiftTabletCrew_SAMT_Agents)
         /// </summary>
-        public virtual ICollection<PakhshEncouragmentUser> PakhshEncouragmentUsers { get; set; } // Pakhsh_EncouragmentUsers.FK_Pakhsh_EncouragmentUsers_SAMT_Agents
-
-        /// <summary>
-        /// Child PakhshPersons where [Pakhsh_Persons].[AgentID] point to this entity (FK_Pakhsh_Persons_SAMT_Agents)
-        /// </summary>
-        public virtual ICollection<PakhshPerson> PakhshPersons { get; set; } // Pakhsh_Persons.FK_Pakhsh_Persons_SAMT_Agents
-
-        /// <summary>
-        /// Child PakhshTabletShifts where [Pakhsh_TabletShifts].[AgentID] point to this entity (FK_Pakhsh_TabletShifts_SAMT_Agents)
-        /// </summary>
-        public virtual ICollection<PakhshTabletShift> PakhshTabletShifts { get; set; } // Pakhsh_TabletShifts.FK_Pakhsh_TabletShifts_SAMT_Agents
-
-        /// <summary>
-        /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[AgentId] point to this entity (FK_Shift_ShiftTableCrew_SAMT_Agents)
-        /// </summary>
-        public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTableCrew_SAMT_Agents
+        public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTabletCrew_SAMT_Agents
 
         public SamtAgent()
         {
-            IsDeleted = false;
-            PakhshEncouragmentUsers = new List<PakhshEncouragmentUser>();
-            PakhshPersons = new List<PakhshPerson>();
-            PakhshTabletShifts = new List<PakhshTabletShift>();
             ShiftShiftTabletCrews = new List<ShiftShiftTabletCrew>();
             InitializePartial();
         }

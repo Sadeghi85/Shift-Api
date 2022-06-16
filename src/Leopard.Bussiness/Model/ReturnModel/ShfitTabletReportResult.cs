@@ -30,5 +30,15 @@ namespace Leopard.Bussiness.Model.ReturnModel {
 				return persianDate.ToString(PersianDateTimeFormat.Date);
 			}
 		}
+
+		public string PortalName { get; set; }
+
+		public string AgentFullName { get {
+				return firstName + " " + lastName;
+			
+			} }
+
+		public DateTime EntranceTime { get; set; }
+		public DateTime ExitTime { get; set; }
 	}
 }

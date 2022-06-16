@@ -14,7 +14,7 @@ namespace Leopard.Repository
         public int Id { get; set; } // ID (Primary key)
         public int AgentId { get; set; } // AgentId
         public int ResourceId { get; set; } // ResourceId
-        public int ShifTabletId { get; set; } // ShifTabletId
+        public int ShiftTabletId { get; set; } // ShiftTabletId
         public DateTime EntranceTime { get; set; } // EntranceTime
         public DateTime ExitTime { get; set; } // ExitTime
         public int? CreatedBy { get; set; } // CreatedBy
@@ -44,9 +44,9 @@ namespace Leopard.Repository
         // Foreign keys
 
         /// <summary>
-        /// Parent SamtAgent pointed by [Shift_ShiftTabletCrew].([AgentId]) (FK_Shift_ShiftTableCrew_SAMT_Agents)
+        /// Parent SamtAgent pointed by [Shift_ShiftTabletCrew].([AgentId]) (FK_Shift_ShiftTabletCrew_SAMT_Agents)
         /// </summary>
-        public virtual SamtAgent SamtAgent { get; set; } // FK_Shift_ShiftTableCrew_SAMT_Agents
+        public virtual SamtAgent SamtAgent { get; set; } // FK_Shift_ShiftTabletCrew_SAMT_Agents
 
         /// <summary>
         /// Parent SamtResourceType pointed by [Shift_ShiftTabletCrew].([ResourceId]) (FK_Shift_ShiftTableCrew_SAMT_ResourceTypes)
@@ -54,7 +54,7 @@ namespace Leopard.Repository
         public virtual SamtResourceType SamtResourceType { get; set; } // FK_Shift_ShiftTableCrew_SAMT_ResourceTypes
 
         /// <summary>
-        /// Parent ShiftShiftTablet pointed by [Shift_ShiftTabletCrew].([ShifTabletId]) (FK_Shift_ShiftTableCrew_Shift_ShiftTablet)
+        /// Parent ShiftShiftTablet pointed by [Shift_ShiftTabletCrew].([ShiftTabletId]) (FK_Shift_ShiftTableCrew_Shift_ShiftTablet)
         /// </summary>
         public virtual ShiftShiftTablet ShiftShiftTablet { get; set; } // FK_Shift_ShiftTableCrew_Shift_ShiftTablet
 

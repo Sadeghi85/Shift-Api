@@ -218,6 +218,8 @@ namespace Leopard.Repository
         public DbSet<SamtGroup> SamtGroups { get; set; } // SAMT_Groups
         public DbSet<SamtHistory> SamtHistories { get; set; } // SAMT_History
         public DbSet<SamtHistoryAgent> SamtHistoryAgents { get; set; } // SAMT_HistoryAgent
+        public DbSet<SamtHrCooperationType> SamtHrCooperationTypes { get; set; } // SAMT_HRCooperationType
+        public DbSet<SamtHrjob> SamtHrjobs { get; set; } // SAMT_HRJOB
         public DbSet<SamtMojri> SamtMojris { get; set; } // SAMT_Mojri
         public DbSet<SamtMonthlyBudget> SamtMonthlyBudgets { get; set; } // SAMT_MonthlyBudgets
         public DbSet<SamtPresentationType> SamtPresentationTypes { get; set; } // SAMT_PresentationType
@@ -284,6 +286,7 @@ namespace Leopard.Repository
         public DbSet<Samtv3StrengthsWeakness> Samtv3StrengthsWeakness { get; set; } // SAMTV3_StrengthsWeaknesses
         public DbSet<Samtv3Topic> Samtv3Topic { get; set; } // SAMTV3_Topics
         public DbSet<ShabakeOmidClipArt> ShabakeOmidClipArts { get; set; } // shabakeOmidClipArts
+        public DbSet<ShiftAgentReport> ShiftAgentReports { get; set; } // Shift_AgentReport
         public DbSet<ShiftCrewRewardFine> ShiftCrewRewardFines { get; set; } // Shift_CrewRewardFine
         public DbSet<ShiftCrewRewardFineReason> ShiftCrewRewardFineReasons { get; set; } // Shift_CrewRewardFineReason
         public DbSet<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail
@@ -606,6 +609,8 @@ namespace Leopard.Repository
             modelBuilder.ApplyConfiguration(new SamtGroupConfiguration());
             modelBuilder.ApplyConfiguration(new SamtHistoryConfiguration());
             modelBuilder.ApplyConfiguration(new SamtHistoryAgentConfiguration());
+            modelBuilder.ApplyConfiguration(new SamtHrCooperationTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new SamtHrjobConfiguration());
             modelBuilder.ApplyConfiguration(new SamtMojriConfiguration());
             modelBuilder.ApplyConfiguration(new SamtMonthlyBudgetConfiguration());
             modelBuilder.ApplyConfiguration(new SamtPresentationTypeConfiguration());
@@ -672,6 +677,7 @@ namespace Leopard.Repository
             modelBuilder.ApplyConfiguration(new Samtv3StrengthsWeaknessConfiguration());
             modelBuilder.ApplyConfiguration(new Samtv3TopicConfiguration());
             modelBuilder.ApplyConfiguration(new ShabakeOmidClipArtConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftAgentReportConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftCrewRewardFineConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftCrewRewardFineReasonConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftEmploymentDetailConfiguration());
@@ -881,6 +887,7 @@ namespace Leopard.Repository
             modelBuilder.Entity<SpSearchConductorReturnModel>().HasNoKey();
             modelBuilder.Entity<SpSearchRegieConductorReturnModel>().HasNoKey();
             modelBuilder.Entity<SpSearchRegieConductorBySpecificVersionReturnModel>().HasNoKey();
+            modelBuilder.Entity<SpShiftGetShiftByPortalIdReturnModel>().HasNoKey();
             modelBuilder.Entity<SpTotalProductionProgressReturnModel>().HasNoKey();
             modelBuilder.Entity<SpUserHitReportReturnModel>().HasNoKey();
             modelBuilder.Entity<SpUserHitReport2ReturnModel>().HasNoKey();
@@ -10160,6 +10167,42 @@ namespace Leopard.Repository
             const string sqlCommand = "EXEC [dbo].[sp_searchRegieConductorBySpecificVersion] @broadcastDate, @simaUserChID, @vNum, @isClipArt";
             var procResultData = await Set<SpSearchRegieConductorBySpecificVersionReturnModel>()
                 .FromSqlRaw(sqlCommand, broadcastDateParam, simaUserChIdParam, vNumParam, isClipArtParam)
+                .ToListAsync();
+
+            return procResultData;
+        }
+
+        public List<SpShiftGetShiftByPortalIdReturnModel> SpShiftGetShiftByPortalId(int? portalId)
+        {
+            int procResult;
+            return SpShiftGetShiftByPortalId(portalId, out procResult);
+        }
+
+        public List<SpShiftGetShiftByPortalIdReturnModel> SpShiftGetShiftByPortalId(int? portalId, out int procResult)
+        {
+            var portalIdParam = new SqlParameter { ParameterName = "@portalId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = portalId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!portalId.HasValue)
+                portalIdParam.Value = DBNull.Value;
+
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+            const string sqlCommand = "EXEC @procResult = [dbo].[SP_ShiftGetShiftByPortalId] @portalId";
+            var procResultData = Set<SpShiftGetShiftByPortalIdReturnModel>()
+                .FromSqlRaw(sqlCommand, portalIdParam, procResultParam)
+                .ToList();
+
+            procResult = (int) procResultParam.Value;
+            return procResultData;
+        }
+
+        public async Task<List<SpShiftGetShiftByPortalIdReturnModel>> SpShiftGetShiftByPortalIdAsync(int? portalId)
+        {
+            var portalIdParam = new SqlParameter { ParameterName = "@portalId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = portalId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!portalId.HasValue)
+                portalIdParam.Value = DBNull.Value;
+
+            const string sqlCommand = "EXEC [dbo].[SP_ShiftGetShiftByPortalId] @portalId";
+            var procResultData = await Set<SpShiftGetShiftByPortalIdReturnModel>()
+                .FromSqlRaw(sqlCommand, portalIdParam)
                 .ToListAsync();
 
             return procResultData;

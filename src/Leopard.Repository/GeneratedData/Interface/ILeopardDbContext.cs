@@ -198,6 +198,8 @@ namespace Leopard.Repository
         DbSet<SamtGroup> SamtGroups { get; set; } // SAMT_Groups
         DbSet<SamtHistory> SamtHistories { get; set; } // SAMT_History
         DbSet<SamtHistoryAgent> SamtHistoryAgents { get; set; } // SAMT_HistoryAgent
+        DbSet<SamtHrCooperationType> SamtHrCooperationTypes { get; set; } // SAMT_HRCooperationType
+        DbSet<SamtHrjob> SamtHrjobs { get; set; } // SAMT_HRJOB
         DbSet<SamtMojri> SamtMojris { get; set; } // SAMT_Mojri
         DbSet<SamtMonthlyBudget> SamtMonthlyBudgets { get; set; } // SAMT_MonthlyBudgets
         DbSet<SamtPresentationType> SamtPresentationTypes { get; set; } // SAMT_PresentationType
@@ -264,6 +266,7 @@ namespace Leopard.Repository
         DbSet<Samtv3StrengthsWeakness> Samtv3StrengthsWeakness { get; set; } // SAMTV3_StrengthsWeaknesses
         DbSet<Samtv3Topic> Samtv3Topic { get; set; } // SAMTV3_Topics
         DbSet<ShabakeOmidClipArt> ShabakeOmidClipArts { get; set; } // shabakeOmidClipArts
+        DbSet<ShiftAgentReport> ShiftAgentReports { get; set; } // Shift_AgentReport
         DbSet<ShiftCrewRewardFine> ShiftCrewRewardFines { get; set; } // Shift_CrewRewardFine
         DbSet<ShiftCrewRewardFineReason> ShiftCrewRewardFineReasons { get; set; } // Shift_CrewRewardFineReason
         DbSet<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail
@@ -1015,6 +1018,10 @@ namespace Leopard.Repository
         List<SpSearchRegieConductorBySpecificVersionReturnModel> SpSearchRegieConductorBySpecificVersion(string broadcastDate, int? simaUserChId, int? vNum, bool? isClipArt);
         List<SpSearchRegieConductorBySpecificVersionReturnModel> SpSearchRegieConductorBySpecificVersion(string broadcastDate, int? simaUserChId, int? vNum, bool? isClipArt, out int procResult);
         Task<List<SpSearchRegieConductorBySpecificVersionReturnModel>> SpSearchRegieConductorBySpecificVersionAsync(string broadcastDate, int? simaUserChId, int? vNum, bool? isClipArt);
+
+        List<SpShiftGetShiftByPortalIdReturnModel> SpShiftGetShiftByPortalId(int? portalId);
+        List<SpShiftGetShiftByPortalIdReturnModel> SpShiftGetShiftByPortalId(int? portalId, out int procResult);
+        Task<List<SpShiftGetShiftByPortalIdReturnModel>> SpShiftGetShiftByPortalIdAsync(int? portalId);
 
         int SpSimaRightSideGauges(int? baseYear);
         // SpSimaRightSideGaugesAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)

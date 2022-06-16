@@ -28,7 +28,6 @@ namespace Leopard.Repository
 
             // Foreign keys
             builder.HasOne(a => a.PakhshPersonTitle).WithMany(b => b.PakhshTabletShifts).HasForeignKey(c => c.PersonTitleId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Pakhsh_TabletShifts_Pakhsh_PersonTitles");
-            builder.HasOne(a => a.SamtAgent).WithMany(b => b.PakhshTabletShifts).HasForeignKey(c => c.AgentId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Pakhsh_TabletShifts_SAMT_Agents");
 
             InitializePartial(builder);
         }
