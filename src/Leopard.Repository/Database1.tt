@@ -52,6 +52,8 @@
     //FilterSettings.TableFilters.Add(new RegexIncludeFilter("^[Cc]ustomer.*")); // This includes any remaining tables with names beginning with 'customer'
     FilterSettings.TableFilters.Add(new RegexExcludeFilter("AspNet.*")); // This excludes all tables starting with 'AspNet'
     FilterSettings.TableFilters.Add(new RegexExcludeFilter("__EFMigrationsHistory")); // This excludes a table called '__EFMigrationsHistory'
+    FilterSettings.TableFilters.Add(new RegexExcludeFilter("SAMT_Agents2")); // This excludes all tables starting with 'AspNet'
+
     //FilterSettings.ColumnFilters.Add(new RegexExcludeFilter("[Cc]reated[Aa]t.*")); // This excludes all columns starting with 'CreatedAt' e.g CreatedAtUtc
     //FilterSettings.ColumnFilters.Add(new RegexIncludeFilter(".*")); // Rarely used as it would only include columns with names listed here
     //FilterSettings.StoredProcedureFilters.Add(new RegexExcludeFilter("Calc")); // This excludes all stored procedures 'Calc' in the name
