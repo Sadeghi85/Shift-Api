@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Model {
-	public class PortalSearchModel:PagerViewModel {
-		
+	public class PortalSearchModel : PagerViewModel {
+
 
 		private string _title;
 
@@ -19,7 +19,8 @@ namespace Leopard.Bussiness.Model {
 				_title = value;
 			}
 		}
-		public int? PortalId { get; set; }
+
+		public int PortalId { get; set; }
 
 	}
 }

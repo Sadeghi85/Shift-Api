@@ -18,17 +18,19 @@ namespace Leopard.Bussiness.Services {
 
 			List<Expression<Func<Portal, bool>>> expressions = new List<Expression<Func<Portal, bool>>>();
 
-			if (string.IsNullOrEmpty(model.Title) && model.PortalId == null) {
-				expressions.Add(pp => true);
-			} else if (!string.IsNullOrEmpty(model.Title)) {
-					expressions.Add(pp => pp.Title.Contains(model.Title));
-			}else if (model.PortalId != null) {
-				expressions.Add(pp => pp.Id == model.PortalId.Value);
+
+			expressions.Add(pp => !pp.NoDashboard);
+
+			if (!string.IsNullOrEmpty(model.Title)) {
+				expressions.Add(pp => pp.Title.Contains(model.Title));
+			}
+			if (model.PortalId != 0) {
+				expressions.Add(pp => pp.Id == model.PortalId);
 			}
 
 
 
-			Task<List<Portal>>? res =	_portalStore.GetAllWithPagingAsync(expressions,t=> new Portal {Id=t.Id, Title= t.Title }, t => t.Id,model.PageSize,model.PageNo, "desc");
+			Task<List<Portal>>? res = _portalStore.GetAllWithPagingAsync(expressions, t => new Portal { Id = t.Id, Title = t.Title }, t => t.Id, model.PageSize, model.PageNo, "asc");
 
 
 
