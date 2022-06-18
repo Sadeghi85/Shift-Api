@@ -70,6 +70,26 @@ namespace Leopard.Repository {
 			}
 			return res;
 		}
+
+		public virtual  int Insert(T entity) {
+			var res = 0;
+			try {
+				//entity.CreateDateTime = DateTime.Now;
+				var theType = entity.GetType();
+				var CreateDateTimeProp = theType.GetProperty("CreateDateTime");
+				if (CreateDateTimeProp != null) {
+					CreateDateTimeProp.SetValue(entity, DateTime.Now);
+				}
+
+				TEntity.Add(entity);
+				
+				res = _ctx.Instance.SaveChanges();
+			} catch (Exception ex) {
+				_logger.Error(ex, "db error, method: 'InsertAsync'");
+			}
+			return res;
+		}
+
 		public virtual Task<int> InsertAsync(List<T> entities) {
 			var res = Task.FromResult(-1);
 			try {
