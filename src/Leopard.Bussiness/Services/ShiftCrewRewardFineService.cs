@@ -72,6 +72,8 @@ namespace Leopard.Bussiness.Services {
 
 		public async Task<int> Register(ShiftCrewRewardFineModel model) {
 
+
+
 			ShiftCrewRewardFine shiftCrewRewardFine = new ShiftCrewRewardFine { ShiftTabletCrewId = model.ShiftTabletCrewId, IsReward = model.IsReward, IsDeleted = false, Ammount = model.Ammount, Shiftpercentage = model.Shiftpercentage, Description = model.Description };
 			var res = await _shiftCrewRewardFineStore.InsertAsync(shiftCrewRewardFine);
 

@@ -271,6 +271,7 @@ namespace Leopard.Repository
         DbSet<ShiftCrewRewardFineReason> ShiftCrewRewardFineReasons { get; set; } // Shift_CrewRewardFineReason
         DbSet<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail
         DbSet<ShiftLocation> ShiftLocations { get; set; } // Shift_Location
+        DbSet<ShiftLog> ShiftLogs { get; set; } // Shift_Log
         DbSet<ShiftProductionNeededResource> ShiftProductionNeededResources { get; set; } // Shift_ProductionNeededResource
         DbSet<ShiftProductionType> ShiftProductionTypes { get; set; } // Shift_ProductionType
         DbSet<ShiftShift> ShiftShifts { get; set; } // Shift_Shift

@@ -1,4 +1,5 @@
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using System;
@@ -11,32 +12,40 @@ namespace Leopard.Bussiness.Services {
 	public class PortalService : IPortalService {
 
 		private readonly IPortalStore _portalStore;
+
+		List<Expression<Func<Portal, bool>>> GetAllExpressions = new List<Expression<Func<Portal, bool>>>();
 		public PortalService(IPortalStore portalStore) {
 			_portalStore = portalStore;
 		}
-		public Task<List<Portal>>? GetAll(PortalSearchModel model) {
+		public Task<List<PortalResult>>? GetAll(PortalSearchModel model) {
 
-			List<Expression<Func<Portal, bool>>> expressions = new List<Expression<Func<Portal, bool>>>();
+			GetAllExpressions.Add(pp => !pp.NoDashboard);
 
-
-			expressions.Add(pp => !pp.NoDashboard);
-
-			if (!string.IsNullOrEmpty(model.Title)) {
-				expressions.Add(pp => pp.Title.Contains(model.Title));
+			if (!string.IsNullOrEmpty(model.Title) && model.PortalId == 0) {
+				GetAllExpressions.Add(pp => true);
+			} else {
+				if (!string.IsNullOrWhiteSpace(model.Title)) {
+					GetAllExpressions.Add(pp=> model.Title.Contains(pp.Title));
+				}
+				if (model.PortalId!=0) {
+					GetAllExpressions.Add(pp=> pp.Id==model.PortalId);
+				}
 			}
-			if (model.PortalId != 0) {
-				expressions.Add(pp => pp.Id == model.PortalId);
-			}
 
-
-
-			Task<List<Portal>>? res = _portalStore.GetAllWithPagingAsync(expressions, t => new Portal { Id = t.Id, Title = t.Title }, t => t.Id, model.PageSize, model.PageNo, "asc");
-
-
+			Task<List<PortalResult>>? res = _portalStore.GetAllWithPagingAsync(GetAllExpressions, t => new PortalResult { Id = t.Id, Title = t.Title }, t => t.Id, model.PageSize, model.PageNo, "asc");
 
 			//IQueryable<Portal>? res = _portalStore.GetAll();
 			return res;
 		}
+
+		public int GetAllTotalCount() {
+
+			var res = _portalStore.TotalCount(GetAllExpressions);
+			return res;
+
+		}
+
+
 
 		public Portal GetById(int id) {
 			Portal? res = _portalStore.FindById(id);

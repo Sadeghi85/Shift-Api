@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services.Interface {
 	public interface IShiftTabletCrewService {
-		public Task<int> Register(ShiftTabletCrewModel model);
+		
 		public Task<int> Update(ShiftTabletCrewModel model);
 
 		public Task<int> Delete(int id);
@@ -24,6 +24,7 @@ namespace Leopard.Bussiness.Services.Interface {
 
 		public Task<List<ShfitTabletReportResult>>? GetAll(ShiftTabletCrewSearchModel model);
 		public int GetAllCount();
+		public  Task<BaseResult> Register(ShiftTabletCrewModel model);
 
 
 	}

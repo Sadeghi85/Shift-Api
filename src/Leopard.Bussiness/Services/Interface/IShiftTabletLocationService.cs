@@ -1,4 +1,5 @@
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Leopard.Bussiness.Services.Interface {
 		public IQueryable<ShiftShiftTabletLocation> GetAll();
 
 		public List<ShiftShiftTabletLocation> GetShiftLocattionsByshiftTabletId(int shiftTablettId);
-
+		public Task<List<ShiftTabletLocationResult>>? GetAll(ShiftTabletLocationSearchModel model);
 
 	}
 }

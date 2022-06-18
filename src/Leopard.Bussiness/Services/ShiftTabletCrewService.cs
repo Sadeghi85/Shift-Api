@@ -11,16 +11,25 @@ using System.Linq.Expressions;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core;
 
+
 namespace Leopard.Bussiness.Services {
-	public class ShiftTabletCrewService : IShiftTabletCrewService {
+	public class ShiftTabletCrewService : BaseService, IShiftTabletCrewService {
 
 		readonly private IShiftShiftTabletCrewStore _shiftShiftTabletCrewStore;
 		readonly private IShiftShiftTabletCrewReplacementStore _shiftShiftTabletCrewReplacementStore;
+		readonly private ISamtResourceTypeStore _samtResourceTypeStore;
+		readonly private ISamtAgentStore _agentStore;
+		readonly private IShiftShiftTabletStore _shiftShiftTabletStore;
+		readonly private IShiftLogStore _shiftLogStore;
 		private List<Expression<Func<ShiftShiftTabletCrew, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftShiftTabletCrew, bool>>>();
 
-		public ShiftTabletCrewService(IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewReplacementStore shiftShiftTabletCrewReplacementStore) {
+		public ShiftTabletCrewService(IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewReplacementStore shiftShiftTabletCrewReplacementStore, ISamtAgentStore samtAgentStore, ISamtResourceTypeStore samtResourceTypeStore, IShiftShiftTabletStore shiftShiftTabletStore , IShiftLogStore shiftLogStore) {
 			_shiftShiftTabletCrewStore = shiftShiftTabletCrewStore;
 			_shiftShiftTabletCrewReplacementStore = shiftShiftTabletCrewReplacementStore;
+			_agentStore = samtAgentStore;
+			_samtResourceTypeStore = samtResourceTypeStore;
+			_shiftShiftTabletStore = shiftShiftTabletStore;
+			_shiftLogStore = shiftLogStore;
 		}
 
 		public async Task<int> Delete(int id) {
@@ -109,13 +118,65 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public async Task<int> Register(ShiftTabletCrewModel model) {
-
-			ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew { AgentId = model.AgentId, EntranceTime = model.EntranceTime, ExitTime = model.ExitTime, IsReplaced = false, ResourceId = model.ResourceTypeId, ShiftTabletId = model.ShiftTabletId };
-			var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
+		public async Task<BaseResult> Register(ShiftTabletCrewModel model) {
 
 
-			return res;
+
+			try {
+
+				var foundAgent= _agentStore.FindById(model.AgentId);
+				var foundResourceType = _samtResourceTypeStore.FindById(model.ResourceTypeId);
+				var foundShiftTablet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
+				if (foundAgent == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه کارمند یافت نشد.";
+
+				} 
+				//else if (foundResourceType==null) {
+				//	BaseResult.Success= false;
+				//	BaseResult.Message = "شناسه سمت مورد نظر یافت نشد.";
+
+				//}
+				else if (foundShiftTablet==null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه لوح مورد نظر یافت نشد.";
+
+				}
+				else if (model.EntranceTime > model.ExitTime) {
+
+					BaseResult.Success = false;
+					BaseResult.Message = "زمان خروج باید بزرگتر از زمان ورود کارمند باشد.";
+
+				}
+				else {
+					ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew { AgentId = model.AgentId, EntranceTime = model.EntranceTime, ExitTime = model.ExitTime, IsReplaced = false, ResourceId = model.ResourceTypeId, ShiftTabletId = model.ShiftTabletId };
+					
+					var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
+					
+					
+				}
+			} catch (Exception ex) {
+
+				BaseResult.Success = false;
+
+				ShiftLog shiftLog = new ShiftLog { Message= ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				_shiftLogStore.ResetContext();
+
+
+				
+
+
+				//ShiftLog shiftLog = new ShiftLog { Message = "ok" };
+				var ss =  _shiftLogStore.Insert(shiftLog);
+
+
+				BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				
+			}
+
+
+			return BaseResult;
 		}
 
 		public async Task<int> Replace(int replaced, int replacedBy) {

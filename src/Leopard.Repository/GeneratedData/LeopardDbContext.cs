@@ -291,6 +291,7 @@ namespace Leopard.Repository
         public DbSet<ShiftCrewRewardFineReason> ShiftCrewRewardFineReasons { get; set; } // Shift_CrewRewardFineReason
         public DbSet<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail
         public DbSet<ShiftLocation> ShiftLocations { get; set; } // Shift_Location
+        public DbSet<ShiftLog> ShiftLogs { get; set; } // Shift_Log
         public DbSet<ShiftProductionNeededResource> ShiftProductionNeededResources { get; set; } // Shift_ProductionNeededResource
         public DbSet<ShiftProductionType> ShiftProductionTypes { get; set; } // Shift_ProductionType
         public DbSet<ShiftShift> ShiftShifts { get; set; } // Shift_Shift
@@ -682,6 +683,7 @@ namespace Leopard.Repository
             modelBuilder.ApplyConfiguration(new ShiftCrewRewardFineReasonConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftEmploymentDetailConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftLocationConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftLogConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftProductionNeededResourceConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftProductionTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftConfiguration());

@@ -66,7 +66,16 @@ builder.Host.UseLamar((context, registry) => {
 	// Lamar V8
 	registry.AddControllers();
 
-	registry.AddControllersWithViews();
+	registry.AddControllersWithViews().ConfigureApiBehaviorOptions(options => {
+		//https://docs.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-6.0#disable-automatic-400-response
+		// so we can manage error messages by our own hands
+		options.SuppressConsumesConstraintForFormFileParameters = true;
+		//options.SuppressInferBindingSourcesForParameters = true;
+		options.SuppressModelStateInvalidFilter = true;
+		options.SuppressMapClientErrors = true;
+		options.ClientErrorMapping[StatusCodes.Status404NotFound].Link =
+			"https://httpstatuses.com/404";
+	}); 
 	registry.AddSwaggerGen();
 
 	registry.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest)
