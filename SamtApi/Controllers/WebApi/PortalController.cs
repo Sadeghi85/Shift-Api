@@ -1,4 +1,5 @@
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +20,10 @@ namespace SamtApi.Controllers.WebApi {
 		// GET: api/<PortalController>
 		[HttpPost("GetAll")]
 		public async  Task<IActionResult> GetAll(PortalSearchModel model) {
-			var res = await _portal.GetAll( model);
+			List<PortalResult>? res = await _portal.GetAll( model);
 
 			if (res.Count > 0) {
-				return Ok(OperationResult<List<Portal>?>.SuccessResult(res, res.Count()));
+				return Ok(OperationResult<List<PortalResult>?>.SuccessResult(res, _portal.GetAllTotalCount()));
 			}
 			return Ok(OperationResult<string>.FailureResult(""));
 

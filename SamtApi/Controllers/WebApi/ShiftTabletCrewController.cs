@@ -311,12 +311,24 @@ namespace SamtApi.Controllers.WebApi {
 		// POST api/<ShiftTabletCrewController>
 		[HttpPost("Register")]
 		public async Task<IActionResult> Register(ShiftTabletCrewModel model) {
+
+			if (!ModelState.IsValid) {
+
+
+				var errors = ModelState.Select(x => x.Value.Errors)
+						   .Where(y => y.Count > 0)
+						   .ToList();
+
+
+				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
 			var res = await _shiftTabletCrewService.Register(model);
 
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<string>.FailureResult(res.Message+" "+res.SystemMessage));
 
 		}
 
