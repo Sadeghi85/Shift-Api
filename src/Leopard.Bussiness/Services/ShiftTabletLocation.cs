@@ -10,14 +10,21 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftTabletLocationService : IShiftTabletLocationService {
+	public class ShiftTabletLocationService : BaseService, IShiftTabletLocationService {
 
-		readonly private ShiftShiftTabletLocationStore _shiftShiftTabletLocationStore;
+		readonly private IShiftShiftTabletLocationStore _shiftShiftTabletLocationStore;
+		readonly private IShiftLogStore _shiftLogStore;
+		readonly private IShiftShiftTabletStore _shiftShiftTabletStore;
+		readonly private IShiftLocationStore _shiftLocationStore;
+
 
 		private List<Expression<Func<ShiftShiftTabletLocation, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftShiftTabletLocation, bool>>>();
 
-		public ShiftTabletLocationService(ShiftShiftTabletLocationStore shiftShiftTabletLocationStore) {
+		public ShiftTabletLocationService(IShiftShiftTabletLocationStore shiftShiftTabletLocationStore, IShiftLogStore shiftLogStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftLocationStore shiftLocationStore) {
 			_shiftShiftTabletLocationStore = shiftShiftTabletLocationStore;
+			_shiftLogStore = shiftLogStore;
+			_shiftShiftTabletStore = shiftShiftTabletStore;
+			_shiftLocationStore = shiftLocationStore;
 		}
 
 		public IQueryable<ShiftShiftTabletLocation> GetAll() {
@@ -31,22 +38,22 @@ namespace Leopard.Bussiness.Services {
 
 		public Task<List<ShiftTabletLocationResult>>? GetAll(ShiftTabletLocationSearchModel model) {
 
-			if (model.ShiftTabletId == 0 && string.IsNullOrWhiteSpace(model.ShiftTitle) && string.IsNullOrWhiteSpace(model.LocationTitle) && model.LocationId==0  ) {
+			if (model.ShiftTabletId == 0 && string.IsNullOrWhiteSpace(model.ShiftTitle) && string.IsNullOrWhiteSpace(model.LocationTitle) && model.LocationId == 0) {
 
-				GetAllExpressions.Add(pp=> true);
+				GetAllExpressions.Add(pp => true);
 
 			} else {
 				if (model.ShiftTabletId != null) {
-					GetAllExpressions.Add(pp => pp.ShiftTabletId==model.ShiftTabletId);
+					GetAllExpressions.Add(pp => pp.ShiftTabletId == model.ShiftTabletId);
 				}
 				if (!string.IsNullOrWhiteSpace(model.ShiftTitle)) {
-					GetAllExpressions.Add(pp=> model.ShiftTitle.Contains(pp.ShiftShiftTablet.ShiftShift.Title));
+					GetAllExpressions.Add(pp => model.ShiftTitle.Contains(pp.ShiftShiftTablet.ShiftShift.Title));
 				}
 				if (!string.IsNullOrWhiteSpace(model.LocationTitle)) {
-					GetAllExpressions.Add(pp=> model.LocationTitle.Contains(pp.ShiftLocation.Title));
+					GetAllExpressions.Add(pp => model.LocationTitle.Contains(pp.ShiftLocation.Title));
 				}
 				if (model.LocationId != 0) {
-					GetAllExpressions.Add(pp => pp.LocationId==model.LocationId); 
+					GetAllExpressions.Add(pp => pp.LocationId == model.LocationId);
 				}
 			}
 
@@ -69,13 +76,40 @@ namespace Leopard.Bussiness.Services {
 			return res;
 		}
 
-		public async Task<int> RegisterShiftTabletLocation(ShiftTabletLocationModel model) {
+		public async Task<BaseResult> RegisterShiftTabletLocation(ShiftTabletLocationModel model) {
 
+			try {
+				var foundShiftTablet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
+				var foundLocation = _shiftLocationStore.FindById(model.LocationId);
 
-			ShiftShiftTabletLocation tabletLocation = new ShiftShiftTabletLocation { LocationId = model.LocationId, ShiftTabletId = model.ShiftTabletId };
-			var res = await _shiftShiftTabletLocationStore.InsertAsync(tabletLocation);
+				if (foundShiftTablet==null) { 
+					BaseResult.Success=false;
+					BaseResult.Message = "لوح شیفت مورد نظر یافت نشد.";
+				
+				}
+				else if (foundLocation==null) {
 
-			return res;
+					BaseResult.Success = false;
+					BaseResult.Message = "محل برگزاری مورد نظر یافت نشد.";
+				}
+				else {
+
+					ShiftShiftTabletLocation tabletLocation = new ShiftShiftTabletLocation { LocationId = model.LocationId, ShiftTabletId = model.ShiftTabletId };
+					var res = await _shiftShiftTabletLocationStore.InsertAsync(tabletLocation);
+				}
+				
+			} catch (Exception ex) {
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+
+			return BaseResult;
 
 		}
 

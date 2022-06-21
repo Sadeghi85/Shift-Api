@@ -10,42 +10,48 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftLocationService : IShiftLocationService {
+	public class ShiftLocationService : BaseService, IShiftLocationService {
 
 		readonly private IShiftLocationStore _shiftLocationStore;
-		private List<Expression<Func<ShiftLocation, bool>>> Expressions { get; set; } = new List<Expression<Func<ShiftLocation, bool>>>();
+		readonly private IShiftLogStore _shiftLogStore;
+		readonly private IPortalStore _portalStore;
+		private List<Expression<Func<ShiftLocation, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftLocation, bool>>>();
 
-		public ShiftLocationService(IShiftLocationStore shiftLocationStore) {
+		public ShiftLocationService(IShiftLocationStore shiftLocationStore, IShiftLogStore shiftLogStore, IPortalStore portalStore) {
 			_shiftLocationStore = shiftLocationStore;
-			
+			_shiftLogStore = shiftLogStore;
+			_portalStore = portalStore;
 		}
-		
+
 
 		public Task<List<ShiftLocationReturnModel>> GetAll(ShiftLocationSearchModel model) {
 
 
-			if (string.IsNullOrWhiteSpace( model.Title) && model.PortalId==0) {
-				Expressions.Add(pp => true);
+			if (string.IsNullOrWhiteSpace(model.Title) && model.PortalId == 0 && model.Id == 0) {
+				GetAllExpressions.Add(pp => true);
 
 			} else {
-				if(!string.IsNullOrWhiteSpace(model.Title)) {
-					Expressions.Add(pp => model.Title.Contains(pp.Title));
+				if (!string.IsNullOrWhiteSpace(model.Title)) {
+					GetAllExpressions.Add(pp => model.Title.Contains(pp.Title));
 				}
 				if (model.PortalId != 0) {
-					Expressions.Add(pp => pp.PortalId == model.PortalId);
+					GetAllExpressions.Add(pp => pp.PortalId == model.PortalId);
+				}
+				if (model.Id != 0) {
+					GetAllExpressions.Add(pp => pp.Id == model.Id);
 				}
 			}
 
 			//var resCnt = _shiftLocationStore.TotalCount(Expressions);
 
-			var res = _shiftLocationStore.GetAllWithPagingAsync(Expressions, pp => new ShiftLocationReturnModel { Id = pp.Id, PortalId = pp.PortalId.Value, Title=pp.Title , PortalTitle = pp.Portal.Title }, pp=> pp.Id,model.PageSize,model.PageNo, "desc");
+			var res = _shiftLocationStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftLocationReturnModel { Id = pp.Id, PortalId = pp.PortalId.Value, Title = pp.Title, PortalTitle = pp.Portal.Title }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
 			return res;
 
 		}
 
 		public int GetAllTotal() {
-			var res = _shiftLocationStore.TotalCount(Expressions);
+			var res = _shiftLocationStore.TotalCount(GetAllExpressions);
 			return res;
 		}
 
@@ -56,11 +62,32 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public async Task<int> RegisterShiftLocation(ShiftLocationModel model) {
+		public async Task<BaseResult> RegisterShiftLocation(ShiftLocationModel model) {
 
-			ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId };
-			var res = await _shiftLocationStore.InsertAsync(shiftLocation);
-			return res;
+			try {
+
+				var foundPortal = _portalStore.FindById(model.PortalId);
+				if (foundPortal == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه پورتال یافت نشد.";
+				} 
+				
+				else {
+
+					ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId };
+					var res = await _shiftLocationStore.InsertAsync(shiftLocation);
+				}
+			} catch (Exception ex) {
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+			return BaseResult;
 
 		}
 
@@ -72,5 +99,5 @@ namespace Leopard.Bussiness.Services {
 			var res = await _shiftLocationStore.Update(found);
 			return res;
 		}
-}
+	}
 }

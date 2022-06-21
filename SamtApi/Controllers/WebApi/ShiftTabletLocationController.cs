@@ -22,30 +22,39 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAll")]
 		public IActionResult GetAll() {
 			IQueryable<ShiftShiftTabletLocation>? res = _shiftTabletLocationService.GetAll();
-			if (res.Count() > 0) {
-				return Ok(OperationResult<IQueryable<ShiftShiftTabletLocation>>.SuccessResult(res, res.Count()));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
+
+			return Ok(OperationResult<IQueryable<ShiftShiftTabletLocation>>.SuccessResult(res, res.Count()));
+
 		}
 
 		// GET api/<ShiftTabletLocationController>/5
 		[HttpPost("GetByTabletId/{shiftTabletId}")]
 		public IActionResult GetByTabletId(int shiftTabletId) {
 			List<ShiftShiftTabletLocation>? res = _shiftTabletLocationService.GetShiftLocattionsByshiftTabletId(shiftTabletId);
-			if (res.Count() > 0) {
-				return Ok(OperationResult<List<ShiftShiftTabletLocation>>.SuccessResult(res, res.Count()));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
+
+			return Ok(OperationResult<List<ShiftShiftTabletLocation>>.SuccessResult(res, res.Count()));
+
 		}
 
 		// POST api/<ShiftTabletLocationController>
 		[HttpPost("Register")]
 		public async Task<IActionResult> Register(ShiftTabletLocationModel model) {
-			var res = await _shiftTabletLocationService.RegisterShiftTabletLocation(model);
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			if (!ModelState.IsValid) {
+
+
+				var errors = ModelState.Select(x => x.Value.Errors)
+						   .Where(y => y.Count > 0)
+						   .ToList();
+
+
+				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			var res = await _shiftTabletLocationService.RegisterShiftTabletLocation(model);
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
+			}
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
 		// PUT api/<ShiftTabletLocationController>/5

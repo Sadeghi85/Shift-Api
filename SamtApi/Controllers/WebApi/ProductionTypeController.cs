@@ -1,4 +1,5 @@
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -23,15 +24,15 @@ namespace SamtApi.Controllers.WebApi {
 
 		// GET: api/<ProductionTypeController>
 		[HttpPost("GetAll")]
-		public IActionResult GetAll() {
+		public async Task< IActionResult> GetAll(ShiftProductionSearchModel model) {
 
 
 
 
 
-			IQueryable<ShiftProductionType>? res = _shiftProductionTypeService.GetAll();
-			if (res.Count() > 0) {
-				return Ok(OperationResult<IQueryable<ShiftProductionType>>.SuccessResult(res, res.Count()));
+			List<ShiftProductionResult>? res = await _shiftProductionTypeService.GetAll(model);
+			if (res.Count > 0) {
+				return Ok(OperationResult<List<ShiftProductionResult>>.SuccessResult(res, _shiftProductionTypeService.GetAllCount()));
 			}
 			return Ok(OperationResult<string>.FailureResult(""));
 
@@ -58,12 +59,24 @@ namespace SamtApi.Controllers.WebApi {
 		// POST api/<ProductionTypeController>
 		[HttpPost("Register")]
 		public async Task<IActionResult> Register(ShiftProductionTypeModel model) {
+
+			if (!ModelState.IsValid) {
+
+
+				var errors = ModelState.Select(x => x.Value.Errors)
+						   .Where(y => y.Count > 0)
+						   .ToList();
+
+				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
+
 			var res = await _shiftProductionTypeService.Register(model);
 
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
 		// PUT api/<ProductionTypeController>/5

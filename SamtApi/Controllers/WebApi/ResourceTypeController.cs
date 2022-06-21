@@ -25,12 +25,7 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(ResourceTypeSearchModel model) {
 			List<SamtResourceType>? res = await _resourceTypeService.GetAll(model);
-			if (res.Count() > 0) {
-				return Ok(OperationResult<List<SamtResourceType>>.SuccessResult(res, _resourceTypeService.GetAllCount()));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
-
-
+			return Ok(OperationResult<List<SamtResourceType>>.SuccessResult(res, _resourceTypeService.GetAllCount()));
 
 		}
 

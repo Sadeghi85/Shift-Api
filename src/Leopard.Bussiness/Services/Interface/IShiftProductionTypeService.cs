@@ -1,4 +1,5 @@
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,11 @@ using System.Threading.Tasks;
 namespace Leopard.Bussiness.Services.Interface {
 	public interface IShiftProductionTypeService {
 
-		
-		public IQueryable<ShiftProductionType> GetAll();
+
+		public Task<List<ShiftProductionResult>>? GetAll(ShiftProductionSearchModel model);
 		public ShiftProductionType FindById(int id);
-		public Task<int> Register(ShiftProductionTypeModel model);
+		public Task<BaseResult> Register(ShiftProductionTypeModel model);
 		public Task<int> Update(ShiftProductionTypeModel model);
+		public int GetAllCount();
 	}
 }

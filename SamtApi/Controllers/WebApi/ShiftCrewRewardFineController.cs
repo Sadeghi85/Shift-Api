@@ -17,21 +17,17 @@ namespace SamtApi.Controllers.WebApi {
 		public ShiftCrewRewardFineController(IShiftCrewRewardFineService shiftCrewRewardFineService) {
 			_shiftCrewRewardFineService = shiftCrewRewardFineService;
 		}
-	
+
 
 
 
 		// GET: api/<ShiftCrewRewardFineController>
 		[HttpPost("GetAll")]
-		public async Task< IActionResult> GetAll(ShiftCrewRewardFineSearchModel model) {
+		public async Task<IActionResult> GetAll(ShiftCrewRewardFineSearchModel model) {
 
 			List<ShiftCrewRewardFine>? res = await _shiftCrewRewardFineService.GetAll(model);
 
-
-			if (res.Count() > 0) {
-				return Ok(OperationResult<List<ShiftCrewRewardFine>>.SuccessResult(res, res.Count()));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<List<ShiftCrewRewardFine>>.SuccessResult(res, res.Count()));
 
 		}
 
@@ -44,18 +40,31 @@ namespace SamtApi.Controllers.WebApi {
 		// POST api/<ShiftCrewRewardFineController>
 		[HttpPost("Register")]
 		public async Task<IActionResult> Register(ShiftCrewRewardFineModel model) {
-			var res = await _shiftCrewRewardFineService.Register(model);
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+
+			if (!ModelState.IsValid) {
+
+
+				var errors = ModelState.Select(x => x.Value.Errors)
+						   .Where(y => y.Count > 0)
+						   .ToList();
+
+
+				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+
+			var res = await _shiftCrewRewardFineService.Register(model);
+			if (res .Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
+			}
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
 		// PUT api/<ShiftCrewRewardFineController>/5
 		[HttpPost("Update")]
 		public async Task<IActionResult> Update(ShiftCrewRewardFineModel model) {
 
-			var res =await _shiftCrewRewardFineService.Update(model);
+			var res = await _shiftCrewRewardFineService.Update(model);
 			if (res > 0) {
 				return Ok(OperationResult<int>.SuccessResult(res));
 			}

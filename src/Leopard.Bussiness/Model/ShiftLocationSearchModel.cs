@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace Leopard.Bussiness.Model {
 	public class ShiftLocationSearchModel : PagerViewModel {
 
+		public int Id { get; set; }
+
 		private string _title;
 		public string Title {
 			get {

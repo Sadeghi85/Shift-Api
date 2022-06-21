@@ -1,4 +1,5 @@
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using System;
@@ -9,13 +10,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftCrewRewardFineService : IShiftCrewRewardFineService {
+	public class ShiftCrewRewardFineService :BaseService, IShiftCrewRewardFineService {
 
 		readonly private IShiftCrewRewardFineStore _shiftCrewRewardFineStore;
+		readonly private IShiftLogStore _shiftLogStore;
+		
 		List<Expression<Func<ShiftCrewRewardFine, bool>>> Expressions = new List<Expression<Func<ShiftCrewRewardFine, bool>>>();
 
-		public ShiftCrewRewardFineService(IShiftCrewRewardFineStore shiftCrewRewardFineStore) {
+
+		public ShiftCrewRewardFineService(IShiftCrewRewardFineStore shiftCrewRewardFineStore, IShiftLogStore shiftLogStore) {
 			_shiftCrewRewardFineStore = shiftCrewRewardFineStore;
+			_shiftLogStore = shiftLogStore;
 		}
 
 		public async Task<int> Delete(int id) {
@@ -70,14 +75,26 @@ namespace Leopard.Bussiness.Services {
 
 		
 
-		public async Task<int> Register(ShiftCrewRewardFineModel model) {
+		public async Task<BaseResult> Register(ShiftCrewRewardFineModel model) {
 
 
 
-			ShiftCrewRewardFine shiftCrewRewardFine = new ShiftCrewRewardFine { ShiftTabletCrewId = model.ShiftTabletCrewId, IsReward = model.IsReward, IsDeleted = false, Ammount = model.Ammount, Shiftpercentage = model.Shiftpercentage, Description = model.Description };
-			var res = await _shiftCrewRewardFineStore.InsertAsync(shiftCrewRewardFine);
+			try {
+				ShiftCrewRewardFine shiftCrewRewardFine = new ShiftCrewRewardFine { ShiftTabletCrewId = model.ShiftTabletCrewId, IsReward = model.IsReward, IsDeleted = false, Ammount = model.Ammount, Shiftpercentage = model.Shiftpercentage, Description = model.Description };
+				var res = await _shiftCrewRewardFineStore.InsertAsync(shiftCrewRewardFine);
+			} catch (Exception ex) {
 
-			return res;
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+
+
+			return BaseResult;
 		}
 
 		public async Task<int> Update(ShiftCrewRewardFineModel model) {

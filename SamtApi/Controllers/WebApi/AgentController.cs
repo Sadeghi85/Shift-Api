@@ -23,12 +23,9 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<IActionResult> GetAll(AgentSearchModel model) {
 
 			List<AgentResultModel>? res = await _agentService.GetAll(model);
-			if (res.Count() > 0) {
-				return Ok(OperationResult<List<AgentResultModel>>.SuccessResult(res, _agentService.GetAllTotal()));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
 
-			
+			return Ok(OperationResult<List<AgentResultModel>>.SuccessResult(res, _agentService.GetAllTotal()));
+
 		}
 
 		// GET api/<AgentController>/5

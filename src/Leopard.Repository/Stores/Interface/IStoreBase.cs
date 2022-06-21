@@ -24,7 +24,7 @@ namespace Leopard.Repository {
 
 		public IQueryable<T> GetAll();
 
-		public  int Insert(T entity);
+		
 
 		List<Expression<Func<T, bool>>> ExpressionMaker();
 	}

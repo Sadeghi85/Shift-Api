@@ -14,20 +14,15 @@ namespace SamtApi.Controllers.WebApi {
 		private readonly IPortalService _portal;
 		public PortalController(IPortalService portal) {
 			_portal = portal;
-		}	
+		}
 
 
 		// GET: api/<PortalController>
 		[HttpPost("GetAll")]
-		public async  Task<IActionResult> GetAll(PortalSearchModel model) {
-			List<PortalResult>? res = await _portal.GetAll( model);
+		public async Task<IActionResult> GetAll(PortalSearchModel model) {
+			List<PortalResult>? res = await _portal.GetAll(model);
 
-			if (res.Count > 0) {
-				return Ok(OperationResult<List<PortalResult>?>.SuccessResult(res, _portal.GetAllTotalCount()));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
-
-
+			return Ok(OperationResult<List<PortalResult>?>.SuccessResult(res, _portal.GetAllTotalCount()));
 		}
 
 		// GET api/<PortalController>/5

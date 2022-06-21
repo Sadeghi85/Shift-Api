@@ -8,9 +8,7 @@ namespace Leopard.Bussiness.Model.ReturnModel {
 	public class BaseResult {
 		public string Message { get; set; } = "عملیات با موفقیت انجام شد.";
 		public bool Success { get; set; } = true;
-		public string SystemMessage { get; set; }
-
-
+		//public string SystemMessage { get; set; }
 		
 	}
 }

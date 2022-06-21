@@ -22,14 +22,12 @@ namespace SamtApi.Controllers.WebApi {
 		// GET: api/<ShiftController>
 		[HttpPost("GetAll")]
 		[ProducesDefaultResponseType]
-		public async Task< IActionResult> GetAll(ShiftSearchModel model) {
+		public async Task<IActionResult> GetAll(ShiftSearchModel model) {
 
-			var res =await _shiftService.GetAll(model);
+			var res = await _shiftService.GetAll(model);
 
-			if (res.Count() > 0) {
-				return Ok(OperationResult<List<ShiftResultModel>?>.SuccessResult(res, _shiftService.GetAllCount()));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<List<ShiftResultModel>?>.SuccessResult(res, _shiftService.GetAllCount()));
+
 		}
 
 		// GET api/<ShiftController>/5
@@ -38,10 +36,10 @@ namespace SamtApi.Controllers.WebApi {
 
 			List<ShiftShift>? res = _shiftService.FindByPortalId(portalId);
 
-			if (res.Count() > 0) {
-				return Ok(OperationResult<List<ShiftShift>>.SuccessResult(res, res.Count()));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
+
+			return Ok(OperationResult<List<ShiftShift>>.SuccessResult(res, res.Count()));
+
+
 
 		}
 
@@ -56,18 +54,16 @@ namespace SamtApi.Controllers.WebApi {
 				var errors = ModelState.Select(x => x.Value.Errors)
 						   .Where(y => y.Count > 0)
 						   .ToList();
-				
 
-				var errMsgs = string.Join(",", errors[0].Select(pp=> pp.ErrorMessage));
+
+				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
-
 			BaseResult? res = await _shiftService.Register(model);
-
 			if (res.Success) {
-				return Ok(OperationResult<BaseResult>.SuccessResult(res));
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
-			return Ok(OperationResult<BaseResult>.FailureResult(res.Message+" "+res.SystemMessage));
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
 

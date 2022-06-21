@@ -10,18 +10,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftService : IShiftService {
+	public class ShiftService : BaseService, IShiftService {
 
 		private readonly IShiftShiftStore _shiftShiftStore;
 		private readonly IPortalStore _portalStore;
+		private readonly IShiftLogStore _shiftLogStore;
 
-		private List<Expression<Func<ShiftShift, bool>>> Expressions { get; set; } = new List<Expression<Func<ShiftShift, bool>>>();
+		private List<Expression<Func<ShiftShift, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftShift, bool>>>();
 
 
-		public ShiftService(IShiftShiftStore shiftShiftStore, IPortalStore portalStore) {
+		public ShiftService(IShiftShiftStore shiftShiftStore, IPortalStore portalStore, IShiftLogStore shiftLogStore) {
 			_shiftShiftStore = shiftShiftStore;
 			_portalStore = portalStore;
-
+			_shiftLogStore = shiftLogStore;
 		}
 
 
@@ -46,18 +47,21 @@ namespace Leopard.Bussiness.Services {
 		public Task<List<ShiftResultModel>> GetAll(ShiftSearchModel model) {
 
 
-			if (string.IsNullOrWhiteSpace(model.Title) && model.PortalId == 0) {
-				Expressions.Add(pp => true);
+			if (string.IsNullOrWhiteSpace(model.Title) && model.PortalId == 0 && model.ShiftType == 0) {
+				GetAllExpressions.Add(pp => true);
 			} else {
 				if (model.PortalId != 0) {
-					Expressions.Add(pp => pp.PortalId == model.PortalId);
+					GetAllExpressions.Add(pp => pp.PortalId == model.PortalId);
 				}
 				if (!string.IsNullOrWhiteSpace(model.Title)) {
-					Expressions.Add(pp => model.Title.Contains(pp.Title));
+					GetAllExpressions.Add(pp => model.Title.Contains(pp.Title));
+				}
+				if (model.ShiftType != 0) {
+					GetAllExpressions.Add(pp => pp.ShiftType == model.ShiftType);
 				}
 			}
 
-			Task<List<ShiftResultModel>>? res = _shiftShiftStore.GetAllWithPagingAsync(Expressions, pp => new ShiftResultModel { Id = pp.Id, Title = pp.Title, PortalTitle = pp.Portal.Title, PortalId = pp.PortalId, EndTime = pp.EndTime, StartTime = pp.StartTime, ShiftTypeId = pp.ShiftType.Value, ShiftTypeTitle = GetShiftTypeTitleByShiftTypeId(pp.ShiftType) }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
+			Task<List<ShiftResultModel>>? res = _shiftShiftStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftResultModel { Id = pp.Id, Title = pp.Title, PortalTitle = pp.Portal.Title, PortalId = pp.PortalId, EndTime = pp.EndTime, StartTime = pp.StartTime, ShiftTypeId = pp.ShiftType.Value, ShiftTypeTitle = GetShiftTypeTitleByShiftTypeId(pp.ShiftType) }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
 
 
@@ -86,7 +90,7 @@ namespace Leopard.Bussiness.Services {
 		}
 
 		public int GetAllCount() {
-			var res = _shiftShiftStore.TotalCount(Expressions);
+			var res = _shiftShiftStore.TotalCount(GetAllExpressions);
 			return res;
 		}
 
@@ -100,7 +104,9 @@ namespace Leopard.Bussiness.Services {
 
 		public async Task<BaseResult> Register(ShiftModel model) {
 
-			BaseResult baseResult = new BaseResult();
+
+
+
 
 			var foundPortal = _portalStore.FindById(model.PortalId);
 
@@ -108,24 +114,16 @@ namespace Leopard.Bussiness.Services {
 				var found = _shiftShiftStore.GetAll().Any(pp => pp.Title == model.Title);
 
 				if (found) {
-					baseResult.Success = false;
-					baseResult.Message = "نام انتخاب شده برای شیفت تکراری است.";
+					BaseResult.Success = false;
+					BaseResult.Message = "نام انتخاب شده برای شیفت تکراری است.";
 
-				} 
-				//else if (foundPortal==null) {
-				//	baseResult.Success = false;
-				//	baseResult.Message = "شناسه پورتال شناسایی نشد.";
-				//} 
-				else if (model.StartTime > model.EndTime) {
-					baseResult.Success = false;
-					baseResult.Message = "ساعت شروع باید کوچتر از زمان پایان باشد.";
-				}
-
-				
-
-				else {
-
-
+				} else if (foundPortal == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه پورتال شناسایی نشد.";
+				} else if (model.StartTime > model.EndTime) {
+					BaseResult.Success = false;
+					BaseResult.Message = "ساعت شروع باید کوچتر از زمان پایان باشد.";
+				} else {
 
 					ShiftShift shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId, ShiftType = model.ShiftType, StartTime = model.StartTime, EndTime = model.EndTime, IsDeleted = false };
 
@@ -134,11 +132,17 @@ namespace Leopard.Bussiness.Services {
 				}
 			} catch (Exception ex) {
 
-				baseResult.Success = false;
-				baseResult.Message = "خطای سیستمی!";
-				baseResult.SystemMessage = ex.Message + "\r\n"+ ex.InnerException != null ? ex.InnerException.Message : "";
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+
 			}
-			return baseResult;
+			return BaseResult;
 
 		}
 

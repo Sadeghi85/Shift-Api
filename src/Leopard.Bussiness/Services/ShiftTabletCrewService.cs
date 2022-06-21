@@ -23,13 +23,14 @@ namespace Leopard.Bussiness.Services {
 		readonly private IShiftLogStore _shiftLogStore;
 		private List<Expression<Func<ShiftShiftTabletCrew, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftShiftTabletCrew, bool>>>();
 
-		public ShiftTabletCrewService(IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewReplacementStore shiftShiftTabletCrewReplacementStore, ISamtAgentStore samtAgentStore, ISamtResourceTypeStore samtResourceTypeStore, IShiftShiftTabletStore shiftShiftTabletStore , IShiftLogStore shiftLogStore) {
+		public ShiftTabletCrewService(IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewReplacementStore shiftShiftTabletCrewReplacementStore, ISamtAgentStore samtAgentStore, ISamtResourceTypeStore samtResourceTypeStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftLogStore shiftLogStore) {
 			_shiftShiftTabletCrewStore = shiftShiftTabletCrewStore;
 			_shiftShiftTabletCrewReplacementStore = shiftShiftTabletCrewReplacementStore;
 			_agentStore = samtAgentStore;
 			_samtResourceTypeStore = samtResourceTypeStore;
 			_shiftShiftTabletStore = shiftShiftTabletStore;
 			_shiftLogStore = shiftLogStore;
+			
 		}
 
 		public async Task<int> Delete(int id) {
@@ -120,8 +121,6 @@ namespace Leopard.Bussiness.Services {
 
 		public async Task<BaseResult> Register(ShiftTabletCrewModel model) {
 
-
-
 			try {
 
 				var foundAgent= _agentStore.FindById(model.AgentId);
@@ -131,12 +130,11 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه کارمند یافت نشد.";
 
-				} 
-				//else if (foundResourceType==null) {
-				//	BaseResult.Success= false;
-				//	BaseResult.Message = "شناسه سمت مورد نظر یافت نشد.";
+				} else if (foundResourceType == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه سمت مورد نظر یافت نشد.";
 
-				//}
+				} 
 				else if (foundShiftTablet==null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه لوح مورد نظر یافت نشد.";
@@ -152,27 +150,19 @@ namespace Leopard.Bussiness.Services {
 					ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew { AgentId = model.AgentId, EntranceTime = model.EntranceTime, ExitTime = model.ExitTime, IsReplaced = false, ResourceId = model.ResourceTypeId, ShiftTabletId = model.ShiftTabletId };
 					
 					var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
-					
-					
 				}
 			} catch (Exception ex) {
 
 				BaseResult.Success = false;
 
-				ShiftLog shiftLog = new ShiftLog { Message= ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
 
-				_shiftLogStore.ResetContext();
+				//_shiftLogStore.ResetContext();
 
-
-				
-
-
-				//ShiftLog shiftLog = new ShiftLog { Message = "ok" };
-				var ss =  _shiftLogStore.Insert(shiftLog);
-
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
 
 				BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
-				
+
 			}
 
 

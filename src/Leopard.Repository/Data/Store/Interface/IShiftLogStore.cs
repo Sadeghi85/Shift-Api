@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Leopard.Repository {
 	public partial interface IShiftLogStore : IStoreBase<ShiftLog> {
-		public void ResetContext();
+		//public void ResetContext();
 	}
 }

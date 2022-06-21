@@ -10,14 +10,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftTabletService : IShiftTabletService {
+	public class ShiftTabletService :BaseService, IShiftTabletService {
 
 		readonly private IShiftShiftTabletStore _shiftShiftTabletStore;
 		readonly private IShiftShiftStore _shiftShiftStore;
+		readonly private IShiftLogStore _shiftLogStore;
+		readonly private IShiftProductionTypeStore _shiftProductionTypeStore;
+
 		private List<Expression<Func<ShiftShiftTablet, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftShiftTablet, bool>>>();
-		public ShiftTabletService(IShiftShiftTabletStore shiftShiftTabletStore, IShiftShiftStore shiftShiftStore) {
+		public ShiftTabletService(IShiftShiftTabletStore shiftShiftTabletStore, IShiftShiftStore shiftShiftStore, IShiftLogStore shiftLogStore, IShiftProductionTypeStore shiftProductionTypeStore) {
 			_shiftShiftTabletStore = shiftShiftTabletStore;
 			_shiftShiftStore = shiftShiftStore;
+			_shiftLogStore = shiftLogStore;
+			_shiftProductionTypeStore = shiftProductionTypeStore;	
 		}
 
 		public List<ShiftShiftTablet> GetTabletShiftByPortalId(int portalId) {
@@ -65,18 +70,38 @@ namespace Leopard.Bussiness.Services {
 		}
 
 
-			public async Task<int> RegisterShiftTablet(ShiftTabletModel model) {
+			public async Task<BaseResult> RegisterShiftTablet(ShiftTabletModel model) {
 
-			
+			try {
+				var foundProductionType = _shiftProductionTypeStore.FindById(model.ProductionTypeId);
 
-			ShiftShiftTablet shiftTablet = new ShiftShiftTablet { ShiftId = model.ShiftId, ShiftDate = model.ShiftDate, ProductionTypeId = model.ProductionTypeId, ShiftWorthPercent = model.ShiftWorthPercent, IsDeleted = false };
-			var foundShift = _shiftShiftStore.FindById(model.ShiftId);
-			shiftTablet.ShiftTime = foundShift.EndTime - foundShift.StartTime;
+				var foundShift= _shiftShiftStore.FindById(model.ShiftId);
+				if (foundShift==null) { 
+					BaseResult.Success= false;
+					BaseResult.Message = "شیفت مورد نظر جستجو نشد.";
+				} 
+				else if (foundProductionType==null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "نوع تولید شیفت یافت نشد.";
+				}
+				else {
+					ShiftShiftTablet shiftTablet = new ShiftShiftTablet { ShiftId = model.ShiftId, ShiftDate = model.ShiftDate, ProductionTypeId = model.ProductionTypeId, ShiftWorthPercent = model.ShiftWorthPercent, IsDeleted = false };
+					foundShift = _shiftShiftStore.FindById(model.ShiftId);
+					shiftTablet.ShiftTime = foundShift.EndTime - foundShift.StartTime;
 
-			int res = await _shiftShiftTabletStore.InsertAsync(shiftTablet);
+					int res = await _shiftShiftTabletStore.InsertAsync(shiftTablet);
+				}
+			} catch (Exception ex) {
 
-			return res;
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
 
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+			return BaseResult;
 		}
 
 		public async Task<int> UpdateShifTablet(ShiftTabletModel model) {

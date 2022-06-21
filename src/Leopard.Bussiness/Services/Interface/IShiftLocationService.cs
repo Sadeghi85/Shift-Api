@@ -12,7 +12,7 @@ namespace Leopard.Bussiness.Services.Interface {
 		public Task<List<ShiftLocationReturnModel>> GetAll(ShiftLocationSearchModel model);
 		public List<ShiftLocation> GetShiftLocationByPortalId(int portalId);
 
-		public Task<int> RegisterShiftLocation(ShiftLocationModel model);
+		public Task<BaseResult> RegisterShiftLocation(ShiftLocationModel model);
 
 		public Task<int> Update(ShiftLocationModel model);
 

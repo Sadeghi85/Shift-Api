@@ -10,10 +10,9 @@ using System.Threading.Tasks;
 namespace Leopard.Bussiness.Services {
 	public class BaseService {
 
-		
+		protected BaseResult BaseResult { get; set; }= new BaseResult();
 
-		public BaseResult BaseResult { get; set; }= new BaseResult();
-
+		}
 
 	}
-}
+

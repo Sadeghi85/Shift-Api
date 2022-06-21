@@ -13,11 +13,11 @@ namespace SamtApi.Controllers.WebApi {
 	[ApiController]
 	public class ShiftTabletController : ControllerBase {
 
-		
+
 
 		readonly private IShiftTabletService _shiftTabletService;
 
-		
+
 
 		public ShiftTabletController(IShiftTabletService shiftTabletService) {
 			_shiftTabletService = shiftTabletService;
@@ -27,42 +27,47 @@ namespace SamtApi.Controllers.WebApi {
 
 		// GET: api/<ShiftTabletController>
 		[HttpPost("GetAll")]
-		public async Task< IActionResult> GetAll(ShiftTabletSearchModel model) {
+		public async Task<IActionResult> GetAll(ShiftTabletSearchModel model) {
 
 
 
 			//IQueryable<ShiftShiftTablet>? res = _shiftTabletService.GetAll();
 			List<ShiftTabletResult>? res = await _shiftTabletService.GetAll(model);
-
-			if (res.Count() > 0) {
-				return Ok(OperationResult<List<ShiftTabletResult>?>.SuccessResult(res,_shiftTabletService.GetShiftTabletCount()));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<List<ShiftTabletResult>?>.SuccessResult(res, _shiftTabletService.GetShiftTabletCount()));
 
 		}
 
-		
+
 
 		// GET api/<ShiftTabletController>/5
 		[HttpPost("GetByPortalId/{portalId}")]
 		public IActionResult GetByPortalId(int portalId) {
 			List<ShiftShiftTablet>? res = _shiftTabletService.GetTabletShiftByPortalId(portalId);
-			if (res.Count() > 0) {
-				return Ok(OperationResult<List<ShiftShiftTablet>>.SuccessResult(res, res.Count()));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
+
+			return Ok(OperationResult<List<ShiftShiftTablet>>.SuccessResult(res, res.Count()));
 
 		}
 
 		// POST api/<ShiftTabletController>
 		[HttpPost("Register")]
 		public async Task<OkObjectResult> Register(ShiftTabletModel model) {
-			
-			var res = await _shiftTabletService.RegisterShiftTablet(model);
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			if (!ModelState.IsValid) {
+
+
+				var errors = ModelState.Select(x => x.Value.Errors)
+						   .Where(y => y.Count > 0)
+						   .ToList();
+
+
+				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+
+			var res = await _shiftTabletService.RegisterShiftTablet(model);
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
+			}
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 
 		}
 

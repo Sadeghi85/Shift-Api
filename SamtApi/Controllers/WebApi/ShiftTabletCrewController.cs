@@ -41,10 +41,8 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(ShiftTabletCrewSearchModel model) {
 			List<ShfitTabletReportResult>? res = await _shiftTabletCrewService.GetAll(model);
-			if (res.Count() > 0) {
-				return Ok(OperationResult<List<ShfitTabletReportResult>?>.SuccessResult(res, _shiftTabletCrewService.GetAllCount()));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<List<ShfitTabletReportResult>?>.SuccessResult(res, _shiftTabletCrewService.GetAllCount()));
+
 		}
 
 		[HttpPost("GetGeExcel")]
@@ -302,10 +300,9 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetByShiftId/{id}")]
 		public IActionResult GetByShiftId(int id) {
 			List<ShiftShiftTabletCrew>? res = _shiftTabletCrewService.GetByShiftId(id);
-			if (res.Count() > 0) {
-				return Ok(OperationResult<List<ShiftShiftTabletCrew>>.SuccessResult(res, res.Count()));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
+
+			return Ok(OperationResult<List<ShiftShiftTabletCrew>>.SuccessResult(res, res.Count()));
+
 		}
 
 		// POST api/<ShiftTabletCrewController>
@@ -328,7 +325,7 @@ namespace SamtApi.Controllers.WebApi {
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
-			return Ok(OperationResult<string>.FailureResult(res.Message+" "+res.SystemMessage));
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 
 		}
 
