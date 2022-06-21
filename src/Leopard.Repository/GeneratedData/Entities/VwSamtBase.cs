@@ -46,6 +46,7 @@ namespace Leopard.Repository
         public string ProductionStartDate { get; set; } // ProductionStartDate (length: 10)
         public string ProductionEndtDate { get; set; } // ProductionEndtDate (length: 10)
         public int? ProductionMode { get; set; } // ProductionMode
+        public int? LivePercent { get; set; } // LivePercent
 
         public VwSamtBase()
         {

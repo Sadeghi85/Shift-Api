@@ -21,7 +21,6 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(PortalSearchModel model) {
 			List<PortalResult>? res = await _portal.GetAll(model);
-
 			return Ok(OperationResult<List<PortalResult>?>.SuccessResult(res, _portal.GetAllTotalCount()));
 		}
 

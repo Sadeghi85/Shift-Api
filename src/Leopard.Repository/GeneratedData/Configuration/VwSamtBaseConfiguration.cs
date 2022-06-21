@@ -49,6 +49,7 @@ namespace Leopard.Repository
             builder.Property(x => x.ProductionStartDate).HasColumnName(@"ProductionStartDate").HasColumnType("nchar(10)").IsRequired(false).IsFixedLength().HasMaxLength(10);
             builder.Property(x => x.ProductionEndtDate).HasColumnName(@"ProductionEndtDate").HasColumnType("nchar(10)").IsRequired(false).IsFixedLength().HasMaxLength(10);
             builder.Property(x => x.ProductionMode).HasColumnName(@"ProductionMode").HasColumnType("int").IsRequired(false);
+            builder.Property(x => x.LivePercent).HasColumnName(@"LivePercent").HasColumnType("int").IsRequired(false);
 
             InitializePartial(builder);
         }

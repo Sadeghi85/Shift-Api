@@ -294,11 +294,14 @@ namespace Leopard.Repository
         public DbSet<ShiftLog> ShiftLogs { get; set; } // Shift_Log
         public DbSet<ShiftProductionNeededResource> ShiftProductionNeededResources { get; set; } // Shift_ProductionNeededResource
         public DbSet<ShiftProductionType> ShiftProductionTypes { get; set; } // Shift_ProductionType
+        public DbSet<ShiftRevisionProblem> ShiftRevisionProblems { get; set; } // Shift_RevisionProblem
         public DbSet<ShiftShift> ShiftShifts { get; set; } // Shift_Shift
         public DbSet<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet
         public DbSet<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew
         public DbSet<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement
         public DbSet<ShiftShiftTabletLocation> ShiftShiftTabletLocations { get; set; } // Shift_ShiftTabletLocation
+        public DbSet<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges
+        public DbSet<ShiftTabletScriptSupervisorDescription> ShiftTabletScriptSupervisorDescriptions { get; set; } // Shift_TabletScriptSupervisorDescription
         public DbSet<SimaDataLog> SimaDataLogs { get; set; } // SimaDataLogs
         public DbSet<SimaRequest> SimaRequests { get; set; } // SIMA_Requests
         public DbSet<SimaTempid> SimaTempids { get; set; } // SIMA_TEMPIDS
@@ -686,11 +689,14 @@ namespace Leopard.Repository
             modelBuilder.ApplyConfiguration(new ShiftLogConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftProductionNeededResourceConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftProductionTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftRevisionProblemConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewReplacementConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletLocationConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftTabletConductorChanxConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftTabletScriptSupervisorDescriptionConfiguration());
             modelBuilder.ApplyConfiguration(new SimaDataLogConfiguration());
             modelBuilder.ApplyConfiguration(new SimaRequestConfiguration());
             modelBuilder.ApplyConfiguration(new SimaTempidConfiguration());

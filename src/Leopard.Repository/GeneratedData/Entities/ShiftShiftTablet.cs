@@ -30,6 +30,11 @@ namespace Leopard.Repository
         // Reverse navigation
 
         /// <summary>
+        /// Child ShiftRevisionProblems where [Shift_RevisionProblem].[ShiftTabletId] point to this entity (FK_Shift_RevisionProblem_Shift_ShiftTablet)
+        /// </summary>
+        public virtual ICollection<ShiftRevisionProblem> ShiftRevisionProblems { get; set; } // Shift_RevisionProblem.FK_Shift_RevisionProblem_Shift_ShiftTablet
+
+        /// <summary>
         /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[ShiftTabletId] point to this entity (FK_Shift_ShiftTableCrew_Shift_ShiftTablet)
         /// </summary>
         public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTableCrew_Shift_ShiftTablet
@@ -38,6 +43,16 @@ namespace Leopard.Repository
         /// Child ShiftShiftTabletLocations where [Shift_ShiftTabletLocation].[ShiftTabletID] point to this entity (FK_ShiftExecutionLocation_ShiftExecution)
         /// </summary>
         public virtual ICollection<ShiftShiftTabletLocation> ShiftShiftTabletLocations { get; set; } // Shift_ShiftTabletLocation.FK_ShiftExecutionLocation_ShiftExecution
+
+        /// <summary>
+        /// Child ShiftTabletConductorChanges where [Shift_TabletConductorChanges].[ShiftTabletId] point to this entity (FK_Shift_TabletConductorChanges_Shift_ShiftTablet)
+        /// </summary>
+        public virtual ICollection<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges.FK_Shift_TabletConductorChanges_Shift_ShiftTablet
+
+        /// <summary>
+        /// Child ShiftTabletScriptSupervisorDescriptions where [Shift_TabletScriptSupervisorDescription].[ShiftTabletId] point to this entity (FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet)
+        /// </summary>
+        public virtual ICollection<ShiftTabletScriptSupervisorDescription> ShiftTabletScriptSupervisorDescriptions { get; set; } // Shift_TabletScriptSupervisorDescription.FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet
 
         // Foreign keys
 
@@ -53,8 +68,11 @@ namespace Leopard.Repository
 
         public ShiftShiftTablet()
         {
+            ShiftRevisionProblems = new List<ShiftRevisionProblem>();
             ShiftShiftTabletCrews = new List<ShiftShiftTabletCrew>();
             ShiftShiftTabletLocations = new List<ShiftShiftTabletLocation>();
+            ShiftTabletConductorChanges = new List<ShiftTabletConductorChanx>();
+            ShiftTabletScriptSupervisorDescriptions = new List<ShiftTabletScriptSupervisorDescription>();
             InitializePartial();
         }
 
