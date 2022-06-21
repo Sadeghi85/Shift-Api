@@ -20,6 +20,7 @@ namespace Leopard.Repository
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
         public DateTime? LastModifiedDateTime { get; set; } // LastModifiedDateTime
+        public bool? IsDeleted { get; set; } // IsDeleted
 
         // Foreign keys
 
