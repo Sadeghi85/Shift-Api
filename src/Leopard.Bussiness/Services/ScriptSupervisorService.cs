@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Leopard.Repository;
 using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Model;
+using System.Linq.Expressions;
 
 namespace Leopard.Bussiness.Services {
 	internal class ScriptSupervisorService:BaseService, IScriptSupervisorService {
@@ -75,6 +76,67 @@ namespace Leopard.Bussiness.Services {
 		}
 
 
+		public async Task<BaseResult> DeleteScriptSupervisorDescription(int id) {
+
+
+			try {
+				var foundScriptSupervisorDescription = _scriptSupervisorDescriptionStore.FindById(id);
+				if (foundScriptSupervisorDescription == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
+				} else {
+					foundScriptSupervisorDescription.IsDeleted=true;
+					await _scriptSupervisorDescriptionStore.Update(foundScriptSupervisorDescription);
+				}
+
+			} catch (Exception ex) {
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+
+			return BaseResult;
+		}
+
+		List<Expression<Func<ShiftTabletScriptSupervisorDescription, bool>>> GetAllScriptSupervisorDescriptionExpressions = new List<Expression<Func<ShiftTabletScriptSupervisorDescription, bool>>>();
+
+		public Task<List<ShiftTabletScriptSupervisorDescription>>? GetAllScriptSupervisorDescription(ScriptSupervisorDescriptionSearchModel model) {
+
+			if(model.Id==0 && model.ShiftTabletId==0 && model.CreateDateTime==null && string.IsNullOrWhiteSpace(model.Description)) {
+
+				GetAllScriptSupervisorDescriptionExpressions.Add(pp => true);
+			} 
+			else  {
+				if (model.Id != 0) {
+					GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.Id == model.Id);
+				}
+				if (model.ShiftTabletId != 0) {
+					GetAllScriptSupervisorDescriptionExpressions.Add(pp=> pp.ShiftTabletId==model.ShiftTabletId);
+				}
+				if (model.CreateDateTime!=null) {
+
+					var inputDate = model.CreateDateTime.Value.Date;
+
+					GetAllScriptSupervisorDescriptionExpressions.Add(pp=> pp.CreateDateTime.Value.Date==model.CreateDateTime.Value.Date);
+				}
+				if (!string.IsNullOrWhiteSpace(model.Description)) {
+					GetAllScriptSupervisorDescriptionExpressions.Add(pp=> model.Description.Contains(pp.Description));
+
+				}
+
+			}
+
+			Task<List<ShiftTabletScriptSupervisorDescription>>? res =  _scriptSupervisorDescriptionStore.GetAllWithPagingAsync(GetAllScriptSupervisorDescriptionExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
+
+
+			return res;
+
+		}
+
 
 		public async Task<BaseResult> RegisterTabletConductorChanges(TabletConductorChangesModel model) {
 
@@ -140,9 +202,64 @@ namespace Leopard.Bussiness.Services {
 			return BaseResult;
 		}
 
+		List<Expression<Func<ShiftTabletConductorChanx, bool>>> GetAllTabletConductorChangesExpressions = new List<Expression<Func<ShiftTabletConductorChanx, bool>>>();
+
+		public void GetAllTabletConductorChanges(TabletConductorChangesSearchModel model) {
+
+			if (model.Id==0 &&  string.IsNullOrWhiteSpace( model.ProgramTitle ) && string.IsNullOrWhiteSpace(model.ReplacedProgramTitle) && model.ShiftTabletId==0) {
+
+				GetAllTabletConductorChangesExpressions.Add(pp => true);
+
+
+			} else {
+				if (model.Id != 0) {
+					GetAllTabletConductorChangesExpressions.Add(pp=> pp.Id==model.Id);
+				}
+				if (!string.IsNullOrWhiteSpace(model.ProgramTitle)) {
+					GetAllTabletConductorChangesExpressions.Add(pp=>model.ProgramTitle.Contains(pp.ProgramTitle));
+				}
+				if (!string.IsNullOrWhiteSpace(model.ReplacedProgramTitle)) {
+					GetAllTabletConductorChangesExpressions.Add(pp=> model.ReplacedProgramTitle.Contains(pp.ReplacedProgramTitle));
+				}
+				if (model.ShiftTabletId != 0) {
+					GetAllTabletConductorChangesExpressions.Add(pp=> pp.ShiftTabletId==model.ShiftTabletId);
+				}
+
+			}
+			_shiftTabletConductorChanxStore.GetAllWithPagingAsync(GetAllTabletConductorChangesExpressions, pp=> pp , pp=> pp.Id ,model.PageSize , model.PageNo  );
+
+
+
+		}
+
+		public async Task<BaseResult> DeleteTabletConductorChanges(int id) {
+
+			try {
+				var foundConductorChange = _shiftTabletConductorChanxStore.FindById(id);
+				if (foundConductorChange == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
+				} else {
+					foundConductorChange.IsDeleted = true;
+
+					await _shiftTabletConductorChanxStore.Update(foundConductorChange);
+				}
+			} catch (Exception ex) {
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+
+			return BaseResult;
+		}
+
 
 			public async Task<BaseResult> RegisterShiftRevisionProblem(ShiftRevisionProblemModel model) {
-
 
 			try {
 				var foundShiftTablet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
@@ -208,7 +325,30 @@ namespace Leopard.Bussiness.Services {
 		}
 
 
+		public async Task<BaseResult> DeleteShiftRevisionProblem(int id) {
 
+			try {
+				var foundRevision = _shiftRevisionProblemStore.FindById(id);
+				if (foundRevision == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
+				} else {
+					foundRevision.IsDeleted = true;
+				await _shiftRevisionProblemStore.Update(foundRevision);
+				}
+			} catch (Exception ex) {
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+
+			return BaseResult;
+		}
 
 	}
 }

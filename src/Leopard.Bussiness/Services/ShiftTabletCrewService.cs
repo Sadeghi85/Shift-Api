@@ -119,6 +119,8 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
+
+
 		public async Task<BaseResult> Register(ShiftTabletCrewModel model) {
 
 			try {
