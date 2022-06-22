@@ -25,6 +25,9 @@ namespace Leopard.Bussiness.Services.Interface {
 		public Task<BaseResult> UpdateShiftRevisionProblem(ShiftRevisionProblemModel model);
 		public Task<BaseResult> DeleteShiftRevisionProblem(int id);
 
+		public int GetAllScriptSupervisorDescriptionTotalCount();
+		public int GetAllShiftRevisionProblemTotalCount();
 
+		public int GetAllTabletConductorChangesTotalCount();
 	}
 }

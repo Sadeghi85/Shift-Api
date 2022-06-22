@@ -136,6 +136,12 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
+		public int GetAllScriptSupervisorDescriptionTotalCount() {
+			var res = _scriptSupervisorDescriptionStore.TotalCount(GetAllScriptSupervisorDescriptionExpressions);
+			return res;
+		}
+
+
 
 		public async Task<BaseResult> RegisterTabletConductorChanges(TabletConductorChangesModel model) {
 
@@ -229,6 +235,11 @@ namespace Leopard.Bussiness.Services {
 			Task<List<ShiftTabletConductorChanx>>? res = _shiftTabletConductorChanxStore.GetAllWithPagingAsync(GetAllTabletConductorChangesExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
 			return res;
 
+		}
+
+		public int GetAllTabletConductorChangesTotalCount() {
+			var res= _shiftTabletConductorChanxStore.TotalCount(GetAllTabletConductorChangesExpressions);
+			return res;
 		}
 
 		public async Task<BaseResult> DeleteTabletConductorChanges(int id) {
@@ -330,6 +341,11 @@ namespace Leopard.Bussiness.Services {
 
 			return res;
 
+		}
+
+		public int GetAllShiftRevisionProblemTotalCount() {
+			var res = _shiftRevisionProblemStore.TotalCount(GetAllShiftRevisionProblemExpressions);
+			return res;
 		}
 
 		public async Task<BaseResult> UpdateShiftRevisionProblem(ShiftRevisionProblemModel model) {

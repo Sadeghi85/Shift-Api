@@ -1,6 +1,7 @@
 using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
+using Leopard.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -51,8 +52,8 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAllScriptSupervisorDescription")]
 		public async Task<IActionResult> GetAllScriptSupervisorDescription(ScriptSupervisorDescriptionSearchModel model) {
 
-			var res =  _scriptSupervisorService.GetAllScriptSupervisorDescription(model);
-			return Ok(res);
+			List<ShiftTabletScriptSupervisorDescription>? res = await _scriptSupervisorService.GetAllScriptSupervisorDescription(model);
+			return Ok(OperationResult<List<ShiftTabletScriptSupervisorDescription>?>.SuccessResult(res, _scriptSupervisorService.GetAllScriptSupervisorDescriptionTotalCount()));
 		}
 
 
