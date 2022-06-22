@@ -66,17 +66,23 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("Update")]
 		public async Task<OkObjectResult> Update(ShiftLocationModel model) {
 			var res = await _shiftLocationService.Update(model);
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 
 
 		}
 
-		// DELETE api/<ShiftLocationController>/5
-		//[HttpDelete("{id}")]
-		//public void Delete(int id) {
-		//}
+		[HttpPost("Delete")]
+		public async Task<OkObjectResult> Delete(int id) {
+			var res = await _shiftLocationService.Delete(id);
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
+			}
+			return Ok(OperationResult<string>.FailureResult(res.Message));
+
+
+		}
 	}
 }
