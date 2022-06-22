@@ -10,5 +10,8 @@ namespace Leopard.Bussiness.Model {
 		public string ProgramTitle { get; set; } // ProgramTitle (length: 250)
 		public string ReplacedProgramTitle { get; set; } // ReplacedProgramTitle (length: 250)
 		public int? ShiftTabletId { get; set; } // ShiftTabletId
+
+		public DateTime? CreateDateTime { get; set; } // CreateDateTime
+
 	}
 }

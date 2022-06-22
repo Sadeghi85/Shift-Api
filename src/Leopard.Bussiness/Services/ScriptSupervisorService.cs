@@ -10,7 +10,7 @@ using Leopard.Bussiness.Model;
 using System.Linq.Expressions;
 
 namespace Leopard.Bussiness.Services {
-	internal class ScriptSupervisorService:BaseService, IScriptSupervisorService {
+	internal class ScriptSupervisorService : BaseService, IScriptSupervisorService {
 
 		private readonly IShiftTabletScriptSupervisorDescriptionStore _scriptSupervisorDescriptionStore;
 		private readonly IShiftLogStore _shiftLogStore;
@@ -23,7 +23,7 @@ namespace Leopard.Bussiness.Services {
 			_shiftLogStore = shiftLogStore;
 			_shiftShiftTabletStore = shiftShiftTabletStore;
 			_shiftTabletConductorChanxStore = shiftTabletConductorChanxStore;
-			_shiftRevisionProblemStore = shiftRevisionProblemStore;	
+			_shiftRevisionProblemStore = shiftRevisionProblemStore;
 		}
 
 		public async Task<BaseResult> RegisterScriptSupervisorDescription(ScriptSupervisorDescriptionModel model) {
@@ -53,8 +53,8 @@ namespace Leopard.Bussiness.Services {
 
 			try {
 				var foundScriptSupervisorDescription = _scriptSupervisorDescriptionStore.FindById(model.Id);
-				if (foundScriptSupervisorDescription==null) {
-					BaseResult.Success=false;
+				if (foundScriptSupervisorDescription == null) {
+					BaseResult.Success = false;
 					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
 				} else {
 					foundScriptSupervisorDescription.ShiftTabletId = model.ShiftTabletId;
@@ -85,7 +85,7 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Success = false;
 					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
 				} else {
-					foundScriptSupervisorDescription.IsDeleted=true;
+					foundScriptSupervisorDescription.IsDeleted = true;
 					await _scriptSupervisorDescriptionStore.Update(foundScriptSupervisorDescription);
 				}
 
@@ -106,31 +106,30 @@ namespace Leopard.Bussiness.Services {
 
 		public Task<List<ShiftTabletScriptSupervisorDescription>>? GetAllScriptSupervisorDescription(ScriptSupervisorDescriptionSearchModel model) {
 
-			if(model.Id==0 && model.ShiftTabletId==0 && model.CreateDateTime==null && string.IsNullOrWhiteSpace(model.Description)) {
+			if (model.Id == 0 && model.ShiftTabletId == 0 && model.CreateDateTime == null && string.IsNullOrWhiteSpace(model.Description)) {
 
 				GetAllScriptSupervisorDescriptionExpressions.Add(pp => true);
-			} 
-			else  {
+			} else {
 				if (model.Id != 0) {
 					GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.Id == model.Id);
 				}
 				if (model.ShiftTabletId != 0) {
-					GetAllScriptSupervisorDescriptionExpressions.Add(pp=> pp.ShiftTabletId==model.ShiftTabletId);
+					GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.ShiftTabletId == model.ShiftTabletId);
 				}
-				if (model.CreateDateTime!=null) {
+				if (model.CreateDateTime != null) {
 
 					var inputDate = model.CreateDateTime.Value.Date;
 
-					GetAllScriptSupervisorDescriptionExpressions.Add(pp=> pp.CreateDateTime.Value.Date==model.CreateDateTime.Value.Date);
+					GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.CreateDateTime.Value.Date == model.CreateDateTime.Value.Date);
 				}
 				if (!string.IsNullOrWhiteSpace(model.Description)) {
-					GetAllScriptSupervisorDescriptionExpressions.Add(pp=> model.Description.Contains(pp.Description));
+					GetAllScriptSupervisorDescriptionExpressions.Add(pp => model.Description.Contains(pp.Description));
 
 				}
 
 			}
 
-			Task<List<ShiftTabletScriptSupervisorDescription>>? res =  _scriptSupervisorDescriptionStore.GetAllWithPagingAsync(GetAllScriptSupervisorDescriptionExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
+			Task<List<ShiftTabletScriptSupervisorDescription>>? res = _scriptSupervisorDescriptionStore.GetAllWithPagingAsync(GetAllScriptSupervisorDescriptionExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
 
 
 			return res;
@@ -141,7 +140,7 @@ namespace Leopard.Bussiness.Services {
 		public async Task<BaseResult> RegisterTabletConductorChanges(TabletConductorChangesModel model) {
 
 			try {
-				var foundTablet= _shiftShiftTabletStore.FindById(model.ShiftTabletId);
+				var foundTablet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
 				if (foundTablet == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "لوح شیفت مورد نظر یافت نشد.";
@@ -151,8 +150,7 @@ namespace Leopard.Bussiness.Services {
 					await _shiftTabletConductorChanxStore.InsertAsync(conductorChanx);
 
 				}
-			}	
-			catch(Exception ex) {
+			} catch (Exception ex) {
 				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
 
 				//_shiftLogStore.ResetContext();
@@ -177,12 +175,11 @@ namespace Leopard.Bussiness.Services {
 				if (foudShiftTablet == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "لوح شیفت مورد نظر جستجو نشد.";
-				}
-				else {
+				} else {
 					foundConductorChange.ProgramTitle = model.ProgramTitle;
 					foundConductorChange.ReplacedProgramTitle = model.ReplacedProgramTitle;
-					foundConductorChange.ShiftTabletId= model.ShiftTabletId;	
-					foundConductorChange.Description= model.Description;
+					foundConductorChange.ShiftTabletId = model.ShiftTabletId;
+					foundConductorChange.Description = model.Description;
 
 					await _shiftTabletConductorChanxStore.Update(foundConductorChange);
 				}
@@ -204,31 +201,33 @@ namespace Leopard.Bussiness.Services {
 
 		List<Expression<Func<ShiftTabletConductorChanx, bool>>> GetAllTabletConductorChangesExpressions = new List<Expression<Func<ShiftTabletConductorChanx, bool>>>();
 
-		public void GetAllTabletConductorChanges(TabletConductorChangesSearchModel model) {
+		public Task<List<ShiftTabletConductorChanx>>? GetAllTabletConductorChanges(TabletConductorChangesSearchModel model) {
 
-			if (model.Id==0 &&  string.IsNullOrWhiteSpace( model.ProgramTitle ) && string.IsNullOrWhiteSpace(model.ReplacedProgramTitle) && model.ShiftTabletId==0) {
+			if (model.Id == 0 && string.IsNullOrWhiteSpace(model.ProgramTitle) && string.IsNullOrWhiteSpace(model.ReplacedProgramTitle) && model.ShiftTabletId == 0 && model.CreateDateTime == null) {
 
 				GetAllTabletConductorChangesExpressions.Add(pp => true);
 
 
 			} else {
 				if (model.Id != 0) {
-					GetAllTabletConductorChangesExpressions.Add(pp=> pp.Id==model.Id);
+					GetAllTabletConductorChangesExpressions.Add(pp => pp.Id == model.Id);
 				}
 				if (!string.IsNullOrWhiteSpace(model.ProgramTitle)) {
-					GetAllTabletConductorChangesExpressions.Add(pp=>model.ProgramTitle.Contains(pp.ProgramTitle));
+					GetAllTabletConductorChangesExpressions.Add(pp => model.ProgramTitle.Contains(pp.ProgramTitle));
 				}
 				if (!string.IsNullOrWhiteSpace(model.ReplacedProgramTitle)) {
-					GetAllTabletConductorChangesExpressions.Add(pp=> model.ReplacedProgramTitle.Contains(pp.ReplacedProgramTitle));
+					GetAllTabletConductorChangesExpressions.Add(pp => model.ReplacedProgramTitle.Contains(pp.ReplacedProgramTitle));
 				}
 				if (model.ShiftTabletId != 0) {
-					GetAllTabletConductorChangesExpressions.Add(pp=> pp.ShiftTabletId==model.ShiftTabletId);
+					GetAllTabletConductorChangesExpressions.Add(pp => pp.ShiftTabletId == model.ShiftTabletId);
+				}
+				if (model.CreateDateTime != null) {
+					GetAllTabletConductorChangesExpressions.Add(pp => pp.CreateDateTime.Value == model.CreateDateTime.Value.Date);
 				}
 
 			}
-			_shiftTabletConductorChanxStore.GetAllWithPagingAsync(GetAllTabletConductorChangesExpressions, pp=> pp , pp=> pp.Id ,model.PageSize , model.PageNo  );
-
-
+			Task<List<ShiftTabletConductorChanx>>? res = _shiftTabletConductorChanxStore.GetAllWithPagingAsync(GetAllTabletConductorChangesExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
+			return res;
 
 		}
 
@@ -259,7 +258,7 @@ namespace Leopard.Bussiness.Services {
 		}
 
 
-			public async Task<BaseResult> RegisterShiftRevisionProblem(ShiftRevisionProblemModel model) {
+		public async Task<BaseResult> RegisterShiftRevisionProblem(ShiftRevisionProblemModel model) {
 
 			try {
 				var foundShiftTablet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
@@ -269,10 +268,11 @@ namespace Leopard.Bussiness.Services {
 				} else {
 					ShiftRevisionProblem revisionProblem = new ShiftRevisionProblem {
 						ClacketNo = model.ClacketNo, FileName = model.FileName,
-						Description = model.Description, FileNumber = model.FileNumber, 
-						ProblemDescription = model.ProblemDescription, 
-						RevisorCode = model.RevisorCode,ShiftTabletId = model.ShiftTabletId
+						Description = model.Description, FileNumber = model.FileNumber,
+						ProblemDescription = model.ProblemDescription,
+						RevisorCode = model.RevisorCode, ShiftTabletId = model.ShiftTabletId
 					};
+					await _shiftRevisionProblemStore.InsertAsync(revisionProblem);
 				}
 
 			} catch (Exception ex) {
@@ -287,6 +287,49 @@ namespace Leopard.Bussiness.Services {
 			}
 
 			return BaseResult;
+		}
+
+		List<Expression<Func<ShiftRevisionProblem, bool>>> GetAllShiftRevisionProblemExpressions = new List<Expression<Func<ShiftRevisionProblem, bool>>>();
+
+		public Task<List<ShiftRevisionProblem>>? GetAllShiftRevisionProblem(ShiftRevisionProblemSearchModel model) {
+
+			if (model.Id == 0 && model.ClacketNo == 0 && model.ShiftTabletId == 0 && string.IsNullOrWhiteSpace(model.FileNumber) && string.IsNullOrWhiteSpace(model.FileName) && string.IsNullOrWhiteSpace(model.RevisorCode) && string.IsNullOrWhiteSpace(model.Description) && model.CreateDateTime == null) {
+				GetAllShiftRevisionProblemExpressions.Add(pp => true);
+
+
+			} else {
+				if (model.Id != 0) {
+					GetAllShiftRevisionProblemExpressions.Add(pp => pp.Id == model.Id);
+				}
+				if (model.ClacketNo != 0) {
+					GetAllShiftRevisionProblemExpressions.Add(pp => pp.ClacketNo == model.ClacketNo);
+				}
+				if (model.ShiftTabletId != 0) {
+					GetAllShiftRevisionProblemExpressions.Add(pp => pp.ShiftTabletId == model.ShiftTabletId);
+				}
+				if (!string.IsNullOrWhiteSpace(model.FileNumber)) {
+					GetAllShiftRevisionProblemExpressions.Add(pp => model.FileNumber.Contains(pp.FileNumber));
+				}
+				if (!string.IsNullOrWhiteSpace(model.FileName)) {
+					GetAllShiftRevisionProblemExpressions.Add(pp => model.FileName.Contains(pp.FileName));
+				}
+				if (!string.IsNullOrWhiteSpace(model.RevisorCode)) {
+					GetAllShiftRevisionProblemExpressions.Add(pp => model.RevisorCode.Contains(pp.RevisorCode));
+				}
+				if (!string.IsNullOrEmpty(model.Description)) {
+					GetAllShiftRevisionProblemExpressions.Add(pp => model.Description.Contains(pp.Description));
+
+				}
+				if (model.CreateDateTime != null) {
+					GetAllShiftRevisionProblemExpressions.Add(pp => pp.CreateDateTime.Value.Date == model.CreateDateTime.Value.Date);
+				}
+
+
+			}
+			Task<List<ShiftRevisionProblem>>? res = _shiftRevisionProblemStore.GetAllWithPagingAsync(GetAllShiftRevisionProblemExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
+
+			return res;
+
 		}
 
 		public async Task<BaseResult> UpdateShiftRevisionProblem(ShiftRevisionProblemModel model) {
@@ -334,7 +377,7 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
 				} else {
 					foundRevision.IsDeleted = true;
-				await _shiftRevisionProblemStore.Update(foundRevision);
+					await _shiftRevisionProblemStore.Update(foundRevision);
 				}
 			} catch (Exception ex) {
 
