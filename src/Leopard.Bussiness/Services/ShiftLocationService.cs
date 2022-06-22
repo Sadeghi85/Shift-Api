@@ -41,7 +41,7 @@ namespace Leopard.Bussiness.Services {
 					GetAllExpressions.Add(pp => pp.Id == model.Id);
 				}
 			}
-			GetAllExpressions.Add(pp=> pp.IsDeleted!=true);
+			GetAllExpressions.Add(pp => pp.IsDeleted != true);
 
 			//var resCnt = _shiftLocationStore.TotalCount(Expressions);
 
@@ -67,12 +67,16 @@ namespace Leopard.Bussiness.Services {
 
 			try {
 
+				var foundPortalTitle = _shiftLocationStore.GetAll().Any(pp => pp.PortalId == model.PortalId && pp.Title == model.Title);
 				var foundPortal = _portalStore.FindById(model.PortalId);
 				if (foundPortal == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه پورتال یافت نشد.";
 				} 
-				
+				else if (foundPortalTitle) {
+					BaseResult.Success = false;
+					BaseResult.Message = "این آیتم قبلا ثبت شده است.";
+				}
 				else {
 
 					ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId };

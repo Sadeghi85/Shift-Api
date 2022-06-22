@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftTabletService :BaseService, IShiftTabletService {
+	public class ShiftTabletService : BaseService, IShiftTabletService {
 
 		readonly private IShiftShiftTabletStore _shiftShiftTabletStore;
 		readonly private IShiftShiftStore _shiftShiftStore;
@@ -22,7 +22,7 @@ namespace Leopard.Bussiness.Services {
 			_shiftShiftTabletStore = shiftShiftTabletStore;
 			_shiftShiftStore = shiftShiftStore;
 			_shiftLogStore = shiftLogStore;
-			_shiftProductionTypeStore = shiftProductionTypeStore;	
+			_shiftProductionTypeStore = shiftProductionTypeStore;
 		}
 
 		public List<ShiftShiftTablet> GetTabletShiftByPortalId(int portalId) {
@@ -48,8 +48,8 @@ namespace Leopard.Bussiness.Services {
 				}
 			}
 			GetAllExpressions.Add(pp => pp.IsDeleted != true);
-			Task<List<ShiftTabletResult>>? res =  _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletResult {Id= pp.Id, ProductionTypeId= pp.ProductionTypeId, ProductionTypeTitle= pp.ShiftProductionType.Title , ShiftDate= pp.ShiftDate, ShiftTitle= pp.ShiftShift.Title, ShiftId= pp.ShiftId , ShiftWorthPercent= pp.ShiftWorthPercent}, pp => pp.Id, model.PageSize, model.PageNo, "desc");
-			
+			Task<List<ShiftTabletResult>>? res = _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletResult { Id = pp.Id, ProductionTypeId = pp.ProductionTypeId, ProductionTypeTitle = pp.ShiftProductionType.Title, ShiftDate = pp.ShiftDate, ShiftTitle = pp.ShiftShift.Title, ShiftId = pp.ShiftId, ShiftWorthPercent = pp.ShiftWorthPercent }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
+
 			//IQueryable<ShiftShiftTablet>? res = _shiftShiftTabletStore.GetAll();
 			//_shiftShiftStore.GetAllAsync
 
@@ -61,7 +61,7 @@ namespace Leopard.Bussiness.Services {
 
 			var res = _shiftShiftTabletStore.TotalCount(GetAllExpressions);
 			return res;
-		
+
 		}
 
 
@@ -71,22 +71,26 @@ namespace Leopard.Bussiness.Services {
 		}
 
 
-			public async Task<BaseResult> RegisterShiftTablet(ShiftTabletModel model) {
+		public async Task<BaseResult> RegisterShiftTablet(ShiftTabletModel model) {
 
 			try {
 				var foundProductionType = _shiftProductionTypeStore.FindById(model.ProductionTypeId);
 
-				var foundShift= _shiftShiftStore.FindById(model.ShiftId);
-				//if (foundShift==null) { 
-				//	BaseResult.Success= false;
-				//	BaseResult.Message = "شیفت مورد نظر جستجو نشد.";
-				//} 
-				//else 
-				if (foundProductionType==null) {
+				var foundShiftTabletSameDate = _shiftShiftTabletStore.GetAll().Any(pp => pp.ShiftDate.Value.Date == model.ShiftDate.Value.Date && pp.ShiftId == model.ShiftId);
+
+
+				var foundShift = _shiftShiftStore.FindById(model.ShiftId);
+				if (foundShift == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شیفت مورد نظر جستجو نشد.";
+				} else if (foundShiftTabletSameDate) {
+
+					BaseResult.Success = false;
+					BaseResult.Message = "این شیفت در این روز حاص از قبل موجود است.";
+				} else if (foundProductionType == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "نوع تولید شیفت یافت نشد.";
-				}
-				else {
+				} else {
 					ShiftShiftTablet shiftTablet = new ShiftShiftTablet { ShiftId = model.ShiftId, ShiftDate = model.ShiftDate, ProductionTypeId = model.ProductionTypeId, ShiftWorthPercent = model.ShiftWorthPercent, IsDeleted = false };
 					foundShift = _shiftShiftStore.FindById(model.ShiftId);
 					shiftTablet.ShiftTime = foundShift.EndTime - foundShift.StartTime;
@@ -113,11 +117,18 @@ namespace Leopard.Bussiness.Services {
 
 
 			try {
+
+				var foundShiftTabletSameDate = _shiftShiftTabletStore.GetAll().Any(pp => pp.ShiftDate.Value.Date == model.ShiftDate.Value.Date && pp.ShiftId == model.ShiftId);
+
 				var found = _shiftShiftTabletStore.FindById(model.Id);
 
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+				} else if (foundShiftTabletSameDate) {
+
+					BaseResult.Success = false;
+					BaseResult.Message = "این شیفت در این روز حاص از قبل موجود است.";
 				} else {
 
 					found.ShiftId = model.ShiftId;
@@ -151,7 +162,7 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
 				} else {
 
-					found.IsDeleted=true;
+					found.IsDeleted = true;
 
 					var res = await _shiftShiftTabletStore.Update(found);
 				}
@@ -168,5 +179,5 @@ namespace Leopard.Bussiness.Services {
 
 			return BaseResult;
 		}
-}
+	}
 }
