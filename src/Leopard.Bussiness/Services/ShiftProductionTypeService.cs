@@ -45,7 +45,7 @@ namespace Leopard.Bussiness.Services {
 					GetAllExpressions.Add(pp => pp.Id == model.Id);
 				}
 			}
-
+			GetAllExpressions.Add(pp=> pp.IsDeleted!=true);
 			Task<List<ShiftProductionResult>>? res = _shiftProductionTypeStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftProductionResult { Id = pp.Id, Title = pp.Title }, pp=> pp.Id , model.PageSize , model.PageNo , "desc");
 
 
@@ -113,34 +113,34 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		//public async Task<BaseResult> Delete(ShiftProductionTypeModel model) {
+		public async Task<BaseResult> Delete(ShiftProductionTypeModel model) {
 
-		//	try {
-		//		var found = _shiftProductionTypeStore.FindById(model.Id);
-		//		if (found == null) {
-		//			BaseResult.Success = false;
-		//			BaseResult.Message = "شناسه مورد نظر جستجو نشد.";
-		//		} else {
-		//			found.I = model.Title;
+			try {
+				var found = _shiftProductionTypeStore.FindById(model.Id);
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر جستجو نشد.";
+				} else {
+					found.IsDeleted = true;
 
-		//			var res = await _shiftProductionTypeStore.Update(found);
-		//		}
-		//	} catch (Exception ex) {
+					var res = await _shiftProductionTypeStore.Update(found);
+				}
+			} catch (Exception ex) {
 
-		//		BaseResult.Success = false;
+				BaseResult.Success = false;
 
-		//		ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 
-		//		//_shiftLogStore.ResetContext();
+				//_shiftLogStore.ResetContext();
 
-		//		var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
 
-		//		BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
-		//	}
+				BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
 
-		//	return BaseResult;
+			return BaseResult;
 
-		//}
+		}
 
 	}
 }

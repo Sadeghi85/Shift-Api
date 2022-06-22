@@ -93,10 +93,15 @@ namespace SamtApi.Controllers.WebApi {
 			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
-		// DELETE api/<ProductionTypeController>/5
-		//[HttpDelete("{id}")]
-		//public void Delete(int id) {
-		//}
+		[HttpPost("Delete")]
+		public async Task<IActionResult> Delete(ShiftProductionTypeModel model) {
+			var res = await _shiftProductionTypeService.Delete(model);
+
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
+			}
+			return Ok(OperationResult<string>.FailureResult(res.Message));
+		}
 
 	}
 }
