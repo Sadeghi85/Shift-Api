@@ -18,6 +18,7 @@ namespace Leopard.Repository
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
         public DateTime? LastModifiedDateTime { get; set; } // LastModifiedDateTime
         public int? PortalId { get; set; } // PortalId
+        public bool? IsDeleted { get; set; } // IsDeleted
 
         // Reverse navigation
 
