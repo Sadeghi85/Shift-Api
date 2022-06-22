@@ -47,6 +47,7 @@ namespace Leopard.Bussiness.Services {
 					GetAllExpressions.Add((pp) => pp.ProductionTypeId == model.ProductionTypeId);
 				}
 			}
+			GetAllExpressions.Add(pp => pp.IsDeleted != true);
 			Task<List<ShiftTabletResult>>? res =  _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletResult {Id= pp.Id, ProductionTypeId= pp.ProductionTypeId, ProductionTypeTitle= pp.ShiftProductionType.Title , ShiftDate= pp.ShiftDate, ShiftTitle= pp.ShiftShift.Title, ShiftId= pp.ShiftId , ShiftWorthPercent= pp.ShiftWorthPercent}, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 			
 			//IQueryable<ShiftShiftTablet>? res = _shiftShiftTabletStore.GetAll();
@@ -139,6 +140,33 @@ namespace Leopard.Bussiness.Services {
 
 			return BaseResult;
 
+		}
+
+		public async Task<BaseResult> Delete(ShiftTabletModel model) {
+			try {
+				var found = _shiftShiftTabletStore.FindById(model.Id);
+
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+				} else {
+
+					found.IsDeleted=true;
+
+					var res = await _shiftShiftTabletStore.Update(found);
+				}
+			} catch (Exception ex) {
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+
+			return BaseResult;
 		}
 }
 }

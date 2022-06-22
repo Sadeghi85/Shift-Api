@@ -26,14 +26,14 @@ namespace Leopard.Bussiness.Services {
 				GetAllExpressions.Add(pp => true);
 			} else {
 				if (!string.IsNullOrWhiteSpace(model.ResourceName)) {
-					GetAllExpressions.Add(pp => model.ResourceName.Contains(pp.Title));
+					GetAllExpressions.Add(pp => pp.Title.Contains(model.ResourceName));
 				}
 				if (model.Id != 0) {
 					GetAllExpressions.Add(pp=> pp.Id==model.Id);
 				}
 
 			}
-			GetAllExpressions.Add(pp => pp.ParentId == 20 && pp.IsDeleted == false);
+			GetAllExpressions.Add(pp => pp.ParentId == 20 && pp.IsDeleted != true);
 
 			Task<List<SamtResourceType>>? res = _samtResourceTypeStore.GetAllWithPagingAsync(GetAllExpressions, pp => pp, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 			return res;

@@ -33,11 +33,11 @@ namespace Leopard.Bussiness.Services {
 			
 		}
 
-		public async Task<BaseResult> Delete(int id) {
+		public async Task<BaseResult> Delete(ShiftTabletCrewModel model) {
 
 
 			try {
-				var found = _shiftShiftTabletCrewStore.FindById(id);
+				var found = _shiftShiftTabletCrewStore.FindById(model.Id);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
@@ -107,6 +107,7 @@ namespace Leopard.Bussiness.Services {
 				}
 
 			}
+			GetAllExpressions.Add(pp => pp.IsDeleted != true);
 
 			//Task<List<ShiftTabletCrewSearchResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletCrewSearchResult {ShifTabletId=pp.ShifTabletId , EntranceTime= pp.EntranceTime , ExitTime= pp.ExitTime , FisrtName= pp.SamtAgent.FirstName, LastName=pp.SamtAgent.LastName, AgentId=pp.AgentId, ShiftTitle= pp.ShiftShiftTablet.ShiftShift.Title , ResourceTitle= pp.SamtResourceType.Title} , pp => pp.Id, model.PageSize, model.PageNo, "desc");
 

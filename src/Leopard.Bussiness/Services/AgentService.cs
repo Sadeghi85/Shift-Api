@@ -25,11 +25,11 @@ namespace Leopard.Bussiness.Services {
 				GetAllExpressions.Add(pp=> true);
 			} else {
 				if (!string.IsNullOrWhiteSpace(model.FirstName)) {
-					GetAllExpressions.Add(pp => model.FirstName.Contains(pp.FirstName));
+					GetAllExpressions.Add(pp => pp.FirstName.Contains(model.FirstName));
 				}
 				if (!string.IsNullOrWhiteSpace(model.LastName)) {
 
-					GetAllExpressions.Add(pp => model.LastName.Contains(pp.LastName));
+					GetAllExpressions.Add(pp => pp.LastName.Contains(model.LastName));
 
 				}
 				if (model.Id != 0) {

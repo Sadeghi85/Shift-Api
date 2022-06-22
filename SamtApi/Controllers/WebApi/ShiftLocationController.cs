@@ -2,15 +2,17 @@ using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SamtApi.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SamtApi.Controllers.WebApi {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ShiftLocationController : ControllerBase {
+	public class ShiftLocationController : YaldaController {
 
 		readonly private IShiftLocationService _shiftLocationService;
 
@@ -75,8 +77,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		[HttpPost("Delete")]
-		public async Task<OkObjectResult> Delete(int id) {
-			var res = await _shiftLocationService.Delete(id);
+		public async Task<OkObjectResult> Delete(ShiftLocationModel model) {
+			var res = await _shiftLocationService.Delete(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}

@@ -14,6 +14,6 @@ namespace Leopard.Bussiness.Services.Interface {
 
 		public Task<List<ShiftCrewRewardFine>>? GetAll(ShiftCrewRewardFineSearchModel model);
 
-		public Task<BaseResult> Delete(int id);
+		public Task<BaseResult> Delete(ShiftCrewRewardFineModel model);
 	}
 }

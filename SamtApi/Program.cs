@@ -7,6 +7,9 @@ using Serilog;
 using Serilog.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using SamtApi;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var configuration = new ConfigurationBuilder()
 				.SetBasePath(Directory.GetCurrentDirectory())
@@ -45,6 +48,29 @@ builder.Host.UseLamar((context, registry) => {
 
 	ConfigServices.ConfigSwagger(registry);
 	var oAuthServerUrl = configuration.GetSection("OAuthServer").Get<string>();
+
+	JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+	registry.AddAuthentication(options => {
+		options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+		options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+		options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+		
+	});
+
+	// accepts any access token issued by identity server
+	registry.AddAuthentication("Bearer")
+		.AddJwtBearer("Bearer", options => {
+			options.Authority = oAuthServerUrl;
+			options.RequireHttpsMetadata = false;
+			options.TokenValidationParameters = new TokenValidationParameters {
+				ValidateAudience = false,
+				
+			};
+			
+		});
+
+
 
 
 	registry.AddDbContext<LeopardDbContext>(options =>
@@ -87,10 +113,17 @@ builder.Host.UseLamar((context, registry) => {
 
 var app = builder.Build();
 
+if (!builder.Environment.IsDevelopment()) {
+	app.MapControllers();
+} else {
+	app.MapControllers().AllowAnonymous();
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment()) {
 	app.UseExceptionHandler("/Home/Error");
 }
+
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseStaticFiles();
@@ -98,6 +131,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("TemporaryCorsPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -3,14 +3,16 @@
 using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SamtApi.Controllers.WebApi {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ShiftCrewRewardFineController : ControllerBase {
+	public class ShiftCrewRewardFineController : YaldaController {
 
 		private readonly IShiftCrewRewardFineService _shiftCrewRewardFineService;
 
@@ -72,10 +74,10 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		// DELETE api/<ShiftCrewRewardFineController>/5
-		[HttpPost("Delete/{id}")]
-		public async Task<IActionResult> Delete(int id) {
+		[HttpPost("Delete")]
+		public async Task<IActionResult> Delete(ShiftCrewRewardFineModel model) {
 
-			var res = await _shiftCrewRewardFineService.Delete(id);
+			var res = await _shiftCrewRewardFineService.Delete(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}

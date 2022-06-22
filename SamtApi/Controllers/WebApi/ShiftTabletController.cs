@@ -2,6 +2,7 @@ using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SamtApi.Models;
 
@@ -9,9 +10,10 @@ using SamtApi.Models;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SamtApi.Controllers.WebApi {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ShiftTabletController : ControllerBase {
+	public class ShiftTabletController : YaldaController {
 
 
 
@@ -82,9 +84,14 @@ namespace SamtApi.Controllers.WebApi {
 
 		}
 
-		// DELETE api/<ShiftTabletController>/5
-		//[HttpDelete("{id}")]
-		//public void Delete(int id) {
-		//}
+		
+		[HttpPost("Delete")]
+		public async Task<IActionResult> Delete(ShiftTabletModel model) {
+			var res = await _shiftTabletService.Delete(model);
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
+			}
+			return Ok(OperationResult<string>.FailureResult(res.Message));
+		}
 	}
 }

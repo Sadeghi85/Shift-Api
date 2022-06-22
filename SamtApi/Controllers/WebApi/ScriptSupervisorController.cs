@@ -2,14 +2,16 @@ using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SamtApi.Controllers.WebApi {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ScriptSupervisorController : ControllerBase {
+	public class ScriptSupervisorController : YaldaController {
 
 		private readonly IScriptSupervisorService _scriptSupervisorService;
 
@@ -40,9 +42,9 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		[HttpPost("DeleteScriptSupervisorDescription")]
-		public async Task<IActionResult> DeleteScriptSupervisorDescription(int id) {
+		public async Task<IActionResult> DeleteScriptSupervisorDescription(ScriptSupervisorDescriptionModel model) {
 
-			BaseResult? res = await _scriptSupervisorService.DeleteScriptSupervisorDescription(id);
+			BaseResult? res = await _scriptSupervisorService.DeleteScriptSupervisorDescription(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -86,9 +88,9 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		[HttpPost("DeleteTabletConductorChanges")]
-		public async Task<IActionResult> DeleteTabletConductorChanges(int id) {
+		public async Task<IActionResult> DeleteTabletConductorChanges(TabletConductorChangesModel model) {
 
-			BaseResult? res = await _scriptSupervisorService.DeleteTabletConductorChanges(id);
+			BaseResult? res = await _scriptSupervisorService.DeleteTabletConductorChanges(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -127,9 +129,9 @@ namespace SamtApi.Controllers.WebApi {
 
 
 		[HttpPost("DeleteShiftRevisionProblem")]
-		public async Task<IActionResult> DeleteShiftRevisionProblem(int id) {
+		public async Task<IActionResult> DeleteShiftRevisionProblem(ShiftRevisionProblemModel model) {
 
-			BaseResult? res = await _scriptSupervisorService.DeleteShiftRevisionProblem(id);
+			BaseResult? res = await _scriptSupervisorService.DeleteShiftRevisionProblem(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}

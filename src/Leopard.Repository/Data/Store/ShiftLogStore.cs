@@ -9,14 +9,14 @@ namespace Leopard.Repository {
 	public partial class ShiftLogStore : StoreBase<ShiftLog>, IShiftLogStore {
 
 
-		//public void ResetContext() {
+		public void ResetContext() {
 
-		//	_ctx.Instance.ChangeTracker.Entries()
-		//								.Where(e => e.Entity != null).ToList()
-		//								.ForEach(e => e.State = EntityState.Detached);
+			_ctx.Instance.ChangeTracker.Entries()
+										.Where(e => e.Entity != null).ToList()
+										.ForEach(e => e.State = EntityState.Detached);
 
-		//}
+		}
 
-		
+
 	}
 }

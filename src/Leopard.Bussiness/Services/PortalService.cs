@@ -25,7 +25,7 @@ namespace Leopard.Bussiness.Services {
 				GetAllExpressions.Add(pp => true);
 			} else {
 				if (!string.IsNullOrWhiteSpace(model.Title)) {
-					GetAllExpressions.Add(pp=> model.Title.Contains(pp.Title));
+					GetAllExpressions.Add(pp=> pp.Title.Contains(model.Title));
 				}
 				if (model.PortalId!=0) {
 					GetAllExpressions.Add(pp=> pp.Id==model.PortalId);

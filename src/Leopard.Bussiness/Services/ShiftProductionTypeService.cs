@@ -39,7 +39,7 @@ namespace Leopard.Bussiness.Services {
 				GetAllExpressions.Add(pp=> true);
 			} else {
 				if (!string.IsNullOrWhiteSpace(model.Title)) {
-					GetAllExpressions.Add(pp => model.Title.Contains(pp.Title));
+					GetAllExpressions.Add(pp => pp.Title.Contains(model.Title));
 				}
 				if (model.Id != 0) {
 					GetAllExpressions.Add(pp => pp.Id == model.Id);
@@ -112,6 +112,35 @@ namespace Leopard.Bussiness.Services {
 			return BaseResult;
 
 		}
+
+		//public async Task<BaseResult> Delete(ShiftProductionTypeModel model) {
+
+		//	try {
+		//		var found = _shiftProductionTypeStore.FindById(model.Id);
+		//		if (found == null) {
+		//			BaseResult.Success = false;
+		//			BaseResult.Message = "شناسه مورد نظر جستجو نشد.";
+		//		} else {
+		//			found.I = model.Title;
+
+		//			var res = await _shiftProductionTypeStore.Update(found);
+		//		}
+		//	} catch (Exception ex) {
+
+		//		BaseResult.Success = false;
+
+		//		ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
+
+		//		//_shiftLogStore.ResetContext();
+
+		//		var ss = await _shiftLogStore.InsertAsync(shiftLog);
+
+		//		BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+		//	}
+
+		//	return BaseResult;
+
+		//}
 
 	}
 }

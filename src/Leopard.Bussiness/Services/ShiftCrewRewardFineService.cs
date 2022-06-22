@@ -23,10 +23,10 @@ namespace Leopard.Bussiness.Services {
 			_shiftLogStore = shiftLogStore;
 		}
 
-		public async Task<BaseResult> Delete(int id) {
+		public async Task<BaseResult> Delete(ShiftCrewRewardFineModel model) {
 
 			try {
-				var found = _shiftCrewRewardFineStore.FindById(id);
+				var found = _shiftCrewRewardFineStore.FindById(model.Id);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
@@ -79,7 +79,7 @@ namespace Leopard.Bussiness.Services {
 				//expressions.Add(pp=> pp.IsDeleted==false);
 
 			}
-
+			Expressions.Add(pp => pp.IsDeleted != true);
 			Task<List<ShiftCrewRewardFine>>? res = _shiftCrewRewardFineStore.GetAllWithPagingAsync(Expressions, pp => new ShiftCrewRewardFine {Id= pp.Id , Ammount= pp.Ammount }, pp=> pp.Id , model.PageSize,model.PageNo , "desc" );
 
 

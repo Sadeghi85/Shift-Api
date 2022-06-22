@@ -26,10 +26,10 @@ namespace Leopard.Bussiness.Services {
 		}
 
 
-		public async Task<BaseResult> Delete(int id) {
+		public async Task<BaseResult> Delete(ShiftModel model) {
 
 			try {
-				var found = _shiftShiftStore.FindById(id);
+				var found = _shiftShiftStore.FindById(model.Id);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
@@ -63,20 +63,23 @@ namespace Leopard.Bussiness.Services {
 		public Task<List<ShiftResultModel>> GetAll(ShiftSearchModel model) {
 
 
-			if (string.IsNullOrWhiteSpace(model.Title) && model.PortalId == 0 && model.ShiftType == 0) {
+			if (string.IsNullOrWhiteSpace(model.Title) && model.PortalId == 0 && model.ShiftType == 0 && model.Id==0) {
 				GetAllExpressions.Add(pp => true);
 			} else {
 				if (model.PortalId != 0) {
 					GetAllExpressions.Add(pp => pp.PortalId == model.PortalId);
 				}
 				if (!string.IsNullOrWhiteSpace(model.Title)) {
-					GetAllExpressions.Add(pp => model.Title.Contains(pp.Title));
+					GetAllExpressions.Add(pp => pp.Title.Contains(model.Title));
 				}
 				if (model.ShiftType != 0) {
 					GetAllExpressions.Add(pp => pp.ShiftType == model.ShiftType);
 				}
+				if (model.Id != 0) {
+					GetAllExpressions.Add(pp=> pp.Id==model.Id);
+				}
 			}
-
+			GetAllExpressions.Add(pp=> pp.IsDeleted!=true);
 			Task<List<ShiftResultModel>>? res = _shiftShiftStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftResultModel { Id = pp.Id, Title = pp.Title, PortalTitle = pp.Portal.Title, PortalId = pp.PortalId, EndTime = pp.EndTime, StartTime = pp.StartTime, ShiftTypeId = pp.ShiftType.Value, ShiftTypeTitle = GetShiftTypeTitleByShiftTypeId(pp.ShiftType) }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
 

@@ -2,15 +2,17 @@ using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SamtApi.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SamtApi.Controllers.WebApi {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ProductionTypeController : ControllerBase {
+	public class ProductionTypeController : YaldaController {
 
 		readonly private IShiftProductionTypeService _shiftProductionTypeService;
 
@@ -95,5 +97,6 @@ namespace SamtApi.Controllers.WebApi {
 		//[HttpDelete("{id}")]
 		//public void Delete(int id) {
 		//}
+
 	}
 }

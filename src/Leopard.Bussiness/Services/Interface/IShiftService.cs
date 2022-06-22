@@ -19,7 +19,7 @@ namespace Leopard.Bussiness.Services.Interface {
 
 		public Task<BaseResult> Update(ShiftModel model);
 
-		public Task<BaseResult> Delete(int id);
+		public Task<BaseResult> Delete(ShiftModel model);
 
 		public int GetAllCount();
 

@@ -12,7 +12,7 @@ namespace Leopard.Bussiness.Services.Interface {
 
 		public  Task<BaseResult> Update(ShiftTabletCrewModel model);
 
-		public Task<BaseResult> Delete(int id);
+		public Task<BaseResult> Delete(ShiftTabletCrewModel model);
 
 		public Task<int> Replace(int replaced, int replacedBy);
 

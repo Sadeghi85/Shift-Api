@@ -16,5 +16,6 @@ namespace Leopard.Bussiness.Services.Interface {
 		public Task<BaseResult> UpdateShifTablet(ShiftTabletModel model);
 		public Task<List<ShiftTabletResult>>? GetAll(ShiftTabletSearchModel model);
 		public int GetShiftTabletCount();
+		public Task<BaseResult> Delete(ShiftTabletModel model);
 	}
 }

@@ -32,7 +32,7 @@ namespace Leopard.Bussiness.Services {
 
 			} else {
 				if (!string.IsNullOrWhiteSpace(model.Title)) {
-					GetAllExpressions.Add(pp => model.Title.Contains(pp.Title));
+					GetAllExpressions.Add(pp => pp.Title.Contains(model.Title));
 				}
 				if (model.PortalId != 0) {
 					GetAllExpressions.Add(pp => pp.PortalId == model.PortalId);
@@ -41,6 +41,7 @@ namespace Leopard.Bussiness.Services {
 					GetAllExpressions.Add(pp => pp.Id == model.Id);
 				}
 			}
+			GetAllExpressions.Add(pp=> pp.IsDeleted!=true);
 
 			//var resCnt = _shiftLocationStore.TotalCount(Expressions);
 
@@ -117,9 +118,9 @@ namespace Leopard.Bussiness.Services {
 			return BaseResult;
 		}
 
-		public async Task<BaseResult> Delete(int id) {
+		public async Task<BaseResult> Delete(ShiftLocationModel model) {
 			try {
-				var found = _shiftLocationStore.FindById(id);
+				var found = _shiftLocationStore.FindById(model.Id);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد";

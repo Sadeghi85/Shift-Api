@@ -76,11 +76,11 @@ namespace Leopard.Bussiness.Services {
 		}
 
 
-		public async Task<BaseResult> DeleteScriptSupervisorDescription(int id) {
+		public async Task<BaseResult> DeleteScriptSupervisorDescription(ScriptSupervisorDescriptionModel model) {
 
 
 			try {
-				var foundScriptSupervisorDescription = _scriptSupervisorDescriptionStore.FindById(id);
+				var foundScriptSupervisorDescription = _scriptSupervisorDescriptionStore.FindById(model.Id);
 				if (foundScriptSupervisorDescription == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
@@ -123,11 +123,12 @@ namespace Leopard.Bussiness.Services {
 					GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.CreateDateTime.Value.Date == model.CreateDateTime.Value.Date);
 				}
 				if (!string.IsNullOrWhiteSpace(model.Description)) {
-					GetAllScriptSupervisorDescriptionExpressions.Add(pp => model.Description.Contains(pp.Description));
+					GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.Description.Contains(model.Description));
 
 				}
 
 			}
+			GetAllScriptSupervisorDescriptionExpressions.Add(pp=> pp.IsDeleted!=true);
 
 			Task<List<ShiftTabletScriptSupervisorDescription>>? res = _scriptSupervisorDescriptionStore.GetAllWithPagingAsync(GetAllScriptSupervisorDescriptionExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
 
@@ -219,10 +220,10 @@ namespace Leopard.Bussiness.Services {
 					GetAllTabletConductorChangesExpressions.Add(pp => pp.Id == model.Id);
 				}
 				if (!string.IsNullOrWhiteSpace(model.ProgramTitle)) {
-					GetAllTabletConductorChangesExpressions.Add(pp => model.ProgramTitle.Contains(pp.ProgramTitle));
+					GetAllTabletConductorChangesExpressions.Add(pp => pp.ProgramTitle.Contains(model.ProgramTitle));
 				}
 				if (!string.IsNullOrWhiteSpace(model.ReplacedProgramTitle)) {
-					GetAllTabletConductorChangesExpressions.Add(pp => model.ReplacedProgramTitle.Contains(pp.ReplacedProgramTitle));
+					GetAllTabletConductorChangesExpressions.Add(pp => pp.ReplacedProgramTitle.Contains(model.ReplacedProgramTitle));
 				}
 				if (model.ShiftTabletId != 0) {
 					GetAllTabletConductorChangesExpressions.Add(pp => pp.ShiftTabletId == model.ShiftTabletId);
@@ -232,6 +233,7 @@ namespace Leopard.Bussiness.Services {
 				}
 
 			}
+			GetAllTabletConductorChangesExpressions.Add(pp => pp.IsDeleted != true);
 			Task<List<ShiftTabletConductorChanx>>? res = _shiftTabletConductorChanxStore.GetAllWithPagingAsync(GetAllTabletConductorChangesExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
 			return res;
 
@@ -242,10 +244,10 @@ namespace Leopard.Bussiness.Services {
 			return res;
 		}
 
-		public async Task<BaseResult> DeleteTabletConductorChanges(int id) {
+		public async Task<BaseResult> DeleteTabletConductorChanges(TabletConductorChangesModel model) {
 
 			try {
-				var foundConductorChange = _shiftTabletConductorChanxStore.FindById(id);
+				var foundConductorChange = _shiftTabletConductorChanxStore.FindById(model.Id);
 				if (foundConductorChange == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
@@ -319,16 +321,16 @@ namespace Leopard.Bussiness.Services {
 					GetAllShiftRevisionProblemExpressions.Add(pp => pp.ShiftTabletId == model.ShiftTabletId);
 				}
 				if (!string.IsNullOrWhiteSpace(model.FileNumber)) {
-					GetAllShiftRevisionProblemExpressions.Add(pp => model.FileNumber.Contains(pp.FileNumber));
+					GetAllShiftRevisionProblemExpressions.Add(pp => pp.FileNumber.Contains(model.FileNumber));
 				}
 				if (!string.IsNullOrWhiteSpace(model.FileName)) {
-					GetAllShiftRevisionProblemExpressions.Add(pp => model.FileName.Contains(pp.FileName));
+					GetAllShiftRevisionProblemExpressions.Add(pp => pp.FileName.Contains(model.FileName));
 				}
 				if (!string.IsNullOrWhiteSpace(model.RevisorCode)) {
-					GetAllShiftRevisionProblemExpressions.Add(pp => model.RevisorCode.Contains(pp.RevisorCode));
+					GetAllShiftRevisionProblemExpressions.Add(pp => pp.RevisorCode.Contains(model.RevisorCode));
 				}
 				if (!string.IsNullOrEmpty(model.Description)) {
-					GetAllShiftRevisionProblemExpressions.Add(pp => model.Description.Contains(pp.Description));
+					GetAllShiftRevisionProblemExpressions.Add(pp => pp.Description.Contains(model.Description));
 
 				}
 				if (model.CreateDateTime != null) {
@@ -337,6 +339,8 @@ namespace Leopard.Bussiness.Services {
 
 
 			}
+			GetAllShiftRevisionProblemExpressions.Add(pp=> pp.IsDeleted!=true);
+
 			Task<List<ShiftRevisionProblem>>? res = _shiftRevisionProblemStore.GetAllWithPagingAsync(GetAllShiftRevisionProblemExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
 
 			return res;
@@ -384,10 +388,10 @@ namespace Leopard.Bussiness.Services {
 		}
 
 
-		public async Task<BaseResult> DeleteShiftRevisionProblem(int id) {
+		public async Task<BaseResult> DeleteShiftRevisionProblem(ShiftRevisionProblemModel model) {
 
 			try {
-				var foundRevision = _shiftRevisionProblemStore.FindById(id);
+				var foundRevision = _shiftRevisionProblemStore.FindById(model.Id);
 				if (foundRevision == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
