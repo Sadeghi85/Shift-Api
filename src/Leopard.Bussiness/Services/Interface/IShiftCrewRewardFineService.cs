@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 namespace Leopard.Bussiness.Services.Interface {
 	public interface IShiftCrewRewardFineService {
 		public Task<BaseResult> Register(ShiftCrewRewardFineModel model);
-		public Task<int> Update(ShiftCrewRewardFineModel model);
+		public Task<BaseResult> Update(ShiftCrewRewardFineModel model);
 
 		public Task<List<ShiftCrewRewardFine>>? GetAll(ShiftCrewRewardFineSearchModel model);
 
-		public Task<int> Delete(int id);
+		public Task<BaseResult> Delete(int id);
 	}
 }

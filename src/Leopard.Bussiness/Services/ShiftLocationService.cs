@@ -91,13 +91,54 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public async Task<int> Update(ShiftLocationModel model) {
+		public async Task<BaseResult> Update(ShiftLocationModel model) {
 
-			var found = _shiftLocationStore.FindById(model.Id);
-			found.Title = model.Title;
-			found.PortalId = model.PortalId;
-			var res = await _shiftLocationStore.Update(found);
-			return res;
+			try {
+				var found = _shiftLocationStore.FindById(model.Id);
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر یافت نشد";
+
+				} else {
+					found.Title = model.Title;
+					found.PortalId = model.PortalId;
+					var res = await _shiftLocationStore.Update(found);
+				}
+			} catch (Exception ex) {
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+			return BaseResult;
+		}
+
+		public async Task<BaseResult> Delete(int id) {
+			try {
+				var found = _shiftLocationStore.FindById(id);
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر یافت نشد";
+
+				} else {
+					found.IsDeleted = true;
+					var res = await _shiftLocationStore.Update(found);
+				}
+			} catch (Exception ex) {
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+			return BaseResult;
 		}
 	}
 }

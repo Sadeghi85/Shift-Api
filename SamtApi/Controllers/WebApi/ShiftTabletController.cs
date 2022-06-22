@@ -75,10 +75,10 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("Update")]
 		public async Task<OkObjectResult> Update(ShiftTabletModel model) {
 			var res = await _shiftTabletService.UpdateShifTablet(model);
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 
 		}
 

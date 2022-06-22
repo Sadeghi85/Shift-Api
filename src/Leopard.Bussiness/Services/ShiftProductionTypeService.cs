@@ -84,15 +84,32 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public async Task<int> Update(ShiftProductionTypeModel model) {
+		public async Task<BaseResult> Update(ShiftProductionTypeModel model) {
 
-			var found = _shiftProductionTypeStore.FindById(model.Id);
+			try {
+				var found = _shiftProductionTypeStore.FindById(model.Id);
+				if (found == null) { 
+					BaseResult.Success=false;
+					BaseResult.Message = "شناسه مورد نظر جستجو نشد.";
+				} else {
+					found.Title = model.Title;
 
-			found.Title = model.Title;
+					var res = await _shiftProductionTypeStore.Update(found);
+				}
+			} catch (Exception ex) {
 
-			var res = await _shiftProductionTypeStore.Update(found);
+				BaseResult.Success = false;
 
-			return res;
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+
+				BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+
+			return BaseResult;
 
 		}
 

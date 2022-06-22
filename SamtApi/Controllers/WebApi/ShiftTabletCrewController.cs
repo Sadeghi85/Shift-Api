@@ -342,10 +342,10 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("Update")]
 		public async Task<IActionResult> Update(ShiftTabletCrewModel model) {
 			var res = await _shiftTabletCrewService.Update(model);
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
 		[HttpPost("Replace/{replaced}/{replacedBy}")]
@@ -361,10 +361,10 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("Delete/{id}")]
 		public async Task<IActionResult> Delete(int id) {
 			var res = await _shiftTabletCrewService.Delete(id);
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 	}
 }

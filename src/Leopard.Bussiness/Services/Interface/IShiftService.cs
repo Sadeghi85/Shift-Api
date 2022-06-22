@@ -17,9 +17,9 @@ namespace Leopard.Bussiness.Services.Interface {
 
 		public Task<BaseResult> Register(ShiftModel model);
 
-		public Task<int> Update(ShiftModel model);
+		public Task<BaseResult> Update(ShiftModel model);
 
-		public Task<int> Delete(int id);
+		public Task<BaseResult> Delete(int id);
 
 		public int GetAllCount();
 

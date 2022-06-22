@@ -85,10 +85,10 @@ namespace SamtApi.Controllers.WebApi {
 
 			var res = await _shiftProductionTypeService.Update(model);
 
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
 		// DELETE api/<ProductionTypeController>/5

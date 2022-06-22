@@ -26,13 +26,29 @@ namespace Leopard.Bussiness.Services {
 		}
 
 
-		public async Task<int> Delete(int id) {
+		public async Task<BaseResult> Delete(int id) {
 
-			var found = _shiftShiftStore.FindById(id);
-			found.IsDeleted = true;
-			var res = await _shiftShiftStore.Update(found);
+			try {
+				var found = _shiftShiftStore.FindById(id);
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+				} else {
+					found.IsDeleted = true;
+					var res = await _shiftShiftStore.Update(found);
+				}
+			} catch (Exception ex) {
 
-			return res;
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+
+			return BaseResult;
 
 		}
 
@@ -152,21 +168,37 @@ namespace Leopard.Bussiness.Services {
 			return res;
 		}
 
-		public async Task<int> Update(ShiftModel model) {
+		public async Task<BaseResult> Update(ShiftModel model) {
 
-			var found = _shiftShiftStore.FindById(model.Id);
-			var res = 0;
-			if (found != null) {
+			try {
+				var found = _shiftShiftStore.FindById(model.Id);
+				var res = 0;
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر جستجو نشد.";
 
-				found.Title = model.Title;
-				found.StartTime = model.StartTime;
-				found.EndTime = model.EndTime;
-				found.ShiftType = model.ShiftType;
-				found.PortalId = model.PortalId;
-				res = await _shiftShiftStore.Update(found);
+				} else {
+
+					found.Title = model.Title;
+					found.StartTime = model.StartTime;
+					found.EndTime = model.EndTime;
+					found.ShiftType = model.ShiftType;
+					found.PortalId = model.PortalId;
+					res = await _shiftShiftStore.Update(found);
+
+				}
+			} catch (Exception ex) {
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
 
 			}
-			return res;
+			return BaseResult;
 		}
 	}
 }

@@ -33,15 +33,32 @@ namespace Leopard.Bussiness.Services {
 			
 		}
 
-		public async Task<int> Delete(int id) {
+		public async Task<BaseResult> Delete(int id) {
 
 
-			var found = _shiftShiftTabletCrewStore.FindById(id);
+			try {
+				var found = _shiftShiftTabletCrewStore.FindById(id);
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+				} else {
+					found.IsDeleted = true;
+					var res = await _shiftShiftTabletCrewStore.Update(found);
+				}
+			} catch (Exception ex) {
 
-			found.IsDeleted = true;
-			var res = await _shiftShiftTabletCrewStore.Update(found);
+				BaseResult.Success = false;
 
-			return res;
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+
+				BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+
+			return BaseResult;
 
 		}
 
@@ -187,19 +204,36 @@ namespace Leopard.Bussiness.Services {
 
 		
 
-		public async Task<int> Update(ShiftTabletCrewModel model) {
+		public async Task<BaseResult> Update(ShiftTabletCrewModel model) {
 
-			var found = _shiftShiftTabletCrewStore.FindById(model.Id);
+			try {
+				var found = _shiftShiftTabletCrewStore.FindById(model.Id);
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+				} else {
+					found.ShiftTabletId = model.ShiftTabletId;
+					found.EntranceTime = model.EntranceTime;
+					found.ExitTime = model.ExitTime;
+					found.ResourceId = model.ResourceTypeId;
+					found.AgentId = model.AgentId;
 
-			found.ShiftTabletId = model.ShiftTabletId;
-			found.EntranceTime = model.EntranceTime;
-			found.ExitTime = model.ExitTime;
-			found.ResourceId = model.ResourceTypeId;
-			found.AgentId = model.AgentId;
+					var res = await _shiftShiftTabletCrewStore.Update(found);
+				}
+			} catch (Exception ex) {
 
-			var res = await _shiftShiftTabletCrewStore.Update(found);
+				BaseResult.Success = false;
 
-			return res;
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+
+				BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+
+			return BaseResult;
 
 
 		}

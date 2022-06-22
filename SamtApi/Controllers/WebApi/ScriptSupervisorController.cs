@@ -81,8 +81,8 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAllTabletConductorChanges")]
 		public async Task<IActionResult> GetAllTabletConductorChanges(TabletConductorChangesSearchModel model) {
 
-			var res = _scriptSupervisorService.GetAllTabletConductorChanges(model);
-			return Ok(res);
+			List<ShiftTabletConductorChanx>? res =await _scriptSupervisorService.GetAllTabletConductorChanges(model);
+			return Ok(OperationResult<List<ShiftTabletConductorChanx>?>.SuccessResult(res, _scriptSupervisorService.GetAllTabletConductorChangesTotalCount()));
 		}
 
 		[HttpPost("DeleteTabletConductorChanges")]
@@ -108,8 +108,9 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAllShiftRevisionProblem")]
 		public async Task<IActionResult> GetAllShiftRevisionProblem(ShiftRevisionProblemSearchModel model) {
 
-			var res = _scriptSupervisorService.GetAllShiftRevisionProblem(model);
-			return Ok(res);
+			List<ShiftRevisionProblem>? res =await _scriptSupervisorService.GetAllShiftRevisionProblem(model);
+			return Ok(OperationResult<List<ShiftRevisionProblem>?>.SuccessResult(res, _scriptSupervisorService.GetAllShiftRevisionProblemTotalCount()));
+			//return Ok(res);
 		}
 
 

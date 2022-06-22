@@ -71,22 +71,22 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("Update")]
 		public async Task<IActionResult> Update(ShiftModel model) {
 
-			int res = await _shiftService.Update(model);
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			var res = await _shiftService.Update(model);
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
 		// DELETE api/<ShiftController>/5
 		[HttpPost("Delete/{id}")]
 		public async Task<IActionResult> Delete(int id) {
 
-			int res = await _shiftService.Delete(id);
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			var res = await _shiftService.Delete(id);
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 	}
 }

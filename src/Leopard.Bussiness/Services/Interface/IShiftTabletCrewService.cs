@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services.Interface {
 	public interface IShiftTabletCrewService {
-		
-		public Task<int> Update(ShiftTabletCrewModel model);
 
-		public Task<int> Delete(int id);
+		public  Task<BaseResult> Update(ShiftTabletCrewModel model);
+
+		public Task<BaseResult> Delete(int id);
 
 		public Task<int> Replace(int replaced, int replacedBy);
 

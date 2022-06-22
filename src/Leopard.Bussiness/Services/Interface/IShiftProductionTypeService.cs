@@ -14,7 +14,7 @@ namespace Leopard.Bussiness.Services.Interface {
 		public Task<List<ShiftProductionResult>>? GetAll(ShiftProductionSearchModel model);
 		public ShiftProductionType FindById(int id);
 		public Task<BaseResult> Register(ShiftProductionTypeModel model);
-		public Task<int> Update(ShiftProductionTypeModel model);
+		public Task<BaseResult> Update(ShiftProductionTypeModel model);
 		public int GetAllCount();
 	}
 }

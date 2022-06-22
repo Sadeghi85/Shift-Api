@@ -23,17 +23,33 @@ namespace Leopard.Bussiness.Services {
 			_shiftLogStore = shiftLogStore;
 		}
 
-		public async Task<int> Delete(int id) {
+		public async Task<BaseResult> Delete(int id) {
 
-			var found = _shiftCrewRewardFineStore.FindById(id);
-			found.IsDeleted = true;
-			var res = await _shiftCrewRewardFineStore.Update(found);
+			try {
+				var found = _shiftCrewRewardFineStore.FindById(id);
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+				} else {
+					found.IsDeleted = true;
+					var res = await _shiftCrewRewardFineStore.Update(found);
+				}
+			} catch (Exception ex) {
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
 
 
 
 
 
-			return res;
+			return BaseResult;
 
 		}
 
@@ -97,20 +113,34 @@ namespace Leopard.Bussiness.Services {
 			return BaseResult;
 		}
 
-		public async Task<int> Update(ShiftCrewRewardFineModel model) {
+		public async Task<BaseResult> Update(ShiftCrewRewardFineModel model) {
 
-			var found = _shiftCrewRewardFineStore.FindById(model.Id);
-			var res = 0;
-			if (found != null) {
-				found.ShiftTabletCrewId = model.ShiftTabletCrewId;
-				found.IsReward = model.IsReward;
-				found.Ammount = model.Ammount;
-				found.Shiftpercentage = model.Shiftpercentage;
-				found.Description = model.Description;
-				res = await _shiftCrewRewardFineStore.Update(found);
+			try {
+				var found = _shiftCrewRewardFineStore.FindById(model.Id);
+				var res = 0;
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+				} else {
+					found.ShiftTabletCrewId = model.ShiftTabletCrewId;
+					found.IsReward = model.IsReward;
+					found.Ammount = model.Ammount;
+					found.Shiftpercentage = model.Shiftpercentage;
+					found.Description = model.Description;
+					res = await _shiftCrewRewardFineStore.Update(found);
 
+				}
+			} catch (Exception ex) {
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
 			}
-			return res;
+			return BaseResult;
 		}
 	}
 }

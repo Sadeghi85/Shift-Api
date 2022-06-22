@@ -65,10 +65,10 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<IActionResult> Update(ShiftCrewRewardFineModel model) {
 
 			var res = await _shiftCrewRewardFineService.Update(model);
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
 		// DELETE api/<ShiftCrewRewardFineController>/5
@@ -76,10 +76,10 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<IActionResult> Delete(int id) {
 
 			var res = await _shiftCrewRewardFineService.Delete(id);
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
-			return Ok(OperationResult<string>.FailureResult(""));
+			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 	}
 }

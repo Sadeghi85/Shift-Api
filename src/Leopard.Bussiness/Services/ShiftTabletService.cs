@@ -104,19 +104,36 @@ namespace Leopard.Bussiness.Services {
 			return BaseResult;
 		}
 
-		public async Task<int> UpdateShifTablet(ShiftTabletModel model) {
+		public async Task<BaseResult> UpdateShifTablet(ShiftTabletModel model) {
 
 
-			var found = _shiftShiftTabletStore.FindById(model.Id);
+			try {
+				var found = _shiftShiftTabletStore.FindById(model.Id);
 
-			found.ShiftId = model.ShiftId;
-			found.ShiftDate = model.ShiftDate;
-			found.ProductionTypeId = model.ProductionTypeId;
-			found.ShiftWorthPercent = model.ShiftWorthPercent;
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+				} else {
 
-			var res = await _shiftShiftTabletStore.Update(found);
+					found.ShiftId = model.ShiftId;
+					found.ShiftDate = model.ShiftDate;
+					found.ProductionTypeId = model.ProductionTypeId;
+					found.ShiftWorthPercent = model.ShiftWorthPercent;
 
-			return res;
+					var res = await _shiftShiftTabletStore.Update(found);
+				}
+			} catch (Exception ex) {
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+
+			return BaseResult;
 
 		}
 }

@@ -82,22 +82,20 @@ namespace Leopard.Bussiness.Services {
 				var foundShiftTablet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
 				var foundLocation = _shiftLocationStore.FindById(model.LocationId);
 
-				if (foundShiftTablet==null) { 
-					BaseResult.Success=false;
+				if (foundShiftTablet == null) {
+					BaseResult.Success = false;
 					BaseResult.Message = "لوح شیفت مورد نظر یافت نشد.";
-				
-				}
-				else if (foundLocation==null) {
+
+				} else if (foundLocation == null) {
 
 					BaseResult.Success = false;
 					BaseResult.Message = "محل برگزاری مورد نظر یافت نشد.";
-				}
-				else {
+				} else {
 
 					ShiftShiftTabletLocation tabletLocation = new ShiftShiftTabletLocation { LocationId = model.LocationId, ShiftTabletId = model.ShiftTabletId };
 					var res = await _shiftShiftTabletLocationStore.InsertAsync(tabletLocation);
 				}
-				
+
 			} catch (Exception ex) {
 
 				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
@@ -113,14 +111,19 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public async Task<int> Update(ShiftTabletLocationModel model) {
+		public async Task<BaseResult> Update(ShiftTabletLocationModel model) {
 
 			var found = _shiftShiftTabletLocationStore.FindById(model.Id);
+			if (found == null) {
+				BaseResult.Success = false;
+				BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+			} else {
 
-			found.ShiftTabletId = model.ShiftTabletId;
-			found.LocationId = model.LocationId;
-			var res = await _shiftShiftTabletLocationStore.Update(found);
-			return res;
+				found.ShiftTabletId = model.ShiftTabletId;
+				found.LocationId = model.LocationId;
+				var res = await _shiftShiftTabletLocationStore.Update(found);
+			}
+			return BaseResult;
 
 		}
 	}

@@ -14,7 +14,8 @@ namespace Leopard.Bussiness.Services.Interface {
 
 		public Task<BaseResult> RegisterShiftLocation(ShiftLocationModel model);
 
-		public Task<int> Update(ShiftLocationModel model);
+		public Task<BaseResult> Update(ShiftLocationModel model);
+		public  Task<BaseResult> Delete(int id);
 
 		public int GetAllTotal();
 
