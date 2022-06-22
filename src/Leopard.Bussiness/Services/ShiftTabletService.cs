@@ -76,11 +76,12 @@ namespace Leopard.Bussiness.Services {
 				var foundProductionType = _shiftProductionTypeStore.FindById(model.ProductionTypeId);
 
 				var foundShift= _shiftShiftStore.FindById(model.ShiftId);
-				if (foundShift==null) { 
-					BaseResult.Success= false;
-					BaseResult.Message = "شیفت مورد نظر جستجو نشد.";
-				} 
-				else if (foundProductionType==null) {
+				//if (foundShift==null) { 
+				//	BaseResult.Success= false;
+				//	BaseResult.Message = "شیفت مورد نظر جستجو نشد.";
+				//} 
+				//else 
+				if (foundProductionType==null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "نوع تولید شیفت یافت نشد.";
 				}
@@ -93,7 +94,10 @@ namespace Leopard.Bussiness.Services {
 				}
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
+				//ex.InnerException?.Message ?? ex.Message;
+				//ShiftLog shiftLog = new ShiftLog { Message = ex.Message };
+
 
 				//_shiftLogStore.ResetContext();
 
@@ -124,7 +128,7 @@ namespace Leopard.Bussiness.Services {
 				}
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 
 				//_shiftLogStore.ResetContext();
 

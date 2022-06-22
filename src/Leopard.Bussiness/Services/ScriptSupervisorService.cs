@@ -38,7 +38,7 @@ namespace Leopard.Bussiness.Services {
 					await _scriptSupervisorDescriptionStore.InsertAsync(supervisorDescription);
 				}
 			} catch (Exception ex) {
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 
 				//_shiftLogStore.ResetContext();
 
@@ -64,7 +64,7 @@ namespace Leopard.Bussiness.Services {
 
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 				//_shiftLogStore.ResetContext();
 
 				var ss = await _shiftLogStore.InsertAsync(shiftLog);
@@ -91,7 +91,7 @@ namespace Leopard.Bussiness.Services {
 
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 				//_shiftLogStore.ResetContext();
 
 				var ss = await _shiftLogStore.InsertAsync(shiftLog);
@@ -157,7 +157,7 @@ namespace Leopard.Bussiness.Services {
 
 				}
 			} catch (Exception ex) {
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 
 				//_shiftLogStore.ResetContext();
 
@@ -192,7 +192,7 @@ namespace Leopard.Bussiness.Services {
 
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 
 				//_shiftLogStore.ResetContext();
 
@@ -256,7 +256,7 @@ namespace Leopard.Bussiness.Services {
 				}
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 
 				//_shiftLogStore.ResetContext();
 
@@ -288,7 +288,7 @@ namespace Leopard.Bussiness.Services {
 
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 
 				//_shiftLogStore.ResetContext();
 
@@ -371,7 +371,7 @@ namespace Leopard.Bussiness.Services {
 				}
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 
 				//_shiftLogStore.ResetContext();
 
@@ -397,7 +397,7 @@ namespace Leopard.Bussiness.Services {
 				}
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 
 				//_shiftLogStore.ResetContext();
 

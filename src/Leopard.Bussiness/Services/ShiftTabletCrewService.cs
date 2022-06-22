@@ -49,7 +49,7 @@ namespace Leopard.Bussiness.Services {
 
 				BaseResult.Success = false;
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 
 				//_shiftLogStore.ResetContext();
 
@@ -174,7 +174,7 @@ namespace Leopard.Bussiness.Services {
 
 				BaseResult.Success = false;
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 
 				//_shiftLogStore.ResetContext();
 
@@ -224,7 +224,7 @@ namespace Leopard.Bussiness.Services {
 
 				BaseResult.Success = false;
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 
 				//_shiftLogStore.ResetContext();
 

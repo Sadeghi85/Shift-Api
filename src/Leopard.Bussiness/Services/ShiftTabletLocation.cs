@@ -98,7 +98,7 @@ namespace Leopard.Bussiness.Services {
 
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException != null ? ex.InnerException.Message : "" };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 
 				//_shiftLogStore.ResetContext();
 
