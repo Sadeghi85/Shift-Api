@@ -54,8 +54,6 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("Register")]
 		public async Task<OkObjectResult> Register(ShiftTabletModel model) {
 			if (!ModelState.IsValid) {
-
-
 				var errors = ModelState.Select(x => x.Value.Errors)
 						   .Where(y => y.Count > 0)
 						   .ToList();
@@ -76,6 +74,16 @@ namespace SamtApi.Controllers.WebApi {
 		// PUT api/<ShiftTabletController>/5
 		[HttpPost("Update")]
 		public async Task<OkObjectResult> Update(ShiftTabletModel model) {
+			if (!ModelState.IsValid) {
+				var errors = ModelState.Select(x => x.Value.Errors)
+						   .Where(y => y.Count > 0)
+						   .ToList();
+				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
+
+
+
 			var res = await _shiftTabletService.UpdateShifTablet(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
