@@ -33,21 +33,27 @@ namespace Leopard.Bussiness.Services {
 		}
 
 		public Task<List<ShiftTabletResult>>? GetAll(ShiftTabletSearchModel model) {
-
-			if (model.ShiftId == 0 && model.ShiftDate == null && model.ProductionTypeId == 0) {
-				GetAllExpressions.Add(pp => true);
-			} else {
-				if (model.ShiftId != 0) {
-					GetAllExpressions.Add(pp => pp.ShiftId == model.ShiftId);
-				}
-				if (model.ShiftDate != null) {
-					GetAllExpressions.Add(pp => pp.ShiftDate == model.ShiftDate);
-				}
-				if (model.ProductionTypeId != 0) {
-					GetAllExpressions.Add((pp) => pp.ProductionTypeId == model.ProductionTypeId);
-				}
-			}
 			GetAllExpressions.Add(pp => pp.IsDeleted != true);
+
+			//if (model.ShiftId == 0 && model.ShiftDate == null && model.ProductionTypeId == 0) {
+			//	GetAllExpressions.Add(pp => true);
+			//} else {
+
+			if (model.Id != 0) {
+				GetAllExpressions.Add(pp => pp.Id == model.Id);
+			}
+
+			if (model.ShiftId != 0) {
+				GetAllExpressions.Add(pp => pp.ShiftId == model.ShiftId);
+			}
+			if (model.ShiftDate != null) {
+				GetAllExpressions.Add(pp => pp.ShiftDate == model.ShiftDate);
+			}
+			if (model.ProductionTypeId != 0) {
+				GetAllExpressions.Add((pp) => pp.ProductionTypeId == model.ProductionTypeId);
+			}
+			//}
+
 			Task<List<ShiftTabletResult>>? res = _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletResult { Id = pp.Id, ProductionTypeId = pp.ProductionTypeId, ProductionTypeTitle = pp.ShiftProductionType.Title, ShiftDate = pp.ShiftDate, ShiftTitle = pp.ShiftShift.Title, ShiftId = pp.ShiftId, ShiftWorthPercent = pp.ShiftWorthPercent }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
 			//IQueryable<ShiftShiftTablet>? res = _shiftShiftTabletStore.GetAll();
