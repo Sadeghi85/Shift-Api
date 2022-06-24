@@ -110,7 +110,17 @@ namespace Leopard.Bussiness.Services {
 
 			//Task<List<ShiftTabletCrewSearchResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletCrewSearchResult {ShifTabletId=pp.ShifTabletId , EntranceTime= pp.EntranceTime , ExitTime= pp.ExitTime , FisrtName= pp.SamtAgent.FirstName, LastName=pp.SamtAgent.LastName, AgentId=pp.AgentId, ShiftTitle= pp.ShiftShiftTablet.ShiftShift.Title , ResourceTitle= pp.SamtResourceType.Title} , pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
-			Task<List<ShfitTabletReportResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShfitTabletReportResult { id = pp.Id, shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, firstName = pp.SamtAgent.FirstName, lastName = pp.SamtAgent.LastName, jobName = pp.SamtResourceType.Title, shiftDate = pp.ShiftShiftTablet.ShiftDate.Value, PortalName = pp.ShiftShiftTablet.ShiftShift.Portal.Title, EntranceTime = pp.EntranceTime, ExitTime = pp.ExitTime }, pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo);
+			Task<List<ShfitTabletReportResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, 
+				pp => new ShfitTabletReportResult { id = pp.Id, 
+					shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, 
+					firstName = pp.SamtAgent.FirstName, 
+					lastName = pp.SamtAgent.LastName, 
+					jobName = pp.SamtResourceType.Title, 
+					shiftDate = pp.ShiftShiftTablet.ShiftDate.Value, 
+					PortalName = pp.ShiftShiftTablet.ShiftShift.Portal.Title, 
+					EntranceTime = pp.EntranceTime, ExitTime = pp.ExitTime 
+				}, 
+				pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo);
 
 			//IQueryable<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll();
 
@@ -147,45 +157,46 @@ namespace Leopard.Bussiness.Services {
 				var foundShiftTablet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
 				if (foundAgent == null) {
 					BaseResult.Success = false;
-					BaseResult.Message = "شناسه کارمند یافت نشد.";
+					BaseResult.Message = "کارمندی با این مشخصات یافت نشد";
 
-				} else if (foundResourceType == null) {
+				}
+				if (foundResourceType == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه سمت مورد نظر یافت نشد.";
 
-				} else if (foundShiftTablet == null) {
+				}
+				if (foundShiftTablet == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه لوح مورد نظر یافت نشد.";
 
-				} else if (model.EntranceTime > model.ExitTime) {
+				}
+				if (model.EntranceTime > model.ExitTime) {
 
 					BaseResult.Success = false;
 					BaseResult.Message = "زمان خروج باید بزرگتر از زمان ورود کارمند باشد.";
 
-				} else {
-					ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew {
-						AgentId = model.AgentId,
-						EntranceTime = model.EntranceTime,
-						ExitTime = model.ExitTime,
-						IsReplaced = false,
-						ResourceId = model.ResourceTypeId,
-						ShiftTabletId = model.ShiftTabletId
-					};
-
-					var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
 				}
+
+				ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew {
+					AgentId = model.AgentId,
+
+					//EntranceTime = model.EntranceTime,
+					//ExitTime = model.ExitTime,
+
+					IsReplaced = false,
+					ResourceId = model.ResourceTypeId,
+					ShiftTabletId = model.ShiftTabletId
+				};
+
+				var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
+
 			} catch (Exception ex) {
 
 				BaseResult.Success = false;
-
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
-
+				var shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 				//_shiftLogStore.ResetContext();
-
 				var ss = await _shiftLogStore.InsertAsync(shiftLog);
-
 				BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
-
 			}
 
 

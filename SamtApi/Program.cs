@@ -65,9 +65,10 @@ builder.Host.UseLamar((context, registry) => {
 			options.RequireHttpsMetadata = false;
 			options.TokenValidationParameters = new TokenValidationParameters {
 				ValidateAudience = false,
-				
+				ValidateIssuer = false,
+				ValidateLifetime = true,
+				ClockSkew = TimeSpan.Zero
 			};
-			
 		});
 
 
@@ -116,7 +117,8 @@ var app = builder.Build();
 if (!builder.Environment.IsDevelopment()) {
 	app.MapControllers();
 } else {
-	app.MapControllers().AllowAnonymous();
+	app.MapControllers();
+		//.AllowAnonymous();
 }
 
 // Configure the HTTP request pipeline.
@@ -125,6 +127,7 @@ if (!app.Environment.IsDevelopment()) {
 }
 
 app.UseSwagger();
+
 app.UseSwaggerUI();
 app.UseStaticFiles();
 

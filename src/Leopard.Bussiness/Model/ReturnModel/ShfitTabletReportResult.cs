@@ -6,21 +6,25 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Model.ReturnModel {
 	public class ShfitTabletReportResult {
+
 		public int id { get; set; }
 		public string shiftTitle { get; set; }
 		public string firstName { get; set; }
 		public string lastName { get; set; }
 		public string jobName { get; set; }
 		public DateTime shiftDate { get; set; }
-		public string weekDay { get {
+
+		public string weekDay {
+			get {
 				return shiftDate.DayOfWeek.ToString();
-			} }
+			}
+		}
 
 		public string PersianWeekDay {
 			get {
 				PersianDateTime persianDate = new PersianDateTime(shiftDate);
-				return  persianDate.DayName;
-				
+				return persianDate.DayName;
+
 			}
 		}
 
@@ -33,12 +37,14 @@ namespace Leopard.Bussiness.Model.ReturnModel {
 
 		public string PortalName { get; set; }
 
-		public string AgentFullName { get {
+		public string AgentFullName {
+			get {
 				return firstName + " " + lastName;
-			
-			} }
 
-		public DateTime EntranceTime { get; set; }
-		public DateTime ExitTime { get; set; }
+			}
+		}
+
+		public DateTime? EntranceTime { get; set; }
+		public DateTime? ExitTime { get; set; }
 	}
 }
