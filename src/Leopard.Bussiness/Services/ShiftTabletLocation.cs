@@ -57,7 +57,7 @@ namespace Leopard.Bussiness.Services {
 				}
 			}
 
-			Task<List<ShiftTabletLocationResult>>? res = _shiftShiftTabletLocationStore.GetAllAsync(GetAllExpressions, pp => new ShiftTabletLocationResult { ShiftId = pp.ShiftShiftTablet.ShiftId.Value, ShiftTabletId = pp.ShiftTabletId.Value, ShiftTitle = pp.ShiftShiftTablet.ShiftShift.Title }, pp => pp.Id, "desc");
+			Task<List<ShiftTabletLocationResult>>? res = _shiftShiftTabletLocationStore.GetAllAsync(GetAllExpressions, pp => new ShiftTabletLocationResult { ShiftId = pp.ShiftShiftTablet.ShiftId, ShiftTabletId = pp.ShiftTabletId.Value, ShiftTitle = pp.ShiftShiftTablet.ShiftShift.Title }, pp => pp.Id, "desc");
 
 
 			return res;

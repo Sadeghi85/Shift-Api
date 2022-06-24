@@ -12,9 +12,9 @@ namespace Leopard.Repository
     public partial class ShiftShiftTablet
     {
         public int Id { get; set; } // ID (Primary key)
-        public int? ShiftId { get; set; } // ShiftID
-        public DateTime? ShiftDate { get; set; } // ShiftDate
-        public int? ProductionTypeId { get; set; } // ProductionTypeId
+        public int ShiftId { get; set; } // ShiftID
+        public DateTime ShiftDate { get; set; } // ShiftDate
+        public int ProductionTypeId { get; set; } // ProductionTypeId
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime

@@ -82,7 +82,7 @@ namespace Leopard.Bussiness.Services {
 			try {
 				var foundProductionType = _shiftProductionTypeStore.FindById(model.ProductionTypeId);
 
-				var foundShiftTabletSameDate = _shiftShiftTabletStore.GetAll().Any(pp => pp.ShiftDate.Value.Date == model.ShiftDate.Value.Date && pp.ShiftId == model.ShiftId);
+				var foundShiftTabletSameDate = _shiftShiftTabletStore.GetAll().Any(pp => pp.ShiftDate.Date == model.ShiftDate.Date && pp.ShiftId == model.ShiftId);
 
 
 				var foundShift = _shiftShiftStore.FindById(model.ShiftId);
@@ -122,7 +122,7 @@ namespace Leopard.Bussiness.Services {
 		public async Task<BaseResult> UpdateShifTablet(ShiftTabletModel model) {
 			try {
 
-				var foundShiftTabletSameDate = _shiftShiftTabletStore.GetAll().Any(pp => pp.ShiftDate.Value.Date == model.ShiftDate.Value.Date && pp.ShiftId == model.ShiftId);
+				var foundShiftTabletSameDate = _shiftShiftTabletStore.GetAll().Any(pp => pp.ShiftDate.Date == model.ShiftDate.Date && pp.ShiftId == model.ShiftId && pp.Id != model.Id);
 
 				var found = _shiftShiftTabletStore.FindById(model.Id);
 

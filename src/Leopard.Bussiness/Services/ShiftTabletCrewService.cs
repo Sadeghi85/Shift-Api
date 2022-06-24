@@ -63,7 +63,7 @@ namespace Leopard.Bussiness.Services {
 		}
 
 		public List<ShfitTabletReportResult> ShfitTabletReport(DateTime fromDate, DateTime toDate, int PortalId, int take = 10, int skip = 10) {
-			var res = _shiftShiftTabletCrewStore.GetAll().Where(pp => (pp.ShiftShiftTablet.ShiftDate >= fromDate && pp.ShiftShiftTablet.ShiftDate <= toDate)).Skip(skip).Take(take).Select(pp => new ShfitTabletReportResult { id = pp.Id, shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, firstName = pp.SamtAgent.FirstName, lastName = pp.SamtAgent.LastName, jobName = pp.SamtResourceType.Title, shiftDate = pp.ShiftShiftTablet.ShiftDate.Value, }).ToList();
+			var res = _shiftShiftTabletCrewStore.GetAll().Where(pp => (pp.ShiftShiftTablet.ShiftDate >= fromDate && pp.ShiftShiftTablet.ShiftDate <= toDate)).Skip(skip).Take(take).Select(pp => new ShfitTabletReportResult { id = pp.Id, shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, firstName = pp.SamtAgent.FirstName, lastName = pp.SamtAgent.LastName, jobName = pp.SamtResourceType.Title, shiftDate = pp.ShiftShiftTablet.ShiftDate, }).ToList();
 			//var list = new List<int>() { 1, 2, 3, 4, 5 };
 
 			//list.OrderBy()
@@ -116,7 +116,7 @@ namespace Leopard.Bussiness.Services {
 					firstName = pp.SamtAgent.FirstName, 
 					lastName = pp.SamtAgent.LastName, 
 					jobName = pp.SamtResourceType.Title, 
-					shiftDate = pp.ShiftShiftTablet.ShiftDate.Value, 
+					shiftDate = pp.ShiftShiftTablet.ShiftDate, 
 					PortalName = pp.ShiftShiftTablet.ShiftShift.Portal.Title, 
 					EntranceTime = pp.EntranceTime, ExitTime = pp.ExitTime 
 				}, 
