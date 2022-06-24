@@ -120,8 +120,6 @@ namespace Leopard.Bussiness.Services {
 		}
 
 		public async Task<BaseResult> UpdateShifTablet(ShiftTabletModel model) {
-
-
 			try {
 
 				var foundShiftTabletSameDate = _shiftShiftTabletStore.GetAll().Any(pp => pp.ShiftDate.Value.Date == model.ShiftDate.Value.Date && pp.ShiftId == model.ShiftId);
@@ -134,7 +132,7 @@ namespace Leopard.Bussiness.Services {
 				} else if (foundShiftTabletSameDate) {
 
 					BaseResult.Success = false;
-					BaseResult.Message = "این شیفت در این روز حاص از قبل موجود است.";
+					BaseResult.Message = "این شیفت در تاریخ " + model.ShiftDate + " قبلا تعریف شده است";
 				} else {
 
 					found.ShiftId = model.ShiftId;
