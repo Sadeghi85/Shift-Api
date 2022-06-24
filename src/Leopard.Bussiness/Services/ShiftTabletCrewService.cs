@@ -30,7 +30,7 @@ namespace Leopard.Bussiness.Services {
 			_samtResourceTypeStore = samtResourceTypeStore;
 			_shiftShiftTabletStore = shiftShiftTabletStore;
 			_shiftLogStore = shiftLogStore;
-			
+
 		}
 
 		public async Task<BaseResult> Delete(ShiftTabletCrewModel model) {
@@ -77,32 +77,31 @@ namespace Leopard.Bussiness.Services {
 		public Task<List<ShfitTabletReportResult>>? GetAll(ShiftTabletCrewSearchModel model) {
 
 
-			if(model.ShifTabletId==0 && model.AgentId==0 && model.EntranceTime==null && model.ExitTime == null && model.IsReplaced==null && string.IsNullOrWhiteSpace(model.AgentName) && string.IsNullOrWhiteSpace(model.ShiftTitle) && model.FromDate==null && model.ToDate == null) {
+			if (model.ShifTabletId == 0 && model.AgentId == 0 && model.EntranceTime == null && model.ExitTime == null && model.IsReplaced == null && string.IsNullOrWhiteSpace(model.AgentName) && string.IsNullOrWhiteSpace(model.ShiftTitle) && model.FromDate == null && model.ToDate == null) {
 				GetAllExpressions.Add(pp => true);
 
 			} else {
 				if (model.ShifTabletId != 0) {
 					GetAllExpressions.Add(pp => pp.ShiftTabletId == model.ShifTabletId);
 				}
-				if (model.AgentId!=0) {
+				if (model.AgentId != 0) {
 					GetAllExpressions.Add(pp => pp.AgentId == model.AgentId);
 				}
-				if (model.EntranceTime!=null) {
-					GetAllExpressions.Add(pp=> pp.EntranceTime==model.EntranceTime);
+				if (model.EntranceTime != null) {
+					GetAllExpressions.Add(pp => pp.EntranceTime == model.EntranceTime);
 				}
 				if (model.IsReplaced != null) {
 					GetAllExpressions.Add(pp => pp.IsReplaced == model.IsReplaced);
 				}
-				if(!string.IsNullOrWhiteSpace( model.AgentName))
-				{	
-					GetAllExpressions.Add(PP =>  model.AgentName.Contains(PP.SamtAgent.FirstName) || model.AgentName.Contains(PP.SamtAgent.LastName));
+				if (!string.IsNullOrWhiteSpace(model.AgentName)) {
+					GetAllExpressions.Add(PP => model.AgentName.Contains(PP.SamtAgent.FirstName) || model.AgentName.Contains(PP.SamtAgent.LastName));
 
 				}
 				if (string.IsNullOrWhiteSpace(model.ShiftTitle)) {
 					GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftShift.Title.Contains(model.ShiftTitle));
 				}
 
-				if(model.FromDate!=null && model.ToDate != null) {
+				if (model.FromDate != null && model.ToDate != null) {
 					GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftDate >= model.FromDate && pp.ShiftShiftTablet.ShiftDate <= model.ToDate);
 				}
 
@@ -111,7 +110,7 @@ namespace Leopard.Bussiness.Services {
 
 			//Task<List<ShiftTabletCrewSearchResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletCrewSearchResult {ShifTabletId=pp.ShifTabletId , EntranceTime= pp.EntranceTime , ExitTime= pp.ExitTime , FisrtName= pp.SamtAgent.FirstName, LastName=pp.SamtAgent.LastName, AgentId=pp.AgentId, ShiftTitle= pp.ShiftShiftTablet.ShiftShift.Title , ResourceTitle= pp.SamtResourceType.Title} , pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
-			Task<List<ShfitTabletReportResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShfitTabletReportResult  { id = pp.Id, shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, firstName = pp.SamtAgent.FirstName, lastName = pp.SamtAgent.LastName, jobName = pp.SamtResourceType.Title, shiftDate = pp.ShiftShiftTablet.ShiftDate.Value, PortalName= pp.ShiftShiftTablet.ShiftShift.Portal.Title , EntranceTime= pp.EntranceTime , ExitTime = pp.ExitTime }, pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo);
+			Task<List<ShfitTabletReportResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShfitTabletReportResult { id = pp.Id, shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, firstName = pp.SamtAgent.FirstName, lastName = pp.SamtAgent.LastName, jobName = pp.SamtResourceType.Title, shiftDate = pp.ShiftShiftTablet.ShiftDate.Value, PortalName = pp.ShiftShiftTablet.ShiftShift.Portal.Title, EntranceTime = pp.EntranceTime, ExitTime = pp.ExitTime }, pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo);
 
 			//IQueryable<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll();
 
@@ -143,7 +142,7 @@ namespace Leopard.Bussiness.Services {
 
 			try {
 
-				var foundAgent= _agentStore.FindById(model.AgentId);
+				var foundAgent = _agentStore.FindById(model.AgentId);
 				var foundResourceType = _samtResourceTypeStore.FindById(model.ResourceTypeId);
 				var foundShiftTablet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
 				if (foundAgent == null) {
@@ -154,21 +153,25 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه سمت مورد نظر یافت نشد.";
 
-				} 
-				else if (foundShiftTablet==null) {
+				} else if (foundShiftTablet == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه لوح مورد نظر یافت نشد.";
 
-				}
-				else if (model.EntranceTime > model.ExitTime) {
+				} else if (model.EntranceTime > model.ExitTime) {
 
 					BaseResult.Success = false;
 					BaseResult.Message = "زمان خروج باید بزرگتر از زمان ورود کارمند باشد.";
 
-				}
-				else {
-					ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew { AgentId = model.AgentId, EntranceTime = model.EntranceTime, ExitTime = model.ExitTime, IsReplaced = false, ResourceId = model.ResourceTypeId, ShiftTabletId = model.ShiftTabletId };
-					
+				} else {
+					ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew {
+						AgentId = model.AgentId,
+						EntranceTime = model.EntranceTime,
+						ExitTime = model.ExitTime,
+						IsReplaced = false,
+						ResourceId = model.ResourceTypeId,
+						ShiftTabletId = model.ShiftTabletId
+					};
+
 					var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
 				}
 			} catch (Exception ex) {
@@ -201,9 +204,9 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		
 
-		
+
+
 
 		public async Task<BaseResult> Update(ShiftTabletCrewModel model) {
 
