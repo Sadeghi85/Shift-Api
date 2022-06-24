@@ -127,9 +127,9 @@ namespace SamtApi.Controllers.WebApi {
 					ws.Cells["B" + row].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
 
 					var query4 =
-	(from cell in ws.Cells["1:1"]
-	 where cell.Value?.ToString() == "شیفت"
-	 select cell).FirstOrDefault();
+						(from cell in ws.Cells["1:1"]
+						where cell.Value?.ToString() == "شیفت"
+						select cell).FirstOrDefault();
 
 					var sss = ws.Cells["D7"].Value;
 
@@ -287,14 +287,14 @@ namespace SamtApi.Controllers.WebApi {
 
 				package.SaveAs(stream);
 
-				
+
 
 				stream.Position = 0;
 				ReportActions ReportActions = new ReportActions();
 
 				pdfRes = ReportActions.CreateExcelToPdfReport(package, "", "Contracts Report", "", new MemoryStream());
 
-				
+
 			}
 
 
@@ -304,7 +304,7 @@ namespace SamtApi.Controllers.WebApi {
 			//return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Report.xlsx");
 		}
 
-		
+
 
 
 		//GET api/<ShiftTabletCrewController>/5
@@ -321,13 +321,9 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<IActionResult> Register(ShiftTabletCrewModel model) {
 
 			if (!ModelState.IsValid) {
-
-
 				var errors = ModelState.Select(x => x.Value.Errors)
 						   .Where(y => y.Count > 0)
 						   .ToList();
-
-
 				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
