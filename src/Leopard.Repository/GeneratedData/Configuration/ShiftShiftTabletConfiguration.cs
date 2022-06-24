@@ -15,9 +15,9 @@ namespace Leopard.Repository
             builder.HasKey(x => x.Id).HasName("PK_ShiftExecution").IsClustered();
 
             builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
-            builder.Property(x => x.ShiftId).HasColumnName(@"ShiftID").HasColumnType("int").IsRequired(false);
-            builder.Property(x => x.ShiftDate).HasColumnName(@"ShiftDate").HasColumnType("datetime").IsRequired(false);
-            builder.Property(x => x.ProductionTypeId).HasColumnName(@"ProductionTypeId").HasColumnType("int").IsRequired(false);
+            builder.Property(x => x.ShiftId).HasColumnName(@"ShiftID").HasColumnType("int").IsRequired();
+            builder.Property(x => x.ShiftDate).HasColumnName(@"ShiftDate").HasColumnType("datetime").IsRequired();
+            builder.Property(x => x.ProductionTypeId).HasColumnName(@"ProductionTypeId").HasColumnType("int").IsRequired();
             builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);

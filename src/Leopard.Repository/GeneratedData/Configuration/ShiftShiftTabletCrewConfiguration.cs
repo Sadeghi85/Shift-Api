@@ -18,8 +18,8 @@ namespace Leopard.Repository
             builder.Property(x => x.AgentId).HasColumnName(@"AgentId").HasColumnType("int").IsRequired();
             builder.Property(x => x.ResourceId).HasColumnName(@"ResourceId").HasColumnType("int").IsRequired();
             builder.Property(x => x.ShiftTabletId).HasColumnName(@"ShiftTabletId").HasColumnType("int").IsRequired();
-            builder.Property(x => x.EntranceTime).HasColumnName(@"EntranceTime").HasColumnType("datetime").IsRequired();
-            builder.Property(x => x.ExitTime).HasColumnName(@"ExitTime").HasColumnType("datetime").IsRequired();
+            builder.Property(x => x.EntranceTime).HasColumnName(@"EntranceTime").HasColumnType("datetime").IsRequired(false);
+            builder.Property(x => x.ExitTime).HasColumnName(@"ExitTime").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);
