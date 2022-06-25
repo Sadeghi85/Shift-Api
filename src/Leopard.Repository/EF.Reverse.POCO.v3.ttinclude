@@ -19636,11 +19636,13 @@ public enum {{EnumName}}{{#newline}}
 {{{#newline}}
     private readonly {{DbContextInterfaceName}} _ctx;{{#newline}}
     private readonly ILogger _logger;{{#newline}}
+    private readonly IPrincipal _iPrincipal;{{#newline}}
     {{#newline}}
-    public {{StoreClassName}}({{DbContextInterfaceName}} ctx, ILogger logger) : base(ctx, logger){{#newline}}
+    public {{StoreClassName}}({{DbContextInterfaceName}} ctx, ILogger logger, IPrincipal principal) : base(ctx, logger, principal){{#newline}}
     {{{#newline}}
         _ctx = ctx;{{#newline}}
 		_logger = logger;{{#newline}}
+        _iPrincipal = principal;{{#newline}}
     }{{#newline}}
 }";
         }
@@ -21260,11 +21262,13 @@ public enum {{EnumName}}{{#newline}}
 {{{#newline}}
     private readonly {{DbContextInterfaceName}} _ctx;{{#newline}}
     private readonly ILogger _logger;{{#newline}}
+    private readonly IPrincipal _iPrincipal;{{#newline}}
     {{#newline}}
-    public {{StoreClassName}}({{DbContextInterfaceName}} ctx, ILogger logger) : base(ctx, logger){{#newline}}
+    public {{StoreClassName}}({{DbContextInterfaceName}} ctx, ILogger logger, IPrincipal principal) : base(ctx, logger, principal){{#newline}}
     {{{#newline}}
         _ctx = ctx;{{#newline}}
 		_logger = logger;{{#newline}}
+        _iPrincipal = principal;{{#newline}}
     }{{#newline}}
 }";
         }
@@ -22933,11 +22937,13 @@ public enum {{EnumName}}{{#newline}}
 {{{#newline}}
     private readonly {{DbContextInterfaceName}} _ctx;{{#newline}}
     private readonly ILogger _logger;{{#newline}}
+    private readonly IPrincipal _iPrincipal;{{#newline}}
     {{#newline}}
-    public {{StoreClassName}}({{DbContextInterfaceName}} ctx, ILogger logger) : base(ctx, logger){{#newline}}
+    public {{StoreClassName}}({{DbContextInterfaceName}} ctx, ILogger logger, IPrincipal principal) : base(ctx, logger, principal){{#newline}}
     {{{#newline}}
         _ctx = ctx;{{#newline}}
 		_logger = logger;{{#newline}}
+        _iPrincipal = principal;{{#newline}}
     }{{#newline}}
 }";
         }
@@ -24601,11 +24607,13 @@ public enum {{EnumName}}{{#newline}}
 {{{#newline}}
     private readonly {{DbContextInterfaceName}} _ctx;{{#newline}}
     private readonly ILogger _logger;{{#newline}}
+    private readonly IPrincipal _iPrincipal;{{#newline}}
     {{#newline}}
-    public {{StoreClassName}}({{DbContextInterfaceName}} ctx, ILogger logger) : base(ctx, logger){{#newline}}
+    public {{StoreClassName}}({{DbContextInterfaceName}} ctx, ILogger logger, IPrincipal principal) : base(ctx, logger, principal){{#newline}}
     {{{#newline}}
         _ctx = ctx;{{#newline}}
 		_logger = logger;{{#newline}}
+        _iPrincipal = principal;{{#newline}}
     }{{#newline}}
 }";
         }
