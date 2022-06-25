@@ -44,6 +44,12 @@ namespace Leopard.Bussiness.Model.ReturnModel {
 			}
 		}
 
+		public int AgentId { get; set; }
+
+		public int ResourceTypeId { get; set; }
+
+		public int ShiftTabletId { get; set; }
+
 		public DateTime? EntranceTime { get; set; }
 		public DateTime? ExitTime { get; set; }
 	}
