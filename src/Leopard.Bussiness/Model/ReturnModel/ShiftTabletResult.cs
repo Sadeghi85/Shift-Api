@@ -14,5 +14,11 @@ namespace Leopard.Bussiness.Model.ReturnModel {
 		public string ShiftTitle { get; set; }
 		public string ProductionTypeTitle { get; set; }
 		public int? ShiftWorthPercent { get; set; }
+
+		public int PortalId { get; set; }
+		public TimeSpan ShiftStartTime { get; set; }
+		public TimeSpan ShiftEndTime { get; set; }
+
+		public string PortalName { get; set; }
 	}
 }
