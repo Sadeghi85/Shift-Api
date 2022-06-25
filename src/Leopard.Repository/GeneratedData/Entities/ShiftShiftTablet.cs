@@ -25,7 +25,7 @@ namespace Leopard.Repository
         /// </summary>
         public int? ShiftWorthPercent { get; set; } // ShiftWorthPercent
         public TimeSpan? ShiftTime { get; set; } // ShiftTime
-        public bool? IsDeleted { get; set; } // IsDeleted
+        public bool IsDeleted { get; set; } // IsDeleted
 
         // Reverse navigation
 

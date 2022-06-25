@@ -13,5 +13,6 @@ namespace Leopard.Bussiness.Model {
 
 		public DateTime? CreateDateTime { get; set; } // CreateDateTime
 
+		public bool? IsDeleted { get; set; }
 	}
 }

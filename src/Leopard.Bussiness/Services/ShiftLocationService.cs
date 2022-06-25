@@ -27,20 +27,20 @@ namespace Leopard.Bussiness.Services {
 		public Task<List<ShiftLocationReturnModel>> GetAll(ShiftLocationSearchModel model) {
 
 
-			if (string.IsNullOrWhiteSpace(model.Title) && model.PortalId == 0 && model.Id == 0) {
-				GetAllExpressions.Add(pp => true);
 
-			} else {
-				if (!string.IsNullOrWhiteSpace(model.Title)) {
-					GetAllExpressions.Add(pp => pp.Title.Contains(model.Title));
-				}
-				if (model.PortalId != 0) {
-					GetAllExpressions.Add(pp => pp.PortalId == model.PortalId);
-				}
-				if (model.Id != 0) {
-					GetAllExpressions.Add(pp => pp.Id == model.Id);
-				}
+			if (!string.IsNullOrWhiteSpace(model.Title)) {
+				GetAllExpressions.Add(pp => pp.Title.Contains(model.Title));
 			}
+			if (model.PortalId != 0) {
+				GetAllExpressions.Add(pp => pp.PortalId == model.PortalId);
+			}
+			if (model.Id != 0) {
+				GetAllExpressions.Add(pp => pp.Id == model.Id);
+			}
+			if (model.IsDeleted != null) {
+				GetAllExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
+			}
+
 			GetAllExpressions.Add(pp => pp.IsDeleted != true);
 
 			//var resCnt = _shiftLocationStore.TotalCount(Expressions);
@@ -72,12 +72,10 @@ namespace Leopard.Bussiness.Services {
 				if (foundPortal == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه پورتال یافت نشد.";
-				} 
-				else if (foundPortalTitle) {
+				} else if (foundPortalTitle) {
 					BaseResult.Success = false;
 					BaseResult.Message = "این آیتم قبلا ثبت شده است.";
-				}
-				else {
+				} else {
 
 					ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId };
 					var res = await _shiftLocationStore.InsertAsync(shiftLocation);

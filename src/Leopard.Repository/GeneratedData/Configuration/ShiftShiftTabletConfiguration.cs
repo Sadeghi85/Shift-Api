@@ -24,7 +24,7 @@ namespace Leopard.Repository
             builder.Property(x => x.LastModifiedDateTime).HasColumnName(@"LastModifiedDateTime").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.ShiftWorthPercent).HasColumnName(@"ShiftWorthPercent").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.ShiftTime).HasColumnName(@"ShiftTime").HasColumnType("time").IsRequired(false);
-            builder.Property(x => x.IsDeleted).HasColumnName(@"IsDeleted").HasColumnType("bit").IsRequired(false);
+            builder.Property(x => x.IsDeleted).HasColumnName(@"IsDeleted").HasColumnType("bit").IsRequired();
 
             // Foreign keys
             builder.HasOne(a => a.ShiftProductionType).WithMany(b => b.ShiftShiftTablets).HasForeignKey(c => c.ProductionTypeId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ShiftExecution_ProductionType");

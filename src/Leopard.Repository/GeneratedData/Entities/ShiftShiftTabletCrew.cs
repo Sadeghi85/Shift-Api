@@ -60,6 +60,8 @@ namespace Leopard.Repository
 
         public ShiftShiftTabletCrew()
         {
+            IsReplaced = false;
+            IsDeleted = false;
             ShiftCrewRewardFines = new List<ShiftCrewRewardFine>();
             ShiftShiftTabletCrewReplacements_ShiftTabletCrewId = new List<ShiftShiftTabletCrewReplacement>();
             ShiftShiftTabletCrewReplacements_ShiftTabletCrewIdReplaceMent = new List<ShiftShiftTabletCrewReplacement>();

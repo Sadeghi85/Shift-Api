@@ -26,7 +26,7 @@ namespace Leopard.Repository
             builder.Property(x => x.ShiftType).HasColumnName(@"ShiftType").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.HasRewardFine).HasColumnName(@"HasRewardFine").HasColumnType("bit").IsRequired(false);
             builder.Property(x => x.RewarFineAmount).HasColumnName(@"RewarFineAmount").HasColumnType("int").IsRequired(false);
-            builder.Property(x => x.IsDeleted).HasColumnName(@"IsDeleted").HasColumnType("bit").IsRequired(false);
+            builder.Property(x => x.IsDeleted).HasColumnName(@"IsDeleted").HasColumnType("bit").IsRequired();
 
             // Foreign keys
             builder.HasOne(a => a.Portal).WithMany(b => b.ShiftShifts).HasForeignKey(c => c.PortalId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_PortalShift_Portals");

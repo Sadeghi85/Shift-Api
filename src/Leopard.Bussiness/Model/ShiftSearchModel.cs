@@ -21,6 +21,7 @@ namespace Leopard.Bussiness.Model {
 		public int PortalId { get; set; }
 		public int? ShiftType { get; set; } // ShiftType
 		public int Id { get; set; }
+		public bool? IsDeleted { get; set; }
 
 
 

@@ -21,6 +21,8 @@ namespace Leopard.Bussiness.Model {
 		public DateTime? FromDate { get; set; }
 		public DateTime? ToDate { get; set; }
 
+		public bool? IsDeleted { get; set; }
+
 
 	}
 }

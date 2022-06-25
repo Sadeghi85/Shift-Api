@@ -106,29 +106,29 @@ namespace Leopard.Bussiness.Services {
 
 		public Task<List<ShiftTabletScriptSupervisorDescription>>? GetAllScriptSupervisorDescription(ScriptSupervisorDescriptionSearchModel model) {
 
-			if (model.Id == 0 && model.ShiftTabletId == 0 && model.CreateDateTime == null && string.IsNullOrWhiteSpace(model.Description)) {
 
-				GetAllScriptSupervisorDescriptionExpressions.Add(pp => true);
-			} else {
-				if (model.Id != 0) {
-					GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.Id == model.Id);
-				}
-				if (model.ShiftTabletId != 0) {
-					GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.ShiftTabletId == model.ShiftTabletId);
-				}
-				if (model.CreateDateTime != null) {
+			if (model.Id != 0) {
+				GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.Id == model.Id);
+			}
+			if (model.ShiftTabletId != 0) {
+				GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.ShiftTabletId == model.ShiftTabletId);
+			}
+			if (model.CreateDateTime != null) {
 
-					var inputDate = model.CreateDateTime.Value.Date;
+				var inputDate = model.CreateDateTime.Value.Date;
 
-					GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.CreateDateTime.Value.Date == model.CreateDateTime.Value.Date);
-				}
-				if (!string.IsNullOrWhiteSpace(model.Description)) {
-					GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.Description.Contains(model.Description));
-
-				}
+				GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.CreateDateTime.Value.Date == model.CreateDateTime.Value.Date);
+			}
+			if (!string.IsNullOrWhiteSpace(model.Description)) {
+				GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.Description.Contains(model.Description));
 
 			}
-			GetAllScriptSupervisorDescriptionExpressions.Add(pp=> pp.IsDeleted!=true);
+			if (model.IsDeleted != null) {
+				GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.IsDeleted == model.IsDeleted.Value);
+			}
+
+
+			GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.IsDeleted != true);
 
 			Task<List<ShiftTabletScriptSupervisorDescription>>? res = _scriptSupervisorDescriptionStore.GetAllWithPagingAsync(GetAllScriptSupervisorDescriptionExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
 
@@ -210,29 +210,27 @@ namespace Leopard.Bussiness.Services {
 
 		public Task<List<ShiftTabletConductorChanx>>? GetAllTabletConductorChanges(TabletConductorChangesSearchModel model) {
 
-			if (model.Id == 0 && string.IsNullOrWhiteSpace(model.ProgramTitle) && string.IsNullOrWhiteSpace(model.ReplacedProgramTitle) && model.ShiftTabletId == 0 && model.CreateDateTime == null) {
 
-				GetAllTabletConductorChangesExpressions.Add(pp => true);
-
-
-			} else {
-				if (model.Id != 0) {
-					GetAllTabletConductorChangesExpressions.Add(pp => pp.Id == model.Id);
-				}
-				if (!string.IsNullOrWhiteSpace(model.ProgramTitle)) {
-					GetAllTabletConductorChangesExpressions.Add(pp => pp.ProgramTitle.Contains(model.ProgramTitle));
-				}
-				if (!string.IsNullOrWhiteSpace(model.ReplacedProgramTitle)) {
-					GetAllTabletConductorChangesExpressions.Add(pp => pp.ReplacedProgramTitle.Contains(model.ReplacedProgramTitle));
-				}
-				if (model.ShiftTabletId != 0) {
-					GetAllTabletConductorChangesExpressions.Add(pp => pp.ShiftTabletId == model.ShiftTabletId);
-				}
-				if (model.CreateDateTime != null) {
-					GetAllTabletConductorChangesExpressions.Add(pp => pp.CreateDateTime.Value == model.CreateDateTime.Value.Date);
-				}
-
+			if (model.Id != 0) {
+				GetAllTabletConductorChangesExpressions.Add(pp => pp.Id == model.Id);
 			}
+			if (!string.IsNullOrWhiteSpace(model.ProgramTitle)) {
+				GetAllTabletConductorChangesExpressions.Add(pp => pp.ProgramTitle.Contains(model.ProgramTitle));
+			}
+			if (!string.IsNullOrWhiteSpace(model.ReplacedProgramTitle)) {
+				GetAllTabletConductorChangesExpressions.Add(pp => pp.ReplacedProgramTitle.Contains(model.ReplacedProgramTitle));
+			}
+			if (model.ShiftTabletId != 0) {
+				GetAllTabletConductorChangesExpressions.Add(pp => pp.ShiftTabletId == model.ShiftTabletId);
+			}
+			if (model.CreateDateTime != null) {
+				GetAllTabletConductorChangesExpressions.Add(pp => pp.CreateDateTime.Value == model.CreateDateTime.Value.Date);
+			}
+			if (model.IsDeleted != null) {
+				GetAllTabletConductorChangesExpressions.Add(pp => pp.IsDeleted == model.IsDeleted.Value);
+			}
+
+
 			GetAllTabletConductorChangesExpressions.Add(pp => pp.IsDeleted != true);
 			Task<List<ShiftTabletConductorChanx>>? res = _shiftTabletConductorChanxStore.GetAllWithPagingAsync(GetAllTabletConductorChangesExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
 			return res;
@@ -240,7 +238,7 @@ namespace Leopard.Bussiness.Services {
 		}
 
 		public int GetAllTabletConductorChangesTotalCount() {
-			var res= _shiftTabletConductorChanxStore.TotalCount(GetAllTabletConductorChangesExpressions);
+			var res = _shiftTabletConductorChanxStore.TotalCount(GetAllTabletConductorChangesExpressions);
 			return res;
 		}
 
@@ -306,40 +304,38 @@ namespace Leopard.Bussiness.Services {
 
 		public Task<List<ShiftRevisionProblem>>? GetAllShiftRevisionProblem(ShiftRevisionProblemSearchModel model) {
 
-			if (model.Id == 0 && model.ClacketNo == 0 && model.ShiftTabletId == 0 && string.IsNullOrWhiteSpace(model.FileNumber) && string.IsNullOrWhiteSpace(model.FileName) && string.IsNullOrWhiteSpace(model.RevisorCode) && string.IsNullOrWhiteSpace(model.Description) && model.CreateDateTime == null) {
-				GetAllShiftRevisionProblemExpressions.Add(pp => true);
 
-
-			} else {
-				if (model.Id != 0) {
-					GetAllShiftRevisionProblemExpressions.Add(pp => pp.Id == model.Id);
-				}
-				if (model.ClacketNo != 0) {
-					GetAllShiftRevisionProblemExpressions.Add(pp => pp.ClacketNo == model.ClacketNo);
-				}
-				if (model.ShiftTabletId != 0) {
-					GetAllShiftRevisionProblemExpressions.Add(pp => pp.ShiftTabletId == model.ShiftTabletId);
-				}
-				if (!string.IsNullOrWhiteSpace(model.FileNumber)) {
-					GetAllShiftRevisionProblemExpressions.Add(pp => pp.FileNumber.Contains(model.FileNumber));
-				}
-				if (!string.IsNullOrWhiteSpace(model.FileName)) {
-					GetAllShiftRevisionProblemExpressions.Add(pp => pp.FileName.Contains(model.FileName));
-				}
-				if (!string.IsNullOrWhiteSpace(model.RevisorCode)) {
-					GetAllShiftRevisionProblemExpressions.Add(pp => pp.RevisorCode.Contains(model.RevisorCode));
-				}
-				if (!string.IsNullOrEmpty(model.Description)) {
-					GetAllShiftRevisionProblemExpressions.Add(pp => pp.Description.Contains(model.Description));
-
-				}
-				if (model.CreateDateTime != null) {
-					GetAllShiftRevisionProblemExpressions.Add(pp => pp.CreateDateTime.Value.Date == model.CreateDateTime.Value.Date);
-				}
-
+			if (model.Id != 0) {
+				GetAllShiftRevisionProblemExpressions.Add(pp => pp.Id == model.Id);
+			}
+			if (model.ClacketNo != 0) {
+				GetAllShiftRevisionProblemExpressions.Add(pp => pp.ClacketNo == model.ClacketNo);
+			}
+			if (model.ShiftTabletId != 0) {
+				GetAllShiftRevisionProblemExpressions.Add(pp => pp.ShiftTabletId == model.ShiftTabletId);
+			}
+			if (!string.IsNullOrWhiteSpace(model.FileNumber)) {
+				GetAllShiftRevisionProblemExpressions.Add(pp => pp.FileNumber.Contains(model.FileNumber));
+			}
+			if (!string.IsNullOrWhiteSpace(model.FileName)) {
+				GetAllShiftRevisionProblemExpressions.Add(pp => pp.FileName.Contains(model.FileName));
+			}
+			if (!string.IsNullOrWhiteSpace(model.RevisorCode)) {
+				GetAllShiftRevisionProblemExpressions.Add(pp => pp.RevisorCode.Contains(model.RevisorCode));
+			}
+			if (!string.IsNullOrEmpty(model.Description)) {
+				GetAllShiftRevisionProblemExpressions.Add(pp => pp.Description.Contains(model.Description));
 
 			}
-			GetAllShiftRevisionProblemExpressions.Add(pp=> pp.IsDeleted!=true);
+			if (model.CreateDateTime != null) {
+				GetAllShiftRevisionProblemExpressions.Add(pp => pp.CreateDateTime.Value.Date == model.CreateDateTime.Value.Date);
+			}
+
+			if (model.IsDeleted != null) {
+				GetAllShiftRevisionProblemExpressions.Add(pp => pp.IsDeleted == model.IsDeleted.Value);
+			}
+
+			GetAllShiftRevisionProblemExpressions.Add(pp => pp.IsDeleted != true);
 
 			Task<List<ShiftRevisionProblem>>? res = _shiftRevisionProblemStore.GetAllWithPagingAsync(GetAllShiftRevisionProblemExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
 

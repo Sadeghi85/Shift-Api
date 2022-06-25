@@ -27,7 +27,7 @@ namespace Leopard.Repository
         public int? ShiftType { get; set; } // ShiftType
         public bool? HasRewardFine { get; set; } // HasRewardFine
         public int? RewarFineAmount { get; set; } // RewarFineAmount
-        public bool? IsDeleted { get; set; } // IsDeleted
+        public bool IsDeleted { get; set; } // IsDeleted
 
         // Reverse navigation
 

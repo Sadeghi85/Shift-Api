@@ -16,6 +16,7 @@ namespace Leopard.Bussiness.Model {
 		public string RevisorCode { get; set; } // RevisorCode (length: 50)
 		public string Description { get; set; } // Description (length: 500)
 		public DateTime? CreateDateTime { get; set; } // CreateDateTime
+		public bool? IsDeleted { get; set; }
 
 	}
 }

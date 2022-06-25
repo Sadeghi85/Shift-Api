@@ -18,7 +18,7 @@ namespace Leopard.Repository
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
         public DateTime? LastModifiedDateTime { get; set; } // LastModifiedDateTime
         public string Description { get; set; } // Description (length: 1000)
-        public bool? IsDeleted { get; set; } // IsDeleted
+        public bool IsDeleted { get; set; } // IsDeleted
 
         // Foreign keys
 

@@ -55,6 +55,9 @@ namespace Leopard.Bussiness.Services {
 			if (model.ToDate != null) {
 				GetAllExpressions.Add(pp=> pp.ShiftDate<=model.ToDate);
 			}
+			if (model.IsDeleted!=null) {
+				GetAllExpressions.Add(pp=> pp.IsDeleted==model.IsDeleted);
+			}
 			//}
 
 			Task<List<ShiftTabletResult>>? res = _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletResult { Id = pp.Id, ProductionTypeId = pp.ProductionTypeId, ProductionTypeTitle = pp.ShiftProductionType.Title, ShiftDate = pp.ShiftDate, ShiftTitle = pp.ShiftShift.Title, ShiftId = pp.ShiftId, ShiftWorthPercent = pp.ShiftWorthPercent }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
