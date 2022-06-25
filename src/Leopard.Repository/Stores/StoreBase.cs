@@ -67,8 +67,9 @@ namespace Leopard.Repository {
 					CreateDateTimeProp.SetValue(entity, DateTime.Now);
 				}
 
-				var ident = _iPrincipal as ClaimsPrincipal;
-				var uId = ident?.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+				//var ident = _iPrincipal as ClaimsPrincipal;
+				//var uId = ident?.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+				var uId = GetUserId();
 				if (null != uId) {
 					var userId = int.Parse(uId);
 					var CreatedByProp = theType.GetProperty("CreatedBy");
@@ -95,6 +96,11 @@ namespace Leopard.Repository {
 			return res;
 		}
 
+		public string? GetUserId() {
+			var ident = _iPrincipal as ClaimsPrincipal;
+			var uId = ident?.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+			return uId;
+		}
 
 		public virtual Task<int> InsertAsync(List<T> entities) {
 			var res = Task.FromResult(-1);
@@ -244,6 +250,16 @@ namespace Leopard.Repository {
 			if (LastModifiedDateTime != null) {
 				LastModifiedDateTime.SetValue(entity, DateTime.Now);
 			}
+
+			var uId = GetUserId();
+			if (null != uId) {
+				var userId = int.Parse(uId);
+				var ModifiedByProp = theType.GetProperty("ModifiedBy");
+				if (ModifiedByProp != null) {
+					ModifiedByProp.SetValue(entity, userId);
+				}
+			}
+
 
 			TEntity.Update(entity);
 			return await _ctx.Instance.SaveChangesAsync();
