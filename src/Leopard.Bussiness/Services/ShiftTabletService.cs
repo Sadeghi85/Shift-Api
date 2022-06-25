@@ -42,15 +42,18 @@ namespace Leopard.Bussiness.Services {
 			if (model.Id != 0) {
 				GetAllExpressions.Add(pp => pp.Id == model.Id);
 			}
-
 			if (model.ShiftId != 0) {
 				GetAllExpressions.Add(pp => pp.ShiftId == model.ShiftId);
 			}
-			if (model.ShiftDate != null) {
-				GetAllExpressions.Add(pp => pp.ShiftDate == model.ShiftDate);
-			}
+			
 			if (model.ProductionTypeId != 0) {
 				GetAllExpressions.Add((pp) => pp.ProductionTypeId == model.ProductionTypeId);
+			}
+			if (model.FromDate!=null) {
+				GetAllExpressions.Add(pp => pp.ShiftDate>=model.FromDate);
+			}
+			if (model.ToDate != null) {
+				GetAllExpressions.Add(pp=> pp.ShiftDate<=model.ToDate);
 			}
 			//}
 
