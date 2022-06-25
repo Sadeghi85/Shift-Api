@@ -23,34 +23,15 @@ namespace SamtApi.Controllers.WebApi {
 		// GET: api/<PortalController>
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(PortalSearchModel model) {
-			List<PortalResult>? res = await _portal.GetAll(model);
+
+			var portalId = GetUserPortalId() ?? 0;
+			if (portalId > 1) {
+				model.PortalId = portalId;
+			}
+
+			var res = await _portal.GetAll(model);
 			return Ok(OperationResult<List<PortalResult>?>.SuccessResult(res, _portal.GetAllTotalCount()));
 		}
 
-		// GET api/<PortalController>/5
-		//[HttpGet("{id}")]
-		//public IActionResult Get(int id) {
-
-		//	Portal res = _portal.GetById(id);
-		//	if (res!=null) {
-		//		return Ok(OperationResult<Portal>.SuccessResult(res));
-		//	}
-		//	return Ok(OperationResult<string>.FailureResult(""));
-		//}
-
-		//// POST api/<PortalController>
-		//[HttpPost]
-		//public void Post([FromBody] string value) {
-		//}
-
-		//// PUT api/<PortalController>/5
-		//[HttpPut("{id}")]
-		//public void Put(int id, [FromBody] string value) {
-		//}
-
-		//// DELETE api/<PortalController>/5
-		//[HttpDelete("{id}")]
-		//public void Delete(int id) {
-		//}
 	}
 }

@@ -21,28 +21,22 @@ namespace Leopard.Bussiness.Services {
 
 			GetAllExpressions.Add(pp => !pp.NoDashboard);
 
-			if (!string.IsNullOrEmpty(model.Title) && model.PortalId == 0) {
-				GetAllExpressions.Add(pp => true);
-			} else {
-				if (!string.IsNullOrWhiteSpace(model.Title)) {
-					GetAllExpressions.Add(pp=> pp.Title.Contains(model.Title));
-				}
-				if (model.PortalId!=0) {
-					GetAllExpressions.Add(pp=> pp.Id==model.PortalId);
-				}
+
+			if (!string.IsNullOrWhiteSpace(model.Title)) {
+				GetAllExpressions.Add(pp => pp.Title.Contains(model.Title));
+			}
+			if (model.PortalId != 0) {
+				GetAllExpressions.Add(pp => pp.Id == model.PortalId);
 			}
 
-			Task<List<PortalResult>>? res = _portalStore.GetAllWithPagingAsync(GetAllExpressions, t => new PortalResult { Id = t.Id, Title = t.Title }, t => t.Id, model.PageSize, model.PageNo, "asc");
 
-			//IQueryable<Portal>? res = _portalStore.GetAll();
+			Task<List<PortalResult>>? res = _portalStore.GetAllWithPagingAsync(GetAllExpressions, t => new PortalResult { Id = t.Id, Title = t.Title }, t => t.Id, model.PageSize, model.PageNo, "asc");
 			return res;
 		}
 
 		public int GetAllTotalCount() {
-
 			var res = _portalStore.TotalCount(GetAllExpressions);
 			return res;
-
 		}
 
 
