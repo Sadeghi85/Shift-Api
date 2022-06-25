@@ -117,9 +117,11 @@ builder.Host.UseLamar((context, registry) => {
 
 });
 
+
+
 var app = builder.Build();
 
-if (!builder.Environment.IsDevelopment()) {
+if (builder.Environment.IsProduction()) {
 	app.MapControllers();
 } else {
 	app.MapControllers()
