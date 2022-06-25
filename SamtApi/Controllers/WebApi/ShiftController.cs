@@ -25,6 +25,11 @@ namespace SamtApi.Controllers.WebApi {
 		[ProducesDefaultResponseType]
 		public async Task<IActionResult> GetAll(ShiftSearchModel model) {
 
+			var portalId = GetUserPortalId() ?? 0;
+			if (portalId > 1) {
+				model.PortalId = portalId;
+			}
+
 			var res = await _shiftService.GetAll(model);
 
 			return Ok(OperationResult<List<ShiftResultModel>?>.SuccessResult(res, _shiftService.GetAllCount()));

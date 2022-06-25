@@ -26,6 +26,11 @@ namespace SamtApi.Controllers.WebApi {
 		// GET: api/<ShiftLocationController>
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(ShiftLocationSearchModel model) {
+
+			var portalId = GetUserPortalId() ?? 0;
+			if (portalId > 1) {
+				model.PortalId = portalId;
+			}
 			List<ShiftLocationReturnModel>? res = await _shiftLocationService.GetAll(model);
 
 			return Ok(OperationResult<List<ShiftLocationReturnModel>>.SuccessResult(res, _shiftLocationService.GetAllTotal()));
