@@ -10,6 +10,7 @@ using SamtApi;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Principal;
 
 var configuration = new ConfigurationBuilder()
 				.SetBasePath(Directory.GetCurrentDirectory())
@@ -32,6 +33,11 @@ builder.Services.AddCors(options => {
 								.AllowCredentials();
 		});
 });
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<IPrincipal>(provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
+
+
 builder.Host.UseSerilog(serilogLogger, true);
 // Add services to the container.
 //builder.Services.AddControllersWithViews();

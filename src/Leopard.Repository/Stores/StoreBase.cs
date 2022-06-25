@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using EFCore.BulkExtensions;
 using Serilog;
+using System.Security.Principal;
+using System.Security.Claims;
 
 namespace Leopard.Repository {
 	public class StoreBase<T> : IStoreBase<T> where T : class, new() {
@@ -14,12 +16,15 @@ namespace Leopard.Repository {
 		protected DbSet<T> TEntity;
 
 		private readonly ILogger _logger;
+		private readonly IPrincipal _iPrincipal;
 
-		protected StoreBase(ILeopardDbContext ctx, ILogger logger) {
+		protected StoreBase(ILeopardDbContext ctx, ILogger logger, IPrincipal principal) {
+
 			_ctx = ctx;
 			TEntity = _ctx.Instance.Set<T>();
 
 			_logger = logger;
+			_iPrincipal = principal;
 		}
 
 		public Task<int> SaveChangesAsync() {
@@ -62,6 +67,18 @@ namespace Leopard.Repository {
 					CreateDateTimeProp.SetValue(entity, DateTime.Now);
 				}
 
+				var ident = _iPrincipal as ClaimsIdentity;
+				var uId = ident?.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+				if (null != uId) {
+					var userId = int.Parse(uId);
+					var CreatedByProp = theType.GetProperty("CreatedBy");
+					if (CreatedByProp != null) {
+						CreatedByProp.SetValue(entity, userId);
+					}
+				}
+				
+
+
 				if (entity is ShiftLog) {
 					//if (typeof(T) == typeof(ShiftLog)) {
 					_ctx.Instance.ChangeTracker.Entries()
@@ -78,7 +95,7 @@ namespace Leopard.Repository {
 			return res;
 		}
 
-		
+
 		public virtual Task<int> InsertAsync(List<T> entities) {
 			var res = Task.FromResult(-1);
 			try {
@@ -238,6 +255,6 @@ namespace Leopard.Repository {
 			return res;
 		}
 
-		
+
 	}
 }
