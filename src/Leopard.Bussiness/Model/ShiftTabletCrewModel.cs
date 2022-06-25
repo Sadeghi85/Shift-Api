@@ -10,13 +10,13 @@ namespace Leopard.Bussiness.Model {
 
 		public int Id { get; set; } // ID (Primary key)
 
-		[Required(ErrorMessage ="شناسه کارمند اجباری است")]
+		[Required(ErrorMessage =ValidationConstants.AgenetIdRequired)]
 		public int AgentId { get; set; } // AgentId
 
-		[Required(ErrorMessage = "سمت اجباری است")]
+		[Required(ErrorMessage = ValidationConstants.ResourceTypeIdRquired)]
 		public int ResourceTypeId { get; set; } // ResourceId
 
-		[Required(ErrorMessage = "شناسه لوح اجباری است")]
+		[Required(ErrorMessage = ValidationConstants.ShiftTabletIdRequred)]
 		public int ShiftTabletId { get; set; } // ShifTabletId
 		
 		public DateTime? EntranceTime { get; set; } // EntranceTime

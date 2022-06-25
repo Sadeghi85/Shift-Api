@@ -9,9 +9,9 @@ namespace Leopard.Bussiness.Model {
 	public class ScriptSupervisorDescriptionModel {
 
 		public int Id { get; set; } // Id (Primary key)
-		[Required(ErrorMessage ="شناسه لوح شیفت اجباری است")]
+		[Required(ErrorMessage = ValidationConstants.ShiftTabletIdRequred)]
 		public int? ShiftTabletId { get; set; } // ShiftTabletId
-		[Required(ErrorMessage ="توضیحات اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.DescriptionRequired)]
 		public string Description { get; set; } // Description (length: 1000)
 
 	}

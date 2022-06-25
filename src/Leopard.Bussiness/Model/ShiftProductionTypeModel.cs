@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Leopard.Bussiness.Model {
 	public class ShiftProductionTypeModel {
 		public int Id { get; set; } // ID (Primary key)
-		[Required(ErrorMessage ="عنوان نوع تولید اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.TitleRquired)]
 		public string Title { get; set; } // Title (length: 250)
 	}
 }

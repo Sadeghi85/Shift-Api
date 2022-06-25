@@ -10,13 +10,13 @@ namespace Leopard.Bussiness.Model {
 
 		public int Id { get; set; } // ID (Primary key)
 
-		[Required(ErrorMessage ="شناسه شیفت اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.ShiftIdRequired)]
 		public int ShiftId { get; set; } // ShifID
 
-		[Required(ErrorMessage ="تاریخ لوح شیفت اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.ShiftDateRequired)]
 		public DateTime ShiftDate { get; set; } // ShiftDate
 
-		[Required(ErrorMessage ="شناسه نوع تولید شیفت اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.ProductionTypeIdRequired)]
 		public int ProductionTypeId { get; set; } // ProductionTypeId
 
 		public int? ShiftWorthPercent { get; set; } // ShiftWorthPercent

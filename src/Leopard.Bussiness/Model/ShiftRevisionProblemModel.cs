@@ -8,25 +8,25 @@ using System.Threading.Tasks;
 namespace Leopard.Bussiness.Model {
 	public class ShiftRevisionProblemModel {
 		public int Id { get; set; } // Id (Primary key)
-		[Required(ErrorMessage ="شناسه لوح شیفت مورد نیاز است.")]
+		[Required(ErrorMessage =ValidationConstants.ShiftTabletIdRequred)]
 		public int? ShiftTabletId { get; set; } // ShiftTabletId
 
-		[Required(ErrorMessage ="شماره فایل اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.FileNumberRequired)]
 		public string FileNumber { get; set; } // FileNumber (length: 50)
 
-		[Required(ErrorMessage ="نام فایل اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.FileNameRquired)]
 		public string FileName { get; set; } // FileName (length: 500)
 
-		[Required(ErrorMessage ="کلاکت اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.ClacketNoRequired)]
 		public int? ClacketNo { get; set; } // ClacketNo
 
-		[Required(ErrorMessage ="مورد اشکال اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.ProblemDescriptionRquired)]
 		public string ProblemDescription { get; set; } // ProblemDescription (length: 500)
 		
-		[Required(ErrorMessage ="کد بازبین اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.RevisorCodeRequired)]
 		public string RevisorCode { get; set; } // RevisorCode (length: 50)
 		
-		[Required(ErrorMessage ="توضیحات اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.DescriptionRequired)]
 		public string Description { get; set; } // Description (length: 500)
 	}
 }

@@ -9,16 +9,16 @@ namespace Leopard.Bussiness.Model {
 	public class TabletConductorChangesModel {
 		public int Id { get; set; } // Id (Primary key)
 		
-		[Required(ErrorMessage ="نام برنامه اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.ProgramTitleRequired)]
 		public string ProgramTitle { get; set; } // ProgramTitle (length: 250)
 		
-		[Required(ErrorMessage ="نام برنامه جایگزین شونده اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.ReplacedProgramTitleRequired)]
 		public string ReplacedProgramTitle { get; set; } // ReplacedProgramTitle (length: 250)
 		
-		[Required(ErrorMessage ="شناسه لوح شیفت اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.ShiftTabletIdRequred)]
 		public int? ShiftTabletId { get; set; } // ShiftTabletId
 		
-		[Required(ErrorMessage ="توضیحات اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.DescriptionRequired)]
 		public string Description { get; set; } // Description (length: 1000)
 	}
 }

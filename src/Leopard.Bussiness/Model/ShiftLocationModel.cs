@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace Leopard.Bussiness.Model {
 	public class ShiftLocationModel {
 		public int Id { get; set; }
-		[Required(ErrorMessage ="عنوان محل برگزاری اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.TitleRquired)]
 		public string Title { get; set; } // Title (length: 250)
-		[Required(ErrorMessage ="شناسه پورتال اجباری است.")]
+		[Required(ErrorMessage =ValidationConstants.PortalIdRequired)]
 		public int? PortalId { get; set; } // PortalId
 	}
 }
