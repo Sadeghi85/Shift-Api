@@ -18083,7 +18083,8 @@ public enum {{EnumName}}{{#newline}}
                 "System.Collections.Generic",
                 "System.Linq",
                 "System.Text",
-                "Serilog"
+                "Serilog",
+                "System.Security.Principal"
             };
 
             return usings;
@@ -19623,7 +19624,8 @@ public enum {{EnumName}}{{#newline}}
                 "System.Collections.Generic",
                 "System.Linq",
                 "System.Text",
-                "Serilog"
+                "Serilog",
+                "System.Security.Principal"
             };
 
             return usings;
@@ -21249,7 +21251,8 @@ public enum {{EnumName}}{{#newline}}
                 "System.Collections.Generic",
                 "System.Linq",
                 "System.Text",
-                "Serilog"
+                "Serilog",
+                "System.Security.Principal"
             };
 
             return usings;
@@ -22924,7 +22927,8 @@ public enum {{EnumName}}{{#newline}}
                 "System.Collections.Generic",
                 "System.Linq",
                 "System.Text",
-                "Serilog"
+                "Serilog",
+                "System.Security.Principal"
             };
 
             return usings;
@@ -24594,7 +24598,8 @@ public enum {{EnumName}}{{#newline}}
                 "System.Collections.Generic",
                 "System.Linq",
                 "System.Text",
-                "Serilog"
+                "Serilog",
+                "System.Security.Principal"
             };
 
             return usings;
