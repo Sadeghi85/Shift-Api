@@ -40,7 +40,6 @@ namespace Leopard.Bussiness.Services {
 		}
 
 
-
 		public Portal GetById(int id) {
 			Portal? res = _portalStore.FindById(id);
 			return res;
