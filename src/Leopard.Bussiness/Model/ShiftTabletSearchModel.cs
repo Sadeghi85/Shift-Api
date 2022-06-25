@@ -9,8 +9,10 @@ namespace Leopard.Bussiness.Model {
 
 		public int Id { get; set; }
 		public int ShiftId { get; set; } // ShiftID
-		public DateTime? ShiftDate { get; set; } // ShiftDate
+		
 		public int ProductionTypeId { get; set; } // ProductionTypeId
+		public DateTime? FromDate { get; set; }
+		public DateTime? ToDate { get; set; }
 
 	}
 }
