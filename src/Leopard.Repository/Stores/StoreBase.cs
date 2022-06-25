@@ -67,7 +67,7 @@ namespace Leopard.Repository {
 					CreateDateTimeProp.SetValue(entity, DateTime.Now);
 				}
 
-				var ident = _iPrincipal as ClaimsIdentity;
+				var ident = _iPrincipal as ClaimsPrincipal;
 				var uId = ident?.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
 				if (null != uId) {
 					var userId = int.Parse(uId);
