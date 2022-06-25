@@ -22,7 +22,7 @@ namespace Leopard.Repository
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
         public DateTime? LastModifiedDateTime { get; set; } // LastModifiedDateTime
         public bool IsReplaced { get; set; } // IsReplaced
-        public bool? IsDeleted { get; set; } // IsDeleted
+        public bool IsDeleted { get; set; } // IsDeleted
 
         // Reverse navigation
 

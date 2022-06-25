@@ -55,7 +55,6 @@ builder.Host.UseLamar((context, registry) => {
 		options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 		options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 		options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-		
 	});
 
 	// accepts any access token issued by identity server
@@ -117,8 +116,8 @@ var app = builder.Build();
 if (!builder.Environment.IsDevelopment()) {
 	app.MapControllers();
 } else {
-	app.MapControllers();
-		//.AllowAnonymous();
+	app.MapControllers()
+		.AllowAnonymous();
 }
 
 // Configure the HTTP request pipeline.

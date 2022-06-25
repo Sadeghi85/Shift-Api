@@ -75,51 +75,54 @@ namespace Leopard.Bussiness.Services {
 		}
 
 		public Task<List<ShfitTabletReportResult>>? GetAll(ShiftTabletCrewSearchModel model) {
+			GetAllExpressions.Add(pp => pp.IsDeleted == false);
 
+			if (model.Id != 0) {
+				GetAllExpressions.Add(pp => pp.Id == model.Id);
+			}
 
-			if (model.ShifTabletId == 0 && model.AgentId == 0 && model.EntranceTime == null && model.ExitTime == null && model.IsReplaced == null && string.IsNullOrWhiteSpace(model.AgentName) && string.IsNullOrWhiteSpace(model.ShiftTitle) && model.FromDate == null && model.ToDate == null) {
-				GetAllExpressions.Add(pp => true);
-
-			} else {
-				if (model.ShifTabletId != 0) {
-					GetAllExpressions.Add(pp => pp.ShiftTabletId == model.ShifTabletId);
-				}
-				if (model.AgentId != 0) {
-					GetAllExpressions.Add(pp => pp.AgentId == model.AgentId);
-				}
-				if (model.EntranceTime != null) {
-					GetAllExpressions.Add(pp => pp.EntranceTime == model.EntranceTime);
-				}
-				if (model.IsReplaced != null) {
-					GetAllExpressions.Add(pp => pp.IsReplaced == model.IsReplaced);
-				}
-				if (!string.IsNullOrWhiteSpace(model.AgentName)) {
-					GetAllExpressions.Add(PP => model.AgentName.Contains(PP.SamtAgent.FirstName) || model.AgentName.Contains(PP.SamtAgent.LastName));
-
-				}
-				if (string.IsNullOrWhiteSpace(model.ShiftTitle)) {
-					GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftShift.Title.Contains(model.ShiftTitle));
-				}
-
-				if (model.FromDate != null && model.ToDate != null) {
-					GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftDate >= model.FromDate && pp.ShiftShiftTablet.ShiftDate <= model.ToDate);
-				}
+			if (model.ShifTabletId != 0) {
+				GetAllExpressions.Add(pp => pp.ShiftTabletId == model.ShifTabletId);
+			}
+			if (model.AgentId != 0) {
+				GetAllExpressions.Add(pp => pp.AgentId == model.AgentId);
+			}
+			if (model.EntranceTime != null) {
+				GetAllExpressions.Add(pp => pp.EntranceTime == model.EntranceTime);
+			}
+			if (model.IsReplaced != null) {
+				GetAllExpressions.Add(pp => pp.IsReplaced == model.IsReplaced);
+			}
+			if (!string.IsNullOrWhiteSpace(model.AgentName)) {
+				GetAllExpressions.Add(PP => model.AgentName.Contains(PP.SamtAgent.FirstName) || model.AgentName.Contains(PP.SamtAgent.LastName));
 
 			}
-			GetAllExpressions.Add(pp => pp.IsDeleted != true);
+			if (!string.IsNullOrWhiteSpace(model.ShiftTitle)) {
+				GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftShift.Title.Contains(model.ShiftTitle));
+			}
+
+			if (model.FromDate != null) {
+				GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftDate >= model.FromDate);
+			}
+
+			if (model.ToDate != null) {
+				GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftDate <= model.ToDate);
+			}
+
 
 			//Task<List<ShiftTabletCrewSearchResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletCrewSearchResult {ShifTabletId=pp.ShifTabletId , EntranceTime= pp.EntranceTime , ExitTime= pp.ExitTime , FisrtName= pp.SamtAgent.FirstName, LastName=pp.SamtAgent.LastName, AgentId=pp.AgentId, ShiftTitle= pp.ShiftShiftTablet.ShiftShift.Title , ResourceTitle= pp.SamtResourceType.Title} , pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
-			Task<List<ShfitTabletReportResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, 
-				pp => new ShfitTabletReportResult { id = pp.Id, 
-					shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, 
-					firstName = pp.SamtAgent.FirstName, 
-					lastName = pp.SamtAgent.LastName, 
-					jobName = pp.SamtResourceType.Title, 
-					shiftDate = pp.ShiftShiftTablet.ShiftDate, 
-					PortalName = pp.ShiftShiftTablet.ShiftShift.Portal.Title, 
-					EntranceTime = pp.EntranceTime, ExitTime = pp.ExitTime 
-				}, 
+			Task<List<ShfitTabletReportResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions,
+				pp => new ShfitTabletReportResult {
+					id = pp.Id,
+					shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title,
+					firstName = pp.SamtAgent.FirstName,
+					lastName = pp.SamtAgent.LastName,
+					jobName = pp.SamtResourceType.Title,
+					shiftDate = pp.ShiftShiftTablet.ShiftDate,
+					PortalName = pp.ShiftShiftTablet.ShiftShift.Portal.Title,
+					EntranceTime = pp.EntranceTime, ExitTime = pp.ExitTime
+				},
 				pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo);
 
 			//IQueryable<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll();
