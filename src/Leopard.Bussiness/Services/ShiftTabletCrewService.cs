@@ -193,8 +193,8 @@ namespace Leopard.Bussiness.Services {
 					
 
 
-					shiftDateStartEnd.StartDateTime = foundShiftTablet.ShiftDate.Add(foundShift.StartTime.Value);
-					shiftDateStartEnd.EndDateTime = foundShiftTablet.ShiftDate.Add(foundShift.EndTime.Value);
+					shiftDateStartEnd.StartDateTime = foundShiftTablet.ShiftDate.Add(foundShift.StartTime);
+					shiftDateStartEnd.EndDateTime = foundShiftTablet.ShiftDate.Add(foundShift.EndTime);
 					lstShiftDateStartEnds.Add(shiftDateStartEnd);
 
 					var listOfAgentWorkingShifts = _shiftShiftTabletCrewStore.GetAll().Where(pp => pp.ShiftShiftTablet.ShiftDate == shiftTabletDate && pp.AgentId == model.AgentId).Select(pp =>
@@ -204,8 +204,8 @@ namespace Leopard.Bussiness.Services {
 
 						foreach (var i in listOfAgentWorkingShifts) {
 							var sdse = new ShiftDateStartEnd();
-							sdse.StartDateTime = i.ShiftDate.Add(i.StartTime.Value);
-							sdse.EndDateTime = i.ShiftDate.Add(i.EndTime.Value);
+							sdse.StartDateTime = i.ShiftDate.Add(i.StartTime);
+							sdse.EndDateTime = i.ShiftDate.Add(i.EndTime);
 							lstShiftDateStartEnds.Add(sdse);
 						}
 

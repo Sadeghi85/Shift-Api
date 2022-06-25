@@ -10,9 +10,9 @@ namespace Leopard.Repository
     {
         public string PortalName { get; set; }
         public string Title { get; set; }
-        public int? PortalId { get; set; }
-        public TimeSpan? StartTime { get; set; }
-        public TimeSpan? EndTime { get; set; }
+        public int PortalId { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
         public int? ShiftType { get; set; }
         public bool? HasRewardFine { get; set; }
         public int? RewarFineAmount { get; set; }

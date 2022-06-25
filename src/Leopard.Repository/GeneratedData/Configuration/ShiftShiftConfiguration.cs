@@ -16,9 +16,9 @@ namespace Leopard.Repository
 
             builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
             builder.Property(x => x.Title).HasColumnName(@"Title").HasColumnType("nvarchar(250)").IsRequired(false).HasMaxLength(250);
-            builder.Property(x => x.PortalId).HasColumnName(@"PortalId").HasColumnType("int").IsRequired(false);
-            builder.Property(x => x.StartTime).HasColumnName(@"StartTime").HasColumnType("time").IsRequired(false);
-            builder.Property(x => x.EndTime).HasColumnName(@"EndTime").HasColumnType("time").IsRequired(false);
+            builder.Property(x => x.PortalId).HasColumnName(@"PortalId").HasColumnType("int").IsRequired();
+            builder.Property(x => x.StartTime).HasColumnName(@"StartTime").HasColumnType("time").IsRequired();
+            builder.Property(x => x.EndTime).HasColumnName(@"EndTime").HasColumnType("time").IsRequired();
             builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);

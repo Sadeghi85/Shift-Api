@@ -60,7 +60,21 @@ namespace Leopard.Bussiness.Services {
 			}
 			//}
 
-			Task<List<ShiftTabletResult>>? res = _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletResult { Id = pp.Id, ProductionTypeId = pp.ProductionTypeId, ProductionTypeTitle = pp.ShiftProductionType.Title, ShiftDate = pp.ShiftDate, ShiftTitle = pp.ShiftShift.Title, ShiftId = pp.ShiftId, ShiftWorthPercent = pp.ShiftWorthPercent }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
+			Task<List<ShiftTabletResult>>? res = _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletResult 
+			{ Id = pp.Id,
+				ProductionTypeId = pp.ProductionTypeId,
+				ProductionTypeTitle = pp.ShiftProductionType.Title,
+				ShiftDate = pp.ShiftDate,
+				ShiftTitle = pp.ShiftShift.Title,
+				ShiftId = pp.ShiftId,
+				ShiftWorthPercent = pp.ShiftWorthPercent, 
+				PortalId= pp.ShiftShift.PortalId,
+				ShiftStartTime = pp.ShiftShift.StartTime,
+				ShiftEndTime= pp.ShiftShift.EndTime,
+				PortalName= pp.ShiftShift.Portal.Title
+
+			
+			}, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
 			//IQueryable<ShiftShiftTablet>? res = _shiftShiftTabletStore.GetAll();
 			//_shiftShiftStore.GetAllAsync

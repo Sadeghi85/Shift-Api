@@ -13,9 +13,9 @@ namespace Leopard.Repository
     {
         public int Id { get; set; } // ID (Primary key)
         public string Title { get; set; } // Title (length: 250)
-        public int? PortalId { get; set; } // PortalId
-        public TimeSpan? StartTime { get; set; } // StartTime
-        public TimeSpan? EndTime { get; set; } // EndTime
+        public int PortalId { get; set; } // PortalId
+        public TimeSpan StartTime { get; set; } // StartTime
+        public TimeSpan EndTime { get; set; } // EndTime
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime

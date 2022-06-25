@@ -145,7 +145,7 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Message = "ساعت شروع باید کوچتر از زمان پایان باشد.";
 				} else {
 
-					ShiftShift shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId, ShiftType = model.ShiftType, StartTime = model.StartTime, EndTime = model.EndTime, IsDeleted = false };
+					ShiftShift shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId.Value, ShiftType = model.ShiftType, StartTime = model.StartTime.Value, EndTime = model.EndTime.Value, IsDeleted = false };
 
 					var res = await _shiftShiftStore.InsertAsync(shiftShift);
 
@@ -184,10 +184,10 @@ namespace Leopard.Bussiness.Services {
 				} else {
 
 					found.Title = model.Title;
-					found.StartTime = model.StartTime;
-					found.EndTime = model.EndTime;
+					found.StartTime = model.StartTime.Value;
+					found.EndTime = model.EndTime.Value;
 					found.ShiftType = model.ShiftType;
-					found.PortalId = model.PortalId;
+					found.PortalId = model.PortalId.Value;
 					res = await _shiftShiftStore.Update(found);
 
 				}
