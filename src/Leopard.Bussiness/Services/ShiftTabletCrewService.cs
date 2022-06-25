@@ -21,16 +21,18 @@ namespace Leopard.Bussiness.Services {
 		readonly private ISamtAgentStore _agentStore;
 		readonly private IShiftShiftTabletStore _shiftShiftTabletStore;
 		readonly private IShiftLogStore _shiftLogStore;
+		readonly private IShiftShiftStore _shiftShiftStore;
+
 		private List<Expression<Func<ShiftShiftTabletCrew, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftShiftTabletCrew, bool>>>();
 
-		public ShiftTabletCrewService(IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewReplacementStore shiftShiftTabletCrewReplacementStore, ISamtAgentStore samtAgentStore, ISamtResourceTypeStore samtResourceTypeStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftLogStore shiftLogStore) {
+		public ShiftTabletCrewService(IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewReplacementStore shiftShiftTabletCrewReplacementStore, ISamtAgentStore samtAgentStore, ISamtResourceTypeStore samtResourceTypeStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftLogStore shiftLogStore, IShiftShiftStore shiftShiftStore) {
 			_shiftShiftTabletCrewStore = shiftShiftTabletCrewStore;
 			_shiftShiftTabletCrewReplacementStore = shiftShiftTabletCrewReplacementStore;
 			_agentStore = samtAgentStore;
 			_samtResourceTypeStore = samtResourceTypeStore;
 			_shiftShiftTabletStore = shiftShiftTabletStore;
 			_shiftLogStore = shiftLogStore;
-
+			_shiftShiftStore = shiftShiftStore;
 		}
 
 		public async Task<BaseResult> Delete(ShiftTabletCrewModel model) {
@@ -105,10 +107,16 @@ namespace Leopard.Bussiness.Services {
 				GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftDate >= model.FromDate);
 			}
 
+			if (model.ResourceTypeId != 0) {
+				GetAllExpressions.Add(pp => pp.ResourceId == model.ResourceTypeId);
+			}
+
 			if (model.ToDate != null) {
 				GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftDate <= model.ToDate);
 			}
-
+			if (model.IsDeleted!=null) {
+				GetAllExpressions.Add(pp=> pp.IsDeleted==model.IsDeleted);
+			}
 
 			//Task<List<ShiftTabletCrewSearchResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletCrewSearchResult {ShifTabletId=pp.ShifTabletId , EntranceTime= pp.EntranceTime , ExitTime= pp.ExitTime , FisrtName= pp.SamtAgent.FirstName, LastName=pp.SamtAgent.LastName, AgentId=pp.AgentId, ShiftTitle= pp.ShiftShiftTablet.ShiftShift.Title , ResourceTitle= pp.SamtResourceType.Title} , pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
@@ -121,9 +129,12 @@ namespace Leopard.Bussiness.Services {
 					jobName = pp.SamtResourceType.Title,
 					shiftDate = pp.ShiftShiftTablet.ShiftDate,
 					PortalName = pp.ShiftShiftTablet.ShiftShift.Portal.Title,
-					EntranceTime = pp.EntranceTime, ExitTime = pp.ExitTime
+					EntranceTime = pp.EntranceTime, ExitTime = pp.ExitTime,
+					AgentId = pp.AgentId,
+					ResourceTypeId = pp.ResourceId, 
+					ShiftTabletId= pp.ShiftTabletId
 				},
-				pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo);
+				pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo); ;
 
 			//IQueryable<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll();
 
@@ -149,51 +160,114 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
+		private bool HasOverLap(ShiftDateStartEnd a, ShiftDateStartEnd b) {
 
+			bool overlap = a.StartDateTime < b.EndDateTime && b.StartDateTime < a.EndDateTime;
+			return overlap;
+		}
 
 		public async Task<BaseResult> Register(ShiftTabletCrewModel model) {
 
+			List<string> overLapMessage = new List<string>();
+
 			try {
+
+
+
+
 
 				var foundAgent = _agentStore.FindById(model.AgentId);
 				var foundResourceType = _samtResourceTypeStore.FindById(model.ResourceTypeId);
-				var foundShiftTablet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
-				if (foundAgent == null) {
-					BaseResult.Success = false;
-					BaseResult.Message = "کارمندی با این مشخصات یافت نشد";
+				var foundShiftTablet = _shiftShiftTabletStore.GetAll().Where(pp => pp.Id == model.ShiftTabletId).FirstOrDefault();
+				var foundAgentInShiftTablet = _shiftShiftTabletCrewStore.GetAll().Any(pp => pp.AgentId == model.AgentId && pp.ShiftTabletId == model.ShiftTabletId && pp.IsDeleted != true);
 
+
+
+				if (foundShiftTablet != null && foundAgent != null && foundAgentInShiftTablet == false) {
+
+					var shiftTabletDate = foundShiftTablet.ShiftDate;
+					List<ShiftDateStartEnd> lstShiftDateStartEnds = new List<ShiftDateStartEnd>();
+					ShiftDateStartEnd shiftDateStartEnd = new ShiftDateStartEnd();
+
+					var foundShift = _shiftShiftStore.GetAll().Where(pp => pp.Id == foundShiftTablet.ShiftId).FirstOrDefault();
+					
+
+
+					shiftDateStartEnd.StartDateTime = foundShiftTablet.ShiftDate.Add(foundShift.StartTime.Value);
+					shiftDateStartEnd.EndDateTime = foundShiftTablet.ShiftDate.Add(foundShift.EndTime.Value);
+					lstShiftDateStartEnds.Add(shiftDateStartEnd);
+
+					var listOfAgentWorkingShifts = _shiftShiftTabletCrewStore.GetAll().Where(pp => pp.ShiftShiftTablet.ShiftDate == shiftTabletDate && pp.AgentId == model.AgentId).Select(pp =>
+					new { pp.ShiftShiftTablet.ShiftDate, pp.ShiftShiftTablet.ShiftShift.StartTime, pp.ShiftShiftTablet.ShiftShift.EndTime }).ToList();
+					if (listOfAgentWorkingShifts.Count != 0) {
+
+
+						foreach (var i in listOfAgentWorkingShifts) {
+							var sdse = new ShiftDateStartEnd();
+							sdse.StartDateTime = i.ShiftDate.Add(i.StartTime.Value);
+							sdse.EndDateTime = i.ShiftDate.Add(i.EndTime.Value);
+							lstShiftDateStartEnds.Add(sdse);
+						}
+
+						if (lstShiftDateStartEnds.Count > 1) {
+
+							lstShiftDateStartEnds = lstShiftDateStartEnds.OrderBy(pp => pp.StartDateTime).ToList();
+
+							for (var i = 0; i < lstShiftDateStartEnds.Count - 1; i++) {
+								if (HasOverLap(lstShiftDateStartEnds[i], lstShiftDateStartEnds[i + 1])) {
+									overLapMessage.Add("کاربر در یک شیفت هم زمان دیگر ثبت شده است.");
+								}
+							}
+
+						}
+
+
+					}
 				}
-				if (foundResourceType == null) {
-					BaseResult.Success = false;
-					BaseResult.Message = "شناسه سمت مورد نظر یافت نشد.";
 
+
+
+					if (foundAgent == null) {
+						BaseResult.Success = false;
+						BaseResult.Message = "کارمندی با این مشخصات یافت نشد";
+
+					} else if (foundResourceType == null) {
+						BaseResult.Success = false;
+						BaseResult.Message = "شناسه سمت مورد نظر یافت نشد.";
+
+					} else if (foundShiftTablet == null) {
+						BaseResult.Success = false;
+						BaseResult.Message = "شناسه لوح مورد نظر یافت نشد.";
+
+					} else if (foundAgentInShiftTablet) {
+						BaseResult.Success = false;
+						BaseResult.Message = "کارمند مورد نظر در این لوح شیفت قبلا ثبت نام شده است.";
+					} else if (overLapMessage.Count > 0) {
+						BaseResult.Success = false;
+						BaseResult.Message = String.Join(",", overLapMessage);
+
+					} else if (model.EntranceTime > model.ExitTime) {
+
+						BaseResult.Success = false;
+						BaseResult.Message = "زمان خروج باید بزرگتر از زمان ورود کارمند باشد.";
+
+					} else {
+						ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew {
+							AgentId = model.AgentId,
+
+							//EntranceTime = model.EntranceTime,
+							//ExitTime = model.ExitTime,
+
+							IsReplaced = false,
+							ResourceId = model.ResourceTypeId,
+							ShiftTabletId = model.ShiftTabletId
+						};
+
+						var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
+					}
 				}
-				if (foundShiftTablet == null) {
-					BaseResult.Success = false;
-					BaseResult.Message = "شناسه لوح مورد نظر یافت نشد.";
 
-				}
-				if (model.EntranceTime > model.ExitTime) {
-
-					BaseResult.Success = false;
-					BaseResult.Message = "زمان خروج باید بزرگتر از زمان ورود کارمند باشد.";
-
-				}
-
-				ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew {
-					AgentId = model.AgentId,
-
-					//EntranceTime = model.EntranceTime,
-					//ExitTime = model.ExitTime,
-
-					IsReplaced = false,
-					ResourceId = model.ResourceTypeId,
-					ShiftTabletId = model.ShiftTabletId
-				};
-
-				var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
-
-			} catch (Exception ex) {
+				catch (Exception ex) {
 
 				BaseResult.Success = false;
 				var shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
