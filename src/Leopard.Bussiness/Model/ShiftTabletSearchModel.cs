@@ -13,6 +13,7 @@ namespace Leopard.Bussiness.Model {
 		public int ProductionTypeId { get; set; } // ProductionTypeId
 		public DateTime? FromDate { get; set; }
 		public DateTime? ToDate { get; set; }
+		public bool? IsDeleted { get; set; }
 
 	}
 }

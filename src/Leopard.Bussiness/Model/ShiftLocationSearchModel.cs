@@ -20,6 +20,8 @@ namespace Leopard.Bussiness.Model {
 			}
 		}
 		public int PortalId { get; set; }
+		public bool? IsDeleted { get; set; }
+
 
 	}
 }

@@ -76,6 +76,9 @@ namespace Leopard.Bussiness.Services {
 				if (!string.IsNullOrWhiteSpace(model.CrewName)) {
 					Expressions.Add(pp => model.CrewName.Contains(pp.ShiftShiftTabletCrew.SamtAgent.FirstName) || model.CrewName.Contains(pp.ShiftShiftTabletCrew.SamtAgent.LastName));
 				}
+				if (model.IsDeleted!=null) {
+					Expressions.Add(pp=> pp.IsDeleted==model.IsDeleted);
+				}
 				//expressions.Add(pp=> pp.IsDeleted==false);
 
 			}

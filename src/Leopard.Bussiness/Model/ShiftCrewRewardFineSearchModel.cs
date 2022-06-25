@@ -11,5 +11,7 @@ namespace Leopard.Bussiness.Model {
 		public bool? IsRewardFine { get; set; }
 		public string Description { get; set; }
 
+		public bool? IsDeleted { get; set; }
+
 	}
 }
