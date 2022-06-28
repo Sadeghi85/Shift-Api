@@ -25,14 +25,14 @@ namespace Leopard.Repository
         public virtual ICollection<ConductorChannelProgramAgent> ConductorChannelProgramAgents { get; set; } // ConductorChannelProgramAgents.FK_ConductorChannelProgramAgents_SAMT_ResourceTypes
 
         /// <summary>
+        /// Child ShiftNeededResources where [ShiftNeededResource].[ResourceTypeId] point to this entity (FK_ShiftNeededResource_SAMT_ResourceTypes)
+        /// </summary>
+        public virtual ICollection<ShiftNeededResource> ShiftNeededResources { get; set; } // ShiftNeededResource.FK_ShiftNeededResource_SAMT_ResourceTypes
+
+        /// <summary>
         /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[ResourceId] point to this entity (FK_Shift_ShiftTableCrew_SAMT_ResourceTypes)
         /// </summary>
         public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTableCrew_SAMT_ResourceTypes
-
-        /// <summary>
-        /// Child ShiftTabletNeededResources where [shiftTabletNeededResource].[ResourceTypeId] point to this entity (FK_shiftTabletNeededResource_SAMT_ResourceTypes)
-        /// </summary>
-        public virtual ICollection<ShiftTabletNeededResource> ShiftTabletNeededResources { get; set; } // shiftTabletNeededResource.FK_shiftTabletNeededResource_SAMT_ResourceTypes
 
         /// <summary>
         /// Child TelavatPaymentLogDetails where [TelavatPaymentLogDetails].[AgentPostID] point to this entity (FK_TelavatPaymentLogDetails_TelavatResourceTypes)
@@ -45,7 +45,7 @@ namespace Leopard.Repository
             IsDeleted = false;
             ConductorChannelProgramAgents = new List<ConductorChannelProgramAgent>();
             ShiftShiftTabletCrews = new List<ShiftShiftTabletCrew>();
-            ShiftTabletNeededResources = new List<ShiftTabletNeededResource>();
+            ShiftNeededResources = new List<ShiftNeededResource>();
             TelavatPaymentLogDetails = new List<TelavatPaymentLogDetail>();
             InitializePartial();
         }

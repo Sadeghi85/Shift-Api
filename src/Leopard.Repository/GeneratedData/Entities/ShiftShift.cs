@@ -32,14 +32,14 @@ namespace Leopard.Repository
         // Reverse navigation
 
         /// <summary>
+        /// Child ShiftNeededResources where [ShiftNeededResource].[ShiftId] point to this entity (FK_ShiftNeededResource_Shift_Shift)
+        /// </summary>
+        public virtual ICollection<ShiftNeededResource> ShiftNeededResources { get; set; } // ShiftNeededResource.FK_ShiftNeededResource_Shift_Shift
+
+        /// <summary>
         /// Child ShiftShiftTablets where [Shift_ShiftTablet].[ShiftID] point to this entity (FK_ShiftExecution_PortalShift)
         /// </summary>
         public virtual ICollection<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet.FK_ShiftExecution_PortalShift
-
-        /// <summary>
-        /// Child ShiftTabletNeededResources where [shiftTabletNeededResource].[ShiftId] point to this entity (FK_shiftTabletNeededResource_Shift_Shift)
-        /// </summary>
-        public virtual ICollection<ShiftTabletNeededResource> ShiftTabletNeededResources { get; set; } // shiftTabletNeededResource.FK_shiftTabletNeededResource_Shift_Shift
 
         // Foreign keys
 
@@ -51,7 +51,7 @@ namespace Leopard.Repository
         public ShiftShift()
         {
             ShiftShiftTablets = new List<ShiftShiftTablet>();
-            ShiftTabletNeededResources = new List<ShiftTabletNeededResource>();
+            ShiftNeededResources = new List<ShiftNeededResource>();
             InitializePartial();
         }
 
