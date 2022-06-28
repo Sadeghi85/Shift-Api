@@ -77,7 +77,7 @@ namespace Leopard.Bussiness.Services {
 		}
 
 		public Task<List<ShfitTabletReportResult>>? GetAll(ShiftTabletCrewSearchModel model) {
-			GetAllExpressions.Add(pp => pp.IsDeleted == false);
+			GetAllExpressions.Add(pp => pp.ShiftShiftTablet.IsDeleted == false);
 
 			if (model.Id != 0) {
 				GetAllExpressions.Add(pp => pp.Id == model.Id);
