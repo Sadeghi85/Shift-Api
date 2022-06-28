@@ -56,6 +56,9 @@ namespace Leopard.Bussiness.Services {
 			if (model.IsDeleted != null) {
 				GetAllExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
 			}
+			if (model.HasLivePrograms != null) {
+				GetAllExpressions.Add(pp=> pp.HasLivePrograms==model.HasLivePrograms);
+			}
 
 			//}
 
@@ -111,7 +114,13 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Success = false;
 					BaseResult.Message = "این شیفت در این روز حاص از قبل موجود است.";
 				} else {
-					ShiftShiftTablet shiftTablet = new ShiftShiftTablet { ShiftId = model.ShiftId, ShiftDate = model.ShiftDate, ShiftWorthPercent = model.ShiftWorthPercent.Value, IsDeleted = false };
+					ShiftShiftTablet shiftTablet = new ShiftShiftTablet { 
+						ShiftId = model.ShiftId,
+						ShiftDate = model.ShiftDate,
+						ShiftWorthPercent = model.ShiftWorthPercent.Value,
+						IsDeleted = false ,
+						HasLivePrograms= model.HasLivePrograms.Value
+					};
 					foundShift = _shiftShiftStore.FindById(model.ShiftId);
 					shiftTablet.ShiftTime = foundShift.EndTime - foundShift.StartTime;
 
@@ -152,6 +161,7 @@ namespace Leopard.Bussiness.Services {
 					found.ShiftId = model.ShiftId;
 					found.ShiftDate = model.ShiftDate;
 					found.ShiftWorthPercent = model.ShiftWorthPercent.Value;
+					found.HasLivePrograms = model.HasLivePrograms.Value;
 
 					var res = await _shiftShiftTabletStore.Update(found);
 				}

@@ -15,15 +15,21 @@ namespace Leopard.Bussiness.Services {
 		private readonly IShiftShiftStore _shiftShiftStore;
 		private readonly IPortalStore _portalStore;
 		private readonly IShiftLogStore _shiftLogStore;
+		private readonly IShiftNeededResourceStore _shiftNeededResourceStore;
+		private readonly ISamtResourceTypeStore _samtResourceTypeStore;
 
 		private List<Expression<Func<ShiftShift, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftShift, bool>>>();
 
 
-		public ShiftService(IShiftShiftStore shiftShiftStore, IPortalStore portalStore, IShiftLogStore shiftLogStore) {
+		public ShiftService(IShiftShiftStore shiftShiftStore, IPortalStore portalStore, IShiftLogStore shiftLogStore, IShiftNeededResourceStore shiftNeededResourceStore, ISamtResourceTypeStore samtResourceTypeStore) {
 			_shiftShiftStore = shiftShiftStore;
 			_portalStore = portalStore;
 			_shiftLogStore = shiftLogStore;
+			_shiftNeededResourceStore = shiftNeededResourceStore;
+			_samtResourceTypeStore = samtResourceTypeStore;	
 		}
+
+
 
 
 		public async Task<BaseResult> Delete(ShiftModel model) {
@@ -206,5 +212,45 @@ namespace Leopard.Bussiness.Services {
 			}
 			return BaseResult;
 		}
+
+		public  async Task<BaseResult> RegisterShiftResource(ShiftNeededResourceModel model) {
+
+
+			try {
+				var foundResourceShift = _shiftNeededResourceStore.GetAll().Any(pp => pp.ShiftId == model.ShiftId && pp.ResourceTypeId == model.ResourceTypeId);
+				var foundShift = _shiftShiftStore.FindById(model.ShiftId);
+				var foundResource = _samtResourceTypeStore.FindById(model.ResourceTypeId);
+
+				if (foundResourceShift) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه سمت برای شیفت قبلا ثبت شده است.";
+				} else if (foundResource == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "سمت مورد نظر یافت نشد.";
+
+				} else if (foundShift == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شیفت مورد نظر یافت نشد.";
+				} else {
+					await _shiftNeededResourceStore.InsertAsync(new ShiftNeededResource {
+						IsDeleted = false,
+						ResourceTypeId = model.ResourceTypeId,
+						ShiftId = model.ShiftId
+					});
+				}
+			} catch (Exception ex) {
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				BaseResult.Success = false;
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+			}
+			return BaseResult;
+		}
+
+		
 	}
 }
