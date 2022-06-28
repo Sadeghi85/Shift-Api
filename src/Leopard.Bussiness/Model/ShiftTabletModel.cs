@@ -21,5 +21,9 @@ namespace Leopard.Bussiness.Model {
 
 		public int? ShiftWorthPercent { get; set; } // ShiftWorthPercent
 		public TimeSpan? ShiftTime { get; set; } // ShiftTime
+
+		[Required(ErrorMessage =ValidationConstants.HasLiveProgramsRequired)]
+		public bool? HasLivePrograms { get; set; }
+
 	}
 }

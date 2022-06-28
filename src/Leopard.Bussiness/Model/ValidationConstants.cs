@@ -30,6 +30,7 @@ namespace Leopard.Bussiness.Model {
 		public const string ProductionTypeIdRequired = "شناسه نوع تولید شیفت اجباری است.";
 		public const string ProgramTitleRequired = "نام برنامه اجباری است.";
 		public const string ReplacedProgramTitleRequired = "نام برنامه جایگزین شونده اجباری است.";
+		public const string HasLiveProgramsRequired = "آیا شیفت دارای برنامه زنده است؟";
 
 	}
 }
