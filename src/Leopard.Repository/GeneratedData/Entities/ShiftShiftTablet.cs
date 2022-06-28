@@ -14,7 +14,6 @@ namespace Leopard.Repository
         public int Id { get; set; } // ID (Primary key)
         public int ShiftId { get; set; } // ShiftID
         public DateTime ShiftDate { get; set; } // ShiftDate
-        public int ProductionTypeId { get; set; } // ProductionTypeId
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
@@ -23,9 +22,10 @@ namespace Leopard.Repository
         /// <summary>
         /// ارزش درصدی شیفت که بر اساس روزهای خاص ثبت میشود.
         /// </summary>
-        public int? ShiftWorthPercent { get; set; } // ShiftWorthPercent
-        public TimeSpan? ShiftTime { get; set; } // ShiftTime
+        public int ShiftWorthPercent { get; set; } // ShiftWorthPercent
+        public TimeSpan ShiftTime { get; set; } // ShiftTime
         public bool IsDeleted { get; set; } // IsDeleted
+        public bool HasLivePrograms { get; set; } // HasLivePrograms
 
         // Reverse navigation
 
@@ -55,11 +55,6 @@ namespace Leopard.Repository
         public virtual ICollection<ShiftTabletScriptSupervisorDescription> ShiftTabletScriptSupervisorDescriptions { get; set; } // Shift_TabletScriptSupervisorDescription.FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet
 
         // Foreign keys
-
-        /// <summary>
-        /// Parent ShiftProductionType pointed by [Shift_ShiftTablet].([ProductionTypeId]) (FK_ShiftExecution_ProductionType)
-        /// </summary>
-        public virtual ShiftProductionType ShiftProductionType { get; set; } // FK_ShiftExecution_ProductionType
 
         /// <summary>
         /// Parent ShiftShift pointed by [Shift_ShiftTablet].([ShiftId]) (FK_ShiftExecution_PortalShift)

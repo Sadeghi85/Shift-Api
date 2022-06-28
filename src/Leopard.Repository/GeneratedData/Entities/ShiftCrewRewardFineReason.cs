@@ -12,12 +12,12 @@ namespace Leopard.Repository
     public partial class ShiftCrewRewardFineReason
     {
         public int Id { get; set; } // ID (Primary key)
-        public int? ShiftCrewRewardFineId { get; set; } // Shift_CrewRewardFineID
+        public int ShiftCrewRewardFineId { get; set; } // Shift_CrewRewardFineID
         public string Title { get; set; } // Title (length: 250)
-        public int CreatedBy { get; set; } // CreatedBy
-        public int ModifiedBy { get; set; } // ModifiedBy
-        public DateTime CreateDateTime { get; set; } // CreateDateTime
-        public DateTime LastModifiedDateTime { get; set; } // LastModifiedDateTime
+        public int? CreatedBy { get; set; } // CreatedBy
+        public int? ModifiedBy { get; set; } // ModifiedBy
+        public DateTime? CreateDateTime { get; set; } // CreateDateTime
+        public DateTime? LastModifiedDateTime { get; set; } // LastModifiedDateTime
 
         // Foreign keys
 

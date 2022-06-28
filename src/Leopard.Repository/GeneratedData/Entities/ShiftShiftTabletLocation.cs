@@ -12,8 +12,8 @@ namespace Leopard.Repository
     public partial class ShiftShiftTabletLocation
     {
         public int Id { get; set; } // ID (Primary key)
-        public int? ShiftTabletId { get; set; } // ShiftTabletID
-        public int? LocationId { get; set; } // LocationID
+        public int ShiftTabletId { get; set; } // ShiftTabletID
+        public int LocationId { get; set; } // LocationID
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime

@@ -14,7 +14,7 @@ namespace Leopard.Repository
         public int Id { get; set; } // Id (Primary key)
         public string ProgramTitle { get; set; } // ProgramTitle (length: 250)
         public string ReplacedProgramTitle { get; set; } // ReplacedProgramTitle (length: 250)
-        public int? ShiftTabletId { get; set; } // ShiftTabletId
+        public int ShiftTabletId { get; set; } // ShiftTabletId
         public string Description { get; set; } // Description (length: 1000)
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy

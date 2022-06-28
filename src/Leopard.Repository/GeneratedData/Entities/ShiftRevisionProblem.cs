@@ -12,10 +12,10 @@ namespace Leopard.Repository
     public partial class ShiftRevisionProblem
     {
         public int Id { get; set; } // Id (Primary key)
-        public int? ShiftTabletId { get; set; } // ShiftTabletId
+        public int ShiftTabletId { get; set; } // ShiftTabletId
         public string FileNumber { get; set; } // FileNumber (length: 50)
-        public string FileName { get; set; } // FileName (length: 500)
-        public int? ClacketNo { get; set; } // ClacketNo
+        public string ProgramName { get; set; } // ProgramName (length: 500)
+        public int ClacketNo { get; set; } // ClacketNo
         public string ProblemDescription { get; set; } // ProblemDescription (length: 500)
         public string RevisorCode { get; set; } // RevisorCode (length: 50)
         public string Description { get; set; } // Description (length: 500)

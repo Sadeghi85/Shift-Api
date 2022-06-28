@@ -24,9 +24,9 @@ namespace Leopard.Repository
         /// <summary>
         /// نوع شیفت که گویای دو نوع شیفت رژی (1) و شیف هماهنگی(2) میباشد.
         /// </summary>
-        public int? ShiftType { get; set; } // ShiftType
-        public bool? HasRewardFine { get; set; } // HasRewardFine
-        public int? RewarFineAmount { get; set; } // RewarFineAmount
+        public int ShiftType { get; set; } // ShiftType
+        public bool HasRewardFine { get; set; } // HasRewardFine
+        public int RewarFineAmount { get; set; } // RewarFineAmount
         public bool IsDeleted { get; set; } // IsDeleted
 
         // Reverse navigation
@@ -35,6 +35,11 @@ namespace Leopard.Repository
         /// Child ShiftShiftTablets where [Shift_ShiftTablet].[ShiftID] point to this entity (FK_ShiftExecution_PortalShift)
         /// </summary>
         public virtual ICollection<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet.FK_ShiftExecution_PortalShift
+
+        /// <summary>
+        /// Child ShiftTabletNeededResources where [shiftTabletNeededResource].[ShiftId] point to this entity (FK_shiftTabletNeededResource_Shift_Shift)
+        /// </summary>
+        public virtual ICollection<ShiftTabletNeededResource> ShiftTabletNeededResources { get; set; } // shiftTabletNeededResource.FK_shiftTabletNeededResource_Shift_Shift
 
         // Foreign keys
 
@@ -46,6 +51,7 @@ namespace Leopard.Repository
         public ShiftShift()
         {
             ShiftShiftTablets = new List<ShiftShiftTablet>();
+            ShiftTabletNeededResources = new List<ShiftTabletNeededResource>();
             InitializePartial();
         }
 

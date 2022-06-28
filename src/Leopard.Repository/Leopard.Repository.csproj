@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="Data\InputModels\" />
+    <Folder Include="GeneratedData\" />
   </ItemGroup>
 
   <ItemGroup>

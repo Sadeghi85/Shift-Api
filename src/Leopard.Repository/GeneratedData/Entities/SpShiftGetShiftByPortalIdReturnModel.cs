@@ -13,9 +13,9 @@ namespace Leopard.Repository
         public int PortalId { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
-        public int? ShiftType { get; set; }
-        public bool? HasRewardFine { get; set; }
-        public int? RewarFineAmount { get; set; }
+        public int ShiftType { get; set; }
+        public bool HasRewardFine { get; set; }
+        public int RewarFineAmount { get; set; }
     }
 
 }

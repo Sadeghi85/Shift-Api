@@ -12,10 +12,10 @@ namespace Leopard.Repository
     public partial class ShiftCrewRewardFine
     {
         public int Id { get; set; } // ID (Primary key)
-        public int? ShiftTabletCrewId { get; set; } // ShiftTabletCrewId
-        public bool? IsReward { get; set; } // IsReward
-        public int? Shiftpercentage { get; set; } // Shiftpercentage
-        public int? Ammount { get; set; } // Ammount
+        public int ShiftTabletCrewId { get; set; } // ShiftTabletCrewId
+        public bool IsReward { get; set; } // IsReward
+        public int Shiftpercentage { get; set; } // Shiftpercentage
+        public int Ammount { get; set; } // Ammount
         public string Description { get; set; } // description (length: 500)
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
