@@ -38,11 +38,11 @@ namespace Leopard.Bussiness.Services {
 
 		public Task<List<ShiftTabletLocationResult>>? GetAll(ShiftTabletLocationSearchModel model) {
 
-			if (model.ShiftTabletId == 0 && string.IsNullOrWhiteSpace(model.ShiftTitle) && string.IsNullOrWhiteSpace(model.LocationTitle) && model.LocationId == 0) {
+			//if (model.ShiftTabletId == 0 && string.IsNullOrWhiteSpace(model.ShiftTitle) && string.IsNullOrWhiteSpace(model.LocationTitle) && model.LocationId == 0) {
 
-				GetAllExpressions.Add(pp => true);
+			//	GetAllExpressions.Add(pp => true);
 
-			} else {
+			//} else {
 				if (model.ShiftTabletId != null) {
 					GetAllExpressions.Add(pp => pp.ShiftTabletId == model.ShiftTabletId);
 				}
@@ -55,9 +55,9 @@ namespace Leopard.Bussiness.Services {
 				if (model.LocationId != 0) {
 					GetAllExpressions.Add(pp => pp.LocationId == model.LocationId);
 				}
-			}
+			//}
 
-			Task<List<ShiftTabletLocationResult>>? res = _shiftShiftTabletLocationStore.GetAllAsync(GetAllExpressions, pp => new ShiftTabletLocationResult { ShiftId = pp.ShiftShiftTablet.ShiftId, ShiftTabletId = pp.ShiftTabletId.Value, ShiftTitle = pp.ShiftShiftTablet.ShiftShift.Title }, pp => pp.Id, "desc");
+			Task<List<ShiftTabletLocationResult>>? res = _shiftShiftTabletLocationStore.GetAllAsync(GetAllExpressions, pp => new ShiftTabletLocationResult { ShiftId = pp.ShiftShiftTablet.ShiftId, ShiftTabletId = pp.ShiftTabletId, ShiftTitle = pp.ShiftShiftTablet.ShiftShift.Title }, pp => pp.Id, "desc");
 
 
 			return res;
@@ -92,7 +92,7 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Message = "محل برگزاری مورد نظر یافت نشد.";
 				} else {
 
-					ShiftShiftTabletLocation tabletLocation = new ShiftShiftTabletLocation { LocationId = model.LocationId, ShiftTabletId = model.ShiftTabletId };
+					ShiftShiftTabletLocation tabletLocation = new ShiftShiftTabletLocation { LocationId = model.LocationId.Value, ShiftTabletId = model.ShiftTabletId.Value };
 					var res = await _shiftShiftTabletLocationStore.InsertAsync(tabletLocation);
 				}
 
@@ -119,8 +119,8 @@ namespace Leopard.Bussiness.Services {
 				BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
 			} else {
 
-				found.ShiftTabletId = model.ShiftTabletId;
-				found.LocationId = model.LocationId;
+				found.ShiftTabletId = model.ShiftTabletId.Value;
+				found.LocationId = model.LocationId.Value;
 				var res = await _shiftShiftTabletLocationStore.Update(found);
 			}
 			return BaseResult;

@@ -15,14 +15,14 @@ namespace Leopard.Bussiness.Services {
 		readonly private IShiftShiftTabletStore _shiftShiftTabletStore;
 		readonly private IShiftShiftStore _shiftShiftStore;
 		readonly private IShiftLogStore _shiftLogStore;
-		readonly private IShiftProductionTypeStore _shiftProductionTypeStore;
+
 
 		private List<Expression<Func<ShiftShiftTablet, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftShiftTablet, bool>>>();
-		public ShiftTabletService(IShiftShiftTabletStore shiftShiftTabletStore, IShiftShiftStore shiftShiftStore, IShiftLogStore shiftLogStore, IShiftProductionTypeStore shiftProductionTypeStore) {
+		public ShiftTabletService(IShiftShiftTabletStore shiftShiftTabletStore, IShiftShiftStore shiftShiftStore, IShiftLogStore shiftLogStore) {
 			_shiftShiftTabletStore = shiftShiftTabletStore;
 			_shiftShiftStore = shiftShiftStore;
 			_shiftLogStore = shiftLogStore;
-			_shiftProductionTypeStore = shiftProductionTypeStore;
+
 		}
 
 		public List<ShiftShiftTablet> GetTabletShiftByPortalId(int portalId) {
@@ -33,7 +33,7 @@ namespace Leopard.Bussiness.Services {
 		}
 
 		public Task<List<ShiftTabletResult>>? GetAll(ShiftTabletSearchModel model) {
-			GetAllExpressions.Add(pp => pp.IsDeleted != true);
+			GetAllExpressions.Add(pp => pp.ShiftShift.IsDeleted == false);
 
 			//if (model.ShiftId == 0 && model.ShiftDate == null && model.ProductionTypeId == 0) {
 			//	GetAllExpressions.Add(pp => true);
@@ -45,35 +45,32 @@ namespace Leopard.Bussiness.Services {
 			if (model.ShiftId != 0) {
 				GetAllExpressions.Add(pp => pp.ShiftId == model.ShiftId);
 			}
-			
-			if (model.ProductionTypeId != 0) {
-				GetAllExpressions.Add((pp) => pp.ProductionTypeId == model.ProductionTypeId);
-			}
-			if (model.FromDate!=null) {
-				GetAllExpressions.Add(pp => pp.ShiftDate>=model.FromDate);
+
+
+			if (model.FromDate != null) {
+				GetAllExpressions.Add(pp => pp.ShiftDate >= model.FromDate);
 			}
 			if (model.ToDate != null) {
-				GetAllExpressions.Add(pp=> pp.ShiftDate<=model.ToDate);
+				GetAllExpressions.Add(pp => pp.ShiftDate <= model.ToDate);
 			}
-			if (model.IsDeleted!=null) {
-				GetAllExpressions.Add(pp=> pp.IsDeleted==model.IsDeleted);
+			if (model.IsDeleted != null) {
+				GetAllExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
 			}
+
 			//}
 
-			Task<List<ShiftTabletResult>>? res = _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletResult 
-			{ Id = pp.Id,
-				ProductionTypeId = pp.ProductionTypeId,
-				ProductionTypeTitle = pp.ShiftProductionType.Title,
+			Task<List<ShiftTabletResult>>? res = _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletResult {
+				Id = pp.Id,
 				ShiftDate = pp.ShiftDate,
 				ShiftTitle = pp.ShiftShift.Title,
 				ShiftId = pp.ShiftId,
-				ShiftWorthPercent = pp.ShiftWorthPercent, 
-				PortalId= pp.ShiftShift.PortalId,
+				ShiftWorthPercent = pp.ShiftWorthPercent,
+				PortalId = pp.ShiftShift.PortalId,
 				ShiftStartTime = pp.ShiftShift.StartTime,
-				ShiftEndTime= pp.ShiftShift.EndTime,
-				PortalName= pp.ShiftShift.Portal.Title
+				ShiftEndTime = pp.ShiftShift.EndTime,
+				PortalName = pp.ShiftShift.Portal.Title
 
-			
+
 			}, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
 			//IQueryable<ShiftShiftTablet>? res = _shiftShiftTabletStore.GetAll();
@@ -100,7 +97,7 @@ namespace Leopard.Bussiness.Services {
 		public async Task<BaseResult> RegisterShiftTablet(ShiftTabletModel model) {
 
 			try {
-				var foundProductionType = _shiftProductionTypeStore.FindById(model.ProductionTypeId);
+
 
 				var foundShiftTabletSameDate = _shiftShiftTabletStore.GetAll().Any(pp => pp.ShiftDate.Date == model.ShiftDate.Date && pp.ShiftId == model.ShiftId);
 
@@ -113,11 +110,8 @@ namespace Leopard.Bussiness.Services {
 
 					BaseResult.Success = false;
 					BaseResult.Message = "این شیفت در این روز حاص از قبل موجود است.";
-				} else if (foundProductionType == null) {
-					BaseResult.Success = false;
-					BaseResult.Message = "نوع تولید شیفت یافت نشد.";
 				} else {
-					ShiftShiftTablet shiftTablet = new ShiftShiftTablet { ShiftId = model.ShiftId, ShiftDate = model.ShiftDate, ProductionTypeId = model.ProductionTypeId, ShiftWorthPercent = model.ShiftWorthPercent, IsDeleted = false };
+					ShiftShiftTablet shiftTablet = new ShiftShiftTablet { ShiftId = model.ShiftId, ShiftDate = model.ShiftDate, ShiftWorthPercent = model.ShiftWorthPercent.Value, IsDeleted = false };
 					foundShift = _shiftShiftStore.FindById(model.ShiftId);
 					shiftTablet.ShiftTime = foundShift.EndTime - foundShift.StartTime;
 
@@ -157,8 +151,7 @@ namespace Leopard.Bussiness.Services {
 
 					found.ShiftId = model.ShiftId;
 					found.ShiftDate = model.ShiftDate;
-					found.ProductionTypeId = model.ProductionTypeId;
-					found.ShiftWorthPercent = model.ShiftWorthPercent;
+					found.ShiftWorthPercent = model.ShiftWorthPercent.Value;
 
 					var res = await _shiftShiftTabletStore.Update(found);
 				}
