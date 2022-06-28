@@ -81,7 +81,7 @@ namespace Leopard.Bussiness.Services {
 			}
 
 			GetAllExpressions.Add(pp=> pp.IsDeleted!=true);
-			Task<List<ShiftResultModel>>? res = _shiftShiftStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftResultModel { Id = pp.Id, Title = pp.Title, PortalTitle = pp.Portal.Title, PortalId = pp.PortalId, EndTime = pp.EndTime, StartTime = pp.StartTime, ShiftTypeId = pp.ShiftType.Value, ShiftTypeTitle = GetShiftTypeTitleByShiftTypeId(pp.ShiftType) }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
+			Task<List<ShiftResultModel>>? res = _shiftShiftStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftResultModel { Id = pp.Id, Title = pp.Title, PortalTitle = pp.Portal.Title, PortalId = pp.PortalId, EndTime = pp.EndTime, StartTime = pp.StartTime, ShiftTypeId = pp.ShiftType, ShiftTypeTitle = GetShiftTypeTitleByShiftTypeId(pp.ShiftType) }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
 
 
@@ -140,12 +140,14 @@ namespace Leopard.Bussiness.Services {
 				} else if (foundPortal == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه پورتال شناسایی نشد.";
-				} else if (model.StartTime > model.EndTime) {
-					BaseResult.Success = false;
-					BaseResult.Message = "ساعت شروع باید کوچتر از زمان پایان باشد.";
-				} else {
+				} 
+				//else if (model.StartTime > model.EndTime) {
+				//	BaseResult.Success = false;
+				//	BaseResult.Message = "ساعت شروع باید کوچتر از زمان پایان باشد.";
+				//} 
+				else {
 
-					ShiftShift shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId.Value, ShiftType = model.ShiftType, StartTime = model.StartTime.Value, EndTime = model.EndTime.Value, IsDeleted = false };
+					ShiftShift shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId.Value, ShiftType = model.ShiftType.Value, StartTime = model.StartTime.Value, EndTime = model.EndTime.Value, IsDeleted = false };
 
 					var res = await _shiftShiftStore.InsertAsync(shiftShift);
 
@@ -186,7 +188,7 @@ namespace Leopard.Bussiness.Services {
 					found.Title = model.Title;
 					found.StartTime = model.StartTime.Value;
 					found.EndTime = model.EndTime.Value;
-					found.ShiftType = model.ShiftType;
+					found.ShiftType = model.ShiftType.Value;
 					found.PortalId = model.PortalId.Value;
 					res = await _shiftShiftStore.Update(found);
 
