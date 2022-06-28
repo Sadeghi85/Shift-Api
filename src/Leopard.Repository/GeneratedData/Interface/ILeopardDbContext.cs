@@ -272,6 +272,7 @@ namespace Leopard.Repository
         DbSet<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail
         DbSet<ShiftLocation> ShiftLocations { get; set; } // Shift_Location
         DbSet<ShiftLog> ShiftLogs { get; set; } // Shift_Log
+        DbSet<ShiftNeededResource> ShiftNeededResources { get; set; } // ShiftNeededResource
         DbSet<ShiftRevisionProblem> ShiftRevisionProblems { get; set; } // Shift_RevisionProblem
         DbSet<ShiftShift> ShiftShifts { get; set; } // Shift_Shift
         DbSet<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet
@@ -280,7 +281,6 @@ namespace Leopard.Repository
         DbSet<ShiftShiftTabletLocation> ShiftShiftTabletLocations { get; set; } // Shift_ShiftTabletLocation
         DbSet<ShiftTabletConductor> ShiftTabletConductors { get; set; } // ShiftTabletConductor
         DbSet<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges
-        DbSet<ShiftTabletNeededResource> ShiftTabletNeededResources { get; set; } // shiftTabletNeededResource
         DbSet<ShiftTabletScriptSupervisorDescription> ShiftTabletScriptSupervisorDescriptions { get; set; } // Shift_TabletScriptSupervisorDescription
         DbSet<SimaDataLog> SimaDataLogs { get; set; } // SimaDataLogs
         DbSet<SimaRequest> SimaRequests { get; set; } // SIMA_Requests
