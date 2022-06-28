@@ -15,11 +15,11 @@ namespace Leopard.Repository
             builder.HasKey(x => x.Id).HasName("PK_Shift_CrewRewardFine").IsClustered();
 
             builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedNever();
-            builder.Property(x => x.ShiftTabletCrewId).HasColumnName(@"ShiftTabletCrewId").HasColumnType("int").IsRequired(false);
-            builder.Property(x => x.IsReward).HasColumnName(@"IsReward").HasColumnType("bit").IsRequired(false);
-            builder.Property(x => x.Shiftpercentage).HasColumnName(@"Shiftpercentage").HasColumnType("int").IsRequired(false);
-            builder.Property(x => x.Ammount).HasColumnName(@"Ammount").HasColumnType("int").IsRequired(false);
-            builder.Property(x => x.Description).HasColumnName(@"description").HasColumnType("nvarchar(500)").IsRequired(false).HasMaxLength(500);
+            builder.Property(x => x.ShiftTabletCrewId).HasColumnName(@"ShiftTabletCrewId").HasColumnType("int").IsRequired();
+            builder.Property(x => x.IsReward).HasColumnName(@"IsReward").HasColumnType("bit").IsRequired();
+            builder.Property(x => x.Shiftpercentage).HasColumnName(@"Shiftpercentage").HasColumnType("int").IsRequired();
+            builder.Property(x => x.Ammount).HasColumnName(@"Ammount").HasColumnType("int").IsRequired();
+            builder.Property(x => x.Description).HasColumnName(@"description").HasColumnType("nvarchar(500)").IsRequired().HasMaxLength(500);
             builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);

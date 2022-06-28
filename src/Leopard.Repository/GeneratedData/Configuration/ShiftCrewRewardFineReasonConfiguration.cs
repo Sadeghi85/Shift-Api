@@ -15,12 +15,12 @@ namespace Leopard.Repository
             builder.HasKey(x => x.Id).HasName("PK_Shift_CrewEncouragementPunishment").IsClustered();
 
             builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
-            builder.Property(x => x.ShiftCrewRewardFineId).HasColumnName(@"Shift_CrewRewardFineID").HasColumnType("int").IsRequired(false);
-            builder.Property(x => x.Title).HasColumnName(@"Title").HasColumnType("nvarchar(250)").IsRequired(false).HasMaxLength(250);
-            builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired();
-            builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired();
-            builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired();
-            builder.Property(x => x.LastModifiedDateTime).HasColumnName(@"LastModifiedDateTime").HasColumnType("datetime").IsRequired();
+            builder.Property(x => x.ShiftCrewRewardFineId).HasColumnName(@"Shift_CrewRewardFineID").HasColumnType("int").IsRequired();
+            builder.Property(x => x.Title).HasColumnName(@"Title").HasColumnType("nvarchar(250)").IsRequired().HasMaxLength(250);
+            builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired(false);
+            builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
+            builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);
+            builder.Property(x => x.LastModifiedDateTime).HasColumnName(@"LastModifiedDateTime").HasColumnType("datetime").IsRequired(false);
 
             // Foreign keys
             builder.HasOne(a => a.ShiftCrewRewardFine).WithMany(b => b.ShiftCrewRewardFineReasons).HasForeignKey(c => c.ShiftCrewRewardFineId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Shift_CrewRewardFineReason_Shift_CrewRewardFine");

@@ -15,13 +15,13 @@ namespace Leopard.Repository
             builder.HasKey(x => x.Id).HasName("PK_Shift_RevisionProblem").IsClustered();
 
             builder.Property(x => x.Id).HasColumnName(@"Id").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
-            builder.Property(x => x.ShiftTabletId).HasColumnName(@"ShiftTabletId").HasColumnType("int").IsRequired(false);
-            builder.Property(x => x.FileNumber).HasColumnName(@"FileNumber").HasColumnType("nvarchar(50)").IsRequired(false).HasMaxLength(50);
-            builder.Property(x => x.FileName).HasColumnName(@"FileName").HasColumnType("nvarchar(500)").IsRequired(false).HasMaxLength(500);
-            builder.Property(x => x.ClacketNo).HasColumnName(@"ClacketNo").HasColumnType("int").IsRequired(false);
-            builder.Property(x => x.ProblemDescription).HasColumnName(@"ProblemDescription").HasColumnType("nvarchar(500)").IsRequired(false).HasMaxLength(500);
-            builder.Property(x => x.RevisorCode).HasColumnName(@"RevisorCode").HasColumnType("nvarchar(50)").IsRequired(false).HasMaxLength(50);
-            builder.Property(x => x.Description).HasColumnName(@"Description").HasColumnType("nvarchar(500)").IsRequired(false).HasMaxLength(500);
+            builder.Property(x => x.ShiftTabletId).HasColumnName(@"ShiftTabletId").HasColumnType("int").IsRequired();
+            builder.Property(x => x.FileNumber).HasColumnName(@"FileNumber").HasColumnType("nvarchar(50)").IsRequired().HasMaxLength(50);
+            builder.Property(x => x.ProgramName).HasColumnName(@"ProgramName").HasColumnType("nvarchar(500)").IsRequired().HasMaxLength(500);
+            builder.Property(x => x.ClacketNo).HasColumnName(@"ClacketNo").HasColumnType("int").IsRequired();
+            builder.Property(x => x.ProblemDescription).HasColumnName(@"ProblemDescription").HasColumnType("nvarchar(500)").IsRequired().HasMaxLength(500);
+            builder.Property(x => x.RevisorCode).HasColumnName(@"RevisorCode").HasColumnType("nvarchar(50)").IsRequired().HasMaxLength(50);
+            builder.Property(x => x.Description).HasColumnName(@"Description").HasColumnType("nvarchar(500)").IsRequired().HasMaxLength(500);
             builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);
