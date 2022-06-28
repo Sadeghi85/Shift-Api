@@ -31,7 +31,13 @@ namespace SamtApi.Controllers.WebApi {
 			if (portalId > 1) {
 				model.PortalId = portalId;
 			}
+			//List<ShiftLocationReturnModel>? res = null;
+			//try {
 			List<ShiftLocationReturnModel>? res = await _shiftLocationService.GetAll(model);
+			//} catch (Exception ex) {
+
+				
+			//}
 
 			return Ok(OperationResult<List<ShiftLocationReturnModel>>.SuccessResult(res, _shiftLocationService.GetAllTotal()));
 		}
@@ -60,7 +66,7 @@ namespace SamtApi.Controllers.WebApi {
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
-			ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId };
+			ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId.Value };
 			var res = await _shiftLocationService.RegisterShiftLocation(model);
 			if ( res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));

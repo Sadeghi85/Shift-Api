@@ -99,7 +99,7 @@ namespace Leopard.Bussiness.Services {
 
 
 			try {
-				ShiftCrewRewardFine shiftCrewRewardFine = new ShiftCrewRewardFine { ShiftTabletCrewId = model.ShiftTabletCrewId, IsReward = model.IsReward, IsDeleted = false, Ammount = model.Ammount, Shiftpercentage = model.Shiftpercentage, Description = model.Description };
+				ShiftCrewRewardFine shiftCrewRewardFine = new ShiftCrewRewardFine { ShiftTabletCrewId = model.ShiftTabletCrewId.Value, IsReward = model.IsReward.Value, IsDeleted = false, Ammount = model.Ammount.Value, Shiftpercentage = model.Shiftpercentage.Value, Description = model.Description };
 				var res = await _shiftCrewRewardFineStore.InsertAsync(shiftCrewRewardFine);
 			} catch (Exception ex) {
 
@@ -125,10 +125,10 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
 				} else {
-					found.ShiftTabletCrewId = model.ShiftTabletCrewId;
-					found.IsReward = model.IsReward;
-					found.Ammount = model.Ammount;
-					found.Shiftpercentage = model.Shiftpercentage;
+					found.ShiftTabletCrewId = model.ShiftTabletCrewId.Value;
+					found.IsReward = model.IsReward.Value;
+					found.Ammount = model.Ammount.Value;
+					found.Shiftpercentage = model.Shiftpercentage.Value;
 					found.Description = model.Description;
 					res = await _shiftCrewRewardFineStore.Update(found);
 

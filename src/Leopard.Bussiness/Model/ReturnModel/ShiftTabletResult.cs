@@ -9,10 +9,10 @@ namespace Leopard.Bussiness.Model.ReturnModel {
 		public int Id { get; set; } // ID (Primary key)
 		public int? ShiftId { get; set; } // ShiftID
 		public DateTime? ShiftDate { get; set; } // ShiftDate
-		public int? ProductionTypeId { get; set; } // ProductionTypeId
+		
 
 		public string ShiftTitle { get; set; }
-		public string ProductionTypeTitle { get; set; }
+		
 		public int? ShiftWorthPercent { get; set; }
 
 		public int PortalId { get; set; }

@@ -30,28 +30,9 @@ namespace SamtApi.Controllers.WebApi {
 			List<AgentResultModel>? res = await _agentService.GetAll(model);
 
 			return Ok(OperationResult<List<AgentResultModel>>.SuccessResult(res, _agentService.GetAllTotal()));
-
 		}
 
-		// GET api/<AgentController>/5
-		[HttpGet("{id}")]
-		public string Get(int id) {
-			return "value";
-		}
-
-		// POST api/<AgentController>
-		[HttpPost]
-		public void Post([FromBody] string value) {
-		}
-
-		// PUT api/<AgentController>/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value) {
-		}
-
-		// DELETE api/<AgentController>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id) {
-		}
+		
+		
 	}
 }

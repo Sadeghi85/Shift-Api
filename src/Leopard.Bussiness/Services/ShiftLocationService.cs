@@ -41,11 +41,15 @@ namespace Leopard.Bussiness.Services {
 				GetAllExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
 			}
 
-			GetAllExpressions.Add(pp => pp.IsDeleted != true);
+			//if (GetAllExpressions.Count == 0) {
+			//	GetAllExpressions.Add(pp => true);
+			//}
+
+			//GetAllExpressions.Add(pp => pp.IsDeleted != true);
 
 			//var resCnt = _shiftLocationStore.TotalCount(Expressions);
 
-			var res = _shiftLocationStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftLocationReturnModel { Id = pp.Id, PortalId = pp.PortalId.Value, Title = pp.Title, PortalTitle = pp.Portal.Title }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
+			var res = _shiftLocationStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftLocationReturnModel { Id = pp.Id, PortalId = pp.PortalId, Title = pp.Title, PortalTitle = pp.Portal.Title }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
 			return res;
 
@@ -77,7 +81,7 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Message = "این آیتم قبلا ثبت شده است.";
 				} else {
 
-					ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId };
+					ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId.Value };
 					var res = await _shiftLocationStore.InsertAsync(shiftLocation);
 				}
 			} catch (Exception ex) {
@@ -104,7 +108,7 @@ namespace Leopard.Bussiness.Services {
 
 				} else {
 					found.Title = model.Title;
-					found.PortalId = model.PortalId;
+					found.PortalId = model.PortalId.Value;
 					var res = await _shiftLocationStore.Update(found);
 				}
 			} catch (Exception ex) {

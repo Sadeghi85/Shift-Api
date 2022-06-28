@@ -1,16 +1,11 @@
-using Leopard.Bussiness.Services.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Leopard.Repository;
-using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Bussiness.Model;
+using Leopard.Bussiness.Model.ReturnModel;
+using Leopard.Bussiness.Services.Interface;
+using Leopard.Repository;
 using System.Linq.Expressions;
 
 namespace Leopard.Bussiness.Services {
-	internal class ScriptSupervisorService : BaseService, IScriptSupervisorService {
+	public class ScriptSupervisorService : BaseService, IScriptSupervisorService {
 
 		private readonly IShiftTabletScriptSupervisorDescriptionStore _scriptSupervisorDescriptionStore;
 		private readonly IShiftLogStore _shiftLogStore;
@@ -153,7 +148,7 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Message = "لوح شیفت مورد نظر یافت نشد.";
 				} else {
 
-					ShiftTabletConductorChanx conductorChanx = new ShiftTabletConductorChanx { ProgramTitle = model.ProgramTitle, ReplacedProgramTitle = model.ReplacedProgramTitle, Description = model.Description, ShiftTabletId = model.ShiftTabletId };
+					ShiftTabletConductorChanx conductorChanx = new ShiftTabletConductorChanx { ProgramTitle = model.ProgramTitle, ReplacedProgramTitle = model.ReplacedProgramTitle, Description = model.Description, ShiftTabletId = model.ShiftTabletId.Value };
 					await _shiftTabletConductorChanxStore.InsertAsync(conductorChanx);
 
 				}
@@ -185,7 +180,7 @@ namespace Leopard.Bussiness.Services {
 				} else {
 					foundConductorChange.ProgramTitle = model.ProgramTitle;
 					foundConductorChange.ReplacedProgramTitle = model.ReplacedProgramTitle;
-					foundConductorChange.ShiftTabletId = model.ShiftTabletId;
+					foundConductorChange.ShiftTabletId = model.ShiftTabletId.Value;
 					foundConductorChange.Description = model.Description;
 
 					await _shiftTabletConductorChanxStore.Update(foundConductorChange);
@@ -278,10 +273,10 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Message = "لوح شیفت مورد نظر جستجو نشد.";
 				} else {
 					ShiftRevisionProblem revisionProblem = new ShiftRevisionProblem {
-						ClacketNo = model.ClacketNo, FileName = model.FileName,
+						ClacketNo = model.ClacketNo.Value, ProgramName = model.FileName,
 						Description = model.Description, FileNumber = model.FileNumber,
 						ProblemDescription = model.ProblemDescription,
-						RevisorCode = model.RevisorCode, ShiftTabletId = model.ShiftTabletId
+						RevisorCode = model.RevisorCode, ShiftTabletId = model.ShiftTabletId.Value
 					};
 					await _shiftRevisionProblemStore.InsertAsync(revisionProblem);
 				}
@@ -318,7 +313,7 @@ namespace Leopard.Bussiness.Services {
 				GetAllShiftRevisionProblemExpressions.Add(pp => pp.FileNumber.Contains(model.FileNumber));
 			}
 			if (!string.IsNullOrWhiteSpace(model.FileName)) {
-				GetAllShiftRevisionProblemExpressions.Add(pp => pp.FileName.Contains(model.FileName));
+				GetAllShiftRevisionProblemExpressions.Add(pp => pp.ProgramName.Contains(model.FileName));
 			}
 			if (!string.IsNullOrWhiteSpace(model.RevisorCode)) {
 				GetAllShiftRevisionProblemExpressions.Add(pp => pp.RevisorCode.Contains(model.RevisorCode));
@@ -360,10 +355,10 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Success = false;
 					BaseResult.Message = "لوح شیفت مورد نظر جستجو نشد.";
 				} else {
-					foundRevision.ShiftTabletId = model.ShiftTabletId;
+					foundRevision.ShiftTabletId = model.ShiftTabletId.Value;
 					foundRevision.FileNumber = model.FileNumber;
-					foundRevision.FileName = model.FileName;
-					foundRevision.ClacketNo = model.ClacketNo;
+					foundRevision.ProgramName = model.FileName;
+					foundRevision.ClacketNo = model.ClacketNo.Value;
 					foundRevision.RevisorCode = model.RevisorCode;
 					foundRevision.Description = model.Description;
 
