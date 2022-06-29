@@ -24,6 +24,11 @@ namespace Leopard.Bussiness.Services.Interface {
 		public int GetAllCount();
 
 
+		public Task<List<ShiftNeededResourcesResult>?> GetAllShiftNeededResources(ShiftNeededResourcesSearchModel model);
+		public int GetAllShiftNeededResourcesCount();
 
+		public Task<BaseResult> RegisterShiftResource(ShiftNeededResourceModel model);
+		public Task<BaseResult> DeleteShiftResource(ShiftNeededResourceModel model);
+		public Task<BaseResult> UpdateShiftResource(ShiftNeededResourceModel model);
 	}
 }
