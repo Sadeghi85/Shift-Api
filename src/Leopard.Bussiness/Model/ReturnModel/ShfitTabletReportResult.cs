@@ -40,7 +40,6 @@ namespace Leopard.Bussiness.Model.ReturnModel {
 		public string AgentFullName {
 			get {
 				return firstName + " " + lastName;
-
 			}
 		}
 
@@ -52,5 +51,9 @@ namespace Leopard.Bussiness.Model.ReturnModel {
 
 		public DateTime? EntranceTime { get; set; }
 		public DateTime? ExitTime { get; set; }
+
+		public TimeSpan DefaultEntranceTime { get; set; }
+		public TimeSpan DefaultExitTime { get; set; }
+
 	}
 }

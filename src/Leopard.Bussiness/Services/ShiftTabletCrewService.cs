@@ -97,8 +97,8 @@ namespace Leopard.Bussiness.Services {
 			}
 			if (!string.IsNullOrWhiteSpace(model.AgentName)) {
 				GetAllExpressions.Add(PP => model.AgentName.Contains(PP.SamtAgent.FirstName) || model.AgentName.Contains(PP.SamtAgent.LastName));
-
 			}
+
 			if (!string.IsNullOrWhiteSpace(model.ShiftTitle)) {
 				GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftShift.Title.Contains(model.ShiftTitle));
 			}
@@ -114,8 +114,8 @@ namespace Leopard.Bussiness.Services {
 			if (model.ToDate != null) {
 				GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftDate <= model.ToDate);
 			}
-			if (model.IsDeleted!=null) {
-				GetAllExpressions.Add(pp=> pp.IsDeleted==model.IsDeleted);
+			if (model.IsDeleted != null) {
+				GetAllExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
 			}
 
 			//Task<List<ShiftTabletCrewSearchResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletCrewSearchResult {ShifTabletId=pp.ShifTabletId , EntranceTime= pp.EntranceTime , ExitTime= pp.ExitTime , FisrtName= pp.SamtAgent.FirstName, LastName=pp.SamtAgent.LastName, AgentId=pp.AgentId, ShiftTitle= pp.ShiftShiftTablet.ShiftShift.Title , ResourceTitle= pp.SamtResourceType.Title} , pp => pp.Id, model.PageSize, model.PageNo, "desc");
@@ -129,10 +129,13 @@ namespace Leopard.Bussiness.Services {
 					jobName = pp.SamtResourceType.Title,
 					shiftDate = pp.ShiftShiftTablet.ShiftDate,
 					PortalName = pp.ShiftShiftTablet.ShiftShift.Portal.Title,
-					EntranceTime = pp.EntranceTime, ExitTime = pp.ExitTime,
 					AgentId = pp.AgentId,
-					ResourceTypeId = pp.ResourceId, 
-					ShiftTabletId= pp.ShiftTabletId
+					ResourceTypeId = pp.ResourceId,
+					ShiftTabletId = pp.ShiftTabletId,
+					EntranceTime = pp.EntranceTime,
+					ExitTime = pp.ExitTime,
+					DefaultEntranceTime = pp.ShiftShiftTablet.ShiftShift.StartTime,
+					DefaultExitTime = pp.ShiftShiftTablet.ShiftShift.EndTime
 				},
 				pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo); ;
 
@@ -190,7 +193,7 @@ namespace Leopard.Bussiness.Services {
 					ShiftDateStartEnd shiftDateStartEnd = new ShiftDateStartEnd();
 
 					var foundShift = _shiftShiftStore.GetAll().Where(pp => pp.Id == foundShiftTablet.ShiftId).FirstOrDefault();
-					
+
 
 
 					shiftDateStartEnd.StartDateTime = foundShiftTablet.ShiftDate.Add(foundShift.StartTime);
@@ -227,47 +230,45 @@ namespace Leopard.Bussiness.Services {
 
 
 
-					if (foundAgent == null) {
-						BaseResult.Success = false;
-						BaseResult.Message = "کارمندی با این مشخصات یافت نشد";
+				if (foundAgent == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "کارمندی با این مشخصات یافت نشد";
 
-					} else if (foundResourceType == null) {
-						BaseResult.Success = false;
-						BaseResult.Message = "شناسه سمت مورد نظر یافت نشد.";
+				} else if (foundResourceType == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه سمت مورد نظر یافت نشد.";
 
-					} else if (foundShiftTablet == null) {
-						BaseResult.Success = false;
-						BaseResult.Message = "شناسه لوح مورد نظر یافت نشد.";
+				} else if (foundShiftTablet == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه لوح مورد نظر یافت نشد.";
 
-					} else if (foundAgentInShiftTablet) {
-						BaseResult.Success = false;
-						BaseResult.Message = "کارمند مورد نظر در این لوح شیفت قبلا ثبت نام شده است.";
-					} else if (overLapMessage.Count > 0) {
-						BaseResult.Success = false;
-						BaseResult.Message = String.Join(",", overLapMessage);
+				} else if (foundAgentInShiftTablet) {
+					BaseResult.Success = false;
+					BaseResult.Message = "کارمند مورد نظر در این لوح شیفت قبلا ثبت نام شده است.";
+				} else if (overLapMessage.Count > 0) {
+					BaseResult.Success = false;
+					BaseResult.Message = String.Join(",", overLapMessage);
 
-					} else if (model.EntranceTime > model.ExitTime) {
+				} else if (model.EntranceTime > model.ExitTime) {
 
-						BaseResult.Success = false;
-						BaseResult.Message = "زمان خروج باید بزرگتر از زمان ورود کارمند باشد.";
+					BaseResult.Success = false;
+					BaseResult.Message = "زمان خروج باید بزرگتر از زمان ورود کارمند باشد.";
 
-					} else {
-						ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew {
-							AgentId = model.AgentId,
+				} else {
+					ShiftShiftTabletCrew shiftShiftTabletCrew = new ShiftShiftTabletCrew {
+						AgentId = model.AgentId,
 
-							//EntranceTime = model.EntranceTime,
-							//ExitTime = model.ExitTime,
+						//EntranceTime = model.EntranceTime,
+						//ExitTime = model.ExitTime,
 
-							IsReplaced = false,
-							ResourceId = model.ResourceTypeId,
-							ShiftTabletId = model.ShiftTabletId
-						};
+						IsReplaced = false,
+						ResourceId = model.ResourceTypeId,
+						ShiftTabletId = model.ShiftTabletId
+					};
 
-						var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
-					}
+					var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
 				}
-
-				catch (Exception ex) {
+			} catch (Exception ex) {
 
 				BaseResult.Success = false;
 				var shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
