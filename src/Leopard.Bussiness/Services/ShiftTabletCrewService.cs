@@ -288,7 +288,9 @@ namespace Leopard.Bussiness.Services {
 				found.IsReplaced = true;
 				_shiftShiftTabletCrewStore.Update(found).Wait();
 			}
-			var res = await _shiftShiftTabletCrewReplacementStore.InsertAsync(new ShiftShiftTabletCrewReplacement { ShiftTabletCrewId = replaced, ShiftTabletCrewIdReplaceMent = replacedBy });
+			var res = await _shiftShiftTabletCrewReplacementStore.InsertAsync(new ShiftShiftTabletCrewReplacement { 
+				ShiftTabletCrewId = replaced, 
+				ShiftTabletCrewIdReplaceMent = replacedBy });
 			return res;
 
 		}

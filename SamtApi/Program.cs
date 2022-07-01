@@ -44,7 +44,7 @@ builder.Host.UseSerilog(serilogLogger, true);
 builder.Host.UseLamar((context, registry) => {
 
 
-	
+
 
 	registry.AddApiVersioning(options => {
 		options.ReportApiVersions = true;
@@ -107,7 +107,7 @@ builder.Host.UseLamar((context, registry) => {
 		options.SuppressMapClientErrors = true;
 		options.ClientErrorMapping[StatusCodes.Status404NotFound].Link =
 			"https://httpstatuses.com/404";
-	}); 
+	});
 	registry.AddSwaggerGen();
 
 	registry.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest)
@@ -121,12 +121,12 @@ builder.Host.UseLamar((context, registry) => {
 
 var app = builder.Build();
 
-if (builder.Environment.IsProduction()) {
-	app.MapControllers();
-} else {
-	app.MapControllers()
-		.AllowAnonymous();
-}
+//if (builder.Environment.IsProduction()) {
+app.MapControllers();
+//} else {
+//	app.MapControllers()
+//		.AllowAnonymous();
+//}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment()) {
