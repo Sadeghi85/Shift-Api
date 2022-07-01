@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class AgentService: IAgentService {
+	public class AgentService : IAgentService {
 
 		private readonly ISamtAgentStore _samtAgentStore;
 		public AgentService(ISamtAgentStore samtAgentStore) {
@@ -20,28 +20,19 @@ namespace Leopard.Bussiness.Services {
 		private List<Expression<Func<SamtAgent, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<SamtAgent, bool>>>();
 
 		public Task<List<AgentResultModel>>? GetAll(AgentSearchModel model) {
+			GetAllExpressions.Add(pp => !pp.IsDeleted);
 
-			if (string.IsNullOrWhiteSpace(model.FirstName) && string.IsNullOrWhiteSpace(model.LastName) && model.Id==0) {
-				GetAllExpressions.Add(pp=> true);
-			} else {
-				if (!string.IsNullOrWhiteSpace(model.FirstName)) {
-					GetAllExpressions.Add(pp => pp.FirstName.Contains(model.FirstName));
-				}
-				if (!string.IsNullOrWhiteSpace(model.LastName)) {
 
-					GetAllExpressions.Add(pp => pp.LastName.Contains(model.LastName));
-
-				}
-				if (model.Id != 0) {
-					GetAllExpressions.Add(pp => model.Id==pp.Id);
-				}
+			if (!string.IsNullOrWhiteSpace(model.Name)) {
+				GetAllExpressions.Add(pp => pp.FirstName.Contains(model.Name) || pp.LastName.Contains(model.Name));
 			}
-			GetAllExpressions.Add(pp=>!string.IsNullOrEmpty( pp.FirstName) && !string.IsNullOrEmpty(pp.LastName));
 
+			if (model.Id != 0) {
+				GetAllExpressions.Add(pp => model.Id == pp.Id);
+			}
 
-			Task<List<AgentResultModel>>? res = _samtAgentStore.GetAllWithPagingAsync(GetAllExpressions, pp => new AgentResultModel {Id=pp.Id , FullName=$"{pp.FirstName} {pp.LastName}" }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
+			Task<List<AgentResultModel>>? res = _samtAgentStore.GetAllWithPagingAsync(GetAllExpressions, pp => new AgentResultModel { Id = pp.Id, FullName = $"{pp.FirstName} {pp.LastName}" }, pp => pp.LastName, model.PageSize, model.PageNo, "desc");
 			return res;
-
 		}
 
 		public int GetAllTotal() {
