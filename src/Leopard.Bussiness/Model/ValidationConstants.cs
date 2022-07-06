@@ -31,6 +31,10 @@ namespace Leopard.Bussiness.Model {
 		public const string ProgramTitleRequired = "نام برنامه اجباری است.";
 		public const string ReplacedProgramTitleRequired = "نام برنامه جایگزین شونده اجباری است.";
 		public const string HasLiveProgramsRequired = "آیا شیفت دارای برنامه زنده است؟";
+		public const string RequiredShiftRequired = "تعداد شیفت های موظفی اجباری است.";
+		public const string CooperationTypeIdRequired = "نوع همکاری اجباری است.";
+		public const string UnrequiredShiftPaymentRequired = "مبلغ شیفت غیر موظفی اجباری است.";
+
 
 	}
 }
