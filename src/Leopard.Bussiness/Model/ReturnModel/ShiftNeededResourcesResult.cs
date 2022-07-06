@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Model.ReturnModel {
 	public class ShiftNeededResourcesResult {
+		public int Id { get; set; }
 		public int ShiftId { get; set; }
 		public int ResourceId { get; set; }
 		public string ShiftName { get; set; }
