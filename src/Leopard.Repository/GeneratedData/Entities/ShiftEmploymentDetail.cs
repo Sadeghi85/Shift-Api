@@ -15,11 +15,6 @@ namespace Leopard.Repository
     public partial class ShiftEmploymentDetail
     {
         public int Id { get; set; } // ID (Primary key)
-
-        /// <summary>
-        /// نوع همکاری که بعد از سامانه نام آی دی نوع همکاری جایگزین این فیلید میشود
-        /// </summary>
-        public string Title { get; set; } // Title (length: 100)
         public int RequiredShift { get; set; } // RequiredShift
         public int? PerformancePaymentMultiplicationPercent { get; set; } // PerformancePaymentMultiplicationPercent
         public int PerformancePaymentAmount { get; set; } // performancePaymentAmount
@@ -34,6 +29,19 @@ namespace Leopard.Repository
         public int? PortalId { get; set; } // portalId
         public int? UnrequiredShiftPayment { get; set; } // UnrequiredShiftPayment
         public int? CooperationTypeId { get; set; } // CooperationTypeId
+        public bool IsDeleted { get; set; } // IsDeleted
+
+        // Foreign keys
+
+        /// <summary>
+        /// Parent Portal pointed by [Shift_EmploymentDetail].([PortalId]) (FK_Shift_EmploymentDetail_Portals)
+        /// </summary>
+        public virtual Portal Portal { get; set; } // FK_Shift_EmploymentDetail_Portals
+
+        /// <summary>
+        /// Parent SamtHrCooperationType pointed by [Shift_EmploymentDetail].([CooperationTypeId]) (FK_Shift_EmploymentDetail_SAMT_HRCooperationType)
+        /// </summary>
+        public virtual SamtHrCooperationType SamtHrCooperationType { get; set; } // FK_Shift_EmploymentDetail_SAMT_HRCooperationType
 
         public ShiftEmploymentDetail()
         {

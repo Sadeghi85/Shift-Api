@@ -112,6 +112,11 @@ namespace Leopard.Repository
         public virtual ICollection<SamtRequest> SamtRequests { get; set; } // SAMT_Requests.FK_TelavatRequests_Portals
 
         /// <summary>
+        /// Child ShiftEmploymentDetails where [Shift_EmploymentDetail].[portalId] point to this entity (FK_Shift_EmploymentDetail_Portals)
+        /// </summary>
+        public virtual ICollection<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail.FK_Shift_EmploymentDetail_Portals
+
+        /// <summary>
         /// Child ShiftLocations where [Shift_Location].[PortalId] point to this entity (FK_Shift_Location_Portals)
         /// </summary>
         public virtual ICollection<ShiftLocation> ShiftLocations { get; set; } // Shift_Location.FK_Shift_Location_Portals
@@ -227,6 +232,7 @@ namespace Leopard.Repository
             SamtGroups = new List<SamtGroup>();
             SamtMonthlyBudgets = new List<SamtMonthlyBudget>();
             SamtRequests = new List<SamtRequest>();
+            ShiftEmploymentDetails = new List<ShiftEmploymentDetail>();
             ShiftLocations = new List<ShiftLocation>();
             ShiftShifts = new List<ShiftShift>();
             TelavatAgentPosts = new List<TelavatAgentPost>();

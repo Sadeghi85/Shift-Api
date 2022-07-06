@@ -14,8 +14,16 @@ namespace Leopard.Repository
         public int HrCooperationTypeId { get; set; } // HRCooperationTypeID (Primary key)
         public string HrCooperationTypeTitle { get; set; } // HRCooperationTypeTitle (length: 500)
 
+        // Reverse navigation
+
+        /// <summary>
+        /// Child ShiftEmploymentDetails where [Shift_EmploymentDetail].[CooperationTypeId] point to this entity (FK_Shift_EmploymentDetail_SAMT_HRCooperationType)
+        /// </summary>
+        public virtual ICollection<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail.FK_Shift_EmploymentDetail_SAMT_HRCooperationType
+
         public SamtHrCooperationType()
         {
+            ShiftEmploymentDetails = new List<ShiftEmploymentDetail>();
             InitializePartial();
         }
 

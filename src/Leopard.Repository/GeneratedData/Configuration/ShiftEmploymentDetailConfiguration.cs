@@ -15,7 +15,6 @@ namespace Leopard.Repository
             builder.HasKey(x => x.Id).HasName("PK_Shift_EmploymentDetail").IsClustered();
 
             builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedNever();
-            builder.Property(x => x.Title).HasColumnName(@"Title").HasColumnType("nvarchar(100)").IsRequired().HasMaxLength(100);
             builder.Property(x => x.RequiredShift).HasColumnName(@"RequiredShift").HasColumnType("int").IsRequired();
             builder.Property(x => x.PerformancePaymentMultiplicationPercent).HasColumnName(@"PerformancePaymentMultiplicationPercent").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.PerformancePaymentAmount).HasColumnName(@"performancePaymentAmount").HasColumnType("int").IsRequired();
@@ -30,6 +29,11 @@ namespace Leopard.Repository
             builder.Property(x => x.PortalId).HasColumnName(@"portalId").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.UnrequiredShiftPayment).HasColumnName(@"UnrequiredShiftPayment").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.CooperationTypeId).HasColumnName(@"CooperationTypeId").HasColumnType("int").IsRequired(false);
+            builder.Property(x => x.IsDeleted).HasColumnName(@"IsDeleted").HasColumnType("bit").IsRequired();
+
+            // Foreign keys
+            builder.HasOne(a => a.Portal).WithMany(b => b.ShiftEmploymentDetails).HasForeignKey(c => c.PortalId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Shift_EmploymentDetail_Portals");
+            builder.HasOne(a => a.SamtHrCooperationType).WithMany(b => b.ShiftEmploymentDetails).HasForeignKey(c => c.CooperationTypeId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Shift_EmploymentDetail_SAMT_HRCooperationType");
 
             InitializePartial(builder);
         }
