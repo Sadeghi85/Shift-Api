@@ -10,5 +10,9 @@ namespace Leopard.Bussiness.Services.Interface {
 	public interface IAgentService {
 		public Task<List<AgentResultModel>>? GetAll(AgentSearchModel model);
 		int GetAllTotal();
+
+		public Task<List<GetAgentByResourceTypeIDResult>>? GetAgentByResourceTypeID(GetAgentByResourceTypeIDModel model);
+		public int GetAgentByResourceTypeIDTotalCount();
+
 	}
 }

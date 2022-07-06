@@ -31,8 +31,22 @@ namespace SamtApi.Controllers.WebApi {
 
 			return Ok(OperationResult<List<AgentResultModel>>.SuccessResult(res, _agentService.GetAllTotal()));
 		}
+		/// <summary>
+		/// there is no relation in TelavatAgentResourceTypes to SAMT_Agents and SAMT_ResourceTypes
+		/// </summary>
+		/// <param name="model"></param>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<IActionResult> GetAgentByResourceTypeID(GetAgentByResourceTypeIDModel model) {
 
-		
-		
+			List<GetAgentByResourceTypeIDResult>? res = await _agentService.GetAgentByResourceTypeID(model);
+			return Ok(OperationResult<List<GetAgentByResourceTypeIDResult>?>.SuccessResult(res, _agentService.GetAgentByResourceTypeIDTotalCount()));
+
+		}
+
+
+
+
+
 	}
 }
