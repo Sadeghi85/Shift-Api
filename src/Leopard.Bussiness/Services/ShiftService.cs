@@ -334,6 +334,7 @@ namespace Leopard.Bussiness.Services {
 
 			List<ShiftNeededResourcesResult>? res = await _shiftNeededResourceStore.GetAllWithPagingAsync(GetAllShiftNeededResourceExpressions, pp =>
 			new ShiftNeededResourcesResult {
+				Id=pp.Id,
 				ResourceId=pp.ResourceTypeId ,
 				ResourceTypeName= pp.SamtResourceType.Title ,
 				ShiftId= pp.ShiftId , 
@@ -346,8 +347,6 @@ namespace Leopard.Bussiness.Services {
 			var res = _shiftNeededResourceStore.TotalCount(GetAllShiftNeededResourceExpressions);
 			return res;
 		}
-
-
 
 	}
 }
