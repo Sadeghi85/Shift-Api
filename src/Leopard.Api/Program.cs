@@ -86,7 +86,7 @@ try {
 
 		registry.AddDbContext<LeopardDbContext>(options => {
 			options.UseSqlServer(configuration.GetConnectionString(@"DefaultConnection"));
-			options.UseLazyLoadingProxies();
+			
 		});
 
 		registry.IncludeRegistry<LamarServiceRegistry>();
