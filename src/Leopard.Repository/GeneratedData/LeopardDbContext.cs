@@ -287,6 +287,7 @@ namespace Leopard.Repository
         public DbSet<Samtv3Topic> Samtv3Topic { get; set; } // SAMTV3_Topics
         public DbSet<ShabakeOmidClipArt> ShabakeOmidClipArts { get; set; } // shabakeOmidClipArts
         public DbSet<ShiftAgentReport> ShiftAgentReports { get; set; } // Shift_AgentReport
+        public DbSet<ShiftCalculation> ShiftCalculations { get; set; } // Shift_Calculations
         public DbSet<ShiftCrewRewardFine> ShiftCrewRewardFines { get; set; } // Shift_CrewRewardFine
         public DbSet<ShiftCrewRewardFineReason> ShiftCrewRewardFineReasons { get; set; } // Shift_CrewRewardFineReason
         public DbSet<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail
@@ -682,6 +683,7 @@ namespace Leopard.Repository
             modelBuilder.ApplyConfiguration(new Samtv3TopicConfiguration());
             modelBuilder.ApplyConfiguration(new ShabakeOmidClipArtConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftAgentReportConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftCalculationConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftCrewRewardFineConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftCrewRewardFineReasonConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftEmploymentDetailConfiguration());
@@ -862,6 +864,7 @@ namespace Leopard.Repository
             modelBuilder.Entity<SpGetEpgMediaConductorReturnModel>().HasNoKey();
             modelBuilder.Entity<SpGetEpgNetworksReturnModel>().HasNoKey();
             modelBuilder.Entity<SpGetFileAutoNumberReturnModel>().HasNoKey();
+            modelBuilder.Entity<SpGetPakhshProgramReportReturnModel>().HasNoKey();
             modelBuilder.Entity<SpGetPlanTopicsHierarchyReturnModel>().HasNoKey();
             modelBuilder.Entity<SpGetProgramDetailReturnModel>().HasNoKey();
             modelBuilder.Entity<SpGetSubjectsReturnModel>().HasNoKey();
@@ -7470,6 +7473,60 @@ namespace Leopard.Repository
 
             return procResultData;
         }
+
+        public List<SpGetPakhshProgramReportReturnModel> SpGetPakhshProgramReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, int? pageNum, int? pageSize, out int? totalCount)
+        {
+            int procResult;
+            return SpGetPakhshProgramReport(channelId, fromDate, toDate, fromDatePersian, toDatePersian, pageNum, pageSize, out totalCount, out procResult);
+        }
+
+        public List<SpGetPakhshProgramReportReturnModel> SpGetPakhshProgramReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, int? pageNum, int? pageSize, out int? totalCount, out int procResult)
+        {
+            var channelIdParam = new SqlParameter { ParameterName = "@_channelID", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = channelId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!channelId.HasValue)
+                channelIdParam.Value = DBNull.Value;
+
+            var fromDateParam = new SqlParameter { ParameterName = "@_fromDate", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = fromDate, Size = 10 };
+            if (fromDateParam.Value == null)
+                fromDateParam.Value = DBNull.Value;
+
+            var toDateParam = new SqlParameter { ParameterName = "@_toDate", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = toDate, Size = 10 };
+            if (toDateParam.Value == null)
+                toDateParam.Value = DBNull.Value;
+
+            var fromDatePersianParam = new SqlParameter { ParameterName = "@_fromDatePersian", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = fromDatePersian, Size = 10 };
+            if (fromDatePersianParam.Value == null)
+                fromDatePersianParam.Value = DBNull.Value;
+
+            var toDatePersianParam = new SqlParameter { ParameterName = "@_toDatePersian", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = toDatePersian, Size = 10 };
+            if (toDatePersianParam.Value == null)
+                toDatePersianParam.Value = DBNull.Value;
+
+            var pageNumParam = new SqlParameter { ParameterName = "@_pageNum", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = pageNum.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!pageNum.HasValue)
+                pageNumParam.Value = DBNull.Value;
+
+            var pageSizeParam = new SqlParameter { ParameterName = "@_pageSize", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = pageSize.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!pageSize.HasValue)
+                pageSizeParam.Value = DBNull.Value;
+
+            var totalCountParam = new SqlParameter { ParameterName = "@totalCount", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output, Precision = 10, Scale = 0 };
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+            const string sqlCommand = "EXEC @procResult = [dbo].[sp_GetPakhshProgramReport] @_channelID, @_fromDate, @_toDate, @_fromDatePersian, @_toDatePersian, @_pageNum, @_pageSize, @totalCount OUTPUT";
+            var procResultData = Set<SpGetPakhshProgramReportReturnModel>()
+                .FromSqlRaw(sqlCommand, channelIdParam, fromDateParam, toDateParam, fromDatePersianParam, toDatePersianParam, pageNumParam, pageSizeParam, totalCountParam, procResultParam)
+                .ToList();
+
+            if (IsSqlParameterNull(totalCountParam))
+                totalCount = null;
+            else
+                totalCount = (int) totalCountParam.Value;
+
+            procResult = (int) procResultParam.Value;
+            return procResultData;
+        }
+
+        // SpGetPakhshProgramReportAsync() cannot be created due to having out parameters, or is relying on the procedure result (List<SpGetPakhshProgramReportReturnModel>)
 
         public List<SpGetPlanTopicsHierarchyReturnModel> SpGetPlanTopicsHierarchy(int? portalId, int? requestId)
         {

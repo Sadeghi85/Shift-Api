@@ -46,12 +46,18 @@ namespace Leopard.Repository
         // Reverse navigation
 
         /// <summary>
+        /// Child ShiftCalculations where [Shift_Calculations].[AgentId] point to this entity (FK_Shift_Calculations_SAMT_Agents)
+        /// </summary>
+        public virtual ICollection<ShiftCalculation> ShiftCalculations { get; set; } // Shift_Calculations.FK_Shift_Calculations_SAMT_Agents
+
+        /// <summary>
         /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[AgentId] point to this entity (FK_Shift_ShiftTabletCrew_SAMT_Agents)
         /// </summary>
         public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTabletCrew_SAMT_Agents
 
         public SamtAgent()
         {
+            ShiftCalculations = new List<ShiftCalculation>();
             ShiftShiftTabletCrews = new List<ShiftShiftTabletCrew>();
             InitializePartial();
         }

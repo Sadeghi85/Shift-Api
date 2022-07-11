@@ -267,6 +267,7 @@ namespace Leopard.Repository
         DbSet<Samtv3Topic> Samtv3Topic { get; set; } // SAMTV3_Topics
         DbSet<ShabakeOmidClipArt> ShabakeOmidClipArts { get; set; } // shabakeOmidClipArts
         DbSet<ShiftAgentReport> ShiftAgentReports { get; set; } // Shift_AgentReport
+        DbSet<ShiftCalculation> ShiftCalculations { get; set; } // Shift_Calculations
         DbSet<ShiftCrewRewardFine> ShiftCrewRewardFines { get; set; } // Shift_CrewRewardFine
         DbSet<ShiftCrewRewardFineReason> ShiftCrewRewardFineReasons { get; set; } // Shift_CrewRewardFineReason
         DbSet<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail
@@ -806,6 +807,10 @@ namespace Leopard.Repository
         List<SpGetFileAutoNumberReturnModel> SpGetFileAutoNumber(string uidLevel, string estimateGid, string theDate);
         List<SpGetFileAutoNumberReturnModel> SpGetFileAutoNumber(string uidLevel, string estimateGid, string theDate, out int procResult);
         Task<List<SpGetFileAutoNumberReturnModel>> SpGetFileAutoNumberAsync(string uidLevel, string estimateGid, string theDate);
+
+        List<SpGetPakhshProgramReportReturnModel> SpGetPakhshProgramReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, int? pageNum, int? pageSize, out int? totalCount);
+        List<SpGetPakhshProgramReportReturnModel> SpGetPakhshProgramReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, int? pageNum, int? pageSize, out int? totalCount, out int procResult);
+        // SpGetPakhshProgramReportAsync() cannot be created due to having out parameters, or is relying on the procedure result (List<SpGetPakhshProgramReportReturnModel>)
 
         List<SpGetPlanTopicsHierarchyReturnModel> SpGetPlanTopicsHierarchy(int? portalId, int? requestId);
         List<SpGetPlanTopicsHierarchyReturnModel> SpGetPlanTopicsHierarchy(int? portalId, int? requestId, out int procResult);
