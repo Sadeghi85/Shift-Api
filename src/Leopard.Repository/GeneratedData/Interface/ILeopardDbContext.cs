@@ -808,9 +808,15 @@ namespace Leopard.Repository
         List<SpGetFileAutoNumberReturnModel> SpGetFileAutoNumber(string uidLevel, string estimateGid, string theDate, out int procResult);
         Task<List<SpGetFileAutoNumberReturnModel>> SpGetFileAutoNumberAsync(string uidLevel, string estimateGid, string theDate);
 
-        List<SpGetPakhshProgramReportReturnModel> SpGetPakhshProgramReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, int? pageNum, int? pageSize, out int? totalCount);
-        List<SpGetPakhshProgramReportReturnModel> SpGetPakhshProgramReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, int? pageNum, int? pageSize, out int? totalCount, out int procResult);
-        // SpGetPakhshProgramReportAsync() cannot be created due to having out parameters, or is relying on the procedure result (List<SpGetPakhshProgramReportReturnModel>)
+        int SpGetPakhshProgramDetailClacketReport(int? programId, int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, int? pageNum, int? pageSize, out int? totalCount, out int? durationSum, out int? repeatDurationSum, out int? nonRepeatDurationSum, out int? repeatCount);
+        // SpGetPakhshProgramDetailClacketReportAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
+
+        int SpGetPakhshProgramDetailReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, string whichLabel, int? whichValue, int? pageNum, int? pageSize, out int? totalCount);
+        // SpGetPakhshProgramDetailReportAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
+
+        List<SpGetPakhshProgramReportReturnModel> SpGetPakhshProgramReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian);
+        List<SpGetPakhshProgramReportReturnModel> SpGetPakhshProgramReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, out int procResult);
+        Task<List<SpGetPakhshProgramReportReturnModel>> SpGetPakhshProgramReportAsync(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian);
 
         List<SpGetPlanTopicsHierarchyReturnModel> SpGetPlanTopicsHierarchy(int? portalId, int? requestId);
         List<SpGetPlanTopicsHierarchyReturnModel> SpGetPlanTopicsHierarchy(int? portalId, int? requestId, out int procResult);
@@ -1027,6 +1033,10 @@ namespace Leopard.Repository
         List<SpSearchRegieConductorBySpecificVersionReturnModel> SpSearchRegieConductorBySpecificVersion(string broadcastDate, int? simaUserChId, int? vNum, bool? isClipArt);
         List<SpSearchRegieConductorBySpecificVersionReturnModel> SpSearchRegieConductorBySpecificVersion(string broadcastDate, int? simaUserChId, int? vNum, bool? isClipArt, out int procResult);
         Task<List<SpSearchRegieConductorBySpecificVersionReturnModel>> SpSearchRegieConductorBySpecificVersionAsync(string broadcastDate, int? simaUserChId, int? vNum, bool? isClipArt);
+
+        List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime);
+        List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime, out int procResult);
+        Task<List<SpShiftCheckShiftTimeOverlapReturnModel>> SpShiftCheckShiftTimeOverlapAsync(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime);
 
         List<SpShiftGetShiftByPortalIdReturnModel> SpShiftGetShiftByPortalId(int? portalId);
         List<SpShiftGetShiftByPortalIdReturnModel> SpShiftGetShiftByPortalId(int? portalId, out int procResult);

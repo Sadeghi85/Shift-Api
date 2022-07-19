@@ -12,13 +12,13 @@ namespace Leopard.Bussiness.Model {
 		public string Title { get; set; } // Title (length: 250)
 
 		[Required(ErrorMessage =ValidationConstants.PortalIdRequired)]
-		public int? PortalId { get; set; } // ProtalId
+		public int PortalId { get; set; } // ProtalId
 		[Range(1,2 , ErrorMessage =ValidationConstants.ShiftTypeRequired) ]
-		public int? ShiftType { get; set; } // ShiftType
+		public int ShiftType { get; set; } // ShiftType
 
 		[Required(ErrorMessage =ValidationConstants.StartTimeRequired)]
-		public TimeSpan? StartTime { get; set; } // StartTime
+		public TimeSpan StartTime { get; set; } // StartTime
 		[Required(ErrorMessage =ValidationConstants.EndTimeRequired)]
-		public TimeSpan? EndTime { get; set; } // EndTime
+		public TimeSpan EndTime { get; set; } // EndTime
 	}
 }

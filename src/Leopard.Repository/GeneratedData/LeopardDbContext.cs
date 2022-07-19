@@ -898,6 +898,7 @@ namespace Leopard.Repository
             modelBuilder.Entity<SpSearchConductorReturnModel>().HasNoKey();
             modelBuilder.Entity<SpSearchRegieConductorReturnModel>().HasNoKey();
             modelBuilder.Entity<SpSearchRegieConductorBySpecificVersionReturnModel>().HasNoKey();
+            modelBuilder.Entity<SpShiftCheckShiftTimeOverlapReturnModel>().HasNoKey();
             modelBuilder.Entity<SpShiftGetShiftByPortalIdReturnModel>().HasNoKey();
             modelBuilder.Entity<SpTotalProductionProgressReturnModel>().HasNoKey();
             modelBuilder.Entity<SpUserHitReportReturnModel>().HasNoKey();
@@ -7474,14 +7475,12 @@ namespace Leopard.Repository
             return procResultData;
         }
 
-        public List<SpGetPakhshProgramReportReturnModel> SpGetPakhshProgramReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, int? pageNum, int? pageSize, out int? totalCount)
+        public int SpGetPakhshProgramDetailClacketReport(int? programId, int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, int? pageNum, int? pageSize, out int? totalCount, out int? durationSum, out int? repeatDurationSum, out int? nonRepeatDurationSum, out int? repeatCount)
         {
-            int procResult;
-            return SpGetPakhshProgramReport(channelId, fromDate, toDate, fromDatePersian, toDatePersian, pageNum, pageSize, out totalCount, out procResult);
-        }
+            var programIdParam = new SqlParameter { ParameterName = "@_programID", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = programId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!programId.HasValue)
+                programIdParam.Value = DBNull.Value;
 
-        public List<SpGetPakhshProgramReportReturnModel> SpGetPakhshProgramReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, int? pageNum, int? pageSize, out int? totalCount, out int procResult)
-        {
             var channelIdParam = new SqlParameter { ParameterName = "@_channelID", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = channelId.GetValueOrDefault(), Precision = 10, Scale = 0 };
             if (!channelId.HasValue)
                 channelIdParam.Value = DBNull.Value;
@@ -7511,22 +7510,164 @@ namespace Leopard.Repository
                 pageSizeParam.Value = DBNull.Value;
 
             var totalCountParam = new SqlParameter { ParameterName = "@totalCount", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output, Precision = 10, Scale = 0 };
+            var durationSumParam = new SqlParameter { ParameterName = "@durationSum", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output, Precision = 10, Scale = 0 };
+            var repeatDurationSumParam = new SqlParameter { ParameterName = "@repeatDurationSum", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output, Precision = 10, Scale = 0 };
+            var nonRepeatDurationSumParam = new SqlParameter { ParameterName = "@nonRepeatDurationSum", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output, Precision = 10, Scale = 0 };
+            var repeatCountParam = new SqlParameter { ParameterName = "@repeatCount", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output, Precision = 10, Scale = 0 };
             var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
-            const string sqlCommand = "EXEC @procResult = [dbo].[sp_GetPakhshProgramReport] @_channelID, @_fromDate, @_toDate, @_fromDatePersian, @_toDatePersian, @_pageNum, @_pageSize, @totalCount OUTPUT";
-            var procResultData = Set<SpGetPakhshProgramReportReturnModel>()
-                .FromSqlRaw(sqlCommand, channelIdParam, fromDateParam, toDateParam, fromDatePersianParam, toDatePersianParam, pageNumParam, pageSizeParam, totalCountParam, procResultParam)
-                .ToList();
+
+            Database.ExecuteSqlRaw("EXEC @procResult = [dbo].[sp_GetPakhshProgramDetailClacketReport] @_programID, @_channelID, @_fromDate, @_toDate, @_fromDatePersian, @_toDatePersian, @_pageNum, @_pageSize, @totalCount OUTPUT, @durationSum OUTPUT, @repeatDurationSum OUTPUT, @nonRepeatDurationSum OUTPUT, @repeatCount OUTPUT", programIdParam, channelIdParam, fromDateParam, toDateParam, fromDatePersianParam, toDatePersianParam, pageNumParam, pageSizeParam, totalCountParam, durationSumParam, repeatDurationSumParam, nonRepeatDurationSumParam, repeatCountParam, procResultParam);
 
             if (IsSqlParameterNull(totalCountParam))
                 totalCount = null;
             else
                 totalCount = (int) totalCountParam.Value;
 
+            if (IsSqlParameterNull(durationSumParam))
+                durationSum = null;
+            else
+                durationSum = (int) durationSumParam.Value;
+
+            if (IsSqlParameterNull(repeatDurationSumParam))
+                repeatDurationSum = null;
+            else
+                repeatDurationSum = (int) repeatDurationSumParam.Value;
+
+            if (IsSqlParameterNull(nonRepeatDurationSumParam))
+                nonRepeatDurationSum = null;
+            else
+                nonRepeatDurationSum = (int) nonRepeatDurationSumParam.Value;
+
+            if (IsSqlParameterNull(repeatCountParam))
+                repeatCount = null;
+            else
+                repeatCount = (int) repeatCountParam.Value;
+
+            return (int)procResultParam.Value;
+        }
+
+        // SpGetPakhshProgramDetailClacketReportAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
+
+        public int SpGetPakhshProgramDetailReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, string whichLabel, int? whichValue, int? pageNum, int? pageSize, out int? totalCount)
+        {
+            var channelIdParam = new SqlParameter { ParameterName = "@_channelID", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = channelId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!channelId.HasValue)
+                channelIdParam.Value = DBNull.Value;
+
+            var fromDateParam = new SqlParameter { ParameterName = "@_fromDate", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = fromDate, Size = 10 };
+            if (fromDateParam.Value == null)
+                fromDateParam.Value = DBNull.Value;
+
+            var toDateParam = new SqlParameter { ParameterName = "@_toDate", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = toDate, Size = 10 };
+            if (toDateParam.Value == null)
+                toDateParam.Value = DBNull.Value;
+
+            var fromDatePersianParam = new SqlParameter { ParameterName = "@_fromDatePersian", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = fromDatePersian, Size = 10 };
+            if (fromDatePersianParam.Value == null)
+                fromDatePersianParam.Value = DBNull.Value;
+
+            var toDatePersianParam = new SqlParameter { ParameterName = "@_toDatePersian", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = toDatePersian, Size = 10 };
+            if (toDatePersianParam.Value == null)
+                toDatePersianParam.Value = DBNull.Value;
+
+            var whichLabelParam = new SqlParameter { ParameterName = "@_whichLabel", SqlDbType = SqlDbType.VarChar, Direction = ParameterDirection.Input, Value = whichLabel, Size = 200 };
+            if (whichLabelParam.Value == null)
+                whichLabelParam.Value = DBNull.Value;
+
+            var whichValueParam = new SqlParameter { ParameterName = "@_whichValue", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = whichValue.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!whichValue.HasValue)
+                whichValueParam.Value = DBNull.Value;
+
+            var pageNumParam = new SqlParameter { ParameterName = "@_pageNum", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = pageNum.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!pageNum.HasValue)
+                pageNumParam.Value = DBNull.Value;
+
+            var pageSizeParam = new SqlParameter { ParameterName = "@_pageSize", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = pageSize.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!pageSize.HasValue)
+                pageSizeParam.Value = DBNull.Value;
+
+            var totalCountParam = new SqlParameter { ParameterName = "@totalCount", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output, Precision = 10, Scale = 0 };
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+
+            Database.ExecuteSqlRaw("EXEC @procResult = [dbo].[sp_GetPakhshProgramDetailReport] @_channelID, @_fromDate, @_toDate, @_fromDatePersian, @_toDatePersian, @_whichLabel, @_whichValue, @_pageNum, @_pageSize, @totalCount OUTPUT", channelIdParam, fromDateParam, toDateParam, fromDatePersianParam, toDatePersianParam, whichLabelParam, whichValueParam, pageNumParam, pageSizeParam, totalCountParam, procResultParam);
+
+            if (IsSqlParameterNull(totalCountParam))
+                totalCount = null;
+            else
+                totalCount = (int) totalCountParam.Value;
+
+            return (int)procResultParam.Value;
+        }
+
+        // SpGetPakhshProgramDetailReportAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
+
+        public List<SpGetPakhshProgramReportReturnModel> SpGetPakhshProgramReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian)
+        {
+            int procResult;
+            return SpGetPakhshProgramReport(channelId, fromDate, toDate, fromDatePersian, toDatePersian, out procResult);
+        }
+
+        public List<SpGetPakhshProgramReportReturnModel> SpGetPakhshProgramReport(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian, out int procResult)
+        {
+            var channelIdParam = new SqlParameter { ParameterName = "@_channelID", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = channelId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!channelId.HasValue)
+                channelIdParam.Value = DBNull.Value;
+
+            var fromDateParam = new SqlParameter { ParameterName = "@_fromDate", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = fromDate, Size = 10 };
+            if (fromDateParam.Value == null)
+                fromDateParam.Value = DBNull.Value;
+
+            var toDateParam = new SqlParameter { ParameterName = "@_toDate", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = toDate, Size = 10 };
+            if (toDateParam.Value == null)
+                toDateParam.Value = DBNull.Value;
+
+            var fromDatePersianParam = new SqlParameter { ParameterName = "@_fromDatePersian", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = fromDatePersian, Size = 10 };
+            if (fromDatePersianParam.Value == null)
+                fromDatePersianParam.Value = DBNull.Value;
+
+            var toDatePersianParam = new SqlParameter { ParameterName = "@_toDatePersian", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = toDatePersian, Size = 10 };
+            if (toDatePersianParam.Value == null)
+                toDatePersianParam.Value = DBNull.Value;
+
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+            const string sqlCommand = "EXEC @procResult = [dbo].[sp_GetPakhshProgramReport] @_channelID, @_fromDate, @_toDate, @_fromDatePersian, @_toDatePersian";
+            var procResultData = Set<SpGetPakhshProgramReportReturnModel>()
+                .FromSqlRaw(sqlCommand, channelIdParam, fromDateParam, toDateParam, fromDatePersianParam, toDatePersianParam, procResultParam)
+                .ToList();
+
             procResult = (int) procResultParam.Value;
             return procResultData;
         }
 
-        // SpGetPakhshProgramReportAsync() cannot be created due to having out parameters, or is relying on the procedure result (List<SpGetPakhshProgramReportReturnModel>)
+        public async Task<List<SpGetPakhshProgramReportReturnModel>> SpGetPakhshProgramReportAsync(int? channelId, string fromDate, string toDate, string fromDatePersian, string toDatePersian)
+        {
+            var channelIdParam = new SqlParameter { ParameterName = "@_channelID", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = channelId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!channelId.HasValue)
+                channelIdParam.Value = DBNull.Value;
+
+            var fromDateParam = new SqlParameter { ParameterName = "@_fromDate", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = fromDate, Size = 10 };
+            if (fromDateParam.Value == null)
+                fromDateParam.Value = DBNull.Value;
+
+            var toDateParam = new SqlParameter { ParameterName = "@_toDate", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = toDate, Size = 10 };
+            if (toDateParam.Value == null)
+                toDateParam.Value = DBNull.Value;
+
+            var fromDatePersianParam = new SqlParameter { ParameterName = "@_fromDatePersian", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = fromDatePersian, Size = 10 };
+            if (fromDatePersianParam.Value == null)
+                fromDatePersianParam.Value = DBNull.Value;
+
+            var toDatePersianParam = new SqlParameter { ParameterName = "@_toDatePersian", SqlDbType = SqlDbType.NChar, Direction = ParameterDirection.Input, Value = toDatePersian, Size = 10 };
+            if (toDatePersianParam.Value == null)
+                toDatePersianParam.Value = DBNull.Value;
+
+            const string sqlCommand = "EXEC [dbo].[sp_GetPakhshProgramReport] @_channelID, @_fromDate, @_toDate, @_fromDatePersian, @_toDatePersian";
+            var procResultData = await Set<SpGetPakhshProgramReportReturnModel>()
+                .FromSqlRaw(sqlCommand, channelIdParam, fromDateParam, toDateParam, fromDatePersianParam, toDatePersianParam)
+                .ToListAsync();
+
+            return procResultData;
+        }
 
         public List<SpGetPlanTopicsHierarchyReturnModel> SpGetPlanTopicsHierarchy(int? portalId, int? requestId)
         {
@@ -10232,6 +10373,74 @@ namespace Leopard.Repository
             const string sqlCommand = "EXEC [dbo].[sp_searchRegieConductorBySpecificVersion] @broadcastDate, @simaUserChID, @vNum, @isClipArt";
             var procResultData = await Set<SpSearchRegieConductorBySpecificVersionReturnModel>()
                 .FromSqlRaw(sqlCommand, broadcastDateParam, simaUserChIdParam, vNumParam, isClipArtParam)
+                .ToListAsync();
+
+            return procResultData;
+        }
+
+        public List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime)
+        {
+            int procResult;
+            return SpShiftCheckShiftTimeOverlap(id, portalId, shiftType, startTime, endTime, out procResult);
+        }
+
+        public List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime, out int procResult)
+        {
+            var idParam = new SqlParameter { ParameterName = "@_id", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = id.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!id.HasValue)
+                idParam.Value = DBNull.Value;
+
+            var portalIdParam = new SqlParameter { ParameterName = "@_portalId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = portalId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!portalId.HasValue)
+                portalIdParam.Value = DBNull.Value;
+
+            var shiftTypeParam = new SqlParameter { ParameterName = "@_shiftType", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = shiftType.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!shiftType.HasValue)
+                shiftTypeParam.Value = DBNull.Value;
+
+            var startTimeParam = new SqlParameter { ParameterName = "@_startTime", SqlDbType = SqlDbType.Time, Direction = ParameterDirection.Input, Value = startTime.GetValueOrDefault() };
+            if (!startTime.HasValue)
+                startTimeParam.Value = DBNull.Value;
+
+            var endTimeParam = new SqlParameter { ParameterName = "@_endTime", SqlDbType = SqlDbType.Time, Direction = ParameterDirection.Input, Value = endTime.GetValueOrDefault() };
+            if (!endTime.HasValue)
+                endTimeParam.Value = DBNull.Value;
+
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+            const string sqlCommand = "EXEC @procResult = [dbo].[SP_Shift_CheckShiftTimeOverlap] @_id, @_portalId, @_shiftType, @_startTime, @_endTime";
+            var procResultData = Set<SpShiftCheckShiftTimeOverlapReturnModel>()
+                .FromSqlRaw(sqlCommand, idParam, portalIdParam, shiftTypeParam, startTimeParam, endTimeParam, procResultParam)
+                .ToList();
+
+            procResult = (int) procResultParam.Value;
+            return procResultData;
+        }
+
+        public async Task<List<SpShiftCheckShiftTimeOverlapReturnModel>> SpShiftCheckShiftTimeOverlapAsync(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime)
+        {
+            var idParam = new SqlParameter { ParameterName = "@_id", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = id.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!id.HasValue)
+                idParam.Value = DBNull.Value;
+
+            var portalIdParam = new SqlParameter { ParameterName = "@_portalId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = portalId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!portalId.HasValue)
+                portalIdParam.Value = DBNull.Value;
+
+            var shiftTypeParam = new SqlParameter { ParameterName = "@_shiftType", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = shiftType.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!shiftType.HasValue)
+                shiftTypeParam.Value = DBNull.Value;
+
+            var startTimeParam = new SqlParameter { ParameterName = "@_startTime", SqlDbType = SqlDbType.Time, Direction = ParameterDirection.Input, Value = startTime.GetValueOrDefault() };
+            if (!startTime.HasValue)
+                startTimeParam.Value = DBNull.Value;
+
+            var endTimeParam = new SqlParameter { ParameterName = "@_endTime", SqlDbType = SqlDbType.Time, Direction = ParameterDirection.Input, Value = endTime.GetValueOrDefault() };
+            if (!endTime.HasValue)
+                endTimeParam.Value = DBNull.Value;
+
+            const string sqlCommand = "EXEC [dbo].[SP_Shift_CheckShiftTimeOverlap] @_id, @_portalId, @_shiftType, @_startTime, @_endTime";
+            var procResultData = await Set<SpShiftCheckShiftTimeOverlapReturnModel>()
+                .FromSqlRaw(sqlCommand, idParam, portalIdParam, shiftTypeParam, startTimeParam, endTimeParam)
                 .ToListAsync();
 
             return procResultData;

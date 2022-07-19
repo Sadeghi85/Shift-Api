@@ -131,46 +131,53 @@ namespace Leopard.Bussiness.Services {
 
 		public async Task<BaseResult> Register(ShiftModel model) {
 
-
-
-
-
 			var foundPortal = _portalStore.FindById(model.PortalId);
+			if (null == foundPortal) {
+				BaseResult.Success = false;
+				BaseResult.Message = "شناسه پورتال شناسایی نشد.";
+
+				return BaseResult;
+			}
 
 			try {
-				var found = _shiftShiftStore.GetAll().Any(pp => pp.Title == model.Title);
 
+				var found = _shiftShiftStore.GetAll().Any(x => x.Title == model.Title);
 				if (found) {
 					BaseResult.Success = false;
 					BaseResult.Message = "نام انتخاب شده برای شیفت تکراری است.";
 
-				} else if (foundPortal == null) {
+					return BaseResult;
+				} 
+
+				found = _shiftShiftStore.CheckTimeOverlap(0, model.PortalId, model.ShiftType, model.StartTime, model.EndTime);
+				if (found) {
 					BaseResult.Success = false;
-					BaseResult.Message = "شناسه پورتال شناسایی نشد.";
+					BaseResult.Message = "بازه زمانی انتخاب شده با موارد ثبت شده تداخل دارد.";
+
+					return BaseResult;
 				}
-				//else if (model.StartTime > model.EndTime) {
-				//	BaseResult.Success = false;
-				//	BaseResult.Message = "ساعت شروع باید کوچتر از زمان پایان باشد.";
-				//} 
-				else {
 
-					ShiftShift shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId.Value, ShiftType = model.ShiftType.Value, StartTime = model.StartTime.Value, EndTime = model.EndTime.Value, IsDeleted = false };
 
-					var res = await _shiftShiftStore.InsertAsync(shiftShift);
 
-				}
+				ShiftShift shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId, ShiftType = model.ShiftType, StartTime = model.StartTime, EndTime = model.EndTime, IsDeleted = false };
+
+				await _shiftShiftStore.InsertAsync(shiftShift);
+
+				
 			} catch (Exception ex) {
 
-
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + Environment.NewLine + ex.InnerException?.Message + Environment.NewLine + ex.StackTrace ?? "" };
 
 				//_shiftLogStore.ResetContext();
 
-				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				await _shiftLogStore.InsertAsync(shiftLog);
 				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفا به مدیر سیستم اطلاع دهید.";
 
+				return BaseResult;
 			}
+
+
 			return BaseResult;
 
 		}
@@ -184,32 +191,58 @@ namespace Leopard.Bussiness.Services {
 		public async Task<BaseResult> Update(ShiftModel model) {
 
 			try {
-				var found = _shiftShiftStore.FindById(model.Id);
-				var res = 0;
-				if (found == null) {
+				var foundShift = _shiftShiftStore.FindById(model.Id);
+				
+				if (null == foundShift) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر جستجو نشد.";
 
-				} else {
-
-					found.Title = model.Title;
-					found.StartTime = model.StartTime.Value;
-					found.EndTime = model.EndTime.Value;
-					found.ShiftType = model.ShiftType.Value;
-					found.PortalId = model.PortalId.Value;
-					res = await _shiftShiftStore.Update(found);
-
+					return BaseResult;
 				}
+
+				var foundPortal = _portalStore.FindById(model.PortalId);
+				if (null == foundPortal) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه پورتال شناسایی نشد.";
+
+					return BaseResult;
+				}
+
+				var found = _shiftShiftStore.GetAll().Any(x => x.Title == model.Title && x.Id != model.Id);
+				if (found) {
+					BaseResult.Success = false;
+					BaseResult.Message = "نام انتخاب شده برای شیفت تکراری است.";
+
+					return BaseResult;
+				}
+
+				found = _shiftShiftStore.CheckTimeOverlap(model.Id, model.PortalId, model.ShiftType, model.StartTime, model.EndTime);
+				if (found) {
+					BaseResult.Success = false;
+					BaseResult.Message = "بازه زمانی انتخاب شده با موارد ثبت شده تداخل دارد.";
+
+					return BaseResult;
+				}
+
+				foundShift.Title = model.Title;
+				foundShift.StartTime = model.StartTime;
+				foundShift.EndTime = model.EndTime;
+				foundShift.ShiftType = model.ShiftType;
+				foundShift.PortalId = model.PortalId;
+				await _shiftShiftStore.Update(foundShift);
+
+				
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + Environment.NewLine + ex.InnerException?.Message + Environment.NewLine + ex.StackTrace ?? "" };
 
 				//_shiftLogStore.ResetContext();
 
-				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+				await _shiftLogStore.InsertAsync(shiftLog);
 				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفا به مدیر سیستم اطلاع دهید.";
 
+				return BaseResult;
 			}
 			return BaseResult;
 		}

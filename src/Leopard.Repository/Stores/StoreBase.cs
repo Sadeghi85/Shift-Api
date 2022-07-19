@@ -77,14 +77,12 @@ namespace Leopard.Repository {
 						CreatedByProp.SetValue(entity, userId);
 					}
 				}
-				
-
 
 				if (entity is ShiftLog) {
 					//if (typeof(T) == typeof(ShiftLog)) {
 					_ctx.Instance.ChangeTracker.Entries()
-.Where(e => e.Entity != null).ToList()
-.ForEach(e => e.State = EntityState.Detached);
+						.Where(e => e.Entity != null).ToList()
+						.ForEach(e => e.State = EntityState.Detached);
 				}
 
 				TEntity.Add(entity);
