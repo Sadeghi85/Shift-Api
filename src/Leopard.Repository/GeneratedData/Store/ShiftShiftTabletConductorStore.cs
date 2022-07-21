@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace Leopard.Repository
 {
-    public partial class ShiftTabletConductorStore : StoreBase<ShiftTabletConductor>, IShiftTabletConductorStore
+    public partial class ShiftShiftTabletConductorStore : StoreBase<ShiftShiftTabletConductor>, IShiftShiftTabletConductorStore
     {
         private readonly ILeopardDbContext _ctx;
         private readonly ILogger _logger;
         private readonly IPrincipal _iPrincipal;
 
-        public ShiftTabletConductorStore(ILeopardDbContext ctx, ILogger logger, IPrincipal principal) : base(ctx, logger, principal)
+        public ShiftShiftTabletConductorStore(ILeopardDbContext ctx, ILogger logger, IPrincipal principal) : base(ctx, logger, principal)
         {
             _ctx = ctx;
     		_logger = logger;

@@ -22,11 +22,13 @@ namespace Leopard.Repository
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.LastModifiedDateTime).HasColumnName(@"LastModifiedDateTime").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.ShiftWorthPercent).HasColumnName(@"ShiftWorthPercent").HasColumnType("int").IsRequired();
-            builder.Property(x => x.ShiftTime).HasColumnName(@"ShiftTime").HasColumnType("time").IsRequired();
+            builder.Property(x => x.ShiftDuration).HasColumnName(@"ShiftDuration").HasColumnType("time").IsRequired();
             builder.Property(x => x.IsDeleted).HasColumnName(@"IsDeleted").HasColumnType("bit").IsRequired();
             builder.Property(x => x.HasLivePrograms).HasColumnName(@"HasLivePrograms").HasColumnType("bit").IsRequired();
+            builder.Property(x => x.PortalId).HasColumnName(@"PortalID").HasColumnType("int").IsRequired();
 
             // Foreign keys
+            builder.HasOne(a => a.Portal).WithMany(b => b.ShiftShiftTablets).HasForeignKey(c => c.PortalId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Shift_ShiftTablet_Portals");
             builder.HasOne(a => a.ShiftShift).WithMany(b => b.ShiftShiftTablets).HasForeignKey(c => c.ShiftId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ShiftExecution_PortalShift");
 
             InitializePartial(builder);

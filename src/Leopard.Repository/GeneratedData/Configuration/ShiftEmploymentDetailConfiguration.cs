@@ -26,9 +26,9 @@ namespace Leopard.Repository
             builder.Property(x => x.LastModifiedDateTime).HasColumnName(@"LastModifiedDateTime").HasColumnType("datetime").IsRequired();
             builder.Property(x => x.SpecialDayPaymentAmount).HasColumnName(@"SpecialDayPaymentAmount").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.SpecialDayPaymetMultiplicationPercent).HasColumnName(@"SpecialDayPaymetMultiplicationPercent").HasColumnType("int").IsRequired(false);
-            builder.Property(x => x.PortalId).HasColumnName(@"portalId").HasColumnType("int").IsRequired(false);
+            builder.Property(x => x.PortalId).HasColumnName(@"portalID").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.UnrequiredShiftPayment).HasColumnName(@"UnrequiredShiftPayment").HasColumnType("int").IsRequired(false);
-            builder.Property(x => x.CooperationTypeId).HasColumnName(@"CooperationTypeId").HasColumnType("int").IsRequired(false);
+            builder.Property(x => x.CooperationTypeId).HasColumnName(@"CooperationTypeID").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.IsDeleted).HasColumnName(@"IsDeleted").HasColumnType("bit").IsRequired();
 
             // Foreign keys

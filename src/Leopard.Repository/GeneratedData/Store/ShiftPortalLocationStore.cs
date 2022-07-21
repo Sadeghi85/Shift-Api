@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace Leopard.Repository
 {
-    public partial class ShiftShiftTabletLocationStore : StoreBase<ShiftShiftTabletLocation>, IShiftShiftTabletLocationStore
+    public partial class ShiftPortalLocationStore : StoreBase<ShiftPortalLocation>, IShiftPortalLocationStore
     {
         private readonly ILeopardDbContext _ctx;
         private readonly ILogger _logger;
         private readonly IPrincipal _iPrincipal;
 
-        public ShiftShiftTabletLocationStore(ILeopardDbContext ctx, ILogger logger, IPrincipal principal) : base(ctx, logger, principal)
+        public ShiftPortalLocationStore(ILeopardDbContext ctx, ILogger logger, IPrincipal principal) : base(ctx, logger, principal)
         {
             _ctx = ctx;
     		_logger = logger;

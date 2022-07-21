@@ -6,30 +6,30 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Leopard.Repository
 {
-    // Shift_ShiftTabletLocation
-    public partial class ShiftShiftTabletLocationConfiguration : IEntityTypeConfiguration<ShiftShiftTabletLocation>
+    // Shift_PortalLocations
+    public partial class ShiftPortalLocationConfiguration : IEntityTypeConfiguration<ShiftPortalLocation>
     {
-        public void Configure(EntityTypeBuilder<ShiftShiftTabletLocation> builder)
+        public void Configure(EntityTypeBuilder<ShiftPortalLocation> builder)
         {
-            builder.ToTable("Shift_ShiftTabletLocation", "dbo");
+            builder.ToTable("Shift_PortalLocations", "dbo");
             builder.HasKey(x => x.Id).HasName("PK_ShiftExecutionLocation").IsClustered();
 
             builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
-            builder.Property(x => x.ShiftTabletId).HasColumnName(@"ShiftTabletID").HasColumnType("int").IsRequired();
             builder.Property(x => x.LocationId).HasColumnName(@"LocationID").HasColumnType("int").IsRequired();
             builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.LastModifiedDateTime).HasColumnName(@"LastModifiedDateTime").HasColumnType("datetime").IsRequired(false);
+            builder.Property(x => x.PortalId).HasColumnName(@"PortalID").HasColumnType("int").IsRequired();
 
             // Foreign keys
-            builder.HasOne(a => a.ShiftLocation).WithMany(b => b.ShiftShiftTabletLocations).HasForeignKey(c => c.LocationId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ShiftExecutionLocation_Location");
-            builder.HasOne(a => a.ShiftShiftTablet).WithMany(b => b.ShiftShiftTabletLocations).HasForeignKey(c => c.ShiftTabletId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ShiftExecutionLocation_ShiftExecution");
+            builder.HasOne(a => a.Portal).WithMany(b => b.ShiftPortalLocations).HasForeignKey(c => c.PortalId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Shift_ShiftTabletLocation_Portals");
+            builder.HasOne(a => a.ShiftLocation).WithMany(b => b.ShiftPortalLocations).HasForeignKey(c => c.LocationId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ShiftExecutionLocation_Location");
 
             InitializePartial(builder);
         }
 
-        partial void InitializePartial(EntityTypeBuilder<ShiftShiftTabletLocation> builder);
+        partial void InitializePartial(EntityTypeBuilder<ShiftPortalLocation> builder);
     }
 
 }

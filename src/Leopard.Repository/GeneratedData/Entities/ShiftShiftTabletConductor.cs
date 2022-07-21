@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Leopard.Repository
 {
-    // ShiftTabletConductor
-    public partial class ShiftTabletConductor
+    // Shift_ShiftTabletConductor
+    public partial class ShiftShiftTabletConductor
     {
         public int Id { get; set; } // Id (Primary key)
         public int? ShiftTabletId { get; set; } // ShiftTabletId
         public string ConductorDate { get; set; } // ConductorDate (length: 50)
 
-        public ShiftTabletConductor()
+        public ShiftShiftTabletConductor()
         {
             InitializePartial();
         }

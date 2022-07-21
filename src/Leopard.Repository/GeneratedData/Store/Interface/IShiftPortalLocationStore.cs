@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Leopard.Repository
 {
-    public partial interface IShiftShiftTabletLocationStore : IStoreBase<ShiftShiftTabletLocation>
+    public partial interface IShiftPortalLocationStore : IStoreBase<ShiftPortalLocation>
     {
     }
 }

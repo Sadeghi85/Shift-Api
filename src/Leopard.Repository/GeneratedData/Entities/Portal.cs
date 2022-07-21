@@ -112,19 +112,24 @@ namespace Leopard.Repository
         public virtual ICollection<SamtRequest> SamtRequests { get; set; } // SAMT_Requests.FK_TelavatRequests_Portals
 
         /// <summary>
-        /// Child ShiftEmploymentDetails where [Shift_EmploymentDetail].[portalId] point to this entity (FK_Shift_EmploymentDetail_Portals)
+        /// Child ShiftEmploymentDetails where [Shift_EmploymentDetail].[portalID] point to this entity (FK_Shift_EmploymentDetail_Portals)
         /// </summary>
         public virtual ICollection<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail.FK_Shift_EmploymentDetail_Portals
 
         /// <summary>
-        /// Child ShiftLocations where [Shift_Location].[PortalId] point to this entity (FK_Shift_Location_Portals)
+        /// Child ShiftPortalLocations where [Shift_PortalLocations].[PortalID] point to this entity (FK_Shift_ShiftTabletLocation_Portals)
         /// </summary>
-        public virtual ICollection<ShiftLocation> ShiftLocations { get; set; } // Shift_Location.FK_Shift_Location_Portals
+        public virtual ICollection<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations.FK_Shift_ShiftTabletLocation_Portals
 
         /// <summary>
-        /// Child ShiftShifts where [Shift_Shift].[PortalId] point to this entity (FK_PortalShift_Portals)
+        /// Child ShiftShifts where [Shift_Shift].[PortalID] point to this entity (FK_PortalShift_Portals)
         /// </summary>
         public virtual ICollection<ShiftShift> ShiftShifts { get; set; } // Shift_Shift.FK_PortalShift_Portals
+
+        /// <summary>
+        /// Child ShiftShiftTablets where [Shift_ShiftTablet].[PortalID] point to this entity (FK_Shift_ShiftTablet_Portals)
+        /// </summary>
+        public virtual ICollection<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet.FK_Shift_ShiftTablet_Portals
 
         /// <summary>
         /// Child TelavatAgentPosts where [TelavatAgentPosts].[PortalID] point to this entity (FK_TelavatAgentPosts_Portals)
@@ -233,8 +238,9 @@ namespace Leopard.Repository
             SamtMonthlyBudgets = new List<SamtMonthlyBudget>();
             SamtRequests = new List<SamtRequest>();
             ShiftEmploymentDetails = new List<ShiftEmploymentDetail>();
-            ShiftLocations = new List<ShiftLocation>();
+            ShiftPortalLocations = new List<ShiftPortalLocation>();
             ShiftShifts = new List<ShiftShift>();
+            ShiftShiftTablets = new List<ShiftShiftTablet>();
             TelavatAgentPosts = new List<TelavatAgentPost>();
             TelavatBandSounds = new List<TelavatBandSound>();
             TelavatCategoryAges = new List<TelavatCategoryAge>();

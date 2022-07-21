@@ -51,7 +51,7 @@ namespace Leopard.Repository
         public virtual ICollection<ShiftCalculation> ShiftCalculations { get; set; } // Shift_Calculations.FK_Shift_Calculations_SAMT_Agents
 
         /// <summary>
-        /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[AgentId] point to this entity (FK_Shift_ShiftTabletCrew_SAMT_Agents)
+        /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[AgentID] point to this entity (FK_Shift_ShiftTabletCrew_SAMT_Agents)
         /// </summary>
         public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTabletCrew_SAMT_Agents
 

@@ -273,14 +273,14 @@ namespace Leopard.Repository
         DbSet<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail
         DbSet<ShiftLocation> ShiftLocations { get; set; } // Shift_Location
         DbSet<ShiftLog> ShiftLogs { get; set; } // Shift_Log
-        DbSet<ShiftNeededResource> ShiftNeededResources { get; set; } // ShiftNeededResource
+        DbSet<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations
         DbSet<ShiftRevisionProblem> ShiftRevisionProblems { get; set; } // Shift_RevisionProblem
         DbSet<ShiftShift> ShiftShifts { get; set; } // Shift_Shift
+        DbSet<ShiftShiftJobTemplate> ShiftShiftJobTemplates { get; set; } // Shift_ShiftJobTemplate
         DbSet<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet
+        DbSet<ShiftShiftTabletConductor> ShiftShiftTabletConductors { get; set; } // Shift_ShiftTabletConductor
         DbSet<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew
         DbSet<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement
-        DbSet<ShiftShiftTabletLocation> ShiftShiftTabletLocations { get; set; } // Shift_ShiftTabletLocation
-        DbSet<ShiftTabletConductor> ShiftTabletConductors { get; set; } // ShiftTabletConductor
         DbSet<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges
         DbSet<ShiftTabletScriptSupervisorDescription> ShiftTabletScriptSupervisorDescriptions { get; set; } // Shift_TabletScriptSupervisorDescription
         DbSet<SimaDataLog> SimaDataLogs { get; set; } // SimaDataLogs
@@ -1034,13 +1034,11 @@ namespace Leopard.Repository
         List<SpSearchRegieConductorBySpecificVersionReturnModel> SpSearchRegieConductorBySpecificVersion(string broadcastDate, int? simaUserChId, int? vNum, bool? isClipArt, out int procResult);
         Task<List<SpSearchRegieConductorBySpecificVersionReturnModel>> SpSearchRegieConductorBySpecificVersionAsync(string broadcastDate, int? simaUserChId, int? vNum, bool? isClipArt);
 
-        List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime);
-        List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime, out int procResult);
-        Task<List<SpShiftCheckShiftTimeOverlapReturnModel>> SpShiftCheckShiftTimeOverlapAsync(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime);
+        int SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime);
+        // SpShiftCheckShiftTimeOverlapAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
-        List<SpShiftGetShiftByPortalIdReturnModel> SpShiftGetShiftByPortalId(int? portalId);
-        List<SpShiftGetShiftByPortalIdReturnModel> SpShiftGetShiftByPortalId(int? portalId, out int procResult);
-        Task<List<SpShiftGetShiftByPortalIdReturnModel>> SpShiftGetShiftByPortalIdAsync(int? portalId);
+        int SpShiftGetShiftByPortalId(int? portalId);
+        // SpShiftGetShiftByPortalIdAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
         int SpSimaRightSideGauges(int? baseYear);
         // SpSimaRightSideGaugesAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)

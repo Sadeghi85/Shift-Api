@@ -26,9 +26,9 @@ namespace Leopard.Repository
         public DateTime LastModifiedDateTime { get; set; } // LastModifiedDateTime
         public int? SpecialDayPaymentAmount { get; set; } // SpecialDayPaymentAmount
         public int? SpecialDayPaymetMultiplicationPercent { get; set; } // SpecialDayPaymetMultiplicationPercent
-        public int? PortalId { get; set; } // portalId
+        public int? PortalId { get; set; } // portalID
         public int? UnrequiredShiftPayment { get; set; } // UnrequiredShiftPayment
-        public int? CooperationTypeId { get; set; } // CooperationTypeId
+        public int? CooperationTypeId { get; set; } // CooperationTypeID
         public bool IsDeleted { get; set; } // IsDeleted
 
         // Foreign keys
@@ -45,6 +45,7 @@ namespace Leopard.Repository
 
         public ShiftEmploymentDetail()
         {
+            IsDeleted = false;
             InitializePartial();
         }
 

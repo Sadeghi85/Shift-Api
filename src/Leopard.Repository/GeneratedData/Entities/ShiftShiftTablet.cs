@@ -23,9 +23,10 @@ namespace Leopard.Repository
         /// ارزش درصدی شیفت که بر اساس روزهای خاص ثبت میشود.
         /// </summary>
         public int ShiftWorthPercent { get; set; } // ShiftWorthPercent
-        public TimeSpan ShiftTime { get; set; } // ShiftTime
+        public TimeSpan ShiftDuration { get; set; } // ShiftDuration
         public bool IsDeleted { get; set; } // IsDeleted
         public bool HasLivePrograms { get; set; } // HasLivePrograms
+        public int PortalId { get; set; } // PortalID
 
         // Reverse navigation
 
@@ -35,14 +36,9 @@ namespace Leopard.Repository
         public virtual ICollection<ShiftRevisionProblem> ShiftRevisionProblems { get; set; } // Shift_RevisionProblem.FK_Shift_RevisionProblem_Shift_ShiftTablet
 
         /// <summary>
-        /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[ShiftTabletId] point to this entity (FK_Shift_ShiftTableCrew_Shift_ShiftTablet)
+        /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[ShiftTabletID] point to this entity (FK_Shift_ShiftTableCrew_Shift_ShiftTablet)
         /// </summary>
         public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTableCrew_Shift_ShiftTablet
-
-        /// <summary>
-        /// Child ShiftShiftTabletLocations where [Shift_ShiftTabletLocation].[ShiftTabletID] point to this entity (FK_ShiftExecutionLocation_ShiftExecution)
-        /// </summary>
-        public virtual ICollection<ShiftShiftTabletLocation> ShiftShiftTabletLocations { get; set; } // Shift_ShiftTabletLocation.FK_ShiftExecutionLocation_ShiftExecution
 
         /// <summary>
         /// Child ShiftTabletConductorChanges where [Shift_TabletConductorChanges].[ShiftTabletId] point to this entity (FK_Shift_TabletConductorChanges_Shift_ShiftTablet)
@@ -57,15 +53,20 @@ namespace Leopard.Repository
         // Foreign keys
 
         /// <summary>
+        /// Parent Portal pointed by [Shift_ShiftTablet].([PortalId]) (FK_Shift_ShiftTablet_Portals)
+        /// </summary>
+        public virtual Portal Portal { get; set; } // FK_Shift_ShiftTablet_Portals
+
+        /// <summary>
         /// Parent ShiftShift pointed by [Shift_ShiftTablet].([ShiftId]) (FK_ShiftExecution_PortalShift)
         /// </summary>
         public virtual ShiftShift ShiftShift { get; set; } // FK_ShiftExecution_PortalShift
 
         public ShiftShiftTablet()
         {
+            IsDeleted = false;
             ShiftRevisionProblems = new List<ShiftRevisionProblem>();
             ShiftShiftTabletCrews = new List<ShiftShiftTabletCrew>();
-            ShiftShiftTabletLocations = new List<ShiftShiftTabletLocation>();
             ShiftTabletConductorChanges = new List<ShiftTabletConductorChanx>();
             ShiftTabletScriptSupervisorDescriptions = new List<ShiftTabletScriptSupervisorDescription>();
             InitializePartial();

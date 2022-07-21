@@ -8,30 +8,30 @@ using System.Threading.Tasks;
 
 namespace Leopard.Repository
 {
-    // Shift_ShiftTabletLocation
-    public partial class ShiftShiftTabletLocation
+    // Shift_PortalLocations
+    public partial class ShiftPortalLocation
     {
         public int Id { get; set; } // ID (Primary key)
-        public int ShiftTabletId { get; set; } // ShiftTabletID
         public int LocationId { get; set; } // LocationID
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
         public DateTime? LastModifiedDateTime { get; set; } // LastModifiedDateTime
+        public int PortalId { get; set; } // PortalID
 
         // Foreign keys
 
         /// <summary>
-        /// Parent ShiftLocation pointed by [Shift_ShiftTabletLocation].([LocationId]) (FK_ShiftExecutionLocation_Location)
+        /// Parent Portal pointed by [Shift_PortalLocations].([PortalId]) (FK_Shift_ShiftTabletLocation_Portals)
+        /// </summary>
+        public virtual Portal Portal { get; set; } // FK_Shift_ShiftTabletLocation_Portals
+
+        /// <summary>
+        /// Parent ShiftLocation pointed by [Shift_PortalLocations].([LocationId]) (FK_ShiftExecutionLocation_Location)
         /// </summary>
         public virtual ShiftLocation ShiftLocation { get; set; } // FK_ShiftExecutionLocation_Location
 
-        /// <summary>
-        /// Parent ShiftShiftTablet pointed by [Shift_ShiftTabletLocation].([ShiftTabletId]) (FK_ShiftExecutionLocation_ShiftExecution)
-        /// </summary>
-        public virtual ShiftShiftTablet ShiftShiftTablet { get; set; } // FK_ShiftExecutionLocation_ShiftExecution
-
-        public ShiftShiftTabletLocation()
+        public ShiftPortalLocation()
         {
             InitializePartial();
         }

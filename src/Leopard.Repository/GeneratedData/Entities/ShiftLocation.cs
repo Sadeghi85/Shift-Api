@@ -17,26 +17,19 @@ namespace Leopard.Repository
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
         public DateTime? LastModifiedDateTime { get; set; } // LastModifiedDateTime
-        public int PortalId { get; set; } // PortalId
         public bool IsDeleted { get; set; } // IsDeleted
 
         // Reverse navigation
 
         /// <summary>
-        /// Child ShiftShiftTabletLocations where [Shift_ShiftTabletLocation].[LocationID] point to this entity (FK_ShiftExecutionLocation_Location)
+        /// Child ShiftPortalLocations where [Shift_PortalLocations].[LocationID] point to this entity (FK_ShiftExecutionLocation_Location)
         /// </summary>
-        public virtual ICollection<ShiftShiftTabletLocation> ShiftShiftTabletLocations { get; set; } // Shift_ShiftTabletLocation.FK_ShiftExecutionLocation_Location
-
-        // Foreign keys
-
-        /// <summary>
-        /// Parent Portal pointed by [Shift_Location].([PortalId]) (FK_Shift_Location_Portals)
-        /// </summary>
-        public virtual Portal Portal { get; set; } // FK_Shift_Location_Portals
+        public virtual ICollection<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations.FK_ShiftExecutionLocation_Location
 
         public ShiftLocation()
         {
-            ShiftShiftTabletLocations = new List<ShiftShiftTabletLocation>();
+            IsDeleted = false;
+            ShiftPortalLocations = new List<ShiftPortalLocation>();
             InitializePartial();
         }
 

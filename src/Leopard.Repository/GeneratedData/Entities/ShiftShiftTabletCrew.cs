@@ -12,9 +12,9 @@ namespace Leopard.Repository
     public partial class ShiftShiftTabletCrew
     {
         public int Id { get; set; } // ID (Primary key)
-        public int AgentId { get; set; } // AgentId
-        public int ResourceId { get; set; } // ResourceId
-        public int ShiftTabletId { get; set; } // ShiftTabletId
+        public int AgentId { get; set; } // AgentID
+        public int JobId { get; set; } // JobID
+        public int ShiftTabletId { get; set; } // ShiftTabletID
         public DateTime? EntranceTime { get; set; } // EntranceTime
         public DateTime? ExitTime { get; set; } // ExitTime
         public int? CreatedBy { get; set; } // CreatedBy
@@ -49,7 +49,7 @@ namespace Leopard.Repository
         public virtual SamtAgent SamtAgent { get; set; } // FK_Shift_ShiftTabletCrew_SAMT_Agents
 
         /// <summary>
-        /// Parent SamtResourceType pointed by [Shift_ShiftTabletCrew].([ResourceId]) (FK_Shift_ShiftTableCrew_SAMT_ResourceTypes)
+        /// Parent SamtResourceType pointed by [Shift_ShiftTabletCrew].([JobId]) (FK_Shift_ShiftTableCrew_SAMT_ResourceTypes)
         /// </summary>
         public virtual SamtResourceType SamtResourceType { get; set; } // FK_Shift_ShiftTableCrew_SAMT_ResourceTypes
 

@@ -25,12 +25,12 @@ namespace Leopard.Repository
         public virtual ICollection<ConductorChannelProgramAgent> ConductorChannelProgramAgents { get; set; } // ConductorChannelProgramAgents.FK_ConductorChannelProgramAgents_SAMT_ResourceTypes
 
         /// <summary>
-        /// Child ShiftNeededResources where [ShiftNeededResource].[ResourceTypeId] point to this entity (FK_ShiftNeededResource_SAMT_ResourceTypes)
+        /// Child ShiftShiftJobTemplates where [Shift_ShiftJobTemplate].[ResourceTypeId] point to this entity (FK_ShiftNeededResource_SAMT_ResourceTypes)
         /// </summary>
-        public virtual ICollection<ShiftNeededResource> ShiftNeededResources { get; set; } // ShiftNeededResource.FK_ShiftNeededResource_SAMT_ResourceTypes
+        public virtual ICollection<ShiftShiftJobTemplate> ShiftShiftJobTemplates { get; set; } // Shift_ShiftJobTemplate.FK_ShiftNeededResource_SAMT_ResourceTypes
 
         /// <summary>
-        /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[ResourceId] point to this entity (FK_Shift_ShiftTableCrew_SAMT_ResourceTypes)
+        /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[JobID] point to this entity (FK_Shift_ShiftTableCrew_SAMT_ResourceTypes)
         /// </summary>
         public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTableCrew_SAMT_ResourceTypes
 
@@ -44,8 +44,8 @@ namespace Leopard.Repository
             AmountWage = 0;
             IsDeleted = false;
             ConductorChannelProgramAgents = new List<ConductorChannelProgramAgent>();
+            ShiftShiftJobTemplates = new List<ShiftShiftJobTemplate>();
             ShiftShiftTabletCrews = new List<ShiftShiftTabletCrew>();
-            ShiftNeededResources = new List<ShiftNeededResource>();
             TelavatPaymentLogDetails = new List<TelavatPaymentLogDetail>();
             InitializePartial();
         }

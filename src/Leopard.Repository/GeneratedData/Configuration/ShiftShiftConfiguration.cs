@@ -16,16 +16,16 @@ namespace Leopard.Repository
 
             builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
             builder.Property(x => x.Title).HasColumnName(@"Title").HasColumnType("nvarchar(250)").IsRequired().HasMaxLength(250);
-            builder.Property(x => x.PortalId).HasColumnName(@"PortalId").HasColumnType("int").IsRequired();
+            builder.Property(x => x.PortalId).HasColumnName(@"PortalID").HasColumnType("int").IsRequired();
             builder.Property(x => x.StartTime).HasColumnName(@"StartTime").HasColumnType("time").IsRequired();
             builder.Property(x => x.EndTime).HasColumnName(@"EndTime").HasColumnType("time").IsRequired();
             builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.LastModifiedDateTime).HasColumnName(@"LastModifiedDateTime").HasColumnType("datetime").IsRequired(false);
-            builder.Property(x => x.ShiftType).HasColumnName(@"ShiftType").HasColumnType("int").IsRequired();
+            builder.Property(x => x.ShiftTypeId).HasColumnName(@"ShiftTypeID").HasColumnType("int").IsRequired();
             builder.Property(x => x.HasRewardFine).HasColumnName(@"HasRewardFine").HasColumnType("bit").IsRequired();
-            builder.Property(x => x.RewarFineAmount).HasColumnName(@"RewarFineAmount").HasColumnType("int").IsRequired();
+            builder.Property(x => x.RewardFineAmount).HasColumnName(@"RewardFineAmount").HasColumnType("int").IsRequired();
             builder.Property(x => x.IsDeleted).HasColumnName(@"IsDeleted").HasColumnType("bit").IsRequired();
 
             // Foreign keys

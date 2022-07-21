@@ -13,7 +13,7 @@ namespace Leopard.Repository
     {
         public int Id { get; set; } // ID (Primary key)
         public string Title { get; set; } // Title (length: 250)
-        public int PortalId { get; set; } // PortalId
+        public int PortalId { get; set; } // PortalID
         public TimeSpan StartTime { get; set; } // StartTime
         public TimeSpan EndTime { get; set; } // EndTime
         public int? CreatedBy { get; set; } // CreatedBy
@@ -24,17 +24,17 @@ namespace Leopard.Repository
         /// <summary>
         /// نوع شیفت که گویای دو نوع شیفت رژی (1) و شیف هماهنگی(2) میباشد.
         /// </summary>
-        public int ShiftType { get; set; } // ShiftType
+        public int ShiftTypeId { get; set; } // ShiftTypeID
         public bool HasRewardFine { get; set; } // HasRewardFine
-        public int RewarFineAmount { get; set; } // RewarFineAmount
+        public int RewardFineAmount { get; set; } // RewardFineAmount
         public bool IsDeleted { get; set; } // IsDeleted
 
         // Reverse navigation
 
         /// <summary>
-        /// Child ShiftNeededResources where [ShiftNeededResource].[ShiftId] point to this entity (FK_ShiftNeededResource_Shift_Shift)
+        /// Child ShiftShiftJobTemplates where [Shift_ShiftJobTemplate].[ShiftId] point to this entity (FK_ShiftNeededResource_Shift_Shift)
         /// </summary>
-        public virtual ICollection<ShiftNeededResource> ShiftNeededResources { get; set; } // ShiftNeededResource.FK_ShiftNeededResource_Shift_Shift
+        public virtual ICollection<ShiftShiftJobTemplate> ShiftShiftJobTemplates { get; set; } // Shift_ShiftJobTemplate.FK_ShiftNeededResource_Shift_Shift
 
         /// <summary>
         /// Child ShiftShiftTablets where [Shift_ShiftTablet].[ShiftID] point to this entity (FK_ShiftExecution_PortalShift)
@@ -50,8 +50,11 @@ namespace Leopard.Repository
 
         public ShiftShift()
         {
+            HasRewardFine = false;
+            RewardFineAmount = 0;
+            IsDeleted = false;
+            ShiftShiftJobTemplates = new List<ShiftShiftJobTemplate>();
             ShiftShiftTablets = new List<ShiftShiftTablet>();
-            ShiftNeededResources = new List<ShiftNeededResource>();
             InitializePartial();
         }
 

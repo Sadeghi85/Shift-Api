@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Leopard.Repository
 {
-    // ShiftNeededResource
-    public partial class ShiftNeededResourceConfiguration : IEntityTypeConfiguration<ShiftNeededResource>
+    // Shift_ShiftJobTemplate
+    public partial class ShiftShiftJobTemplateConfiguration : IEntityTypeConfiguration<ShiftShiftJobTemplate>
     {
-        public void Configure(EntityTypeBuilder<ShiftNeededResource> builder)
+        public void Configure(EntityTypeBuilder<ShiftShiftJobTemplate> builder)
         {
-            builder.ToTable("ShiftNeededResource", "dbo");
+            builder.ToTable("Shift_ShiftJobTemplate", "dbo");
             builder.HasKey(x => x.Id).HasName("PK_ShiftNeededResource").IsClustered();
 
             builder.Property(x => x.Id).HasColumnName(@"Id").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
@@ -24,13 +24,13 @@ namespace Leopard.Repository
             builder.Property(x => x.IsDeleted).HasColumnName(@"IsDeleted").HasColumnType("bit").IsRequired();
 
             // Foreign keys
-            builder.HasOne(a => a.SamtResourceType).WithMany(b => b.ShiftNeededResources).HasForeignKey(c => c.ResourceTypeId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ShiftNeededResource_SAMT_ResourceTypes");
-            builder.HasOne(a => a.ShiftShift).WithMany(b => b.ShiftNeededResources).HasForeignKey(c => c.ShiftId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ShiftNeededResource_Shift_Shift");
+            builder.HasOne(a => a.SamtResourceType).WithMany(b => b.ShiftShiftJobTemplates).HasForeignKey(c => c.ResourceTypeId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ShiftNeededResource_SAMT_ResourceTypes");
+            builder.HasOne(a => a.ShiftShift).WithMany(b => b.ShiftShiftJobTemplates).HasForeignKey(c => c.ShiftId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ShiftNeededResource_Shift_Shift");
 
             InitializePartial(builder);
         }
 
-        partial void InitializePartial(EntityTypeBuilder<ShiftNeededResource> builder);
+        partial void InitializePartial(EntityTypeBuilder<ShiftShiftJobTemplate> builder);
     }
 
 }

@@ -15,9 +15,9 @@ namespace Leopard.Repository
             builder.HasKey(x => x.Id).HasName("PK_Shift_ShiftTableCrew").IsClustered();
 
             builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
-            builder.Property(x => x.AgentId).HasColumnName(@"AgentId").HasColumnType("int").IsRequired();
-            builder.Property(x => x.ResourceId).HasColumnName(@"ResourceId").HasColumnType("int").IsRequired();
-            builder.Property(x => x.ShiftTabletId).HasColumnName(@"ShiftTabletId").HasColumnType("int").IsRequired();
+            builder.Property(x => x.AgentId).HasColumnName(@"AgentID").HasColumnType("int").IsRequired();
+            builder.Property(x => x.JobId).HasColumnName(@"JobID").HasColumnType("int").IsRequired();
+            builder.Property(x => x.ShiftTabletId).HasColumnName(@"ShiftTabletID").HasColumnType("int").IsRequired();
             builder.Property(x => x.EntranceTime).HasColumnName(@"EntranceTime").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.ExitTime).HasColumnName(@"ExitTime").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired(false);
@@ -29,7 +29,7 @@ namespace Leopard.Repository
 
             // Foreign keys
             builder.HasOne(a => a.SamtAgent).WithMany(b => b.ShiftShiftTabletCrews).HasForeignKey(c => c.AgentId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Shift_ShiftTabletCrew_SAMT_Agents");
-            builder.HasOne(a => a.SamtResourceType).WithMany(b => b.ShiftShiftTabletCrews).HasForeignKey(c => c.ResourceId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Shift_ShiftTableCrew_SAMT_ResourceTypes");
+            builder.HasOne(a => a.SamtResourceType).WithMany(b => b.ShiftShiftTabletCrews).HasForeignKey(c => c.JobId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Shift_ShiftTableCrew_SAMT_ResourceTypes");
             builder.HasOne(a => a.ShiftShiftTablet).WithMany(b => b.ShiftShiftTabletCrews).HasForeignKey(c => c.ShiftTabletId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Shift_ShiftTableCrew_Shift_ShiftTablet");
 
             InitializePartial(builder);

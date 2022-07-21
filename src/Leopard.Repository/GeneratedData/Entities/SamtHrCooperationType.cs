@@ -17,7 +17,7 @@ namespace Leopard.Repository
         // Reverse navigation
 
         /// <summary>
-        /// Child ShiftEmploymentDetails where [Shift_EmploymentDetail].[CooperationTypeId] point to this entity (FK_Shift_EmploymentDetail_SAMT_HRCooperationType)
+        /// Child ShiftEmploymentDetails where [Shift_EmploymentDetail].[CooperationTypeID] point to this entity (FK_Shift_EmploymentDetail_SAMT_HRCooperationType)
         /// </summary>
         public virtual ICollection<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail.FK_Shift_EmploymentDetail_SAMT_HRCooperationType
 

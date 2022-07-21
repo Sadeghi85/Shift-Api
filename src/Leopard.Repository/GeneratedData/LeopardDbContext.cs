@@ -293,14 +293,14 @@ namespace Leopard.Repository
         public DbSet<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail
         public DbSet<ShiftLocation> ShiftLocations { get; set; } // Shift_Location
         public DbSet<ShiftLog> ShiftLogs { get; set; } // Shift_Log
-        public DbSet<ShiftNeededResource> ShiftNeededResources { get; set; } // ShiftNeededResource
+        public DbSet<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations
         public DbSet<ShiftRevisionProblem> ShiftRevisionProblems { get; set; } // Shift_RevisionProblem
         public DbSet<ShiftShift> ShiftShifts { get; set; } // Shift_Shift
+        public DbSet<ShiftShiftJobTemplate> ShiftShiftJobTemplates { get; set; } // Shift_ShiftJobTemplate
         public DbSet<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet
+        public DbSet<ShiftShiftTabletConductor> ShiftShiftTabletConductors { get; set; } // Shift_ShiftTabletConductor
         public DbSet<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew
         public DbSet<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement
-        public DbSet<ShiftShiftTabletLocation> ShiftShiftTabletLocations { get; set; } // Shift_ShiftTabletLocation
-        public DbSet<ShiftTabletConductor> ShiftTabletConductors { get; set; } // ShiftTabletConductor
         public DbSet<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges
         public DbSet<ShiftTabletScriptSupervisorDescription> ShiftTabletScriptSupervisorDescriptions { get; set; } // Shift_TabletScriptSupervisorDescription
         public DbSet<SimaDataLog> SimaDataLogs { get; set; } // SimaDataLogs
@@ -689,14 +689,14 @@ namespace Leopard.Repository
             modelBuilder.ApplyConfiguration(new ShiftEmploymentDetailConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftLocationConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftLogConfiguration());
-            modelBuilder.ApplyConfiguration(new ShiftNeededResourceConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftPortalLocationConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftRevisionProblemConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftShiftJobTemplateConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftShiftTabletConductorConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewReplacementConfiguration());
-            modelBuilder.ApplyConfiguration(new ShiftShiftTabletLocationConfiguration());
-            modelBuilder.ApplyConfiguration(new ShiftTabletConductorConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftTabletConductorChanxConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftTabletScriptSupervisorDescriptionConfiguration());
             modelBuilder.ApplyConfiguration(new SimaDataLogConfiguration());
@@ -898,8 +898,6 @@ namespace Leopard.Repository
             modelBuilder.Entity<SpSearchConductorReturnModel>().HasNoKey();
             modelBuilder.Entity<SpSearchRegieConductorReturnModel>().HasNoKey();
             modelBuilder.Entity<SpSearchRegieConductorBySpecificVersionReturnModel>().HasNoKey();
-            modelBuilder.Entity<SpShiftCheckShiftTimeOverlapReturnModel>().HasNoKey();
-            modelBuilder.Entity<SpShiftGetShiftByPortalIdReturnModel>().HasNoKey();
             modelBuilder.Entity<SpTotalProductionProgressReturnModel>().HasNoKey();
             modelBuilder.Entity<SpUserHitReportReturnModel>().HasNoKey();
             modelBuilder.Entity<SpUserHitReport2ReturnModel>().HasNoKey();
@@ -10378,13 +10376,7 @@ namespace Leopard.Repository
             return procResultData;
         }
 
-        public List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime)
-        {
-            int procResult;
-            return SpShiftCheckShiftTimeOverlap(id, portalId, shiftType, startTime, endTime, out procResult);
-        }
-
-        public List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime, out int procResult)
+        public int SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime)
         {
             var idParam = new SqlParameter { ParameterName = "@_id", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = id.GetValueOrDefault(), Precision = 10, Scale = 0 };
             if (!id.HasValue)
@@ -10407,80 +10399,28 @@ namespace Leopard.Repository
                 endTimeParam.Value = DBNull.Value;
 
             var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
-            const string sqlCommand = "EXEC @procResult = [dbo].[SP_Shift_CheckShiftTimeOverlap] @_id, @_portalId, @_shiftType, @_startTime, @_endTime";
-            var procResultData = Set<SpShiftCheckShiftTimeOverlapReturnModel>()
-                .FromSqlRaw(sqlCommand, idParam, portalIdParam, shiftTypeParam, startTimeParam, endTimeParam, procResultParam)
-                .ToList();
 
-            procResult = (int) procResultParam.Value;
-            return procResultData;
+            Database.ExecuteSqlRaw("EXEC @procResult = [dbo].[SP_Shift_CheckShiftTimeOverlap] @_id, @_portalId, @_shiftType, @_startTime, @_endTime", idParam, portalIdParam, shiftTypeParam, startTimeParam, endTimeParam, procResultParam);
+
+            return (int)procResultParam.Value;
         }
 
-        public async Task<List<SpShiftCheckShiftTimeOverlapReturnModel>> SpShiftCheckShiftTimeOverlapAsync(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime)
-        {
-            var idParam = new SqlParameter { ParameterName = "@_id", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = id.GetValueOrDefault(), Precision = 10, Scale = 0 };
-            if (!id.HasValue)
-                idParam.Value = DBNull.Value;
+        // SpShiftCheckShiftTimeOverlapAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
-            var portalIdParam = new SqlParameter { ParameterName = "@_portalId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = portalId.GetValueOrDefault(), Precision = 10, Scale = 0 };
-            if (!portalId.HasValue)
-                portalIdParam.Value = DBNull.Value;
-
-            var shiftTypeParam = new SqlParameter { ParameterName = "@_shiftType", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = shiftType.GetValueOrDefault(), Precision = 10, Scale = 0 };
-            if (!shiftType.HasValue)
-                shiftTypeParam.Value = DBNull.Value;
-
-            var startTimeParam = new SqlParameter { ParameterName = "@_startTime", SqlDbType = SqlDbType.Time, Direction = ParameterDirection.Input, Value = startTime.GetValueOrDefault() };
-            if (!startTime.HasValue)
-                startTimeParam.Value = DBNull.Value;
-
-            var endTimeParam = new SqlParameter { ParameterName = "@_endTime", SqlDbType = SqlDbType.Time, Direction = ParameterDirection.Input, Value = endTime.GetValueOrDefault() };
-            if (!endTime.HasValue)
-                endTimeParam.Value = DBNull.Value;
-
-            const string sqlCommand = "EXEC [dbo].[SP_Shift_CheckShiftTimeOverlap] @_id, @_portalId, @_shiftType, @_startTime, @_endTime";
-            var procResultData = await Set<SpShiftCheckShiftTimeOverlapReturnModel>()
-                .FromSqlRaw(sqlCommand, idParam, portalIdParam, shiftTypeParam, startTimeParam, endTimeParam)
-                .ToListAsync();
-
-            return procResultData;
-        }
-
-        public List<SpShiftGetShiftByPortalIdReturnModel> SpShiftGetShiftByPortalId(int? portalId)
-        {
-            int procResult;
-            return SpShiftGetShiftByPortalId(portalId, out procResult);
-        }
-
-        public List<SpShiftGetShiftByPortalIdReturnModel> SpShiftGetShiftByPortalId(int? portalId, out int procResult)
+        public int SpShiftGetShiftByPortalId(int? portalId)
         {
             var portalIdParam = new SqlParameter { ParameterName = "@portalId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = portalId.GetValueOrDefault(), Precision = 10, Scale = 0 };
             if (!portalId.HasValue)
                 portalIdParam.Value = DBNull.Value;
 
             var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
-            const string sqlCommand = "EXEC @procResult = [dbo].[SP_ShiftGetShiftByPortalId] @portalId";
-            var procResultData = Set<SpShiftGetShiftByPortalIdReturnModel>()
-                .FromSqlRaw(sqlCommand, portalIdParam, procResultParam)
-                .ToList();
 
-            procResult = (int) procResultParam.Value;
-            return procResultData;
+            Database.ExecuteSqlRaw("EXEC @procResult = [dbo].[SP_ShiftGetShiftByPortalId] @portalId", portalIdParam, procResultParam);
+
+            return (int)procResultParam.Value;
         }
 
-        public async Task<List<SpShiftGetShiftByPortalIdReturnModel>> SpShiftGetShiftByPortalIdAsync(int? portalId)
-        {
-            var portalIdParam = new SqlParameter { ParameterName = "@portalId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = portalId.GetValueOrDefault(), Precision = 10, Scale = 0 };
-            if (!portalId.HasValue)
-                portalIdParam.Value = DBNull.Value;
-
-            const string sqlCommand = "EXEC [dbo].[SP_ShiftGetShiftByPortalId] @portalId";
-            var procResultData = await Set<SpShiftGetShiftByPortalIdReturnModel>()
-                .FromSqlRaw(sqlCommand, portalIdParam)
-                .ToListAsync();
-
-            return procResultData;
-        }
+        // SpShiftGetShiftByPortalIdAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
         public int SpSimaRightSideGauges(int? baseYear)
         {

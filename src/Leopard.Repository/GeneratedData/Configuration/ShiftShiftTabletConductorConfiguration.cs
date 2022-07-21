@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Leopard.Repository
 {
-    // ShiftTabletConductor
-    public partial class ShiftTabletConductorConfiguration : IEntityTypeConfiguration<ShiftTabletConductor>
+    // Shift_ShiftTabletConductor
+    public partial class ShiftShiftTabletConductorConfiguration : IEntityTypeConfiguration<ShiftShiftTabletConductor>
     {
-        public void Configure(EntityTypeBuilder<ShiftTabletConductor> builder)
+        public void Configure(EntityTypeBuilder<ShiftShiftTabletConductor> builder)
         {
-            builder.ToTable("ShiftTabletConductor", "dbo");
+            builder.ToTable("Shift_ShiftTabletConductor", "dbo");
             builder.HasKey(x => x.Id).HasName("PK_ShiftTabletConductor").IsClustered();
 
             builder.Property(x => x.Id).HasColumnName(@"Id").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
@@ -21,7 +21,7 @@ namespace Leopard.Repository
             InitializePartial(builder);
         }
 
-        partial void InitializePartial(EntityTypeBuilder<ShiftTabletConductor> builder);
+        partial void InitializePartial(EntityTypeBuilder<ShiftShiftTabletConductor> builder);
     }
 
 }
