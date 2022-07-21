@@ -1,11 +1,11 @@
 using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 namespace Leopard.Bussiness.Services {
@@ -14,7 +14,7 @@ namespace Leopard.Bussiness.Services {
 		private readonly IPortalStore _portalStore;
 
 		List<Expression<Func<Portal, bool>>> GetAllExpressions = new List<Expression<Func<Portal, bool>>>();
-		public PortalService(IPortalStore portalStore) {
+		public PortalService(IPrincipal iPrincipal, IPortalStore portalStore) : base(iPrincipal) {
 			_portalStore = portalStore;
 		}
 		public Task<List<PortalResult>>? GetAll(PortalSearchModel model) {

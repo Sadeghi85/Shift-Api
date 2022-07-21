@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Services.Interface {
+namespace Leopard.Bussiness {
 	public interface IPortalService {
 		public Task<List<PortalResult>>? GetAll(PortalSearchModel model);
 		public Portal GetById(int id);

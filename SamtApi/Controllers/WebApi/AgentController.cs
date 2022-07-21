@@ -23,7 +23,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// GET: api/<AgentController>
 		[HttpPost("GetAll")]
-		public async Task<IActionResult> GetAll(AgentSearchModel model) {
+		public async Task<IActionResult> GetAll(AgentModel model) {
 
 			var ss = GetUserId();
 

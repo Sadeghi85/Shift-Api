@@ -1,16 +1,16 @@
 using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftTabletLocationService : BaseService, IShiftTabletLocationService {
+	public class ShiftTabletLocationService : ServiceBase, IShiftTabletLocationService {
 
 		readonly private IShiftShiftTabletLocationStore _shiftShiftTabletLocationStore;
 		readonly private IShiftLogStore _shiftLogStore;
@@ -20,7 +20,7 @@ namespace Leopard.Bussiness.Services {
 
 		private List<Expression<Func<ShiftShiftTabletLocation, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftShiftTabletLocation, bool>>>();
 
-		public ShiftTabletLocationService(IShiftShiftTabletLocationStore shiftShiftTabletLocationStore, IShiftLogStore shiftLogStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftLocationStore shiftLocationStore) {
+		public ShiftTabletLocationService(IPrincipal iPrincipal, IShiftShiftTabletLocationStore shiftShiftTabletLocationStore, IShiftLogStore shiftLogStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftLocationStore shiftLocationStore) : base(iPrincipal) {
 			_shiftShiftTabletLocationStore = shiftShiftTabletLocationStore;
 			_shiftLogStore = shiftLogStore;
 			_shiftShiftTabletStore = shiftShiftTabletStore;

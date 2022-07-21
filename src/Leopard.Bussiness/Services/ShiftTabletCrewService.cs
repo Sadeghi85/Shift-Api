@@ -1,6 +1,5 @@
 using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
@@ -10,10 +9,10 @@ using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core;
-
+using System.Security.Principal;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftTabletCrewService : BaseService, IShiftTabletCrewService {
+	public class ShiftTabletCrewService : ServiceBase, IShiftTabletCrewService {
 
 		readonly private IShiftShiftTabletCrewStore _shiftShiftTabletCrewStore;
 		readonly private IShiftShiftTabletCrewReplacementStore _shiftShiftTabletCrewReplacementStore;
@@ -25,7 +24,7 @@ namespace Leopard.Bussiness.Services {
 
 		private List<Expression<Func<ShiftShiftTabletCrew, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftShiftTabletCrew, bool>>>();
 
-		public ShiftTabletCrewService(IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewReplacementStore shiftShiftTabletCrewReplacementStore, ISamtAgentStore samtAgentStore, ISamtResourceTypeStore samtResourceTypeStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftLogStore shiftLogStore, IShiftShiftStore shiftShiftStore) {
+		public ShiftTabletCrewService(IPrincipal iPrincipal, IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewReplacementStore shiftShiftTabletCrewReplacementStore, ISamtAgentStore samtAgentStore, ISamtResourceTypeStore samtResourceTypeStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftLogStore shiftLogStore, IShiftShiftStore shiftShiftStore) : base(iPrincipal) {
 			_shiftShiftTabletCrewStore = shiftShiftTabletCrewStore;
 			_shiftShiftTabletCrewReplacementStore = shiftShiftTabletCrewReplacementStore;
 			_agentStore = samtAgentStore;

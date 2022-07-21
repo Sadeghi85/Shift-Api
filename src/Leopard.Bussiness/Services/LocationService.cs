@@ -1,32 +1,42 @@
 using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Services {
-	public class LocationService : ServiceBase, IShiftLocationService {
+namespace Leopard.Bussiness {
+	public class LocationService : ServiceBase, ILocationService {
 
 		readonly private IShiftLocationStore _shiftLocationStore;
 		readonly private IShiftLogStore _shiftLogStore;
 		private List<Expression<Func<ShiftLocation, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftLocation, bool>>>();
 
-		public LocationService(IShiftLocationStore shiftLocationStore, IShiftLogStore shiftLogStore, IPortalStore portalStore) {
+		public LocationService(IPrincipal iPrincipal, IShiftLocationStore shiftLocationStore, IShiftLogStore shiftLogStore, IPortalStore portalStore) : base(iPrincipal) {
 			_shiftLocationStore = shiftLocationStore;
 			_shiftLogStore = shiftLogStore;
 
-			if (_iPrincipal) {
+		}
 
+		private BaseResult CheckAccess() {
+			if (CurrentUserPortalId != 1) {
+				return new BaseResult() { Message= "شما به این قسمت دسترسی ندارید.", Success = false };
 			}
+
+			return new BaseResult();
 		}
 
 
-		public Task<List<ShiftLocationReturnModel>> GetAll(LocationSearchModel model) {
+		public Task<List<LocationViewModel>> GetAll(LocationSearchModel model) {
+			var checkAccess = CheckAccess();
+			if (!checkAccess.Success) {
+				return Task.FromResult(new List<LocationViewModel>());
+			}
+
 			if (!string.IsNullOrWhiteSpace(model.Title)) {
 				GetAllExpressions.Add(pp => pp.Title.Contains(model.Title));
 			}
@@ -41,7 +51,7 @@ namespace Leopard.Bussiness.Services {
 			//	GetAllExpressions.Add(pp => true);
 			//}
 
-			var res = _shiftLocationStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftLocationReturnModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
+			var res = _shiftLocationStore.GetAllWithPagingAsync(GetAllExpressions, pp => new LocationViewModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
 			return res;
 
@@ -59,9 +69,12 @@ namespace Leopard.Bussiness.Services {
 
 		//}
 
-		public async Task<BaseResult> RegisterShiftLocation(LocationModel model) {
-
+		public async Task<BaseResult> RegisterShiftLocation(LocationInputModel model) {
 			try {
+				var checkAccess = CheckAccess();
+				if (!checkAccess.Success) {
+					return checkAccess;
+				}
 
 				var found = _shiftLocationStore.GetAll().Any(pp => pp.Title == model.Title);
 				//var foundPortal = _portalStore.FindById(model.PortalId);
@@ -92,9 +105,13 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public async Task<BaseResult> Update(LocationModel model) {
-
+		public async Task<BaseResult> Update(LocationInputModel model) {
 			try {
+				var checkAccess = CheckAccess();
+				if (!checkAccess.Success) {
+					return checkAccess;
+				}
+
 				var found = _shiftLocationStore.FindById(model.Id);
 				if (found == null) {
 					BaseResult.Success = false;
@@ -117,8 +134,13 @@ namespace Leopard.Bussiness.Services {
 			return BaseResult;
 		}
 
-		public async Task<BaseResult> Delete(LocationModel model) {
+		public async Task<BaseResult> Delete(LocationInputModel model) {
 			try {
+				var checkAccess = CheckAccess();
+				if (!checkAccess.Success) {
+					return checkAccess;
+				}
+
 				var found = _shiftLocationStore.FindById(model.Id);
 				if (found == null) {
 					BaseResult.Success = false;

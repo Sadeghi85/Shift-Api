@@ -2,22 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 namespace Leopard.Bussiness.Services {
-	public class ShiftEmploymentDetailService : BaseService, IShiftEmploymentDetailService {
+	public class ShiftEmploymentDetailService : ServiceBase, IShiftEmploymentDetailService {
 		private IShiftEmploymentDetailStore _shiftEmploymentDetailStore;
 		private IShiftLogStore _shiftLogStore;
 		private IPortalStore _portalStore;
 		private ISamtHrCooperationTypeStore _samtHrCooperationTypeStore;
 
 
-		public ShiftEmploymentDetailService(IShiftEmploymentDetailStore shiftEmploymentDetailStore, IShiftLogStore shiftLogStore, ISamtHrCooperationTypeStore samtHrCooperationTypeStore) {
+		public ShiftEmploymentDetailService(IPrincipal iPrincipal, IShiftEmploymentDetailStore shiftEmploymentDetailStore, IShiftLogStore shiftLogStore, ISamtHrCooperationTypeStore samtHrCooperationTypeStore) : base(iPrincipal) {
 			_shiftEmploymentDetailStore = shiftEmploymentDetailStore;
 			_shiftLogStore = shiftLogStore;
 			_samtHrCooperationTypeStore = samtHrCooperationTypeStore;

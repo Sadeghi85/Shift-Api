@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Services.Interface {
+namespace Leopard.Bussiness {
 	public interface IShiftEmploymentDetailService {
 		public Task<BaseResult> Register(ShiftEmploymentDetailModel model);
 		public Task<BaseResult> Update(ShiftEmploymentDetailModel model);

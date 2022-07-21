@@ -1,4 +1,3 @@
-using Leopard.Bussiness.Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +6,14 @@ using System.Threading.Tasks;
 using Leopard.Repository;
 using Leopard.Bussiness.Model;
 using System.Linq.Expressions;
+using System.Security.Principal;
 
 namespace Leopard.Bussiness.Services {
-	public class ResourceTypeService : IResourceTypeService {
+	public class ResourceTypeService : ServiceBase, IResourceTypeService {
 
 		private readonly ISamtResourceTypeStore _samtResourceTypeStore;
 
-		public ResourceTypeService(ISamtResourceTypeStore samtResourceTypeStore) {
+		public ResourceTypeService(IPrincipal iPrincipal, ISamtResourceTypeStore samtResourceTypeStore) : base(iPrincipal) {
 			_samtResourceTypeStore = samtResourceTypeStore;
 		}
 

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Services.Interface {
+namespace Leopard.Bussiness {
 	public interface IShiftTabletService {
 		public  Task<BaseResult> RegisterShiftTablet(ShiftTabletModel model);
 		public List<ShiftShiftTablet> GetTabletShiftByPortalId(int portalId);

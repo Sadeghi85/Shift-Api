@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Services.Interface {
+namespace Leopard.Bussiness {
 	public interface IShiftTabletCrewService {
 
 		public  Task<BaseResult> Update(ShiftTabletCrewModel model);

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Services.Interface {
+namespace Leopard.Bussiness {
 	public interface IScriptSupervisorService {
 		public Task<BaseResult> RegisterScriptSupervisorDescription(ScriptSupervisorDescriptionModel model);
 		public Task<BaseResult> UpdateScriptSupervisorDescription(ScriptSupervisorDescriptionModel model);

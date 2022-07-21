@@ -1,11 +1,11 @@
 using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +22,7 @@ namespace Leopard.Bussiness.Services {
 
 		private List<Expression<Func<ShiftShiftJobTemplate, bool>>> GetAllShiftShiftJobTemplateExpressions { get; set; } = new List<Expression<Func<ShiftShiftJobTemplate, bool>>>();
 
-		public ShiftService(IShiftShiftStore shiftShiftStore, IPortalStore portalStore, IShiftLogStore shiftLogStore, IShiftShiftJobTemplateStore shiftShiftJobTemplateStore, ISamtResourceTypeStore samtResourceTypeStore) {
+		public ShiftService(IPrincipal iPrincipal, IShiftShiftStore shiftShiftStore, IPortalStore portalStore, IShiftLogStore shiftLogStore, IShiftShiftJobTemplateStore shiftShiftJobTemplateStore, ISamtResourceTypeStore samtResourceTypeStore) : base(iPrincipal) {
 			_shiftShiftStore = shiftShiftStore;
 			_portalStore = portalStore;
 			_shiftLogStore = shiftLogStore;

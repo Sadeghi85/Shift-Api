@@ -9,11 +9,11 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Services {
+namespace Leopard.Bussiness {
 	public class ServiceBase : IServiceBase {
 
 
-		protected readonly IPrincipal _iPrincipal;
+		private readonly IPrincipal _iPrincipal;
 		public ServiceBase(IPrincipal iPrincipal) {
 			_iPrincipal = iPrincipal;
 		}
@@ -29,7 +29,6 @@ namespace Leopard.Bussiness.Services {
 			}
 		}
 
-
 		public int? CurrentUserPortalId {
 			get {
 				//TODO: find difference between ClaimsIdentity & ClaimsPrincipal
@@ -41,9 +40,6 @@ namespace Leopard.Bussiness.Services {
 				return int.Parse(uId);
 			}
 		}
-
-
-
 		protected BaseResult BaseResult { get; set; } = new BaseResult();
 	}
 }

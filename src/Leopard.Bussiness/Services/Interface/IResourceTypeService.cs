@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Services.Interface {
+namespace Leopard.Bussiness{
 	public interface IResourceTypeService {
 		public Task<List<SamtResourceType>>? GetAll(ResourceTypeSearchModel model);
 		public int GetAllCount();

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Model {
+namespace Leopard.Bussiness {
 	public class PagerViewModel {
 
 		public int PageNo { get; set; } = 1;

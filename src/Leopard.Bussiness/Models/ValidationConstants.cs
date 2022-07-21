@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Model {
+namespace Leopard.Bussiness {
 	public static class ValidationConstants {
 		public const string ShiftTabletIdRequred = "شناسه لوح شیفت اجباری است";
 		public const string DescriptionRequired = "توضیحات اجباری است.";

@@ -1,11 +1,11 @@
 using Leopard.Bussiness.Model;
 using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
 using Leopard.Repository;
 using System.Linq.Expressions;
+using System.Security.Principal;
 
 namespace Leopard.Bussiness.Services {
-	public class ScriptSupervisorService : BaseService, IScriptSupervisorService {
+	public class ScriptSupervisorService : ServiceBase, IScriptSupervisorService {
 
 		private readonly IShiftTabletScriptSupervisorDescriptionStore _scriptSupervisorDescriptionStore;
 		private readonly IShiftLogStore _shiftLogStore;
@@ -13,7 +13,7 @@ namespace Leopard.Bussiness.Services {
 		private readonly IShiftTabletConductorChanxStore _shiftTabletConductorChanxStore;
 		private readonly IShiftRevisionProblemStore _shiftRevisionProblemStore;
 
-		public ScriptSupervisorService(IShiftTabletScriptSupervisorDescriptionStore scriptSupervisorDescriptionStore, IShiftLogStore shiftLogStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftTabletConductorChanxStore shiftTabletConductorChanxStore, IShiftRevisionProblemStore shiftRevisionProblemStore) {
+		public ScriptSupervisorService(IPrincipal iPrincipal, IShiftTabletScriptSupervisorDescriptionStore scriptSupervisorDescriptionStore, IShiftLogStore shiftLogStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftTabletConductorChanxStore shiftTabletConductorChanxStore, IShiftRevisionProblemStore shiftRevisionProblemStore) : base(iPrincipal) {
 			_scriptSupervisorDescriptionStore = scriptSupervisorDescriptionStore;
 			_shiftLogStore = shiftLogStore;
 			_shiftShiftTabletStore = shiftShiftTabletStore;
