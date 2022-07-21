@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Model {
-	public class ShiftNeededResourcesSearchModel : PagerViewModel {
+	public class ShiftShiftJobTemplateSearchModel : PagerViewModel {
 		public int ShiftId { get; set; }
-		public int ResourceTypeId { get; set; }	
+		public int JobId { get; set; }	
 
 		public bool? IsDeleted { get; set; }	
 

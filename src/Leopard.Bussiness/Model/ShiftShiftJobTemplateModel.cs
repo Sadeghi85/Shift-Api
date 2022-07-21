@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Model {
-	public  class ShiftNeededResourceModel {
+	public  class ShiftShiftJobTemplateModel {
 		public int Id { get; set; } // Id (Primary key)
 		[Required(ErrorMessage =ValidationConstants.ResourceTypeIdRquired)]
-		public int ResourceTypeId { get; set; } // ResourceTypeId
+		public int JobId { get; set; } // JobId
 		[Required(ErrorMessage =ValidationConstants.ShiftIdRequired)]
 		public int ShiftId { get; set; } // ShiftId
 		

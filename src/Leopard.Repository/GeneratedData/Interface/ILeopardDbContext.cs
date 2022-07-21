@@ -271,7 +271,7 @@ namespace Leopard.Repository
         DbSet<ShiftCrewRewardFine> ShiftCrewRewardFines { get; set; } // Shift_CrewRewardFine
         DbSet<ShiftCrewRewardFineReason> ShiftCrewRewardFineReasons { get; set; } // Shift_CrewRewardFineReason
         DbSet<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail
-        DbSet<ShiftLocation> ShiftLocations { get; set; } // Shift_Location
+        DbSet<ShiftLocation> ShiftLocations { get; set; } // Shift_Locations
         DbSet<ShiftLog> ShiftLogs { get; set; } // Shift_Log
         DbSet<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations
         DbSet<ShiftRevisionProblem> ShiftRevisionProblems { get; set; } // Shift_RevisionProblem
@@ -1034,8 +1034,9 @@ namespace Leopard.Repository
         List<SpSearchRegieConductorBySpecificVersionReturnModel> SpSearchRegieConductorBySpecificVersion(string broadcastDate, int? simaUserChId, int? vNum, bool? isClipArt, out int procResult);
         Task<List<SpSearchRegieConductorBySpecificVersionReturnModel>> SpSearchRegieConductorBySpecificVersionAsync(string broadcastDate, int? simaUserChId, int? vNum, bool? isClipArt);
 
-        int SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime);
-        // SpShiftCheckShiftTimeOverlapAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
+        List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime);
+        List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime, out int procResult);
+        Task<List<SpShiftCheckShiftTimeOverlapReturnModel>> SpShiftCheckShiftTimeOverlapAsync(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime);
 
         int SpShiftGetShiftByPortalId(int? portalId);
         // SpShiftGetShiftByPortalIdAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)

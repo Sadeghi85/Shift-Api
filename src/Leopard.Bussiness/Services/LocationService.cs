@@ -10,29 +10,25 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftLocationService : BaseService, IShiftLocationService {
+	public class LocationService : BaseService, IShiftLocationService {
 
 		readonly private IShiftLocationStore _shiftLocationStore;
 		readonly private IShiftLogStore _shiftLogStore;
-		readonly private IPortalStore _portalStore;
 		private List<Expression<Func<ShiftLocation, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftLocation, bool>>>();
 
-		public ShiftLocationService(IShiftLocationStore shiftLocationStore, IShiftLogStore shiftLogStore, IPortalStore portalStore) {
+		public LocationService(IShiftLocationStore shiftLocationStore, IShiftLogStore shiftLogStore, IPortalStore portalStore) {
 			_shiftLocationStore = shiftLocationStore;
 			_shiftLogStore = shiftLogStore;
-			_portalStore = portalStore;
+
+			if (portalid) {
+
+			}
 		}
 
 
-		public Task<List<ShiftLocationReturnModel>> GetAll(ShiftLocationSearchModel model) {
-
-
-
+		public Task<List<ShiftLocationReturnModel>> GetAll(LocationSearchModel model) {
 			if (!string.IsNullOrWhiteSpace(model.Title)) {
 				GetAllExpressions.Add(pp => pp.Title.Contains(model.Title));
-			}
-			if (model.PortalId != 0) {
-				GetAllExpressions.Add(pp => pp.PortalId == model.PortalId);
 			}
 			if (model.Id != 0) {
 				GetAllExpressions.Add(pp => pp.Id == model.Id);
@@ -45,11 +41,7 @@ namespace Leopard.Bussiness.Services {
 			//	GetAllExpressions.Add(pp => true);
 			//}
 
-			//GetAllExpressions.Add(pp => pp.IsDeleted != true);
-
-			//var resCnt = _shiftLocationStore.TotalCount(Expressions);
-
-			var res = _shiftLocationStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftLocationReturnModel { Id = pp.Id, PortalId = pp.PortalId, Title = pp.Title, PortalTitle = pp.Portal.Title }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
+			var res = _shiftLocationStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftLocationReturnModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
 			return res;
 
@@ -60,28 +52,30 @@ namespace Leopard.Bussiness.Services {
 			return res;
 		}
 
-		public List<ShiftLocation> GetShiftLocationByPortalId(int portalId) {
+		//public List<ShiftLocation> GetShiftLocationByPortalId(int portalId) {
 
-			List<ShiftLocation>? res = _shiftLocationStore.GetAll().Where(pp => pp.PortalId == portalId).ToList();
-			return res;
+		//	List<ShiftLocation>? res = _shiftLocationStore.GetAll().Where(pp => pp.PortalId == portalId).ToList();
+		//	return res;
 
-		}
+		//}
 
-		public async Task<BaseResult> RegisterShiftLocation(ShiftLocationModel model) {
+		public async Task<BaseResult> RegisterShiftLocation(LocationModel model) {
 
 			try {
 
-				var foundPortalTitle = _shiftLocationStore.GetAll().Any(pp => pp.PortalId == model.PortalId && pp.Title == model.Title);
-				var foundPortal = _portalStore.FindById(model.PortalId);
-				if (foundPortal == null) {
-					BaseResult.Success = false;
-					BaseResult.Message = "شناسه پورتال یافت نشد.";
-				} else if (foundPortalTitle) {
+				var found = _shiftLocationStore.GetAll().Any(pp => pp.Title == model.Title);
+				//var foundPortal = _portalStore.FindById(model.PortalId);
+				//if (foundPortal == null) {
+				//	BaseResult.Success = false;
+				//	BaseResult.Message = "شناسه پورتال یافت نشد.";
+				//} else 
+				
+				if (found) {
 					BaseResult.Success = false;
 					BaseResult.Message = "این آیتم قبلا ثبت شده است.";
 				} else {
 
-					ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId.Value };
+					ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title };
 					var res = await _shiftLocationStore.InsertAsync(shiftLocation);
 				}
 			} catch (Exception ex) {
@@ -92,13 +86,13 @@ namespace Leopard.Bussiness.Services {
 
 				var ss = await _shiftLogStore.InsertAsync(shiftLog);
 				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفا به مدیر سیستم اطلاع دهید.";
 			}
 			return BaseResult;
 
 		}
 
-		public async Task<BaseResult> Update(ShiftLocationModel model) {
+		public async Task<BaseResult> Update(LocationModel model) {
 
 			try {
 				var found = _shiftLocationStore.FindById(model.Id);
@@ -108,7 +102,6 @@ namespace Leopard.Bussiness.Services {
 
 				} else {
 					found.Title = model.Title;
-					found.PortalId = model.PortalId.Value;
 					var res = await _shiftLocationStore.Update(found);
 				}
 			} catch (Exception ex) {
@@ -119,12 +112,12 @@ namespace Leopard.Bussiness.Services {
 
 				var ss = await _shiftLogStore.InsertAsync(shiftLog);
 				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفا به مدیر سیستم اطلاع دهید.";
 			}
 			return BaseResult;
 		}
 
-		public async Task<BaseResult> Delete(ShiftLocationModel model) {
+		public async Task<BaseResult> Delete(LocationModel model) {
 			try {
 				var found = _shiftLocationStore.FindById(model.Id);
 				if (found == null) {
@@ -143,7 +136,7 @@ namespace Leopard.Bussiness.Services {
 
 				var ss = await _shiftLogStore.InsertAsync(shiftLog);
 				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفا به مدیر سیستم اطلاع دهید.";
 			}
 			return BaseResult;
 		}

@@ -11,9 +11,9 @@ namespace Leopard.Repository
     // Shift_ShiftJobTemplate
     public partial class ShiftShiftJobTemplate
     {
-        public int Id { get; set; } // Id (Primary key)
-        public int ResourceTypeId { get; set; } // ResourceTypeId
-        public int ShiftId { get; set; } // ShiftId
+        public int Id { get; set; } // ID (Primary key)
+        public int JobId { get; set; } // JobID
+        public int ShiftId { get; set; } // ShiftID
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
@@ -23,7 +23,7 @@ namespace Leopard.Repository
         // Foreign keys
 
         /// <summary>
-        /// Parent SamtResourceType pointed by [Shift_ShiftJobTemplate].([ResourceTypeId]) (FK_ShiftNeededResource_SAMT_ResourceTypes)
+        /// Parent SamtResourceType pointed by [Shift_ShiftJobTemplate].([JobId]) (FK_ShiftNeededResource_SAMT_ResourceTypes)
         /// </summary>
         public virtual SamtResourceType SamtResourceType { get; set; } // FK_ShiftNeededResource_SAMT_ResourceTypes
 
@@ -34,6 +34,7 @@ namespace Leopard.Repository
 
         public ShiftShiftJobTemplate()
         {
+            IsDeleted = false;
             InitializePartial();
         }
 

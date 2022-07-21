@@ -14,7 +14,7 @@ namespace Leopard.Bussiness.Model {
 		[Required(ErrorMessage =ValidationConstants.PortalIdRequired)]
 		public int PortalId { get; set; } // ProtalId
 		[Range(1,2 , ErrorMessage =ValidationConstants.ShiftTypeRequired) ]
-		public int ShiftType { get; set; } // ShiftType
+		public int ShiftTypeId { get; set; } // ShiftTypeId
 
 		[Required(ErrorMessage =ValidationConstants.StartTimeRequired)]
 		public TimeSpan StartTime { get; set; } // StartTime

@@ -291,7 +291,7 @@ namespace Leopard.Repository
         public DbSet<ShiftCrewRewardFine> ShiftCrewRewardFines { get; set; } // Shift_CrewRewardFine
         public DbSet<ShiftCrewRewardFineReason> ShiftCrewRewardFineReasons { get; set; } // Shift_CrewRewardFineReason
         public DbSet<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail
-        public DbSet<ShiftLocation> ShiftLocations { get; set; } // Shift_Location
+        public DbSet<ShiftLocation> ShiftLocations { get; set; } // Shift_Locations
         public DbSet<ShiftLog> ShiftLogs { get; set; } // Shift_Log
         public DbSet<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations
         public DbSet<ShiftRevisionProblem> ShiftRevisionProblems { get; set; } // Shift_RevisionProblem
@@ -898,6 +898,7 @@ namespace Leopard.Repository
             modelBuilder.Entity<SpSearchConductorReturnModel>().HasNoKey();
             modelBuilder.Entity<SpSearchRegieConductorReturnModel>().HasNoKey();
             modelBuilder.Entity<SpSearchRegieConductorBySpecificVersionReturnModel>().HasNoKey();
+            modelBuilder.Entity<SpShiftCheckShiftTimeOverlapReturnModel>().HasNoKey();
             modelBuilder.Entity<SpTotalProductionProgressReturnModel>().HasNoKey();
             modelBuilder.Entity<SpUserHitReportReturnModel>().HasNoKey();
             modelBuilder.Entity<SpUserHitReport2ReturnModel>().HasNoKey();
@@ -10376,7 +10377,13 @@ namespace Leopard.Repository
             return procResultData;
         }
 
-        public int SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftType, TimeSpan? startTime, TimeSpan? endTime)
+        public List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime)
+        {
+            int procResult;
+            return SpShiftCheckShiftTimeOverlap(id, portalId, shiftTypeId, startTime, endTime, out procResult);
+        }
+
+        public List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime, out int procResult)
         {
             var idParam = new SqlParameter { ParameterName = "@_id", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = id.GetValueOrDefault(), Precision = 10, Scale = 0 };
             if (!id.HasValue)
@@ -10386,9 +10393,9 @@ namespace Leopard.Repository
             if (!portalId.HasValue)
                 portalIdParam.Value = DBNull.Value;
 
-            var shiftTypeParam = new SqlParameter { ParameterName = "@_shiftType", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = shiftType.GetValueOrDefault(), Precision = 10, Scale = 0 };
-            if (!shiftType.HasValue)
-                shiftTypeParam.Value = DBNull.Value;
+            var shiftTypeIdParam = new SqlParameter { ParameterName = "@_shiftTypeId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = shiftTypeId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!shiftTypeId.HasValue)
+                shiftTypeIdParam.Value = DBNull.Value;
 
             var startTimeParam = new SqlParameter { ParameterName = "@_startTime", SqlDbType = SqlDbType.Time, Direction = ParameterDirection.Input, Value = startTime.GetValueOrDefault() };
             if (!startTime.HasValue)
@@ -10399,13 +10406,44 @@ namespace Leopard.Repository
                 endTimeParam.Value = DBNull.Value;
 
             var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+            const string sqlCommand = "EXEC @procResult = [dbo].[SP_Shift_CheckShiftTimeOverlap] @_id, @_portalId, @_shiftTypeId, @_startTime, @_endTime";
+            var procResultData = Set<SpShiftCheckShiftTimeOverlapReturnModel>()
+                .FromSqlRaw(sqlCommand, idParam, portalIdParam, shiftTypeIdParam, startTimeParam, endTimeParam, procResultParam)
+                .ToList();
 
-            Database.ExecuteSqlRaw("EXEC @procResult = [dbo].[SP_Shift_CheckShiftTimeOverlap] @_id, @_portalId, @_shiftType, @_startTime, @_endTime", idParam, portalIdParam, shiftTypeParam, startTimeParam, endTimeParam, procResultParam);
-
-            return (int)procResultParam.Value;
+            procResult = (int) procResultParam.Value;
+            return procResultData;
         }
 
-        // SpShiftCheckShiftTimeOverlapAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
+        public async Task<List<SpShiftCheckShiftTimeOverlapReturnModel>> SpShiftCheckShiftTimeOverlapAsync(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime)
+        {
+            var idParam = new SqlParameter { ParameterName = "@_id", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = id.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!id.HasValue)
+                idParam.Value = DBNull.Value;
+
+            var portalIdParam = new SqlParameter { ParameterName = "@_portalId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = portalId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!portalId.HasValue)
+                portalIdParam.Value = DBNull.Value;
+
+            var shiftTypeIdParam = new SqlParameter { ParameterName = "@_shiftTypeId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = shiftTypeId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!shiftTypeId.HasValue)
+                shiftTypeIdParam.Value = DBNull.Value;
+
+            var startTimeParam = new SqlParameter { ParameterName = "@_startTime", SqlDbType = SqlDbType.Time, Direction = ParameterDirection.Input, Value = startTime.GetValueOrDefault() };
+            if (!startTime.HasValue)
+                startTimeParam.Value = DBNull.Value;
+
+            var endTimeParam = new SqlParameter { ParameterName = "@_endTime", SqlDbType = SqlDbType.Time, Direction = ParameterDirection.Input, Value = endTime.GetValueOrDefault() };
+            if (!endTime.HasValue)
+                endTimeParam.Value = DBNull.Value;
+
+            const string sqlCommand = "EXEC [dbo].[SP_Shift_CheckShiftTimeOverlap] @_id, @_portalId, @_shiftTypeId, @_startTime, @_endTime";
+            var procResultData = await Set<SpShiftCheckShiftTimeOverlapReturnModel>()
+                .FromSqlRaw(sqlCommand, idParam, portalIdParam, shiftTypeIdParam, startTimeParam, endTimeParam)
+                .ToListAsync();
+
+            return procResultData;
+        }
 
         public int SpShiftGetShiftByPortalId(int? portalId)
         {

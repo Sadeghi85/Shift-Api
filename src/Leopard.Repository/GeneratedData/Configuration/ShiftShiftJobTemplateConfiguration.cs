@@ -14,9 +14,9 @@ namespace Leopard.Repository
             builder.ToTable("Shift_ShiftJobTemplate", "dbo");
             builder.HasKey(x => x.Id).HasName("PK_ShiftNeededResource").IsClustered();
 
-            builder.Property(x => x.Id).HasColumnName(@"Id").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
-            builder.Property(x => x.ResourceTypeId).HasColumnName(@"ResourceTypeId").HasColumnType("int").IsRequired();
-            builder.Property(x => x.ShiftId).HasColumnName(@"ShiftId").HasColumnType("int").IsRequired();
+            builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
+            builder.Property(x => x.JobId).HasColumnName(@"JobID").HasColumnType("int").IsRequired();
+            builder.Property(x => x.ShiftId).HasColumnName(@"ShiftID").HasColumnType("int").IsRequired();
             builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);
@@ -24,7 +24,7 @@ namespace Leopard.Repository
             builder.Property(x => x.IsDeleted).HasColumnName(@"IsDeleted").HasColumnType("bit").IsRequired();
 
             // Foreign keys
-            builder.HasOne(a => a.SamtResourceType).WithMany(b => b.ShiftShiftJobTemplates).HasForeignKey(c => c.ResourceTypeId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ShiftNeededResource_SAMT_ResourceTypes");
+            builder.HasOne(a => a.SamtResourceType).WithMany(b => b.ShiftShiftJobTemplates).HasForeignKey(c => c.JobId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ShiftNeededResource_SAMT_ResourceTypes");
             builder.HasOne(a => a.ShiftShift).WithMany(b => b.ShiftShiftJobTemplates).HasForeignKey(c => c.ShiftId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_ShiftNeededResource_Shift_Shift");
 
             InitializePartial(builder);

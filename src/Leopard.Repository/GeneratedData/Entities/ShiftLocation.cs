@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Leopard.Repository
 {
-    // Shift_Location
+    // Shift_Locations
     public partial class ShiftLocation
     {
         public int Id { get; set; } // ID (Primary key)

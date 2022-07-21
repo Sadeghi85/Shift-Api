@@ -25,7 +25,7 @@ namespace Leopard.Repository
         public virtual ICollection<ConductorChannelProgramAgent> ConductorChannelProgramAgents { get; set; } // ConductorChannelProgramAgents.FK_ConductorChannelProgramAgents_SAMT_ResourceTypes
 
         /// <summary>
-        /// Child ShiftShiftJobTemplates where [Shift_ShiftJobTemplate].[ResourceTypeId] point to this entity (FK_ShiftNeededResource_SAMT_ResourceTypes)
+        /// Child ShiftShiftJobTemplates where [Shift_ShiftJobTemplate].[JobID] point to this entity (FK_ShiftNeededResource_SAMT_ResourceTypes)
         /// </summary>
         public virtual ICollection<ShiftShiftJobTemplate> ShiftShiftJobTemplates { get; set; } // Shift_ShiftJobTemplate.FK_ShiftNeededResource_SAMT_ResourceTypes
 

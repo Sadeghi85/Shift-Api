@@ -32,7 +32,7 @@ namespace Leopard.Repository
         // Reverse navigation
 
         /// <summary>
-        /// Child ShiftShiftJobTemplates where [Shift_ShiftJobTemplate].[ShiftId] point to this entity (FK_ShiftNeededResource_Shift_Shift)
+        /// Child ShiftShiftJobTemplates where [Shift_ShiftJobTemplate].[ShiftID] point to this entity (FK_ShiftNeededResource_Shift_Shift)
         /// </summary>
         public virtual ICollection<ShiftShiftJobTemplate> ShiftShiftJobTemplates { get; set; } // Shift_ShiftJobTemplate.FK_ShiftNeededResource_Shift_Shift
 

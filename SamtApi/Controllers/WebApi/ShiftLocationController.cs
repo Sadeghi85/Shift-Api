@@ -25,7 +25,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// GET: api/<ShiftLocationController>
 		[HttpPost("GetAll")]
-		public async Task<IActionResult> GetAll(ShiftLocationSearchModel model) {
+		public async Task<IActionResult> GetAll(LocationSearchModel model) {
 
 			var portalId = GetUserPortalId() ?? 0;
 			if (portalId > 1) {
@@ -53,7 +53,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// POST api/<ShiftLocationController>
 		[HttpPost("Register")]
-		public async Task<OkObjectResult> Register(ShiftLocationModel model) {
+		public async Task<OkObjectResult> Register(LocationModel model) {
 			if (!ModelState.IsValid) {
 
 
@@ -77,7 +77,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// PUT api/<ShiftLocationController>/5
 		[HttpPost("Update")]
-		public async Task<OkObjectResult> Update(ShiftLocationModel model) {
+		public async Task<OkObjectResult> Update(LocationModel model) {
 			var res = await _shiftLocationService.Update(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
@@ -88,7 +88,7 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		[HttpPost("Delete")]
-		public async Task<OkObjectResult> Delete(ShiftLocationModel model) {
+		public async Task<OkObjectResult> Delete(LocationModel model) {
 			var res = await _shiftLocationService.Delete(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));

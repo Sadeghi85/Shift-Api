@@ -24,11 +24,11 @@ namespace Leopard.Bussiness.Services.Interface {
 		public int GetAllCount();
 
 
-		public Task<List<ShiftNeededResourcesResult>?> GetAllShiftNeededResources(ShiftNeededResourcesSearchModel model);
+		public Task<List<ShiftNeededResourcesResult>?> GetAllShiftNeededResources(ShiftShiftJobTemplateSearchModel model);
 		public int GetAllShiftNeededResourcesCount();
 
-		public Task<BaseResult> RegisterShiftResource(ShiftNeededResourceModel model);
-		public Task<BaseResult> DeleteShiftResource(ShiftNeededResourceModel model);
-		public Task<BaseResult> UpdateShiftResource(ShiftNeededResourceModel model);
+		public Task<BaseResult> RegisterShiftResource(ShiftShiftJobTemplateModel model);
+		public Task<BaseResult> DeleteShiftResource(ShiftShiftJobTemplateModel model);
+		public Task<BaseResult> UpdateShiftResource(ShiftShiftJobTemplateModel model);
 	}
 }

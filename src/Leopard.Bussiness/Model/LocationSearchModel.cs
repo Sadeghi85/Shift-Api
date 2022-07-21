@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Model {
-	public class ShiftLocationSearchModel : PagerViewModel {
+	public class LocationSearchModel : PagerViewModel {
 
 		public int Id { get; set; }
 
@@ -19,7 +19,6 @@ namespace Leopard.Bussiness.Model {
 				_title = value;
 			}
 		}
-		public int PortalId { get; set; }
 		public bool? IsDeleted { get; set; }
 
 

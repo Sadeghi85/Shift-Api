@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Leopard.Repository
 {
-    // Shift_Location
+    // Shift_Locations
     public partial class ShiftLocationConfiguration : IEntityTypeConfiguration<ShiftLocation>
     {
         public void Configure(EntityTypeBuilder<ShiftLocation> builder)
         {
-            builder.ToTable("Shift_Location", "dbo");
+            builder.ToTable("Shift_Locations", "dbo");
             builder.HasKey(x => x.Id).HasName("PK_Location").IsClustered();
 
             builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();

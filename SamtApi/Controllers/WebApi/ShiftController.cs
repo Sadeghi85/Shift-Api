@@ -97,14 +97,14 @@ namespace SamtApi.Controllers.WebApi {
 
 
 		[HttpPost("NeededResource/GetAll")]
-		public async Task<IActionResult> GetAllShiftNeededResources(ShiftNeededResourcesSearchModel model) {
+		public async Task<IActionResult> GetAllShiftNeededResources(ShiftShiftJobTemplateSearchModel model) {
 			List<ShiftNeededResourcesResult>? res = await _shiftService.GetAllShiftNeededResources(model);
 			return Ok(OperationResult<List<ShiftNeededResourcesResult>?>.SuccessResult(res, _shiftService.GetAllShiftNeededResourcesCount()));
 		}
 
 
 		[HttpPost("NeededResource/Register")]
-		public async Task<IActionResult> RegisterShiftResource(ShiftNeededResourceModel model) {
+		public async Task<IActionResult> RegisterShiftResource(ShiftShiftJobTemplateModel model) {
 
 			var res =await _shiftService.RegisterShiftResource(model);
 			if (res.Success) {
@@ -115,7 +115,7 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		[HttpPost("NeededResource/Delete")]
-		public async Task<IActionResult> DeleteShiftResource(ShiftNeededResourceModel model) {
+		public async Task<IActionResult> DeleteShiftResource(ShiftShiftJobTemplateModel model) {
 			var res =await _shiftService.DeleteShiftResource(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
@@ -124,7 +124,7 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		[HttpPost("NeededResource/Update")]
-		public async Task<IActionResult> UpdateShiftResource(ShiftNeededResourceModel model) {
+		public async Task<IActionResult> UpdateShiftResource(ShiftShiftJobTemplateModel model) {
 
 			var res = await _shiftService.UpdateShiftResource(model);
 			if (res.Success) {
