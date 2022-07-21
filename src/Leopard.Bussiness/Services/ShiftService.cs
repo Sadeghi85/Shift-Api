@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class ShiftService : BaseService, IShiftService {
+	public class ShiftService : ServiceBase, IShiftService {
 
 		private readonly IShiftShiftStore _shiftShiftStore;
 		private readonly IPortalStore _portalStore;

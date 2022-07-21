@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services.Interface {
+
 	public interface IShiftService {
 
 		public List<ShiftShift> FindByPortalId(int Id);

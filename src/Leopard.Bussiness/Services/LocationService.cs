@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness.Services {
-	public class LocationService : BaseService, IShiftLocationService {
+	public class LocationService : ServiceBase, IShiftLocationService {
 
 		readonly private IShiftLocationStore _shiftLocationStore;
 		readonly private IShiftLogStore _shiftLogStore;
@@ -20,7 +20,7 @@ namespace Leopard.Bussiness.Services {
 			_shiftLocationStore = shiftLocationStore;
 			_shiftLogStore = shiftLogStore;
 
-			if (portalid) {
+			if (_iPrincipal) {
 
 			}
 		}

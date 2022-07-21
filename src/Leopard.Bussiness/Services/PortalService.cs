@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 namespace Leopard.Bussiness.Services {
-	public class PortalService : IPortalService {
+	public class PortalService : ServiceBase, IPortalService {
 
 		private readonly IPortalStore _portalStore;
 

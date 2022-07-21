@@ -17,6 +17,12 @@ namespace SamtApi.Controllers.WebApi {
 		private readonly IShiftService _shiftService;
 		public ShiftController(IShiftService shiftService) {
 			_shiftService = shiftService;
+
+			if (GetUserId() == 0) {
+
+			}
+
+
 		}
 
 
@@ -106,7 +112,7 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("NeededResource/Register")]
 		public async Task<IActionResult> RegisterShiftResource(ShiftShiftJobTemplateModel model) {
 
-			var res =await _shiftService.RegisterShiftResource(model);
+			var res = await _shiftService.RegisterShiftResource(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -116,7 +122,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		[HttpPost("NeededResource/Delete")]
 		public async Task<IActionResult> DeleteShiftResource(ShiftShiftJobTemplateModel model) {
-			var res =await _shiftService.DeleteShiftResource(model);
+			var res = await _shiftService.DeleteShiftResource(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
