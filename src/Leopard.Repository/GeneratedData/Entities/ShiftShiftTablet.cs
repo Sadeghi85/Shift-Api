@@ -27,6 +27,7 @@ namespace Leopard.Repository
         public bool IsDeleted { get; set; } // IsDeleted
         public bool HasLivePrograms { get; set; } // HasLivePrograms
         public int PortalId { get; set; } // PortalID
+        public int LocationId { get; set; } // LocationID
 
         // Reverse navigation
 
@@ -56,6 +57,11 @@ namespace Leopard.Repository
         /// Parent Portal pointed by [Shift_ShiftTablet].([PortalId]) (FK_Shift_ShiftTablet_Portals)
         /// </summary>
         public virtual Portal Portal { get; set; } // FK_Shift_ShiftTablet_Portals
+
+        /// <summary>
+        /// Parent ShiftLocation pointed by [Shift_ShiftTablet].([LocationId]) (FK_Shift_ShiftTablet_Shift_Locations)
+        /// </summary>
+        public virtual ShiftLocation ShiftLocation { get; set; } // FK_Shift_ShiftTablet_Shift_Locations
 
         /// <summary>
         /// Parent ShiftShift pointed by [Shift_ShiftTablet].([ShiftId]) (FK_ShiftExecution_PortalShift)

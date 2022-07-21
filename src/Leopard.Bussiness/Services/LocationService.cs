@@ -1,5 +1,3 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
@@ -24,7 +22,7 @@ namespace Leopard.Bussiness {
 
 		private BaseResult CheckAccess() {
 			if (CurrentUserPortalId != 1) {
-				return new BaseResult() { Message= "شما به این قسمت دسترسی ندارید.", Success = false };
+				return new BaseResult() { Message = "شما به این قسمت دسترسی ندارید.", Success = false };
 			}
 
 			return new BaseResult();
@@ -82,7 +80,7 @@ namespace Leopard.Bussiness {
 				//	BaseResult.Success = false;
 				//	BaseResult.Message = "شناسه پورتال یافت نشد.";
 				//} else 
-				
+
 				if (found) {
 					BaseResult.Success = false;
 					BaseResult.Message = "این آیتم قبلا ثبت شده است.";

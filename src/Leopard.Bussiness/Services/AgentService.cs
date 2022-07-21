@@ -51,12 +51,12 @@ namespace Leopard.Bussiness {
 			if (model.IsDeleted != null) {
 				GetAgentByResourceTypeIDExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
 			}
-			if (model.ResourceTypeId!=0) {
-				GetAgentByResourceTypeIDExpressions.Add(pp=> pp.ResourceTypeId == model.ResourceTypeId);
+			if (model.ResourceTypeId != 0) {
+				GetAgentByResourceTypeIDExpressions.Add(pp => pp.ResourceTypeId == model.ResourceTypeId);
 			}
 
 
-			Task<List<GetAgentByResourceTypeIDResult>>? res =  _telavatAgentResourceTypeStore.GetAllWithPagingAsync(GetAgentByResourceTypeIDExpressions ,pp=> new GetAgentByResourceTypeIDResult {AgentID= pp.AgentId  } , pp=> pp.Id , model.PageSize , model.PageNo , "desc");
+			Task<List<GetAgentByResourceTypeIDResult>>? res = _telavatAgentResourceTypeStore.GetAllWithPagingAsync(GetAgentByResourceTypeIDExpressions, pp => new GetAgentByResourceTypeIDResult { AgentID = pp.AgentId }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 			return res;
 
 

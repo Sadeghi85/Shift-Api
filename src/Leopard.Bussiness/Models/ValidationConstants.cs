@@ -23,7 +23,7 @@ namespace Leopard.Bussiness {
 		public const string ProblemDescriptionRquired = "مورد اشکال اجباری است.";
 		public const string RevisorCodeRequired = "کد بازبین اجباری است.";
 		public const string AgenetIdRequired = "شناسه کارمند اجباری است";
-		public const string ResourceTypeIdRquired = "سمت اجباری است";
+		public const string JobIdRquired = "عنوان شغلی اجباری است";
 		public const string LocationIdRequired = "شناسه لوکیشن اجباری است.";
 		public const string ShiftIdRequired = "شناسه شیفت اجباری است.";
 		public const string ShiftDateRequired = "تاریخ لوح شیفت اجباری است.";

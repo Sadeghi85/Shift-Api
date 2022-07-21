@@ -1,5 +1,3 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
@@ -11,7 +9,7 @@ using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core;
 using System.Security.Principal;
 
-namespace Leopard.Bussiness.Services {
+namespace Leopard.Bussiness {
 	public class ShiftTabletCrewService : ServiceBase, IShiftTabletCrewService {
 
 		readonly private IShiftShiftTabletCrewStore _shiftShiftTabletCrewStore;
@@ -34,37 +32,8 @@ namespace Leopard.Bussiness.Services {
 			_shiftShiftStore = shiftShiftStore;
 		}
 
-		public async Task<BaseResult> Delete(ShiftTabletCrewModel model) {
-
-
-			try {
-				var found = _shiftShiftTabletCrewStore.FindById(model.Id);
-				if (found == null) {
-					BaseResult.Success = false;
-					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
-				} else {
-					found.IsDeleted = true;
-					var res = await _shiftShiftTabletCrewStore.Update(found);
-				}
-			} catch (Exception ex) {
-
-				BaseResult.Success = false;
-
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
-
-				//_shiftLogStore.ResetContext();
-
-				var ss = await _shiftLogStore.InsertAsync(shiftLog);
-
-				BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
-			}
-
-			return BaseResult;
-
-		}
-
-		public List<ShfitTabletReportResult> ShfitTabletReport(DateTime fromDate, DateTime toDate, int PortalId, int take = 10, int skip = 10) {
-			var res = _shiftShiftTabletCrewStore.GetAll().Where(pp => (pp.ShiftShiftTablet.ShiftDate >= fromDate && pp.ShiftShiftTablet.ShiftDate <= toDate)).Skip(skip).Take(take).Select(pp => new ShfitTabletReportResult { id = pp.Id, shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, firstName = pp.SamtAgent.FirstName, lastName = pp.SamtAgent.LastName, jobName = pp.SamtResourceType.Title, shiftDate = pp.ShiftShiftTablet.ShiftDate, }).ToList();
+		public List<ShiftTabletCrewViewModel> ShfitTabletReport(DateTime fromDate, DateTime toDate, int PortalId, int take = 10, int skip = 10) {
+			var res = _shiftShiftTabletCrewStore.GetAll().Where(pp => (pp.ShiftShiftTablet.ShiftDate >= fromDate && pp.ShiftShiftTablet.ShiftDate <= toDate)).Skip(skip).Take(take).Select(pp => new ShiftTabletCrewViewModel { Id = pp.Id, ShiftTitle = pp.ShiftShiftTablet.ShiftShift.Title, FirstName = pp.SamtAgent.FirstName, LastName = pp.SamtAgent.LastName, JobTitle = pp.SamtResourceType.Title, ShiftDate = pp.ShiftShiftTablet.ShiftDate, }).ToList();
 			//var list = new List<int>() { 1, 2, 3, 4, 5 };
 
 			//list.OrderBy()
@@ -75,9 +44,7 @@ namespace Leopard.Bussiness.Services {
 			return res;
 		}
 
-		
-
-		public Task<List<ShfitTabletReportResult>>? GetAll(ShiftTabletCrewSearchModel model) {
+		public Task<List<ShiftTabletCrewViewModel>>? GetAll(ShiftTabletCrewSearchModel model) {
 			GetAllExpressions.Add(pp => pp.ShiftShiftTablet.IsDeleted == false);
 
 			if (model.Id != 0) {
@@ -108,8 +75,8 @@ namespace Leopard.Bussiness.Services {
 				GetAllExpressions.Add(pp => pp.ShiftShiftTablet.ShiftDate >= model.FromDate);
 			}
 
-			if (model.ResourceTypeId != 0) {
-				GetAllExpressions.Add(pp => pp.ResourceId == model.ResourceTypeId);
+			if (model.JobId != 0) {
+				GetAllExpressions.Add(pp => pp.JobId == model.JobId);
 			}
 
 			if (model.ToDate != null) {
@@ -121,17 +88,17 @@ namespace Leopard.Bussiness.Services {
 
 			//Task<List<ShiftTabletCrewSearchResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletCrewSearchResult {ShifTabletId=pp.ShifTabletId , EntranceTime= pp.EntranceTime , ExitTime= pp.ExitTime , FisrtName= pp.SamtAgent.FirstName, LastName=pp.SamtAgent.LastName, AgentId=pp.AgentId, ShiftTitle= pp.ShiftShiftTablet.ShiftShift.Title , ResourceTitle= pp.SamtResourceType.Title} , pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
-			Task<List<ShfitTabletReportResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions,
-				pp => new ShfitTabletReportResult {
-					id = pp.Id,
-					shiftTitle = pp.ShiftShiftTablet.ShiftShift.Title,
-					firstName = pp.SamtAgent.FirstName,
-					lastName = pp.SamtAgent.LastName,
-					jobName = pp.SamtResourceType.Title,
-					shiftDate = pp.ShiftShiftTablet.ShiftDate,
-					PortalName = pp.ShiftShiftTablet.ShiftShift.Portal.Title,
+			Task<List<ShiftTabletCrewViewModel>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions,
+				pp => new ShiftTabletCrewViewModel {
+					Id = pp.Id,
+					ShiftTitle = pp.ShiftShiftTablet.ShiftShift.Title,
+					FirstName = pp.SamtAgent.FirstName,
+					LastName = pp.SamtAgent.LastName,
+					JobTitle = pp.SamtResourceType.Title,
+					ShiftDate = pp.ShiftShiftTablet.ShiftDate,
+					PortalTitle = pp.ShiftShiftTablet.ShiftShift.Portal.Title,
 					AgentId = pp.AgentId,
-					ResourceTypeId = pp.ResourceId,
+					JobId = pp.JobId,
 					ShiftTabletId = pp.ShiftTabletId,
 					EntranceTime = pp.EntranceTime,
 					ExitTime = pp.ExitTime,
@@ -170,22 +137,15 @@ namespace Leopard.Bussiness.Services {
 			return overlap;
 		}
 
-		public async Task<BaseResult> Register(ShiftTabletCrewModel model) {
+		public async Task<BaseResult> Register(ShiftTabletCrewInputModel model) {
 
 			List<string> overLapMessage = new List<string>();
 
 			try {
-
-
-
-
-
 				var foundAgent = _agentStore.FindById(model.AgentId);
-				var foundResourceType = _samtResourceTypeStore.FindById(model.ResourceTypeId);
+				var foundResourceType = _samtResourceTypeStore.FindById(model.JobId);
 				var foundShiftTablet = _shiftShiftTabletStore.GetAll().Where(pp => pp.Id == model.ShiftTabletId).FirstOrDefault();
 				var foundAgentInShiftTablet = _shiftShiftTabletCrewStore.GetAll().Any(pp => pp.AgentId == model.AgentId && pp.ShiftTabletId == model.ShiftTabletId && pp.IsDeleted != true);
-
-
 
 				if (foundShiftTablet != null && foundAgent != null && foundAgentInShiftTablet == false) {
 
@@ -194,8 +154,6 @@ namespace Leopard.Bussiness.Services {
 					ShiftDateStartEnd shiftDateStartEnd = new ShiftDateStartEnd();
 
 					var foundShift = _shiftShiftStore.GetAll().Where(pp => pp.Id == foundShiftTablet.ShiftId).FirstOrDefault();
-
-
 
 					shiftDateStartEnd.StartDateTime = foundShiftTablet.ShiftDate.Add(foundShift.StartTime);
 					shiftDateStartEnd.EndDateTime = foundShiftTablet.ShiftDate.Add(foundShift.EndTime);
@@ -229,8 +187,6 @@ namespace Leopard.Bussiness.Services {
 					}
 				}
 
-
-
 				if (foundAgent == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "کارمندی با این مشخصات یافت نشد";
@@ -263,7 +219,7 @@ namespace Leopard.Bussiness.Services {
 						//ExitTime = model.ExitTime,
 
 						IsReplaced = false,
-						ResourceId = model.ResourceTypeId,
+						JobId = model.JobId,
 						ShiftTabletId = model.ShiftTabletId
 					};
 
@@ -275,7 +231,7 @@ namespace Leopard.Bussiness.Services {
 				var shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
 				//_shiftLogStore.ResetContext();
 				var ss = await _shiftLogStore.InsertAsync(shiftLog);
-				BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفا به مدیر سیستم اطلاع دهید.";
 			}
 
 
@@ -289,18 +245,16 @@ namespace Leopard.Bussiness.Services {
 				found.IsReplaced = true;
 				_shiftShiftTabletCrewStore.Update(found).Wait();
 			}
-			var res = await _shiftShiftTabletCrewReplacementStore.InsertAsync(new ShiftShiftTabletCrewReplacement { 
-				ShiftTabletCrewId = replaced, 
-				ShiftTabletCrewIdReplaceMent = replacedBy });
+			var res = await _shiftShiftTabletCrewReplacementStore.InsertAsync(new ShiftShiftTabletCrewReplacement {
+				ShiftTabletCrewId = replaced,
+				ShiftTabletCrewIdReplaceMent = replacedBy
+			});
 			return res;
 
 		}
 
 
-
-
-
-		public async Task<BaseResult> Update(ShiftTabletCrewModel model) {
+		public async Task<BaseResult> Update(ShiftTabletCrewInputModel model) {
 
 			try {
 				var found = _shiftShiftTabletCrewStore.FindById(model.Id);
@@ -311,7 +265,7 @@ namespace Leopard.Bussiness.Services {
 					found.ShiftTabletId = model.ShiftTabletId;
 					found.EntranceTime = model.EntranceTime;
 					found.ExitTime = model.ExitTime;
-					found.ResourceId = model.ResourceTypeId;
+					found.JobId = model.JobId;
 					found.AgentId = model.AgentId;
 
 					var res = await _shiftShiftTabletCrewStore.Update(found);
@@ -326,7 +280,7 @@ namespace Leopard.Bussiness.Services {
 
 				var ss = await _shiftLogStore.InsertAsync(shiftLog);
 
-				BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفا به مدیر سیستم اطلاع دهید.";
 			}
 
 			return BaseResult;
@@ -334,9 +288,32 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
+		public async Task<BaseResult> Delete(ShiftTabletCrewInputModel model) {
+			try {
+				var found = _shiftShiftTabletCrewStore.FindById(model.Id);
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+				} else {
+					found.IsDeleted = true;
+					var res = await _shiftShiftTabletCrewStore.Update(found);
+				}
+			} catch (Exception ex) {
+
+				BaseResult.Success = false;
+
+				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
+
+				//_shiftLogStore.ResetContext();
+
+				var ss = await _shiftLogStore.InsertAsync(shiftLog);
+
+				BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفا به مدیر سیستم اطلاع دهید.";
+			}
+
+			return BaseResult;
+
+		}
 
 	}
-
-
-
 }

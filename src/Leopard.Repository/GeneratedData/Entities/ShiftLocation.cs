@@ -26,10 +26,16 @@ namespace Leopard.Repository
         /// </summary>
         public virtual ICollection<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations.FK_ShiftExecutionLocation_Location
 
+        /// <summary>
+        /// Child ShiftShiftTablets where [Shift_ShiftTablet].[LocationID] point to this entity (FK_Shift_ShiftTablet_Shift_Locations)
+        /// </summary>
+        public virtual ICollection<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet.FK_Shift_ShiftTablet_Shift_Locations
+
         public ShiftLocation()
         {
             IsDeleted = false;
             ShiftPortalLocations = new List<ShiftPortalLocation>();
+            ShiftShiftTablets = new List<ShiftShiftTablet>();
             InitializePartial();
         }
 

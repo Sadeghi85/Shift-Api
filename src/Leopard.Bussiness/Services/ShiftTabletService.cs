@@ -122,7 +122,7 @@ namespace Leopard.Bussiness.Services {
 						HasLivePrograms= model.HasLivePrograms.Value
 					};
 					foundShift = _shiftShiftStore.FindById(model.ShiftId);
-					shiftTablet.ShiftTime = foundShift.EndTime - foundShift.StartTime;
+					shiftTablet.ShiftDuration = foundShift.EndTime - foundShift.StartTime;
 
 					int res = await _shiftShiftTabletStore.InsertAsync(shiftTablet);
 				}

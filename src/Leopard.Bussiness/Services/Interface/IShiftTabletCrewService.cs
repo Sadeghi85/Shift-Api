@@ -9,22 +9,14 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
 	public interface IShiftTabletCrewService {
-
-		public  Task<BaseResult> Update(ShiftTabletCrewModel model);
-
-		public Task<BaseResult> Delete(ShiftTabletCrewModel model);
-
+		public  Task<BaseResult> Update(ShiftTabletCrewInputModel model);
+		public Task<BaseResult> Delete(ShiftTabletCrewInputModel model);
 		public Task<int> Replace(int replaced, int replacedBy);
-
-		//public IQueryable<ShiftShiftTabletCrew> GetAll();
-
 		public List<ShiftShiftTabletCrew> GetByShiftId(int shifTabletId);
-
-		public List<ShfitTabletReportResult> ShfitTabletReport(DateTime fromDate, DateTime toDate, int PortalId, int take = 10, int skip = 10);
-
-		public Task<List<ShfitTabletReportResult>>? GetAll(ShiftTabletCrewSearchModel model);
+		public List<ShiftTabletCrewViewModel> ShfitTabletReport(DateTime fromDate, DateTime toDate, int PortalId, int take = 10, int skip = 10);
+		public Task<List<ShiftTabletCrewViewModel>>? GetAll(ShiftTabletCrewSearchModel model);
 		public int GetAllCount();
-		public  Task<BaseResult> Register(ShiftTabletCrewModel model);
+		public  Task<BaseResult> Register(ShiftTabletCrewInputModel model);
 
 
 	}

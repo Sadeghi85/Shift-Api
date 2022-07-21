@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Leopard.Bussiness.Model {
 	public  class ShiftShiftJobTemplateModel {
 		public int Id { get; set; } // Id (Primary key)
-		[Required(ErrorMessage =ValidationConstants.ResourceTypeIdRquired)]
+		[Required(ErrorMessage =ValidationConstants.JobIdRquired)]
 		public int JobId { get; set; } // JobId
 		[Required(ErrorMessage =ValidationConstants.ShiftIdRequired)]
 		public int ShiftId { get; set; } // ShiftId
