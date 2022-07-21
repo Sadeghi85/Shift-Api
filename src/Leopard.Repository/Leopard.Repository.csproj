@@ -9,9 +9,7 @@
 
   <ItemGroup>
     <None Remove="Data\Entities\.gitkeep" />
-    <None Remove="Data\InputModels\.gitkeep" />
     <None Remove="Data\Interface\.gitkeep" />
-    <None Remove="Data\ViewModels\.gitkeep" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\InputModels\" />
     <Folder Include="GeneratedData\" />
   </ItemGroup>
 

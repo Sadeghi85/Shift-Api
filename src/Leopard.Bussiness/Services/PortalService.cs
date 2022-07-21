@@ -17,7 +17,7 @@ namespace Leopard.Bussiness.Services {
 		public PortalService(IPrincipal iPrincipal, IPortalStore portalStore) : base(iPrincipal) {
 			_portalStore = portalStore;
 		}
-		public Task<List<PortalResult>>? GetAll(PortalSearchModel model) {
+		public Task<List<PortalViewModel>>? GetAll(PortalSearchModel model) {
 
 			GetAllExpressions.Add(pp => !pp.NoDashboard);
 
@@ -30,7 +30,7 @@ namespace Leopard.Bussiness.Services {
 			}
 
 
-			Task<List<PortalResult>>? res = _portalStore.GetAllWithPagingAsync(GetAllExpressions, t => new PortalResult { Id = t.Id, Title = t.Title }, t => t.Id, model.PageSize, model.PageNo, "asc");
+			Task<List<PortalViewModel>>? res = _portalStore.GetAllWithPagingAsync(GetAllExpressions, t => new PortalViewModel { Id = t.Id, Title = t.Title }, t => t.Id, model.PageSize, model.PageNo, "asc");
 			return res;
 		}
 

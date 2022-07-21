@@ -33,7 +33,7 @@ namespace Leopard.Bussiness {
 				GetAllExpressions.Add(pp => model.Id == pp.Id);
 			}
 
-			Task<List<AgentViewModel>>? res = _samtAgentStore.GetAllWithPagingAsync(GetAllExpressions, pp => new AgentViewModel { Id = pp.Id, FullName = $"{pp.FirstName} {pp.LastName}" }, pp => pp.LastName, model.PageSize, model.PageNo, "desc");
+			Task<List<AgentViewModel>>? res = _samtAgentStore.GetAllWithPagingAsync(GetAllExpressions, pp => new AgentViewModel { Id = pp.Id, Fullname = $"{pp.FirstName} {pp.LastName}" }, pp => pp.LastName, model.PageSize, model.PageNo, "desc");
 			return res;
 		}
 

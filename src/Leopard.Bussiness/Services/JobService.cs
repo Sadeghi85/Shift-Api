@@ -9,24 +9,24 @@ using System.Linq.Expressions;
 using System.Security.Principal;
 
 namespace Leopard.Bussiness.Services {
-	public class ResourceTypeService : ServiceBase, IResourceTypeService {
+	public class JobService : ServiceBase, IJobService {
 
 		private readonly ISamtResourceTypeStore _samtResourceTypeStore;
 
-		public ResourceTypeService(IPrincipal iPrincipal, ISamtResourceTypeStore samtResourceTypeStore) : base(iPrincipal) {
+		public JobService(IPrincipal iPrincipal, ISamtResourceTypeStore samtResourceTypeStore) : base(iPrincipal) {
 			_samtResourceTypeStore = samtResourceTypeStore;
 		}
 
 		private List<Expression<Func<SamtResourceType, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<SamtResourceType, bool>>>();
 
 
-		public Task<List<SamtResourceType>>? GetAll(ResourceTypeSearchModel model) {
+		public Task<List<JobViewModel>>? GetAll(JobSearchModel model) {
 
-			if (string.IsNullOrWhiteSpace(model.ResourceName) && model.Id==0) {
+			if (string.IsNullOrWhiteSpace(model.Title) && model.Id==0) {
 				GetAllExpressions.Add(pp => true);
 			} else {
-				if (!string.IsNullOrWhiteSpace(model.ResourceName)) {
-					GetAllExpressions.Add(pp => pp.Title.Contains(model.ResourceName));
+				if (!string.IsNullOrWhiteSpace(model.Title)) {
+					GetAllExpressions.Add(pp => pp.Title.Contains(model.Title));
 				}
 				if (model.Id != 0) {
 					GetAllExpressions.Add(pp=> pp.Id==model.Id);
@@ -35,7 +35,7 @@ namespace Leopard.Bussiness.Services {
 			}
 			GetAllExpressions.Add(pp => pp.ParentId == 20 && pp.IsDeleted != true);
 
-			Task<List<SamtResourceType>>? res = _samtResourceTypeStore.GetAllWithPagingAsync(GetAllExpressions, pp => pp, pp => pp.Id, model.PageSize, model.PageNo, "desc");
+			Task<List<JobViewModel>>? res = _samtResourceTypeStore.GetAllWithPagingAsync(GetAllExpressions, pp => new JobViewModel { Id = pp.Id, Title = pp.Title}, pp => pp.Id, model.PageSize, model.PageNo, "desc");
 			return res;
 
 		}

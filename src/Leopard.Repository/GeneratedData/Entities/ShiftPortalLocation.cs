@@ -18,6 +18,7 @@ namespace Leopard.Repository
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
         public DateTime? LastModifiedDateTime { get; set; } // LastModifiedDateTime
         public int PortalId { get; set; } // PortalID
+        public bool IsDeleted { get; set; } // IsDeleted
 
         // Foreign keys
 
@@ -33,6 +34,7 @@ namespace Leopard.Repository
 
         public ShiftPortalLocation()
         {
+            IsDeleted = false;
             InitializePartial();
         }
 

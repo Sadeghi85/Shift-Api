@@ -4,10 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Model {
+namespace Leopard.Bussiness {
 	public class PortalSearchModel : PagerViewModel {
-
-
 		private string _title;
 
 		public string Title {
@@ -21,6 +19,11 @@ namespace Leopard.Bussiness.Model {
 		}
 
 		public int PortalId { get; set; }
-
 	}
+
+	public class PortalViewModel {
+		public int Id { get; set; }
+		public string Title { get; set; }
+	}
+
 }

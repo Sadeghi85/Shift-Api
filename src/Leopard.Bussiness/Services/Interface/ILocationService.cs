@@ -11,7 +11,7 @@ namespace Leopard.Bussiness {
 	public interface ILocationService {
 		public Task<List<LocationViewModel>> GetAll(LocationSearchModel model);
 
-		public Task<BaseResult> RegisterShiftLocation(LocationInputModel model);
+		public Task<BaseResult> Register(LocationInputModel model);
 
 		public Task<BaseResult> Update(LocationInputModel model);
 		public  Task<BaseResult> Delete(LocationInputModel model);

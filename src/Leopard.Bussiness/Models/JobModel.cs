@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
-	public class AgentSearchModel : PagerViewModel {
+	public class JobSearchModel : PagerViewModel {
 		public int Id { get; set; }
-		public string Fullname { get; set; } // FirstName (length: 1000)
+		public string Title { get; set; }
+		public bool? IsDeleted { get; set; }
 	}
 
-	public class AgentViewModel {
+	public class JobViewModel {
 		public int Id { get; set; }
-		public string Fullname { get; set; }
+		public string Title { get; set; }
 	}
 }

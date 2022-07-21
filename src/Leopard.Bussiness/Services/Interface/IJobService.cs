@@ -1,4 +1,3 @@
-using Leopard.Bussiness.Model;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
@@ -7,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness{
-	public interface IResourceTypeService {
-		public Task<List<SamtResourceType>>? GetAll(ResourceTypeSearchModel model);
+	public interface IJobService {
+		public Task<List<JobViewModel>>? GetAll(JobSearchModel model);
 		public int GetAllCount();
 	}
 }

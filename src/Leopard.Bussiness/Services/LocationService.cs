@@ -16,7 +16,7 @@ namespace Leopard.Bussiness {
 		readonly private IShiftLogStore _shiftLogStore;
 		private List<Expression<Func<ShiftLocation, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftLocation, bool>>>();
 
-		public LocationService(IPrincipal iPrincipal, IShiftLocationStore shiftLocationStore, IShiftLogStore shiftLogStore, IPortalStore portalStore) : base(iPrincipal) {
+		public LocationService(IPrincipal iPrincipal, IShiftLocationStore shiftLocationStore, IShiftLogStore shiftLogStore) : base(iPrincipal) {
 			_shiftLocationStore = shiftLocationStore;
 			_shiftLogStore = shiftLogStore;
 
@@ -69,7 +69,7 @@ namespace Leopard.Bussiness {
 
 		//}
 
-		public async Task<BaseResult> RegisterShiftLocation(LocationInputModel model) {
+		public async Task<BaseResult> Register(LocationInputModel model) {
 			try {
 				var checkAccess = CheckAccess();
 				if (!checkAccess.Success) {
