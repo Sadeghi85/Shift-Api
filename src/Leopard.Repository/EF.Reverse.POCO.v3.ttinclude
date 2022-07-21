@@ -5326,10 +5326,30 @@
             }
         }
 
+        private void RecursiveDelete(DirectoryInfo baseDir)
+        {
+            if (!baseDir.Exists)
+                return;
+
+            foreach (var dir in baseDir.EnumerateDirectories())
+            {
+                RecursiveDelete(dir);
+            }
+            var files = baseDir.GetFiles();
+            foreach (var file in files)
+            {
+                file.IsReadOnly = false;
+                file.Delete();
+            }
+            baseDir.Delete();
+        }
+
         private void CreateOutputFolders()
         {
             if (Settings.FileManagerType != FileManagerType.EfCore || Settings.GenerateSeparateFiles != true)
                 return;
+
+            RecursiveDelete(new DirectoryInfo(Path.Combine(Settings.Root, Settings.ContextFolder)));
 
             CreateOutputFolder(Settings.ContextFolder);
             CreateOutputFolder(Settings.InterfaceFolder);
