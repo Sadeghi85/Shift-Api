@@ -121,12 +121,11 @@ builder.Host.UseLamar((context, registry) => {
 
 var app = builder.Build();
 
-//if (builder.Environment.IsProduction()) {
-app.MapControllers();
-//} else {
-//	app.MapControllers()
-//		.AllowAnonymous();
-//}
+if (app.Environment.IsDevelopment())
+	app.MapControllers().AllowAnonymous();
+else
+	app.MapControllers();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment()) {
