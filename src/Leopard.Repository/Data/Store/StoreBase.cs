@@ -9,6 +9,9 @@ using EFCore.BulkExtensions;
 using Serilog;
 using System.Security.Principal;
 using System.Security.Claims;
+using System.Linq.Dynamic.Core;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace Leopard.Repository {
 	public class StoreBase<T> : IStoreBase<T> where T : class, new() {
@@ -27,15 +30,16 @@ namespace Leopard.Repository {
 			_iPrincipal = principal;
 		}
 
-		public Task<int> SaveChangesAsync() {
-			var res = Task.FromResult(-1);
-			try {
-				res = _ctx.Instance.SaveChangesAsync();
-			} catch (Exception ex) {
-				_logger.Error(ex, "db error, method: 'SaveChangesAsync'");
-			}
-			return res;
-		}
+		//public Task<int> SaveChangesAsync() {
+		//	var res = Task.FromResult(-1);
+		//	try {
+		//		res = _ctx.Instance.SaveChangesAsync();
+		//	} catch (Exception ex) {
+		//		_logger.Error(ex, "db error, method: 'SaveChangesAsync'");
+		//	}
+		//	return res;
+		//}
+
 		//public virtual Task<int> SoftDeleteAsync(Expression<Func<T, bool>> predicate) {
 		//	var res = Task.FromResult(-1);
 		//	try {
@@ -89,12 +93,6 @@ namespace Leopard.Repository {
 				_logger.Error(ex, "db error, method: 'InsertAsync'");
 			}
 			return res;
-		}
-
-		public string? GetUserId() {
-			var ident = _iPrincipal as ClaimsPrincipal;
-			var uId = ident?.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
-			return uId;
 		}
 
 		public virtual Task<int> InsertAsync(List<T> entities) {
@@ -162,8 +160,29 @@ namespace Leopard.Repository {
 			}
 			return res;
 		}
-		public virtual Task<List<TResult>> GetAllAsync<TResult, TKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, string orderDirection = "asc") {
+		public virtual Task<int> UpdateAsync(T entity) {
+			var theType = entity.GetType();
+			var lastModifiedDateTime = theType.GetProperty("LastModifiedDateTime");
+			if (lastModifiedDateTime != null) {
+				lastModifiedDateTime.SetValue(entity, DateTime.Now);
+			}
+
+			var uId = GetUserId();
+			if (null != uId) {
+				var userId = int.Parse(uId);
+				var modifiedByProp = theType.GetProperty("ModifiedBy");
+				if (modifiedByProp != null) {
+					modifiedByProp.SetValue(entity, userId);
+				}
+			}
+
+			TEntity.Update(entity);
+			return _ctx.Instance.SaveChangesAsync();
+		}
+		public virtual Task<List<TResult>> GetAllAsync<TResult, TKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, string orderDirection, out int totalCount) {
 			var res = Task.FromResult(new List<TResult>());
+			totalCount = 0;
+
 			try {
 				var queryresult = TEntity.Where(predicate);
 
@@ -173,25 +192,21 @@ namespace Leopard.Repository {
 					queryresult = queryresult.OrderByDescending(orderKeySelector);
 				}
 
+				totalCount = queryresult.Count();
+
 				res = queryresult.Select(selectList).ToListAsync();
 			} catch (Exception ex) {
 				_logger.Error(ex, "db error, method: 'GetAllAsync'");
 			}
 			return res;
 		}
-		public virtual Task<List<TResult>> GetAllAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, string orderDirection = "asc") {
+		public virtual Task<List<TResult>> GetAllAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, string orderDirection, out int totalCount) {
 			var res = Task.FromResult(new List<TResult>());
+			totalCount = 0;
+
 			try {
 
 				IQueryable<T> queryresult = TEntity;
-
-				//if (predicate.Count <= 0) {
-				//	return null;
-				//}
-				//var queryresult = TEntity.Where(predicate[0]);
-				//for (int i = 1; i < predicate.Count; i++) {
-				//	queryresult = queryresult.Where(predicate[i]);
-				//}
 
 				for (var i = 0; i < predicate.Count; i++) {
 					queryresult = queryresult.Where(predicate[i]);
@@ -203,6 +218,8 @@ namespace Leopard.Repository {
 					queryresult = queryresult.OrderByDescending(orderKeySelector);
 				}
 
+				totalCount = queryresult.Count();
+
 				res = queryresult.Select(selectList).ToListAsync();
 			} catch (Exception ex) {
 				_logger.Error(ex, "db error, method: 'GetAllAsync'");
@@ -210,25 +227,7 @@ namespace Leopard.Repository {
 			return res;
 		}
 
-		//public virtual int TotalCount(List<Expression<Func<T, bool>>> predicate) {
-		//	var res = 0;
-		//	try {
-		//		if (predicate.Count <= 0) {
-		//			return 0;
-		//		}
-		//		var queryresult = TEntity.Where(predicate[0]);
-		//		for (int i = 1; i < predicate.Count; i++) {
-		//			queryresult = queryresult.Where(predicate[i]);
-		//		}
-
-		//		res = queryresult.Count();
-		//	} catch (Exception ex) {
-		//		_logger.Error(ex, "db error, method: 'TotalCount'");
-		//	}
-		//	return res;
-		//}
-
-		public Task<List<TResult>> GetAllWithPagingAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, int pageSize, int pageNumber, string orderDirection, out int totalCount) {
+		public virtual Task<List<TResult>> GetAllWithPagingAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, string orderDirection, int pageSize, int pageNumber, out int totalCount) {
 			var res = Task.FromResult(new List<TResult>());
 			totalCount = 0;
 
@@ -255,44 +254,61 @@ namespace Leopard.Repository {
 			return res;
 		}
 
-		public IQueryable<T> GetAll() {
+		public virtual Task<List<TResult>> GetAllWithPagingAsync<TResult>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, string orderKeySelector, string orderDirection, int pageSize, int pageNumber, out int totalCount) {
+			var res = Task.FromResult(new List<TResult>());
+			totalCount = 0;
+
+			try {
+				IQueryable<T> queryresult = TEntity;
+
+				for (var i = 0; i < predicate.Count; i++) {
+					queryresult = queryresult.Where(predicate[i]);
+				}
+
+
+				var type = typeof(T);
+				var property = type.GetProperty(orderKeySelector ?? "id", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) ?? type.GetProperties().FirstOrDefault(x => x.GetCustomAttribute(typeof(KeyAttribute), true) != null) ?? type.GetProperties().First();
+
+				if (orderDirection == "asc") {
+					queryresult = queryresult.OrderByExtended(property.Name, false);
+				} else {
+					queryresult = queryresult.OrderByExtended(property.Name, true);
+				}
+
+				totalCount = queryresult.Count();
+
+				res = queryresult.Select(selectList).Skip(pageSize * pageNumber).Take(pageSize).ToListAsync();
+			} catch (Exception ex) {
+				_logger.Error(ex, "db error, method: 'GetAllWithPagingAsync'");
+			}
+
+			return res;
+		}
+
+		public virtual IQueryable<T> GetAll() {
 
 			IQueryable<T> query = TEntity;
 			return query;
 		}
 
-		public List<Expression<Func<T, bool>>> ExpressionMaker() {
+		public virtual List<Expression<Func<T, bool>>> ExpressionMaker() {
 			return new List<Expression<Func<T, bool>>>();
 		}
-		public void Dispose() {
+		public virtual void Dispose() {
 			_ctx.Instance.Dispose();
 		}
 
-		public async Task<int> Update(T entity) {
-			var theType = entity.GetType();
-			var lastModifiedDateTime = theType.GetProperty("LastModifiedDateTime");
-			if (lastModifiedDateTime != null) {
-				lastModifiedDateTime.SetValue(entity, DateTime.Now);
-			}
-
-			var uId = GetUserId();
-			if (null != uId) {
-				var userId = int.Parse(uId);
-				var modifiedByProp = theType.GetProperty("ModifiedBy");
-				if (modifiedByProp != null) {
-					modifiedByProp.SetValue(entity, userId);
-				}
-			}
-
-			TEntity.Update(entity);
-			return await _ctx.Instance.SaveChangesAsync();
-		}
-
-		public T? FindById(object id) {
-			var res = TEntity.Find(id);
+		public virtual ValueTask<T?> FindByIdAsync(object id) {
+			var res = TEntity.FindAsync(id);
 			return res;
 		}
 
+		public virtual string? GetUserId() {
+			var ident = _iPrincipal as ClaimsPrincipal;
+			var uId = ident?.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+			return uId;
+		}
 
+		
 	}
 }
