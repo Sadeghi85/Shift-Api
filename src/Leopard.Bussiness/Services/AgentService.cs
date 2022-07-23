@@ -33,7 +33,7 @@ namespace Leopard.Bussiness {
 				GetAllExpressions.Add(pp => model.Id == pp.Id);
 			}
 
-			var res = _samtAgentStore.GetAllWithPagingAsync(GetAllExpressions, pp => new AgentViewModel { Id = pp.Id, Fullname = $"{pp.FirstName} {pp.LastName}" }, pp => pp.LastName, model.PageSize, model.PageNo, "desc", out totalCount);
+			var res = _samtAgentStore.GetAllWithPagingAsync(GetAllExpressions, pp => new AgentViewModel { Id = pp.Id, Fullname = $"{pp.FirstName} {pp.LastName}" }, model.OrderKey, model.Desc ? "desc" : "asc", model.PageSize, model.PageNo, out totalCount);
 			return res;
 		}
 
@@ -54,7 +54,7 @@ namespace Leopard.Bussiness {
 			}
 
 
-			var res = _telavatAgentResourceTypeStore.GetAllWithPagingAsync(GetAgentByResourceTypeIDExpressions, pp => new GetAgentByResourceTypeIDResult { AgentID = pp.AgentId }, pp => pp.Id, model.PageSize, model.PageNo, "desc", out totalCount);
+			var res = _telavatAgentResourceTypeStore.GetAllWithPagingAsync(GetAgentByResourceTypeIDExpressions, pp => new GetAgentByResourceTypeIDResult { AgentID = pp.AgentId }, pp => pp.Id, "desc", model.PageSize, model.PageNo, out totalCount);
 			return res;
 
 

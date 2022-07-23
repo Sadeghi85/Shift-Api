@@ -17,24 +17,20 @@ namespace SamtApi.Controllers.WebApi {
 			_agentService = agentService;
 		}
 
-
-
 		// GET: api/<AgentController>
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(AgentSearchModel model) {
 
-			var ss = GetUserId();
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
-			if (model == null) {
-				return null;
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
-			Task<int> totalCount;
+			var ss = GetUserId();
 
-			var res = await _agentService.GetAll(model, out totalCount);
-			var resCount = await totalCount;
-
-			//return Ok(OperationResult<List<AgentViewModel>>.SuccessResult(res, _agentService.GetAllTotal()));
+			var res = await _agentService.GetAll(model, out var resCount);
 
 			return Ok(OperationResult<List<AgentViewModel>>.SuccessResult(res, resCount));
 		}
@@ -43,13 +39,17 @@ namespace SamtApi.Controllers.WebApi {
 		/// </summary>
 		/// <param name="model"></param>
 		/// <returns></returns>
-		[HttpPost]
+		[HttpPost("GetAgentByResourceTypeID")]
 		public async Task<IActionResult> GetAgentByResourceTypeID(GetAgentByResourceTypeIDModel model) {
 
-			Task<int> totalCount;
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
-			var res = await _agentService.GetAgentByResourceTypeID(model, out totalCount);
-			var resCount = await totalCount;
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
+
+			var res = await _agentService.GetAgentByResourceTypeID(model, out var resCount);
 
 			return Ok(OperationResult<List<GetAgentByResourceTypeIDResult>?>.SuccessResult(res, resCount));
 

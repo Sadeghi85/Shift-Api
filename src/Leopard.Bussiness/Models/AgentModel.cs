@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Leopard.Bussiness {
 	public class AgentSearchModel : PagerViewModel {
 		public int Id { get; set; }
-		public string Name { get; set; } // FirstName (length: 1000)
+		public string? Name { get; set; } // FirstName (length: 1000)
 	}
 
 	public class AgentViewModel {
