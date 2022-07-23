@@ -33,11 +33,7 @@ namespace SamtApi.Controllers.WebApi {
 				model.PortalId = portalId;
 			}
 
-			Task<int> totalCount;
-
-
-			var res = await _shiftService.GetAll(model, out totalCount);
-			var resCount = await totalCount;
+			var res = await _shiftService.GetAll(model, out var resCount);
 
 			return Ok(OperationResult<List<ShiftViewModel>?>.SuccessResult(res, resCount));
 
@@ -106,10 +102,8 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("ShiftJobTemplate/GetAll")]
 		public async Task<IActionResult> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model) {
 
-			Task<int> totalCount;
 
-			List<ShiftShiftJobTemplateViewModel>? res = await _shiftService.GetAllShiftJobTemplates(model, out totalCount);
-			var resCount = await totalCount;
+			List<ShiftShiftJobTemplateViewModel>? res = await _shiftService.GetAllShiftJobTemplates(model, out var resCount);
 
 			return Ok(OperationResult<List<ShiftShiftJobTemplateViewModel>?>.SuccessResult(res, resCount));
 		}

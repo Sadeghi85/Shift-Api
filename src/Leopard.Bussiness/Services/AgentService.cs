@@ -21,7 +21,7 @@ namespace Leopard.Bussiness {
 
 		private List<Expression<Func<SamtAgent, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<SamtAgent, bool>>>();
 
-		public Task<List<AgentViewModel>> GetAll(AgentSearchModel model, out Task<int> totalCount) {
+		public Task<List<AgentViewModel>> GetAll(AgentSearchModel model, out int totalCount) {
 
 			GetAllExpressions.Add(pp => !pp.IsDeleted);
 
@@ -45,7 +45,7 @@ namespace Leopard.Bussiness {
 		private List<Expression<Func<TelavatAgentResourceType, bool>>> GetAgentByResourceTypeIDExpressions { get; set; } = new List<Expression<Func<TelavatAgentResourceType, bool>>>();
 
 
-		public Task<List<GetAgentByResourceTypeIDResult>> GetAgentByResourceTypeID(GetAgentByResourceTypeIDModel model, out Task<int> totalCount) {
+		public Task<List<GetAgentByResourceTypeIDResult>> GetAgentByResourceTypeID(GetAgentByResourceTypeIDModel model, out int totalCount) {
 			if (model.IsDeleted != null) {
 				GetAgentByResourceTypeIDExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
 			}

@@ -30,7 +30,7 @@ namespace Leopard.Bussiness {
 			return res;
 		}
 
-		public Task<List<ShiftTabletViewModel>>? GetAll(ShiftTabletSearchModel model, out Task<int> totalCount) {
+		public Task<List<ShiftTabletViewModel>>? GetAll(ShiftTabletSearchModel model, out int totalCount) {
 			GetAllExpressions.Add(pp => pp.ShiftShift.IsDeleted == false);
 
 			//if (model.ShiftId == 0 && model.ShiftDate == null && model.ProductionTypeId == 0) {

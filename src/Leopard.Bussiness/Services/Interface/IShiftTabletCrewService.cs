@@ -12,7 +12,7 @@ namespace Leopard.Bussiness {
 		public Task<int> Replace(int replaced, int replacedBy);
 		public List<ShiftShiftTabletCrew> GetByShiftId(int shifTabletId);
 		public List<ShiftTabletCrewViewModel> ShfitTabletReport(DateTime fromDate, DateTime toDate, int PortalId, int take = 10, int skip = 10);
-		public Task<List<ShiftTabletCrewViewModel>>? GetAll(ShiftTabletCrewSearchModel model, out Task<int> totalCount);
+		public Task<List<ShiftTabletCrewViewModel>>? GetAll(ShiftTabletCrewSearchModel model, out int totalCount);
 		//public int GetAllCount();
 		public Task<BaseResult> Register(ShiftTabletCrewInputModel model);
 

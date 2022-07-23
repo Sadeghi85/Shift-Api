@@ -27,10 +27,8 @@ namespace SamtApi.Controllers.WebApi {
 
 			var portalId = GetUserPortalId() ?? 0;
 
-			Task<int> totalCount;
 
-			var res = await _locationService.GetAll(model, out totalCount);
-			var resCount = await totalCount;
+			var res = await _locationService.GetAll(model, out var resCount);
 
 
 			return Ok(OperationResult<List<LocationViewModel>>.SuccessResult(res, resCount));

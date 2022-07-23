@@ -23,11 +23,8 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(PortalLocationSearchModel model) {
 
-			Task<int> totalCount;
 
-
-			var res = await _portalLocationService.GetAll(model, out totalCount);
-			var resCount = await totalCount;
+			var res = await _portalLocationService.GetAll(model, out var resCount);
 
 			return Ok(OperationResult<List<PortalLocationViewModel>>.SuccessResult(res, resCount));
 

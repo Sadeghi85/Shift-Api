@@ -149,7 +149,7 @@ namespace Leopard.Bussiness {
 		private List<Expression<Func<ShiftEmploymentDetail, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftEmploymentDetail, bool>>>();
 
 
-		public Task<List<ShiftEmploymentDetailViewModel>> GetAll(ShiftEmploymentDetailSearchModel model, out Task<int> totalCount) {
+		public Task<List<ShiftEmploymentDetailViewModel>> GetAll(ShiftEmploymentDetailSearchModel model, out int totalCount) {
 
 			if (model.Id != 0) {
 				GetAllExpressions.Add(pp => pp.Id == model.Id);

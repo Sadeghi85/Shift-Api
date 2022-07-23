@@ -24,11 +24,8 @@ namespace SamtApi.Controllers.WebApi {
 				model.PortalId = portalId;
 			}
 
-			Task<int> totalCount;
 
-
-			var res = await _shiftEmploymentDetail.GetAll(model, out totalCount);
-			var resCount = await totalCount;
+			var res = await _shiftEmploymentDetail.GetAll(model, out var resCount);
 
 			return Ok(OperationResult<List<ShiftEmploymentDetailViewModel>?>.SuccessResult(res, resCount));
 

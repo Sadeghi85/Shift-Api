@@ -9,7 +9,7 @@ namespace Leopard.Bussiness {
 
 		public int PageNo { get; set; } = 1;
 		public int PageSize { get; set; } = 10;
-		public string orderKey { get; set; }
-		public bool desc { get; set; }
+		public string OrderKey { get; set; } = "id";
+		public bool Desc { get; set; } = true;
 	}
 }

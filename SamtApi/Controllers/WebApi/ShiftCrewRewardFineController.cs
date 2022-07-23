@@ -26,11 +26,9 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(ShiftCrewRewardFineSearchModel model) {
 
-			Task<int> totalCount;
 
 
-			var res = await _shiftCrewRewardFineService.GetAll(model, out totalCount);
-			var resCount = await totalCount;
+			var res = await _shiftCrewRewardFineService.GetAll(model, out var resCount);
 
 			return Ok(OperationResult<List<ShiftCrewRewardFine>>.SuccessResult(res, resCount));
 

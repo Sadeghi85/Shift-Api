@@ -19,7 +19,7 @@ namespace Leopard.Bussiness {
 		private List<Expression<Func<SamtResourceType, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<SamtResourceType, bool>>>();
 
 
-		public Task<List<JobViewModel>>? GetAll(JobSearchModel model, out Task<int> totalCount) {
+		public Task<List<JobViewModel>>? GetAll(JobSearchModel model, out int totalCount) {
 
 			if (string.IsNullOrWhiteSpace(model.Title) && model.Id == 0) {
 				GetAllExpressions.Add(pp => true);

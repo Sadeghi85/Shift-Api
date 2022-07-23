@@ -29,10 +29,10 @@ namespace Leopard.Bussiness {
 		}
 
 
-		public Task<List<LocationViewModel>> GetAll(LocationSearchModel model, out Task<int> totalCount) {
+		public Task<List<LocationViewModel>> GetAll(LocationSearchModel model, out int totalCount) {
 			var checkAccess = CheckAccess();
 			if (!checkAccess.Success) {
-				totalCount = Task.FromResult(0);
+				totalCount = 0;
 				return Task.FromResult(new List<LocationViewModel>());
 			}
 

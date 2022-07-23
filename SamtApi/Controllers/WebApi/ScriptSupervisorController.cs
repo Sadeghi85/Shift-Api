@@ -52,11 +52,8 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAllScriptSupervisorDescription")]
 		public async Task<IActionResult> GetAllScriptSupervisorDescription(ScriptSupervisorDescriptionSearchModel model) {
 
-			Task<int> totalCount;
 
-
-			var res = await _scriptSupervisorService.GetAllScriptSupervisorDescription(model, out totalCount);
-			var resCount = await totalCount;
+			var res = await _scriptSupervisorService.GetAllScriptSupervisorDescription(model, out var resCount);
 
 			return Ok(OperationResult<List<ShiftTabletScriptSupervisorDescription>?>.SuccessResult(res, resCount));
 		}
@@ -86,11 +83,8 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAllTabletConductorChanges")]
 		public async Task<IActionResult> GetAllTabletConductorChanges(TabletConductorChangesSearchModel model) {
 
-			Task<int> totalCount;
 
-
-			List<ShiftTabletConductorChanx>? res = await _scriptSupervisorService.GetAllTabletConductorChanges(model, out totalCount);
-			var resCount = await totalCount;
+			List<ShiftTabletConductorChanx>? res = await _scriptSupervisorService.GetAllTabletConductorChanges(model, out var resCount);
 
 			return Ok(OperationResult<List<ShiftTabletConductorChanx>?>.SuccessResult(res, resCount));
 		}
@@ -118,11 +112,9 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAllShiftRevisionProblem")]
 		public async Task<IActionResult> GetAllShiftRevisionProblem(ShiftRevisionProblemSearchModel model) {
 
-			Task<int> totalCount;
 
 
-			List<ShiftRevisionProblem>? res = await _scriptSupervisorService.GetAllShiftRevisionProblem(model, out totalCount);
-			var resCount = await totalCount;
+			List<ShiftRevisionProblem>? res = await _scriptSupervisorService.GetAllShiftRevisionProblem(model, out var resCount);
 
 			return Ok(OperationResult<List<ShiftRevisionProblem>?>.SuccessResult(res, resCount));
 			//return Ok(res);

@@ -44,7 +44,7 @@ namespace Leopard.Bussiness {
 			return res;
 		}
 
-		public Task<List<ShiftTabletCrewViewModel>>? GetAll(ShiftTabletCrewSearchModel model, out Task<int> totalCount) {
+		public Task<List<ShiftTabletCrewViewModel>>? GetAll(ShiftTabletCrewSearchModel model, out int totalCount) {
 			GetAllExpressions.Add(pp => pp.ShiftShiftTablet.IsDeleted == false);
 
 			if (model.Id != 0) {

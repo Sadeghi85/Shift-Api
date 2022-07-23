@@ -12,7 +12,7 @@ namespace Leopard.Bussiness {
 		//public IQueryable<ShiftShiftTablet> GetAll();
 
 		public Task<BaseResult> Update(ShiftTabletInputModel model);
-		public Task<List<ShiftTabletViewModel>>? GetAll(ShiftTabletSearchModel model, out Task<int> totalCount);
+		public Task<List<ShiftTabletViewModel>>? GetAll(ShiftTabletSearchModel model, out int totalCount);
 		//public int GetShiftTabletCount();
 		public Task<BaseResult> Delete(ShiftTabletInputModel model);
 	}

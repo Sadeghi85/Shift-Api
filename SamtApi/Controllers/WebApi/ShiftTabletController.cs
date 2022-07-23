@@ -29,11 +29,9 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(ShiftTabletSearchModel model) {
 
-			Task<int> totalCount;
-
 			//IQueryable<ShiftShiftTablet>? res = _shiftTabletService.GetAll();
-			var res = await _shiftTabletService.GetAll(model, out totalCount);
-			var resCount = await totalCount;
+			var res = await _shiftTabletService.GetAll(model, out var resCount);
+
 
 			return Ok(OperationResult<List<ShiftTabletViewModel>?>.SuccessResult(res, resCount));
 

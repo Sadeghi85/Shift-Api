@@ -66,7 +66,7 @@ namespace Leopard.Bussiness {
 
 		}
 
-		public Task<List<ShiftViewModel>> GetAll(ShiftSearchModel model, out Task<int> totalCount) {
+		public Task<List<ShiftViewModel>> GetAll(ShiftSearchModel model, out int totalCount) {
 
 
 
@@ -350,7 +350,7 @@ namespace Leopard.Bussiness {
 			return BaseResult;
 		}
 
-		public Task<List<ShiftShiftJobTemplateViewModel>?> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model, out Task<int> totalCount) {
+		public Task<List<ShiftShiftJobTemplateViewModel>?> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model, out int totalCount) {
 
 			if (model.ShiftId != 0) {
 				GetAllShiftShiftJobTemplateExpressions.Add(pp => pp.ShiftId == model.ShiftId);

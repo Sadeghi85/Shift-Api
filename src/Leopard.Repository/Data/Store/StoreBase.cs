@@ -228,9 +228,9 @@ namespace Leopard.Repository {
 		//	return res;
 		//}
 
-		public Task<List<TResult>> GetAllWithPagingAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, int pageSize, int pageNumber, string orderDirection, out Task<int> totalCount) {
+		public Task<List<TResult>> GetAllWithPagingAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, int pageSize, int pageNumber, string orderDirection, out int totalCount) {
 			var res = Task.FromResult(new List<TResult>());
-			totalCount = Task.FromResult(0);
+			totalCount = 0;
 
 			try {
 				IQueryable<T> queryresult = TEntity;
@@ -245,7 +245,7 @@ namespace Leopard.Repository {
 					queryresult = queryresult.OrderByDescending(orderKeySelector);
 				}
 
-				totalCount = queryresult.CountAsync();
+				totalCount = queryresult.Count();
 
 				res = queryresult.Select(selectList).Skip(pageSize * pageNumber).Take(pageSize).ToListAsync();
 			} catch (Exception ex) {

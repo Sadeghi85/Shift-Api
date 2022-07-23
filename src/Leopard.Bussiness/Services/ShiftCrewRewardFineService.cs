@@ -55,7 +55,7 @@ namespace Leopard.Bussiness {
 		//	throw new NotImplementedException();
 		//}
 
-		public Task<List<ShiftCrewRewardFine>>? GetAll(ShiftCrewRewardFineSearchModel model, out Task<int> totalCount) {
+		public Task<List<ShiftCrewRewardFine>>? GetAll(ShiftCrewRewardFineSearchModel model, out int totalCount) {
 
 
 

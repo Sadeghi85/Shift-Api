@@ -15,7 +15,7 @@ namespace Leopard.Bussiness {
 		public PortalService(IPrincipal iPrincipal, IPortalStore portalStore) : base(iPrincipal) {
 			_portalStore = portalStore;
 		}
-		public Task<List<PortalViewModel>>? GetAll(PortalSearchModel model, out Task<int> totalCount) {
+		public Task<List<PortalViewModel>>? GetAll(PortalSearchModel model, out int totalCount) {
 
 			GetAllExpressions.Add(pp => !pp.NoDashboard);
 

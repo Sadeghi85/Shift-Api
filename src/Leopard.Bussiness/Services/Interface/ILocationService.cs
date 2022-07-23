@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
 	public interface ILocationService {
-		public Task<List<LocationViewModel>> GetAll(LocationSearchModel model, out Task<int> totalCount);
+		public Task<List<LocationViewModel>> GetAll(LocationSearchModel model, out int totalCount);
 
 		public Task<BaseResult> Register(LocationInputModel model);
 

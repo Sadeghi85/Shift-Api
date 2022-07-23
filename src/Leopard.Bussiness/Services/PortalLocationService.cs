@@ -30,7 +30,7 @@ namespace Leopard.Bussiness {
 		}
 
 
-		public Task<List<PortalLocationViewModel>> GetAll(PortalLocationSearchModel model, out Task<int> totalCount) {
+		public Task<List<PortalLocationViewModel>> GetAll(PortalLocationSearchModel model, out int totalCount) {
 			//var checkAccess = CheckAccess();
 			//if (!checkAccess.Success) {
 			//	return Task.FromResult(new List<LocationViewModel>());
@@ -53,12 +53,12 @@ namespace Leopard.Bussiness {
 			//}
 
 			var type = typeof(ShiftPortalLocation);
-			var property = type.GetProperty(model.orderKey ?? "id");
+			var property = type.GetProperty(model.OrderKey ?? "id");
 			var parameter = Expression.Parameter(type, "p");
 			var propertyAccess = Expression.MakeMemberAccess(parameter, property);
 			var orderByExp = Expression.Lambda(propertyAccess, parameter);
 
-			var res = _shiftPortalLocationStore.GetAllWithPagingAsync(GetAllExpressions, x => new PortalLocationViewModel { Id = x.Id, PortalId = x.PortalId, LocationId = x.LocationId, PortalTitle = x.Portal.Title, LocationTitle = x.ShiftLocation.Title }, x => Expression.Quote(orderByExp), model.PageSize, model.PageNo, model.desc ? "desc" : "asc", out totalCount);
+			var res = _shiftPortalLocationStore.GetAllWithPagingAsync(GetAllExpressions, x => new PortalLocationViewModel { Id = x.Id, PortalId = x.PortalId, LocationId = x.LocationId, PortalTitle = x.Portal.Title, LocationTitle = x.ShiftLocation.Title }, x => Expression.Quote(orderByExp), model.PageSize, model.PageNo, model.Desc ? "desc" : "asc", out totalCount);
 
 			return res;
 

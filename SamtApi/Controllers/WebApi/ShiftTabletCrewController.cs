@@ -42,11 +42,8 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(ShiftTabletCrewSearchModel model) {
 
-			Task<int> totalCount;
 
-
-			var res = await _shiftTabletCrewService.GetAll(model, out totalCount);
-			var resCount = await totalCount;
+			var res = await _shiftTabletCrewService.GetAll(model, out var resCount);
 
 			return Ok(OperationResult<List<ShiftTabletCrewViewModel>?>.SuccessResult(res, resCount));
 
@@ -55,10 +52,8 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetGeExcel")]
 		public async Task<IActionResult> GetGeExcel(ShiftTabletCrewSearchModel model) {
 
-			Task<int> totalCount;
 
-
-			var res = await _shiftTabletCrewService.GetAll(model, out totalCount);
+			var res = await _shiftTabletCrewService.GetAll(model, out var resCount);
 
 			var dates = res.Select(pp => new { pp.ShiftDatePersian, pp.PersianWeekDay }).Distinct().ToList();
 			var shifts = res.Select(pp => pp.ShiftTitle).Distinct().ToList();
@@ -178,10 +173,8 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetPdf")]
 		public async Task<IActionResult> GetPdf(ShiftTabletCrewSearchModel model) {
 
-			Task<int> totalCount;
 
-
-			List<ShiftTabletCrewViewModel>? res = await _shiftTabletCrewService.GetAll(model, out totalCount);
+			List<ShiftTabletCrewViewModel>? res = await _shiftTabletCrewService.GetAll(model, out var resCount);
 
 
 			var dates = res.Select(pp => new { pp.ShiftDatePersian, pp.PersianWeekDay }).Distinct().ToList();
