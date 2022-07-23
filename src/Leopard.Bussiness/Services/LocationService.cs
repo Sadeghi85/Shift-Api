@@ -50,7 +50,7 @@ namespace Leopard.Bussiness {
 			//	GetAllExpressions.Add(pp => true);
 			//}
 
-			var res = _shiftLocationStore.GetAllWithPagingAsync(GetAllExpressions, pp => new LocationViewModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, model.PageSize, model.PageNo, "desc", out totalCount);
+			var res = _shiftLocationStore.GetAllWithPagingAsync(GetAllExpressions, pp => new LocationViewModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, "desc", model.PageSize, model.PageNo, out totalCount);
 
 			return res;
 
@@ -111,14 +111,14 @@ namespace Leopard.Bussiness {
 					return checkAccess;
 				}
 
-				var found = _shiftLocationStore.FindById(model.Id);
+				var found = await _shiftLocationStore.FindByIdAsync(model.Id);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد";
 
 				} else {
 					found.Title = model.Title;
-					var res = await _shiftLocationStore.Update(found);
+					var res = await _shiftLocationStore.UpdateAsync(found);
 				}
 			} catch (Exception ex) {
 
@@ -140,14 +140,14 @@ namespace Leopard.Bussiness {
 					return checkAccess;
 				}
 
-				var found = _shiftLocationStore.FindById(model.Id);
+				var found = await _shiftLocationStore.FindByIdAsync(model.Id);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد";
 
 				} else {
 					found.IsDeleted = true;
-					var res = await _shiftLocationStore.Update(found);
+					var res = await _shiftLocationStore.UpdateAsync(found);
 				}
 			} catch (Exception ex) {
 

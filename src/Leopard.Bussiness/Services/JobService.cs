@@ -34,7 +34,7 @@ namespace Leopard.Bussiness {
 			}
 			GetAllExpressions.Add(pp => pp.ParentId == 20 && pp.IsDeleted != true);
 
-			Task<List<JobViewModel>>? res = _samtResourceTypeStore.GetAllWithPagingAsync(GetAllExpressions, pp => new JobViewModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, model.PageSize, model.PageNo, "desc", out totalCount);
+			Task<List<JobViewModel>>? res = _samtResourceTypeStore.GetAllWithPagingAsync(GetAllExpressions, pp => new JobViewModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, "desc", model.PageSize, model.PageNo, out totalCount);
 			return res;
 
 		}

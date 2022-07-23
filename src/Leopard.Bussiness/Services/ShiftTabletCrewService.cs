@@ -105,7 +105,7 @@ namespace Leopard.Bussiness {
 					DefaultEntranceTime = pp.ShiftShiftTablet.ShiftShift.StartTime,
 					DefaultExitTime = pp.ShiftShiftTablet.ShiftShift.EndTime
 				},
-				pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo, "desc", out totalCount);
+				pp => pp.ShiftShiftTablet.ShiftDate, "desc", model.PageSize, model.PageNo, out totalCount);
 
 			//IQueryable<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll();
 
@@ -142,8 +142,8 @@ namespace Leopard.Bussiness {
 			List<string> overLapMessage = new List<string>();
 
 			try {
-				var foundAgent = _agentStore.FindById(model.AgentId);
-				var foundResourceType = _samtResourceTypeStore.FindById(model.JobId);
+				var foundAgent = await _agentStore.FindByIdAsync(model.AgentId);
+				var foundResourceType = await _samtResourceTypeStore.FindByIdAsync(model.JobId);
 				var foundShiftTablet = _shiftShiftTabletStore.GetAll().Where(pp => pp.Id == model.ShiftTabletId).FirstOrDefault();
 				var foundAgentInShiftTablet = _shiftShiftTabletCrewStore.GetAll().Any(pp => pp.AgentId == model.AgentId && pp.ShiftTabletId == model.ShiftTabletId && pp.IsDeleted != true);
 
@@ -240,10 +240,10 @@ namespace Leopard.Bussiness {
 
 		public async Task<int> Replace(int replaced, int replacedBy) {
 
-			var found = _shiftShiftTabletCrewStore.FindById(replaced);
+			var found = await _shiftShiftTabletCrewStore.FindByIdAsync(replaced);
 			if (found != null) {
 				found.IsReplaced = true;
-				_shiftShiftTabletCrewStore.Update(found).Wait();
+				_shiftShiftTabletCrewStore.UpdateAsync(found).Wait();
 			}
 			var res = await _shiftShiftTabletCrewReplacementStore.InsertAsync(new ShiftShiftTabletCrewReplacement {
 				ShiftTabletCrewId = replaced,
@@ -257,7 +257,7 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> Update(ShiftTabletCrewInputModel model) {
 
 			try {
-				var found = _shiftShiftTabletCrewStore.FindById(model.Id);
+				var found = await _shiftShiftTabletCrewStore.FindByIdAsync(model.Id);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
@@ -268,7 +268,7 @@ namespace Leopard.Bussiness {
 					found.JobId = model.JobId;
 					found.AgentId = model.AgentId;
 
-					var res = await _shiftShiftTabletCrewStore.Update(found);
+					var res = await _shiftShiftTabletCrewStore.UpdateAsync(found);
 				}
 			} catch (Exception ex) {
 
@@ -290,13 +290,13 @@ namespace Leopard.Bussiness {
 
 		public async Task<BaseResult> Delete(ShiftTabletCrewInputModel model) {
 			try {
-				var found = _shiftShiftTabletCrewStore.FindById(model.Id);
+				var found = await _shiftShiftTabletCrewStore.FindByIdAsync(model.Id);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
 				} else {
 					found.IsDeleted = true;
-					var res = await _shiftShiftTabletCrewStore.Update(found);
+					var res = await _shiftShiftTabletCrewStore.UpdateAsync(found);
 				}
 			} catch (Exception ex) {
 

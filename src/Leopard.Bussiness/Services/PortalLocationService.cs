@@ -48,17 +48,8 @@ namespace Leopard.Bussiness {
 				GetAllExpressions.Add(pp => pp.LocationId == model.LocationId);
 			}
 
-			//if (GetAllExpressions.Count == 0) {
-			//	GetAllExpressions.Add(pp => true);
-			//}
 
-			var type = typeof(ShiftPortalLocation);
-			var property = type.GetProperty(model.OrderKey ?? "id");
-			var parameter = Expression.Parameter(type, "p");
-			var propertyAccess = Expression.MakeMemberAccess(parameter, property);
-			var orderByExp = Expression.Lambda(propertyAccess, parameter);
-
-			var res = _shiftPortalLocationStore.GetAllWithPagingAsync(GetAllExpressions, x => new PortalLocationViewModel { Id = x.Id, PortalId = x.PortalId, LocationId = x.LocationId, PortalTitle = x.Portal.Title, LocationTitle = x.ShiftLocation.Title }, x => Expression.Quote(orderByExp), model.PageSize, model.PageNo, model.Desc ? "desc" : "asc", out totalCount);
+			var res = _shiftPortalLocationStore.GetAllWithPagingAsync(GetAllExpressions, x => new PortalLocationViewModel { Id = x.Id, PortalId = x.PortalId, LocationId = x.LocationId, PortalTitle = x.Portal.Title, LocationTitle = x.ShiftLocation.Title }, model.OrderKey, model.Desc ? "desc" : "asc", model.PageSize, model.PageNo, out totalCount);
 
 			return res;
 
@@ -126,7 +117,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var found = _shiftPortalLocationStore.FindById(model.Id);
+				var found = await _shiftPortalLocationStore.FindByIdAsync(model.Id);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد";
@@ -134,7 +125,7 @@ namespace Leopard.Bussiness {
 				} else {
 					found.PortalId = model.PortalId;
 					found.LocationId = model.LocationId;
-					var res = await _shiftPortalLocationStore.Update(found);
+					var res = await _shiftPortalLocationStore.UpdateAsync(found);
 				}
 			} catch (Exception ex) {
 
@@ -156,7 +147,7 @@ namespace Leopard.Bussiness {
 				//	return checkAccess;
 				//}
 
-				var found = _shiftPortalLocationStore.FindById(model.Id);
+				var found = await _shiftPortalLocationStore.FindByIdAsync(model.Id);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد";
@@ -170,7 +161,7 @@ namespace Leopard.Bussiness {
 					}
 
 					found.IsDeleted = true;
-					var res = await _shiftPortalLocationStore.Update(found);
+					var res = await _shiftPortalLocationStore.UpdateAsync(found);
 				}
 			} catch (Exception ex) {
 

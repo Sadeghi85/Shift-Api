@@ -28,7 +28,7 @@ namespace Leopard.Bussiness {
 			}
 
 
-			Task<List<PortalViewModel>>? res = _portalStore.GetAllWithPagingAsync(GetAllExpressions, t => new PortalViewModel { Id = t.Id, Title = t.Title }, t => t.Id, model.PageSize, model.PageNo, "asc", out totalCount);
+			Task<List<PortalViewModel>>? res = _portalStore.GetAllWithPagingAsync(GetAllExpressions, t => new PortalViewModel { Id = t.Id, Title = t.Title }, t => t.Id, "asc", model.PageSize, model.PageNo, out totalCount);
 			return res;
 		}
 
@@ -38,8 +38,8 @@ namespace Leopard.Bussiness {
 		//}
 
 
-		public Portal GetById(int id) {
-			Portal? res = _portalStore.FindById(id);
+		public ValueTask<Portal?> GetById(int id) {
+			var res = _portalStore.FindByIdAsync(id);
 			return res;
 
 		}

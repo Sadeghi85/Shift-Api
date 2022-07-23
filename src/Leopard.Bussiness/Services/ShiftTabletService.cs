@@ -72,7 +72,7 @@ namespace Leopard.Bussiness {
 				PortalTitle = pp.ShiftShift.Portal.Title
 
 
-			}, pp => pp.Id, model.PageSize, model.PageNo, "desc", out totalCount);
+			}, pp => pp.Id, "desc", model.PageSize, model.PageNo, out totalCount);
 
 			//IQueryable<ShiftShiftTablet>? res = _shiftShiftTabletStore.GetAll();
 			//_shiftShiftStore.GetAllAsync
@@ -103,7 +103,7 @@ namespace Leopard.Bussiness {
 				var foundShiftTabletSameDate = _shiftShiftTabletStore.GetAll().Any(pp => pp.ShiftDate.Date == model.ShiftDate.Date && pp.ShiftId == model.ShiftId);
 
 
-				var foundShift = _shiftShiftStore.FindById(model.ShiftId);
+				var foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
 				if (foundShift == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شیفت مورد نظر جستجو نشد.";
@@ -119,7 +119,7 @@ namespace Leopard.Bussiness {
 						IsDeleted = false,
 						HasLivePrograms = model.HasLivePrograms.Value
 					};
-					foundShift = _shiftShiftStore.FindById(model.ShiftId);
+					foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
 					shiftTablet.ShiftDuration = foundShift.EndTime - foundShift.StartTime;
 
 					int res = await _shiftShiftTabletStore.InsertAsync(shiftTablet);
@@ -145,7 +145,7 @@ namespace Leopard.Bussiness {
 
 				var foundShiftTabletSameDate = _shiftShiftTabletStore.GetAll().Any(pp => pp.ShiftDate.Date == model.ShiftDate.Date && pp.ShiftId == model.ShiftId && pp.Id != model.Id);
 
-				var found = _shiftShiftTabletStore.FindById(model.Id);
+				var found = await _shiftShiftTabletStore.FindByIdAsync(model.Id);
 
 				if (found == null) {
 					BaseResult.Success = false;
@@ -161,7 +161,7 @@ namespace Leopard.Bussiness {
 					found.ShiftWorthPercent = model.ShiftWorthPercent.Value;
 					found.HasLivePrograms = model.HasLivePrograms.Value;
 
-					var res = await _shiftShiftTabletStore.Update(found);
+					var res = await _shiftShiftTabletStore.UpdateAsync(found);
 				}
 			} catch (Exception ex) {
 
@@ -180,7 +180,7 @@ namespace Leopard.Bussiness {
 
 		public async Task<BaseResult> Delete(ShiftTabletInputModel model) {
 			try {
-				var found = _shiftShiftTabletStore.FindById(model.Id);
+				var found = await _shiftShiftTabletStore.FindByIdAsync(model.Id);
 
 				if (found == null) {
 					BaseResult.Success = false;
@@ -189,7 +189,7 @@ namespace Leopard.Bussiness {
 
 					found.IsDeleted = true;
 
-					var res = await _shiftShiftTabletStore.Update(found);
+					var res = await _shiftShiftTabletStore.UpdateAsync(found);
 				}
 			} catch (Exception ex) {
 

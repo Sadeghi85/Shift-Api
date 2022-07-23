@@ -25,8 +25,8 @@ namespace Leopard.Bussiness {
 
 			try {
 
-				var foundHrCooprationType = _samtHrCooperationTypeStore.FindById(model.CooperationTypeId);
-				var foundPortal = _portalStore.FindById(model.PortalId);
+				var foundHrCooprationType = await _samtHrCooperationTypeStore.FindByIdAsync(model.CooperationTypeId);
+				var foundPortal = await _portalStore.FindByIdAsync(model.PortalId);
 
 
 				if (foundHrCooprationType == null) {
@@ -72,10 +72,10 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> Update(ShiftEmploymentDetailInputModel model) {
 
 			try {
-				var foundHrCooprationType = _samtHrCooperationTypeStore.FindById(model.CooperationTypeId);
-				var foundPortal = _portalStore.FindById(model.PortalId);
+				var foundHrCooprationType = await _samtHrCooperationTypeStore.FindByIdAsync(model.CooperationTypeId);
+				var foundPortal = await _portalStore.FindByIdAsync(model.PortalId);
 
-				var foundShiftEmployeeDetail = _shiftEmploymentDetailStore.FindById(model.Id);
+				var foundShiftEmployeeDetail = await _shiftEmploymentDetailStore.FindByIdAsync(model.Id);
 
 				if (foundShiftEmployeeDetail == null) {
 					BaseResult.Success = false;
@@ -99,7 +99,7 @@ namespace Leopard.Bussiness {
 					foundShiftEmployeeDetail.LivePaymenetAmount = model.LivePaymenetAmount;
 					foundShiftEmployeeDetail.RequiredShift = model.RequiredShift.Value;
 					foundShiftEmployeeDetail.CooperationTypeId = model.CooperationTypeId;
-					await _shiftEmploymentDetailStore.Update(foundShiftEmployeeDetail);
+					await _shiftEmploymentDetailStore.UpdateAsync(foundShiftEmployeeDetail);
 
 				}
 			} catch (Exception ex) {
@@ -120,7 +120,7 @@ namespace Leopard.Bussiness {
 
 			try {
 
-				var foundShiftEmployeeDetail = _shiftEmploymentDetailStore.FindById(model.Id);
+				var foundShiftEmployeeDetail = await _shiftEmploymentDetailStore.FindByIdAsync(model.Id);
 
 				if (foundShiftEmployeeDetail == null) {
 					BaseResult.Success = false;
@@ -129,7 +129,7 @@ namespace Leopard.Bussiness {
 				} else {
 
 					foundShiftEmployeeDetail.IsDeleted = true;
-					await _shiftEmploymentDetailStore.Update(foundShiftEmployeeDetail);
+					await _shiftEmploymentDetailStore.UpdateAsync(foundShiftEmployeeDetail);
 
 				}
 			} catch (Exception ex) {
@@ -179,7 +179,7 @@ namespace Leopard.Bussiness {
 				SpecialDayPaymentAmount = pp.SpecialDayPaymentAmount,
 				SpecialDayPaymetMultiplicationPercent = pp.SpecialDayPaymetMultiplicationPercent,
 				UnrequiredShiftPayment = pp.UnrequiredShiftPayment
-			}, pp => pp.Id, model.PageSize, model.PageNo, "desc", out totalCount);
+			}, pp => pp.Id, "desc", model.PageSize, model.PageNo, out totalCount);
 
 			return res;
 

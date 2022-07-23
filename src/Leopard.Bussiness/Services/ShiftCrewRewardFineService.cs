@@ -24,13 +24,13 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> Delete(ShiftCrewRewardFineInputModel model) {
 
 			try {
-				var found = _shiftCrewRewardFineStore.FindById(model.Id);
+				var found = await _shiftCrewRewardFineStore.FindByIdAsync(model.Id);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
 				} else {
 					found.IsDeleted = true;
-					var res = await _shiftCrewRewardFineStore.Update(found);
+					var res = await _shiftCrewRewardFineStore.UpdateAsync(found);
 				}
 			} catch (Exception ex) {
 
@@ -81,7 +81,7 @@ namespace Leopard.Bussiness {
 
 			}
 			Expressions.Add(pp => pp.IsDeleted != true);
-			Task<List<ShiftCrewRewardFine>>? res = _shiftCrewRewardFineStore.GetAllWithPagingAsync(Expressions, pp => new ShiftCrewRewardFine { Id = pp.Id, Ammount = pp.Ammount }, pp => pp.Id, model.PageSize, model.PageNo, "desc", out totalCount);
+			Task<List<ShiftCrewRewardFine>>? res = _shiftCrewRewardFineStore.GetAllWithPagingAsync(Expressions, pp => new ShiftCrewRewardFine { Id = pp.Id, Ammount = pp.Ammount }, pp => pp.Id, "desc", model.PageSize, model.PageNo, out totalCount);
 
 
 
@@ -117,7 +117,7 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> Update(ShiftCrewRewardFineInputModel model) {
 
 			try {
-				var found = _shiftCrewRewardFineStore.FindById(model.Id);
+				var found = await _shiftCrewRewardFineStore.FindByIdAsync(model.Id);
 				var res = 0;
 				if (found == null) {
 					BaseResult.Success = false;
@@ -128,7 +128,7 @@ namespace Leopard.Bussiness {
 					found.Ammount = model.Ammount.Value;
 					found.Shiftpercentage = model.Shiftpercentage.Value;
 					found.Description = model.Description;
-					res = await _shiftCrewRewardFineStore.Update(found);
+					res = await _shiftCrewRewardFineStore.UpdateAsync(found);
 
 				}
 			} catch (Exception ex) {

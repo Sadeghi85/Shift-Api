@@ -22,7 +22,7 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> RegisterScriptSupervisorDescription(ScriptSupervisorDescriptionModel model) {
 
 			try {
-				var foundShiftTablet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
+				var foundShiftTablet = await _shiftShiftTabletStore.FindByIdAsync(model.ShiftTabletId);
 				if (foundShiftTablet == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "لوح شیفت مورد نظر یافت نشد.";
@@ -45,14 +45,14 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> UpdateScriptSupervisorDescription(ScriptSupervisorDescriptionModel model) {
 
 			try {
-				var foundScriptSupervisorDescription = _scriptSupervisorDescriptionStore.FindById(model.Id);
+				var foundScriptSupervisorDescription = await _scriptSupervisorDescriptionStore.FindByIdAsync(model.Id);
 				if (foundScriptSupervisorDescription == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
 				} else {
 					foundScriptSupervisorDescription.ShiftTabletId = model.ShiftTabletId;
 					foundScriptSupervisorDescription.Description = model.Description;
-					await _scriptSupervisorDescriptionStore.Update(foundScriptSupervisorDescription);
+					await _scriptSupervisorDescriptionStore.UpdateAsync(foundScriptSupervisorDescription);
 				}
 
 			} catch (Exception ex) {
@@ -73,13 +73,13 @@ namespace Leopard.Bussiness {
 
 
 			try {
-				var foundScriptSupervisorDescription = _scriptSupervisorDescriptionStore.FindById(model.Id);
+				var foundScriptSupervisorDescription = await _scriptSupervisorDescriptionStore.FindByIdAsync(model.Id);
 				if (foundScriptSupervisorDescription == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
 				} else {
 					foundScriptSupervisorDescription.IsDeleted = true;
-					await _scriptSupervisorDescriptionStore.Update(foundScriptSupervisorDescription);
+					await _scriptSupervisorDescriptionStore.UpdateAsync(foundScriptSupervisorDescription);
 				}
 
 			} catch (Exception ex) {
@@ -123,7 +123,7 @@ namespace Leopard.Bussiness {
 
 			GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.IsDeleted != true);
 
-			Task<List<ShiftTabletScriptSupervisorDescription>>? res = _scriptSupervisorDescriptionStore.GetAllWithPagingAsync(GetAllScriptSupervisorDescriptionExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo, "desc", out totalCount);
+			Task<List<ShiftTabletScriptSupervisorDescription>>? res = _scriptSupervisorDescriptionStore.GetAllWithPagingAsync(GetAllScriptSupervisorDescriptionExpressions, pp => pp, pp => pp.CreateDateTime, "desc", model.PageSize, model.PageNo, out totalCount);
 
 
 			return res;
@@ -140,7 +140,7 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> RegisterTabletConductorChanges(TabletConductorChangesModel model) {
 
 			try {
-				var foundTablet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
+				var foundTablet = await _shiftShiftTabletStore.FindByIdAsync(model.ShiftTabletId);
 				if (foundTablet == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "لوح شیفت مورد نظر یافت نشد.";
@@ -166,8 +166,8 @@ namespace Leopard.Bussiness {
 
 			try {
 
-				var foudShiftTablet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
-				var foundConductorChange = _shiftTabletConductorChanxStore.FindById(model.Id);
+				var foudShiftTablet = await _shiftShiftTabletStore.FindByIdAsync(model.ShiftTabletId);
+				var foundConductorChange = await _shiftTabletConductorChanxStore.FindByIdAsync(model.Id);
 				if (foundConductorChange == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
@@ -181,7 +181,7 @@ namespace Leopard.Bussiness {
 					foundConductorChange.ShiftTabletId = model.ShiftTabletId.Value;
 					foundConductorChange.Description = model.Description;
 
-					await _shiftTabletConductorChanxStore.Update(foundConductorChange);
+					await _shiftTabletConductorChanxStore.UpdateAsync(foundConductorChange);
 				}
 
 			} catch (Exception ex) {
@@ -225,7 +225,7 @@ namespace Leopard.Bussiness {
 
 
 			GetAllTabletConductorChangesExpressions.Add(pp => pp.IsDeleted != true);
-			Task<List<ShiftTabletConductorChanx>>? res = _shiftTabletConductorChanxStore.GetAllWithPagingAsync(GetAllTabletConductorChangesExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo, "desc", out totalCount);
+			Task<List<ShiftTabletConductorChanx>>? res = _shiftTabletConductorChanxStore.GetAllWithPagingAsync(GetAllTabletConductorChangesExpressions, pp => pp, pp => pp.CreateDateTime, "desc", model.PageSize, model.PageNo, out totalCount);
 			return res;
 
 		}
@@ -238,14 +238,14 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> DeleteTabletConductorChanges(TabletConductorChangesModel model) {
 
 			try {
-				var foundConductorChange = _shiftTabletConductorChanxStore.FindById(model.Id);
+				var foundConductorChange = await _shiftTabletConductorChanxStore.FindByIdAsync(model.Id);
 				if (foundConductorChange == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
 				} else {
 					foundConductorChange.IsDeleted = true;
 
-					await _shiftTabletConductorChanxStore.Update(foundConductorChange);
+					await _shiftTabletConductorChanxStore.UpdateAsync(foundConductorChange);
 				}
 			} catch (Exception ex) {
 
@@ -265,7 +265,7 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> RegisterShiftRevisionProblem(ShiftRevisionProblemModel model) {
 
 			try {
-				var foundShiftTablet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
+				var foundShiftTablet = await _shiftShiftTabletStore.FindByIdAsync(model.ShiftTabletId);
 				if (foundShiftTablet == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "لوح شیفت مورد نظر جستجو نشد.";
@@ -330,7 +330,7 @@ namespace Leopard.Bussiness {
 
 			GetAllShiftRevisionProblemExpressions.Add(pp => pp.IsDeleted != true);
 
-			Task<List<ShiftRevisionProblem>>? res = _shiftRevisionProblemStore.GetAllWithPagingAsync(GetAllShiftRevisionProblemExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo, "desc", out totalCount);
+			Task<List<ShiftRevisionProblem>>? res = _shiftRevisionProblemStore.GetAllWithPagingAsync(GetAllShiftRevisionProblemExpressions, pp => pp, pp => pp.CreateDateTime, "desc", model.PageSize, model.PageNo, out totalCount);
 
 			return res;
 
@@ -344,8 +344,8 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> UpdateShiftRevisionProblem(ShiftRevisionProblemModel model) {
 
 			try {
-				var foundShiftTblet = _shiftShiftTabletStore.FindById(model.ShiftTabletId);
-				var foundRevision = _shiftRevisionProblemStore.FindById(model.Id);
+				var foundShiftTblet = await _shiftShiftTabletStore.FindByIdAsync(model.ShiftTabletId);
+				var foundRevision = await _shiftRevisionProblemStore.FindByIdAsync(model.Id);
 				if (foundRevision == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
@@ -360,7 +360,7 @@ namespace Leopard.Bussiness {
 					foundRevision.RevisorCode = model.RevisorCode;
 					foundRevision.Description = model.Description;
 
-					_shiftRevisionProblemStore.Update(foundRevision);
+					_shiftRevisionProblemStore.UpdateAsync(foundRevision);
 				}
 			} catch (Exception ex) {
 
@@ -380,13 +380,13 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> DeleteShiftRevisionProblem(ShiftRevisionProblemModel model) {
 
 			try {
-				var foundRevision = _shiftRevisionProblemStore.FindById(model.Id);
+				var foundRevision = await _shiftRevisionProblemStore.FindByIdAsync(model.Id);
 				if (foundRevision == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "رکورد مورد نظر جستجو نشد.";
 				} else {
 					foundRevision.IsDeleted = true;
-					await _shiftRevisionProblemStore.Update(foundRevision);
+					await _shiftRevisionProblemStore.UpdateAsync(foundRevision);
 				}
 			} catch (Exception ex) {
 
