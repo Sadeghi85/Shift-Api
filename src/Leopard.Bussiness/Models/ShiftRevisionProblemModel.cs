@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Model {
+namespace Leopard.Bussiness {
 	public class ShiftRevisionProblemModel {
 		public int Id { get; set; } // Id (Primary key)
 		[Required(ErrorMessage =ValidationConstants.ShiftTabletIdRequred)]

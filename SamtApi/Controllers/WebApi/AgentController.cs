@@ -1,6 +1,4 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
+using Leopard.Bussiness;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +11,7 @@ namespace SamtApi.Controllers.WebApi {
 	[ApiController]
 	public class AgentController : YaldaController {
 
-		private IAgentService _agentService;
+		private readonly IAgentService _agentService;
 
 		public AgentController(IAgentService agentService) {
 			_agentService = agentService;
@@ -23,13 +21,22 @@ namespace SamtApi.Controllers.WebApi {
 
 		// GET: api/<AgentController>
 		[HttpPost("GetAll")]
-		public async Task<IActionResult> GetAll(AgentModel model) {
+		public async Task<IActionResult> GetAll(AgentSearchModel model) {
 
 			var ss = GetUserId();
 
-			List<AgentResultModel>? res = await _agentService.GetAll(model);
+			if (model == null) {
+				return null;
+			}
 
-			return Ok(OperationResult<List<AgentResultModel>>.SuccessResult(res, _agentService.GetAllTotal()));
+			Task<int> totalCount;
+
+			var res = await _agentService.GetAll(model, out totalCount);
+			var resCount = await totalCount;
+
+			//return Ok(OperationResult<List<AgentViewModel>>.SuccessResult(res, _agentService.GetAllTotal()));
+
+			return Ok(OperationResult<List<AgentViewModel>>.SuccessResult(res, resCount));
 		}
 		/// <summary>
 		/// there is no relation in TelavatAgentResourceTypes to SAMT_Agents and SAMT_ResourceTypes
@@ -39,8 +46,12 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost]
 		public async Task<IActionResult> GetAgentByResourceTypeID(GetAgentByResourceTypeIDModel model) {
 
-			List<GetAgentByResourceTypeIDResult>? res = await _agentService.GetAgentByResourceTypeID(model);
-			return Ok(OperationResult<List<GetAgentByResourceTypeIDResult>?>.SuccessResult(res, _agentService.GetAgentByResourceTypeIDTotalCount()));
+			Task<int> totalCount;
+
+			var res = await _agentService.GetAgentByResourceTypeID(model, out totalCount);
+			var resCount = await totalCount;
+
+			return Ok(OperationResult<List<GetAgentByResourceTypeIDResult>?>.SuccessResult(res, resCount));
 
 		}
 

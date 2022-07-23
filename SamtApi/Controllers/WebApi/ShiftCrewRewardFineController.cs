@@ -1,7 +1,6 @@
 
 
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Services.Interface;
+using Leopard.Bussiness;
 using Leopard.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,9 +26,13 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(ShiftCrewRewardFineSearchModel model) {
 
-			List<ShiftCrewRewardFine>? res = await _shiftCrewRewardFineService.GetAll(model);
+			Task<int> totalCount;
 
-			return Ok(OperationResult<List<ShiftCrewRewardFine>>.SuccessResult(res, res.Count()));
+
+			var res = await _shiftCrewRewardFineService.GetAll(model, out totalCount);
+			var resCount = await totalCount;
+
+			return Ok(OperationResult<List<ShiftCrewRewardFine>>.SuccessResult(res, resCount));
 
 		}
 
@@ -41,7 +44,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// POST api/<ShiftCrewRewardFineController>
 		[HttpPost("Register")]
-		public async Task<IActionResult> Register(ShiftCrewRewardFineModel model) {
+		public async Task<IActionResult> Register(ShiftCrewRewardFineInputModel model) {
 
 			if (!ModelState.IsValid) {
 
@@ -56,7 +59,7 @@ namespace SamtApi.Controllers.WebApi {
 			}
 
 			var res = await _shiftCrewRewardFineService.Register(model);
-			if (res .Success) {
+			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
 			return Ok(OperationResult<string>.FailureResult(res.Message));
@@ -64,7 +67,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// PUT api/<ShiftCrewRewardFineController>/5
 		[HttpPost("Update")]
-		public async Task<IActionResult> Update(ShiftCrewRewardFineModel model) {
+		public async Task<IActionResult> Update(ShiftCrewRewardFineInputModel model) {
 
 			var res = await _shiftCrewRewardFineService.Update(model);
 			if (res.Success) {
@@ -75,7 +78,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// DELETE api/<ShiftCrewRewardFineController>/5
 		[HttpPost("Delete")]
-		public async Task<IActionResult> Delete(ShiftCrewRewardFineModel model) {
+		public async Task<IActionResult> Delete(ShiftCrewRewardFineInputModel model) {
 
 			var res = await _shiftCrewRewardFineService.Delete(model);
 			if (res.Success) {

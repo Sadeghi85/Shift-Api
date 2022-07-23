@@ -1,6 +1,4 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
+using Leopard.Bussiness;
 using Leopard.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,11 +29,13 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(ShiftTabletSearchModel model) {
 
-
+			Task<int> totalCount;
 
 			//IQueryable<ShiftShiftTablet>? res = _shiftTabletService.GetAll();
-			List<ShiftTabletResult>? res = await _shiftTabletService.GetAll(model);
-			return Ok(OperationResult<List<ShiftTabletResult>?>.SuccessResult(res, _shiftTabletService.GetShiftTabletCount()));
+			var res = await _shiftTabletService.GetAll(model, out totalCount);
+			var resCount = await totalCount;
+
+			return Ok(OperationResult<List<ShiftTabletViewModel>?>.SuccessResult(res, resCount));
 
 		}
 
@@ -52,7 +52,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// POST api/<ShiftTabletController>
 		[HttpPost("Register")]
-		public async Task<OkObjectResult> Register(ShiftTabletModel model) {
+		public async Task<OkObjectResult> Register(ShiftTabletInputModel model) {
 			if (!ModelState.IsValid) {
 				var errors = ModelState.Select(x => x.Value.Errors)
 						   .Where(y => y.Count > 0)
@@ -63,7 +63,7 @@ namespace SamtApi.Controllers.WebApi {
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
-			var res = await _shiftTabletService.RegisterShiftTablet(model);
+			var res = await _shiftTabletService.Register(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -73,7 +73,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// PUT api/<ShiftTabletController>/5
 		[HttpPost("Update")]
-		public async Task<OkObjectResult> Update(ShiftTabletModel model) {
+		public async Task<OkObjectResult> Update(ShiftTabletInputModel model) {
 			if (!ModelState.IsValid) {
 				var errors = ModelState.Select(x => x.Value.Errors)
 						   .Where(y => y.Count > 0)
@@ -84,7 +84,7 @@ namespace SamtApi.Controllers.WebApi {
 
 
 
-			var res = await _shiftTabletService.UpdateShifTablet(model);
+			var res = await _shiftTabletService.Update(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -92,9 +92,9 @@ namespace SamtApi.Controllers.WebApi {
 
 		}
 
-		
+
 		[HttpPost("Delete")]
-		public async Task<IActionResult> Delete(ShiftTabletModel model) {
+		public async Task<IActionResult> Delete(ShiftTabletInputModel model) {
 			var res = await _shiftTabletService.Delete(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));

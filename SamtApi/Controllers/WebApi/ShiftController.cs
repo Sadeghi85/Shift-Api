@@ -1,7 +1,4 @@
-
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
+using Leopard.Bussiness;
 using Leopard.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,9 +33,13 @@ namespace SamtApi.Controllers.WebApi {
 				model.PortalId = portalId;
 			}
 
-			var res = await _shiftService.GetAll(model);
+			Task<int> totalCount;
 
-			return Ok(OperationResult<List<ShiftResultModel>?>.SuccessResult(res, _shiftService.GetAllCount()));
+
+			var res = await _shiftService.GetAll(model, out totalCount);
+			var resCount = await totalCount;
+
+			return Ok(OperationResult<List<ShiftViewModel>?>.SuccessResult(res, resCount));
 
 		}
 
@@ -59,7 +60,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// POST api/<ShiftController>
 		[HttpPost("Register")]
-		public async Task<IActionResult> Register(ShiftModel model) {
+		public async Task<IActionResult> Register(ShiftInputModel model) {
 			if (!ModelState.IsValid) {
 
 
@@ -81,7 +82,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// PUT api/<ShiftController>/5
 		[HttpPost("Update")]
-		public async Task<IActionResult> Update(ShiftModel model) {
+		public async Task<IActionResult> Update(ShiftInputModel model) {
 
 			var res = await _shiftService.Update(model);
 			if (res.Success) {
@@ -92,7 +93,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// DELETE api/<ShiftController>/5
 		[HttpPost("Delete")]
-		public async Task<IActionResult> Delete(ShiftModel model) {
+		public async Task<IActionResult> Delete(ShiftInputModel model) {
 
 			var res = await _shiftService.Delete(model);
 			if (res.Success) {
@@ -102,17 +103,22 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 
-		[HttpPost("NeededResource/GetAll")]
-		public async Task<IActionResult> GetAllShiftNeededResources(ShiftShiftJobTemplateSearchModel model) {
-			List<ShiftNeededResourcesResult>? res = await _shiftService.GetAllShiftNeededResources(model);
-			return Ok(OperationResult<List<ShiftNeededResourcesResult>?>.SuccessResult(res, _shiftService.GetAllShiftNeededResourcesCount()));
+		[HttpPost("ShiftJobTemplate/GetAll")]
+		public async Task<IActionResult> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model) {
+
+			Task<int> totalCount;
+
+			List<ShiftShiftJobTemplateViewModel>? res = await _shiftService.GetAllShiftJobTemplates(model, out totalCount);
+			var resCount = await totalCount;
+
+			return Ok(OperationResult<List<ShiftShiftJobTemplateViewModel>?>.SuccessResult(res, resCount));
 		}
 
 
-		[HttpPost("NeededResource/Register")]
-		public async Task<IActionResult> RegisterShiftResource(ShiftShiftJobTemplateModel model) {
+		[HttpPost("ShiftJobTemplate/Register")]
+		public async Task<IActionResult> RegisterShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
 
-			var res = await _shiftService.RegisterShiftResource(model);
+			var res = await _shiftService.RegisterShiftJobTemplate(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -120,37 +126,25 @@ namespace SamtApi.Controllers.WebApi {
 
 		}
 
-		[HttpPost("NeededResource/Delete")]
-		public async Task<IActionResult> DeleteShiftResource(ShiftShiftJobTemplateModel model) {
-			var res = await _shiftService.DeleteShiftResource(model);
+		[HttpPost("ShiftJobTemplate/Delete")]
+		public async Task<IActionResult> DeleteShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
+			var res = await _shiftService.DeleteShiftJobTemplate(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
 			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
-		[HttpPost("NeededResource/Update")]
-		public async Task<IActionResult> UpdateShiftResource(ShiftShiftJobTemplateModel model) {
+		[HttpPost("ShiftJobTemplate/Update")]
+		public async Task<IActionResult> UpdateShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
 
-			var res = await _shiftService.UpdateShiftResource(model);
+			var res = await _shiftService.UpdateShiftJobTemplate(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
 			return Ok(OperationResult<string>.FailureResult(res.Message));
 
 		}
-
-
-
-		//[HttpPost("Delete")]
-		//public async Task<IActionResult> Register(ShiftModel model) {
-
-		//	var res = await _shiftService.Delete(model);
-		//	if (res.Success) {
-		//		return Ok(OperationResult<string>.SuccessResult(res.Message));
-		//	}
-		//	return Ok(OperationResult<string>.FailureResult(res.Message));
-		//}
 
 	}
 }

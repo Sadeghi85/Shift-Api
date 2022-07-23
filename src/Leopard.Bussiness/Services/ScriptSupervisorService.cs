@@ -1,10 +1,8 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Repository;
 using System.Linq.Expressions;
 using System.Security.Principal;
 
-namespace Leopard.Bussiness.Services {
+namespace Leopard.Bussiness {
 	public class ScriptSupervisorService : ServiceBase, IScriptSupervisorService {
 
 		private readonly IShiftTabletScriptSupervisorDescriptionStore _scriptSupervisorDescriptionStore;
@@ -99,7 +97,7 @@ namespace Leopard.Bussiness.Services {
 
 		List<Expression<Func<ShiftTabletScriptSupervisorDescription, bool>>> GetAllScriptSupervisorDescriptionExpressions = new List<Expression<Func<ShiftTabletScriptSupervisorDescription, bool>>>();
 
-		public Task<List<ShiftTabletScriptSupervisorDescription>>? GetAllScriptSupervisorDescription(ScriptSupervisorDescriptionSearchModel model) {
+		public Task<List<ShiftTabletScriptSupervisorDescription>>? GetAllScriptSupervisorDescription(ScriptSupervisorDescriptionSearchModel model, out Task<int> totalCount) {
 
 
 			if (model.Id != 0) {
@@ -125,17 +123,17 @@ namespace Leopard.Bussiness.Services {
 
 			GetAllScriptSupervisorDescriptionExpressions.Add(pp => pp.IsDeleted != true);
 
-			Task<List<ShiftTabletScriptSupervisorDescription>>? res = _scriptSupervisorDescriptionStore.GetAllWithPagingAsync(GetAllScriptSupervisorDescriptionExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
+			Task<List<ShiftTabletScriptSupervisorDescription>>? res = _scriptSupervisorDescriptionStore.GetAllWithPagingAsync(GetAllScriptSupervisorDescriptionExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo, "desc", out totalCount);
 
 
 			return res;
 
 		}
 
-		public int GetAllScriptSupervisorDescriptionTotalCount() {
-			var res = _scriptSupervisorDescriptionStore.TotalCount(GetAllScriptSupervisorDescriptionExpressions);
-			return res;
-		}
+		//public int GetAllScriptSupervisorDescriptionTotalCount() {
+		//	var res = _scriptSupervisorDescriptionStore.TotalCount(GetAllScriptSupervisorDescriptionExpressions);
+		//	return res;
+		//}
 
 
 
@@ -203,7 +201,7 @@ namespace Leopard.Bussiness.Services {
 
 		List<Expression<Func<ShiftTabletConductorChanx, bool>>> GetAllTabletConductorChangesExpressions = new List<Expression<Func<ShiftTabletConductorChanx, bool>>>();
 
-		public Task<List<ShiftTabletConductorChanx>>? GetAllTabletConductorChanges(TabletConductorChangesSearchModel model) {
+		public Task<List<ShiftTabletConductorChanx>>? GetAllTabletConductorChanges(TabletConductorChangesSearchModel model, out Task<int> totalCount) {
 
 
 			if (model.Id != 0) {
@@ -227,15 +225,15 @@ namespace Leopard.Bussiness.Services {
 
 
 			GetAllTabletConductorChangesExpressions.Add(pp => pp.IsDeleted != true);
-			Task<List<ShiftTabletConductorChanx>>? res = _shiftTabletConductorChanxStore.GetAllWithPagingAsync(GetAllTabletConductorChangesExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
+			Task<List<ShiftTabletConductorChanx>>? res = _shiftTabletConductorChanxStore.GetAllWithPagingAsync(GetAllTabletConductorChangesExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo, "desc", out totalCount);
 			return res;
 
 		}
 
-		public int GetAllTabletConductorChangesTotalCount() {
-			var res = _shiftTabletConductorChanxStore.TotalCount(GetAllTabletConductorChangesExpressions);
-			return res;
-		}
+		//public int GetAllTabletConductorChangesTotalCount() {
+		//	var res = _shiftTabletConductorChanxStore.TotalCount(GetAllTabletConductorChangesExpressions);
+		//	return res;
+		//}
 
 		public async Task<BaseResult> DeleteTabletConductorChanges(TabletConductorChangesModel model) {
 
@@ -297,7 +295,7 @@ namespace Leopard.Bussiness.Services {
 
 		List<Expression<Func<ShiftRevisionProblem, bool>>> GetAllShiftRevisionProblemExpressions = new List<Expression<Func<ShiftRevisionProblem, bool>>>();
 
-		public Task<List<ShiftRevisionProblem>>? GetAllShiftRevisionProblem(ShiftRevisionProblemSearchModel model) {
+		public Task<List<ShiftRevisionProblem>>? GetAllShiftRevisionProblem(ShiftRevisionProblemSearchModel model, out Task<int> totalCount) {
 
 
 			if (model.Id != 0) {
@@ -332,16 +330,16 @@ namespace Leopard.Bussiness.Services {
 
 			GetAllShiftRevisionProblemExpressions.Add(pp => pp.IsDeleted != true);
 
-			Task<List<ShiftRevisionProblem>>? res = _shiftRevisionProblemStore.GetAllWithPagingAsync(GetAllShiftRevisionProblemExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo);
+			Task<List<ShiftRevisionProblem>>? res = _shiftRevisionProblemStore.GetAllWithPagingAsync(GetAllShiftRevisionProblemExpressions, pp => pp, pp => pp.CreateDateTime, model.PageSize, model.PageNo, "desc", out totalCount);
 
 			return res;
 
 		}
 
-		public int GetAllShiftRevisionProblemTotalCount() {
-			var res = _shiftRevisionProblemStore.TotalCount(GetAllShiftRevisionProblemExpressions);
-			return res;
-		}
+		//public int GetAllShiftRevisionProblemTotalCount() {
+		//	var res = _shiftRevisionProblemStore.TotalCount(GetAllShiftRevisionProblemExpressions);
+		//	return res;
+		//}
 
 		public async Task<BaseResult> UpdateShiftRevisionProblem(ShiftRevisionProblemModel model) {
 

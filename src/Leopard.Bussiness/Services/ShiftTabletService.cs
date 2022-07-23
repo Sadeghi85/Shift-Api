@@ -1,5 +1,3 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
@@ -9,7 +7,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Services {
+namespace Leopard.Bussiness {
 	public class ShiftTabletService : ServiceBase, IShiftTabletService {
 
 		readonly private IShiftShiftTabletStore _shiftShiftTabletStore;
@@ -32,7 +30,7 @@ namespace Leopard.Bussiness.Services {
 			return res;
 		}
 
-		public Task<List<ShiftTabletResult>>? GetAll(ShiftTabletSearchModel model) {
+		public Task<List<ShiftTabletViewModel>>? GetAll(ShiftTabletSearchModel model, out Task<int> totalCount) {
 			GetAllExpressions.Add(pp => pp.ShiftShift.IsDeleted == false);
 
 			//if (model.ShiftId == 0 && model.ShiftDate == null && model.ProductionTypeId == 0) {
@@ -57,12 +55,12 @@ namespace Leopard.Bussiness.Services {
 				GetAllExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
 			}
 			if (model.HasLivePrograms != null) {
-				GetAllExpressions.Add(pp=> pp.HasLivePrograms==model.HasLivePrograms);
+				GetAllExpressions.Add(pp => pp.HasLivePrograms == model.HasLivePrograms);
 			}
 
 			//}
 
-			Task<List<ShiftTabletResult>>? res = _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletResult {
+			var res = _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletViewModel {
 				Id = pp.Id,
 				ShiftDate = pp.ShiftDate,
 				ShiftTitle = pp.ShiftShift.Title,
@@ -71,10 +69,10 @@ namespace Leopard.Bussiness.Services {
 				PortalId = pp.ShiftShift.PortalId,
 				ShiftStartTime = pp.ShiftShift.StartTime,
 				ShiftEndTime = pp.ShiftShift.EndTime,
-				PortalName = pp.ShiftShift.Portal.Title
+				PortalTitle = pp.ShiftShift.Portal.Title
 
 
-			}, pp => pp.Id, model.PageSize, model.PageNo, "desc");
+			}, pp => pp.Id, model.PageSize, model.PageNo, "desc", out totalCount);
 
 			//IQueryable<ShiftShiftTablet>? res = _shiftShiftTabletStore.GetAll();
 			//_shiftShiftStore.GetAllAsync
@@ -83,21 +81,21 @@ namespace Leopard.Bussiness.Services {
 			return res;
 		}
 
-		public int GetShiftTabletCount() {
+		//public int GetShiftTabletCount() {
 
-			var res = _shiftShiftTabletStore.TotalCount(GetAllExpressions);
-			return res;
+		//	var res = _shiftShiftTabletStore.TotalCount(GetAllExpressions);
+		//	return res;
 
-		}
-
-
-
-		public IQueryable<ShiftShiftTablet> GetAll() {
-			return _shiftShiftTabletStore.GetAll();
-		}
+		//}
 
 
-		public async Task<BaseResult> RegisterShiftTablet(ShiftTabletModel model) {
+
+		//public IQueryable<ShiftShiftTablet> GetAll() {
+		//	return _shiftShiftTabletStore.GetAll();
+		//}
+
+
+		public async Task<BaseResult> Register(ShiftTabletInputModel model) {
 
 			try {
 
@@ -114,12 +112,12 @@ namespace Leopard.Bussiness.Services {
 					BaseResult.Success = false;
 					BaseResult.Message = "این شیفت در این روز حاص از قبل موجود است.";
 				} else {
-					ShiftShiftTablet shiftTablet = new ShiftShiftTablet { 
+					ShiftShiftTablet shiftTablet = new ShiftShiftTablet {
 						ShiftId = model.ShiftId,
 						ShiftDate = model.ShiftDate,
 						ShiftWorthPercent = model.ShiftWorthPercent.Value,
-						IsDeleted = false ,
-						HasLivePrograms= model.HasLivePrograms.Value
+						IsDeleted = false,
+						HasLivePrograms = model.HasLivePrograms.Value
 					};
 					foundShift = _shiftShiftStore.FindById(model.ShiftId);
 					shiftTablet.ShiftDuration = foundShift.EndTime - foundShift.StartTime;
@@ -142,7 +140,7 @@ namespace Leopard.Bussiness.Services {
 			return BaseResult;
 		}
 
-		public async Task<BaseResult> UpdateShifTablet(ShiftTabletModel model) {
+		public async Task<BaseResult> Update(ShiftTabletInputModel model) {
 			try {
 
 				var foundShiftTabletSameDate = _shiftShiftTabletStore.GetAll().Any(pp => pp.ShiftDate.Date == model.ShiftDate.Date && pp.ShiftId == model.ShiftId && pp.Id != model.Id);
@@ -180,7 +178,7 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public async Task<BaseResult> Delete(ShiftTabletModel model) {
+		public async Task<BaseResult> Delete(ShiftTabletInputModel model) {
 			try {
 				var found = _shiftShiftTabletStore.FindById(model.Id);
 

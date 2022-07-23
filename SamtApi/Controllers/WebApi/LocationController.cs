@@ -1,6 +1,4 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
+using Leopard.Bussiness;
 using Leopard.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +10,12 @@ namespace SamtApi.Controllers.WebApi {
 	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ShiftLocationController : YaldaController {
+	public class LocationController : YaldaController {
 
-		readonly private IShiftLocationService _shiftLocationService;
+		readonly private ILocationService _locationService;
 
-		public ShiftLocationController(IShiftLocationService shiftLocationService) {
-			_shiftLocationService = shiftLocationService;
+		public LocationController(ILocationService locationService) {
+			_locationService = locationService;
 		}
 
 
@@ -28,32 +26,28 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<IActionResult> GetAll(LocationSearchModel model) {
 
 			var portalId = GetUserPortalId() ?? 0;
-			if (portalId > 1) {
-				model.PortalId = portalId;
-			}
-			//List<ShiftLocationReturnModel>? res = null;
-			//try {
-			List<ShiftLocationReturnModel>? res = await _shiftLocationService.GetAll(model);
-			//} catch (Exception ex) {
 
-				
-			//}
+			Task<int> totalCount;
 
-			return Ok(OperationResult<List<ShiftLocationReturnModel>>.SuccessResult(res, _shiftLocationService.GetAllTotal()));
+			var res = await _locationService.GetAll(model, out totalCount);
+			var resCount = await totalCount;
+
+
+			return Ok(OperationResult<List<LocationViewModel>>.SuccessResult(res, resCount));
 		}
 
 		// GET api/<ShiftLocationController>/5
-		[HttpPost("{portalId}")]
-		public IActionResult Get(int portalId) {
+		//[HttpPost("{portalId}")]
+		//public IActionResult Get(int portalId) {
 
-			List<ShiftLocation>? res = _shiftLocationService.GetShiftLocationByPortalId(portalId);
-			return Ok(OperationResult<List<ShiftLocation>>.SuccessResult(res, res.Count()));
-		}
+		//	List<ShiftLocation>? res = _locationService.GetShiftLocationByPortalId(portalId);
+		//	return Ok(OperationResult<List<ShiftLocation>>.SuccessResult(res, res.Count()));
+		//}
 
 
 		// POST api/<ShiftLocationController>
 		[HttpPost("Register")]
-		public async Task<OkObjectResult> Register(LocationModel model) {
+		public async Task<OkObjectResult> Register(LocationInputModel model) {
 			if (!ModelState.IsValid) {
 
 
@@ -66,9 +60,8 @@ namespace SamtApi.Controllers.WebApi {
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
-			ShiftLocation shiftLocation = new ShiftLocation { Title = model.Title, PortalId = model.PortalId.Value };
-			var res = await _shiftLocationService.RegisterShiftLocation(model);
-			if ( res.Success) {
+			var res = await _locationService.Register(model);
+			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
 			return Ok(OperationResult<string>.FailureResult(res.Message));
@@ -77,8 +70,8 @@ namespace SamtApi.Controllers.WebApi {
 
 		// PUT api/<ShiftLocationController>/5
 		[HttpPost("Update")]
-		public async Task<OkObjectResult> Update(LocationModel model) {
-			var res = await _shiftLocationService.Update(model);
+		public async Task<OkObjectResult> Update(LocationInputModel model) {
+			var res = await _locationService.Update(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -88,8 +81,8 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		[HttpPost("Delete")]
-		public async Task<OkObjectResult> Delete(LocationModel model) {
-			var res = await _shiftLocationService.Delete(model);
+		public async Task<OkObjectResult> Delete(LocationInputModel model) {
+			var res = await _locationService.Delete(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}

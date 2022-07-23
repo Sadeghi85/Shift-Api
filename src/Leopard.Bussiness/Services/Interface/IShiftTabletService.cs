@@ -1,5 +1,3 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
@@ -9,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
 	public interface IShiftTabletService {
-		public  Task<BaseResult> RegisterShiftTablet(ShiftTabletModel model);
+		public Task<BaseResult> Register(ShiftTabletInputModel model);
 		public List<ShiftShiftTablet> GetTabletShiftByPortalId(int portalId);
-		public IQueryable<ShiftShiftTablet> GetAll();
+		//public IQueryable<ShiftShiftTablet> GetAll();
 
-		public Task<BaseResult> UpdateShifTablet(ShiftTabletModel model);
-		public Task<List<ShiftTabletResult>>? GetAll(ShiftTabletSearchModel model);
-		public int GetShiftTabletCount();
-		public Task<BaseResult> Delete(ShiftTabletModel model);
+		public Task<BaseResult> Update(ShiftTabletInputModel model);
+		public Task<List<ShiftTabletViewModel>>? GetAll(ShiftTabletSearchModel model, out Task<int> totalCount);
+		//public int GetShiftTabletCount();
+		public Task<BaseResult> Delete(ShiftTabletInputModel model);
 	}
 }

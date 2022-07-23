@@ -1,6 +1,4 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
+using Leopard.Bussiness;
 using Leopard.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,8 +27,12 @@ namespace SamtApi.Controllers.WebApi {
 				model.PortalId = portalId;
 			}
 
-			var res = await _portal.GetAll(model);
-			return Ok(OperationResult<List<PortalResult>?>.SuccessResult(res, _portal.GetAllTotalCount()));
+			Task<int> totalCount;
+
+			var res = await _portal.GetAll(model, out totalCount);
+			var resCount = await totalCount;
+
+			return Ok(OperationResult<List<PortalViewModel>?>.SuccessResult(res, resCount));
 		}
 
 	}

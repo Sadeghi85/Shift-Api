@@ -44,7 +44,7 @@ namespace Leopard.Bussiness {
 			return res;
 		}
 
-		public Task<List<ShiftTabletCrewViewModel>>? GetAll(ShiftTabletCrewSearchModel model) {
+		public Task<List<ShiftTabletCrewViewModel>>? GetAll(ShiftTabletCrewSearchModel model, out Task<int> totalCount) {
 			GetAllExpressions.Add(pp => pp.ShiftShiftTablet.IsDeleted == false);
 
 			if (model.Id != 0) {
@@ -88,7 +88,7 @@ namespace Leopard.Bussiness {
 
 			//Task<List<ShiftTabletCrewSearchResult>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletCrewSearchResult {ShifTabletId=pp.ShifTabletId , EntranceTime= pp.EntranceTime , ExitTime= pp.ExitTime , FisrtName= pp.SamtAgent.FirstName, LastName=pp.SamtAgent.LastName, AgentId=pp.AgentId, ShiftTitle= pp.ShiftShiftTablet.ShiftShift.Title , ResourceTitle= pp.SamtResourceType.Title} , pp => pp.Id, model.PageSize, model.PageNo, "desc");
 
-			Task<List<ShiftTabletCrewViewModel>>? res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions,
+			var res = _shiftShiftTabletCrewStore.GetAllWithPagingAsync(GetAllExpressions,
 				pp => new ShiftTabletCrewViewModel {
 					Id = pp.Id,
 					ShiftTitle = pp.ShiftShiftTablet.ShiftShift.Title,
@@ -105,17 +105,17 @@ namespace Leopard.Bussiness {
 					DefaultEntranceTime = pp.ShiftShiftTablet.ShiftShift.StartTime,
 					DefaultExitTime = pp.ShiftShiftTablet.ShiftShift.EndTime
 				},
-				pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo); ;
+				pp => pp.ShiftShiftTablet.ShiftDate, model.PageSize, model.PageNo, "desc", out totalCount);
 
 			//IQueryable<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll();
 
 			return res;
 		}
 
-		public int GetAllCount() {
-			var res = _shiftShiftTabletCrewStore.TotalCount(GetAllExpressions);
-			return res;
-		}
+		//public int GetAllCount() {
+		//	var res = _shiftShiftTabletCrewStore.TotalCount(GetAllExpressions);
+		//	return res;
+		//}
 
 		//public IQueryable<ShiftShiftTabletCrew> GetAll() {
 		//	IQueryable<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll();

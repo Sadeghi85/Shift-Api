@@ -1,5 +1,4 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
+using Leopard.Bussiness;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Services {
+namespace Leopard.Bussiness {
 	public class ShiftService : ServiceBase, IShiftService {
 
 		private readonly IShiftShiftStore _shiftShiftStore;
@@ -33,7 +32,7 @@ namespace Leopard.Bussiness.Services {
 
 
 
-		public async Task<BaseResult> Delete(ShiftModel model) {
+		public async Task<BaseResult> Delete(ShiftInputModel model) {
 
 			try {
 				var found = _shiftShiftStore.FindById(model.Id);
@@ -67,7 +66,7 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public Task<List<ShiftResultModel>> GetAll(ShiftSearchModel model) {
+		public Task<List<ShiftViewModel>> GetAll(ShiftSearchModel model, out Task<int> totalCount) {
 
 
 
@@ -88,7 +87,7 @@ namespace Leopard.Bussiness.Services {
 			}
 
 			GetAllExpressions.Add(pp => pp.IsDeleted != true);
-			Task<List<ShiftResultModel>>? res = _shiftShiftStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftResultModel { Id = pp.Id, Title = pp.Title, PortalTitle = pp.Portal.Title, PortalId = pp.PortalId, EndTime = pp.EndTime, StartTime = pp.StartTime, ShiftTypeId = pp.ShiftTypeId, ShiftTypeTitle = GetShiftTypeTitleByShiftTypeId(pp.ShiftTypeId) }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
+			Task<List<ShiftViewModel>>? res = _shiftShiftStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftViewModel { Id = pp.Id, Title = pp.Title, PortalTitle = pp.Portal.Title, PortalId = pp.PortalId, EndTime = pp.EndTime, StartTime = pp.StartTime, ShiftTypeId = pp.ShiftTypeId, ShiftTypeTitle = GetShiftTypeTitleByShiftTypeId(pp.ShiftTypeId) }, pp => pp.Id, model.PageSize, model.PageNo, "desc", out totalCount);
 
 
 
@@ -116,10 +115,10 @@ namespace Leopard.Bussiness.Services {
 			}
 		}
 
-		public int GetAllCount() {
-			var res = _shiftShiftStore.TotalCount(GetAllExpressions);
-			return res;
-		}
+		//public int GetAllCount() {
+		//	var res = _shiftShiftStore.TotalCount(GetAllExpressions);
+		//	return res;
+		//}
 
 
 		public IQueryable<ShiftShift> GetByPortalId(int portalId) {
@@ -129,7 +128,7 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public async Task<BaseResult> Register(ShiftModel model) {
+		public async Task<BaseResult> Register(ShiftInputModel model) {
 
 			var foundPortal = _portalStore.FindById(model.PortalId);
 			if (null == foundPortal) {
@@ -188,7 +187,7 @@ namespace Leopard.Bussiness.Services {
 			return res;
 		}
 
-		public async Task<BaseResult> Update(ShiftModel model) {
+		public async Task<BaseResult> Update(ShiftInputModel model) {
 
 			try {
 				var foundShift = _shiftShiftStore.FindById(model.Id);
@@ -247,7 +246,7 @@ namespace Leopard.Bussiness.Services {
 			return BaseResult;
 		}
 
-		public async Task<BaseResult> RegisterShiftResource(ShiftShiftJobTemplateModel model) {
+		public async Task<BaseResult> RegisterShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
 			try {
 				var foundResourceShift = _shiftShiftJobTemplateStore.GetAll().Any(pp => pp.ShiftId == model.ShiftId && pp.JobId == model.JobId);
 				var foundShift = _shiftShiftStore.FindById(model.ShiftId);
@@ -283,7 +282,7 @@ namespace Leopard.Bussiness.Services {
 			return BaseResult;
 		}
 
-		public async Task<BaseResult> UpdateShiftResource(ShiftShiftJobTemplateModel model) {
+		public async Task<BaseResult> UpdateShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
 
 			try {
 				var founded = _shiftShiftJobTemplateStore.FindById(model.Id);
@@ -323,7 +322,7 @@ namespace Leopard.Bussiness.Services {
 			return BaseResult;
 		}
 
-		public async Task<BaseResult> DeleteShiftResource(ShiftShiftJobTemplateModel model) {
+		public async Task<BaseResult> DeleteShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
 
 			try {
 				var founded = _shiftShiftJobTemplateStore.FindById(model.Id);
@@ -351,7 +350,7 @@ namespace Leopard.Bussiness.Services {
 			return BaseResult;
 		}
 
-		public async Task<List<ShiftNeededResourcesResult>?> GetAllShiftNeededResources(ShiftShiftJobTemplateSearchModel model) {
+		public Task<List<ShiftShiftJobTemplateViewModel>?> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model, out Task<int> totalCount) {
 
 			if (model.ShiftId != 0) {
 				GetAllShiftShiftJobTemplateExpressions.Add(pp => pp.ShiftId == model.ShiftId);
@@ -363,21 +362,21 @@ namespace Leopard.Bussiness.Services {
 				GetAllShiftShiftJobTemplateExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
 			}
 
-			List<ShiftNeededResourcesResult>? res = await _shiftShiftJobTemplateStore.GetAllWithPagingAsync(GetAllShiftShiftJobTemplateExpressions, pp =>
-			new ShiftNeededResourcesResult {
+			var res = _shiftShiftJobTemplateStore.GetAllWithPagingAsync(GetAllShiftShiftJobTemplateExpressions, pp =>
+			new ShiftShiftJobTemplateViewModel {
 				Id = pp.Id,
 				ResourceId = pp.JobId,
-				ResourceTypeName = pp.SamtResourceType.Title,
+				JobTitle = pp.SamtResourceType.Title,
 				ShiftId = pp.ShiftId,
-				ShiftName = pp.ShiftShift.Title
-			}, pp => pp.Id, model.PageSize, model.PageNo);
+				ShiftTitle = pp.ShiftShift.Title
+			}, pp => pp.Id, model.PageSize, model.PageNo, "desc", out totalCount);
 			return res;
 		}
 
-		public int GetAllShiftNeededResourcesCount() {
-			var res = _shiftShiftJobTemplateStore.TotalCount(GetAllShiftShiftJobTemplateExpressions);
-			return res;
-		}
+		//public int GetAllShiftNeededResourcesCount() {
+		//	var res = _shiftShiftJobTemplateStore.TotalCount(GetAllShiftShiftJobTemplateExpressions);
+		//	return res;
+		//}
 
 	}
 }

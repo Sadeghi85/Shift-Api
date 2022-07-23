@@ -1,5 +1,3 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
@@ -9,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
 	public interface IPortalService {
-		public Task<List<PortalViewModel>>? GetAll(PortalSearchModel model);
+		public Task<List<PortalViewModel>>? GetAll(PortalSearchModel model, out Task<int> totalCount);
 		public Portal GetById(int id);
-		public int GetAllTotalCount();
+		//public int GetAllTotalCount();
 	}
 }

@@ -1,5 +1,4 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Services.Interface;
+using Leopard.Bussiness;
 using Leopard.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,37 +9,42 @@ namespace SamtApi.Controllers.WebApi {
 	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ShiftTabletLocationController : YaldaController {
+	public class PortalLocationController : YaldaController {
 
-		readonly private IShiftTabletLocationService _shiftTabletLocationService;
+		readonly private IPortalLocationService _portalLocationService;
 
-		public ShiftTabletLocationController(IShiftTabletLocationService shiftTabletLocationService) {
-			_shiftTabletLocationService = shiftTabletLocationService;
+		public PortalLocationController(IPortalLocationService portalLocationService) {
+			_portalLocationService = portalLocationService;
 		}
 
 
 
 		// GET: api/<ShiftTabletLocationController>
 		[HttpPost("GetAll")]
-		public IActionResult GetAll() {
-			IQueryable<ShiftShiftTabletLocation>? res = _shiftTabletLocationService.GetAll();
+		public async Task<IActionResult> GetAll(PortalLocationSearchModel model) {
 
-			return Ok(OperationResult<IQueryable<ShiftShiftTabletLocation>>.SuccessResult(res, res.Count()));
+			Task<int> totalCount;
+
+
+			var res = await _portalLocationService.GetAll(model, out totalCount);
+			var resCount = await totalCount;
+
+			return Ok(OperationResult<List<PortalLocationViewModel>>.SuccessResult(res, resCount));
 
 		}
 
 		// GET api/<ShiftTabletLocationController>/5
-		[HttpPost("GetByTabletId/{shiftTabletId}")]
-		public IActionResult GetByTabletId(int shiftTabletId) {
-			List<ShiftShiftTabletLocation>? res = _shiftTabletLocationService.GetShiftLocattionsByshiftTabletId(shiftTabletId);
+		//[HttpPost("GetByTabletId/{shiftTabletId}")]
+		//public IActionResult GetByTabletId(int shiftTabletId) {
+		//	var res = _portalLocationService.GetShiftLocattionsByshiftTabletId(shiftTabletId);
 
-			return Ok(OperationResult<List<ShiftShiftTabletLocation>>.SuccessResult(res, res.Count()));
+		//	return Ok(OperationResult<List<PortalLocationViewModel>>.SuccessResult(res, res.Count()));
 
-		}
+		//}
 
 		// POST api/<ShiftTabletLocationController>
 		[HttpPost("Register")]
-		public async Task<IActionResult> Register(ShiftTabletLocationModel model) {
+		public async Task<IActionResult> Register(PortalLocationInputModel model) {
 			if (!ModelState.IsValid) {
 
 
@@ -52,7 +56,7 @@ namespace SamtApi.Controllers.WebApi {
 				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
-			var res = await _shiftTabletLocationService.RegisterShiftTabletLocation(model);
+			var res = await _portalLocationService.Register(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -61,8 +65,8 @@ namespace SamtApi.Controllers.WebApi {
 
 		// PUT api/<ShiftTabletLocationController>/5
 		[HttpPost("Update")]
-		public async Task<IActionResult> Update(ShiftTabletLocationModel model) {
-			var res = await _shiftTabletLocationService.Update(model);
+		public async Task<IActionResult> Update(PortalLocationInputModel model) {
+			var res = await _portalLocationService.Update(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}

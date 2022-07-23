@@ -1,6 +1,4 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
+using Leopard.Bussiness;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -26,12 +24,17 @@ namespace SamtApi.Controllers.WebApi {
 				model.PortalId = portalId;
 			}
 
-			List<ShiftEmploymentDetailResult>? res =await _shiftEmploymentDetail.GetAll(model);
-			return Ok(OperationResult<List<ShiftEmploymentDetailResult>?>.SuccessResult(res, _shiftEmploymentDetail.GetAllCount()));
+			Task<int> totalCount;
+
+
+			var res = await _shiftEmploymentDetail.GetAll(model, out totalCount);
+			var resCount = await totalCount;
+
+			return Ok(OperationResult<List<ShiftEmploymentDetailViewModel>?>.SuccessResult(res, resCount));
 
 		}
 		[HttpPost("Register")]
-		public async Task<IActionResult> Register(ShiftEmploymentDetailModel model) {
+		public async Task<IActionResult> Register(ShiftEmploymentDetailInputModel model) {
 
 			if (!ModelState.IsValid) {
 				var errors = ModelState.Select(x => x.Value.Errors)
@@ -52,7 +55,7 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		[HttpPost("Update")]
-		public async Task<IActionResult> Update(ShiftEmploymentDetailModel model) {
+		public async Task<IActionResult> Update(ShiftEmploymentDetailInputModel model) {
 			if (!ModelState.IsValid) {
 				var errors = ModelState.Select(x => x.Value.Errors)
 						   .Where(y => y.Count > 0)
@@ -72,7 +75,7 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		[HttpPost("Delete")]
-		public async Task<IActionResult> Delete(ShiftEmploymentDetailModel model) {
+		public async Task<IActionResult> Delete(ShiftEmploymentDetailInputModel model) {
 
 			var res = await _shiftEmploymentDetail.Delete(model);
 			if (res.Success) {

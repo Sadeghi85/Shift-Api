@@ -29,9 +29,10 @@ namespace Leopard.Bussiness {
 		}
 
 
-		public Task<List<LocationViewModel>> GetAll(LocationSearchModel model) {
+		public Task<List<LocationViewModel>> GetAll(LocationSearchModel model, out Task<int> totalCount) {
 			var checkAccess = CheckAccess();
 			if (!checkAccess.Success) {
+				totalCount = Task.FromResult(0);
 				return Task.FromResult(new List<LocationViewModel>());
 			}
 
@@ -49,16 +50,16 @@ namespace Leopard.Bussiness {
 			//	GetAllExpressions.Add(pp => true);
 			//}
 
-			var res = _shiftLocationStore.GetAllWithPagingAsync(GetAllExpressions, pp => new LocationViewModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, model.PageSize, model.PageNo, "desc");
+			var res = _shiftLocationStore.GetAllWithPagingAsync(GetAllExpressions, pp => new LocationViewModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, model.PageSize, model.PageNo, "desc", out totalCount);
 
 			return res;
 
 		}
 
-		public int GetAllTotal() {
-			var res = _shiftLocationStore.TotalCount(GetAllExpressions);
-			return res;
-		}
+		//public int GetAllTotal() {
+		//	var res = _shiftLocationStore.TotalCount(GetAllExpressions);
+		//	return res;
+		//}
 
 		//public List<ShiftLocation> GetShiftLocationByPortalId(int portalId) {
 

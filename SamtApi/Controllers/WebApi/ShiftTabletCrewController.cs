@@ -1,6 +1,4 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
+using Leopard.Bussiness;
 using Leopard.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,18 +41,27 @@ namespace SamtApi.Controllers.WebApi {
 		// GET: api/<ShiftTabletCrewController>
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(ShiftTabletCrewSearchModel model) {
-			List<ShfitTabletReportResult>? res = await _shiftTabletCrewService.GetAll(model);
-			return Ok(OperationResult<List<ShfitTabletReportResult>?>.SuccessResult(res, _shiftTabletCrewService.GetAllCount()));
+
+			Task<int> totalCount;
+
+
+			var res = await _shiftTabletCrewService.GetAll(model, out totalCount);
+			var resCount = await totalCount;
+
+			return Ok(OperationResult<List<ShiftTabletCrewViewModel>?>.SuccessResult(res, resCount));
 
 		}
 
 		[HttpPost("GetGeExcel")]
 		public async Task<IActionResult> GetGeExcel(ShiftTabletCrewSearchModel model) {
 
-			List<ShfitTabletReportResult>? res = await _shiftTabletCrewService.GetAll(model);
+			Task<int> totalCount;
 
-			var dates = res.Select(pp => new { pp.PersianDate, pp.PersianWeekDay }).Distinct().ToList();
-			var shifts = res.Select(pp => pp.shiftTitle).Distinct().ToList();
+
+			var res = await _shiftTabletCrewService.GetAll(model, out totalCount);
+
+			var dates = res.Select(pp => new { pp.ShiftDatePersian, pp.PersianWeekDay }).Distinct().ToList();
+			var shifts = res.Select(pp => pp.ShiftTitle).Distinct().ToList();
 
 			List<ReportTemplate> reportTemplates = new List<ReportTemplate>();
 
@@ -66,13 +73,13 @@ namespace SamtApi.Controllers.WebApi {
 				//reportTemplates.Add(tt);
 				var listOfshifts = new List<TheShift>();
 				foreach (var j in shifts) {
-					var thePersonsListTmp = res.Where(pp => pp.PersianDate == i.PersianDate && pp.shiftTitle == j).Select(pp => new ThePerson { Name = pp.firstName + " " + pp.lastName, ResourceName = pp.jobName }).ToList();
+					var thePersonsListTmp = res.Where(pp => pp.ShiftDatePersian == i.ShiftDatePersian && pp.ShiftTitle == j).Select(pp => new ThePerson { Name = pp.FirstName + " " + pp.LastName, ResourceName = pp.JobTitle }).ToList();
 					var tmpShift = new TheShift { ShiftName = j, ThePersonList = thePersonsListTmp };
 					//
 					listOfshifts.Add(tmpShift);
 
 				}
-				var tt = new ReportTemplate { DayName = i.PersianWeekDay, PersianDate = i.PersianDate, Shifts = listOfshifts };
+				var tt = new ReportTemplate { DayName = i.PersianWeekDay, PersianDate = i.ShiftDatePersian, Shifts = listOfshifts };
 
 				reportTemplates.Add(tt);
 			}
@@ -129,8 +136,8 @@ namespace SamtApi.Controllers.WebApi {
 
 					var query4 =
 						(from cell in ws.Cells["1:1"]
-						where cell.Value?.ToString() == "شیفت"
-						select cell).FirstOrDefault();
+						 where cell.Value?.ToString() == "شیفت"
+						 select cell).FirstOrDefault();
 
 					var sss = ws.Cells["D7"].Value;
 
@@ -171,11 +178,14 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetPdf")]
 		public async Task<IActionResult> GetPdf(ShiftTabletCrewSearchModel model) {
 
-			List<ShfitTabletReportResult>? res = await _shiftTabletCrewService.GetAll(model);
+			Task<int> totalCount;
 
 
-			var dates = res.Select(pp => new { pp.PersianDate, pp.PersianWeekDay }).Distinct().ToList();
-			var shifts = res.Select(pp => pp.shiftTitle).Distinct().ToList();
+			List<ShiftTabletCrewViewModel>? res = await _shiftTabletCrewService.GetAll(model, out totalCount);
+
+
+			var dates = res.Select(pp => new { pp.ShiftDatePersian, pp.PersianWeekDay }).Distinct().ToList();
+			var shifts = res.Select(pp => pp.ShiftTitle).Distinct().ToList();
 
 			List<ReportTemplate> reportTemplates = new List<ReportTemplate>();
 			IPdfReportData pdfRes;
@@ -187,13 +197,13 @@ namespace SamtApi.Controllers.WebApi {
 				//reportTemplates.Add(tt);
 				var listOfshifts = new List<TheShift>();
 				foreach (var j in shifts) {
-					var thePersonsListTmp = res.Where(pp => pp.PersianDate == i.PersianDate && pp.shiftTitle == j).Select(pp => new ThePerson { Name = pp.firstName + " " + pp.lastName, ResourceName = pp.jobName }).ToList();
+					var thePersonsListTmp = res.Where(pp => pp.ShiftDatePersian == i.ShiftDatePersian && pp.ShiftTitle == j).Select(pp => new ThePerson { Name = pp.FirstName + " " + pp.LastName, ResourceName = pp.JobTitle }).ToList();
 					var tmpShift = new TheShift { ShiftName = j, ThePersonList = thePersonsListTmp };
 					//
 					listOfshifts.Add(tmpShift);
 
 				}
-				var tt = new ReportTemplate { DayName = i.PersianWeekDay, PersianDate = i.PersianDate, Shifts = listOfshifts };
+				var tt = new ReportTemplate { DayName = i.PersianWeekDay, PersianDate = i.ShiftDatePersian, Shifts = listOfshifts };
 
 				reportTemplates.Add(tt);
 			}
@@ -319,7 +329,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// POST api/<ShiftTabletCrewController>
 		[HttpPost("Register")]
-		public async Task<IActionResult> Register(ShiftTabletCrewModel model) {
+		public async Task<IActionResult> Register(ShiftTabletCrewInputModel model) {
 
 			if (!ModelState.IsValid) {
 				var errors = ModelState.Select(x => x.Value.Errors)
@@ -339,7 +349,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// PUT api/<ShiftTabletCrewController>/5
 		[HttpPost("Update")]
-		public async Task<IActionResult> Update(ShiftTabletCrewModel model) {
+		public async Task<IActionResult> Update(ShiftTabletCrewInputModel model) {
 			var res = await _shiftTabletCrewService.Update(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
@@ -358,7 +368,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		// DELETE api/<ShiftTabletCrewController>/5
 		[HttpPost("Delete")]
-		public async Task<IActionResult> Delete(ShiftTabletCrewModel model) {
+		public async Task<IActionResult> Delete(ShiftTabletCrewInputModel model) {
 			var res = await _shiftTabletCrewService.Delete(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));

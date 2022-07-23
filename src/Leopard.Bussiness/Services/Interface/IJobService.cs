@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness{
+namespace Leopard.Bussiness {
 	public interface IJobService {
-		public Task<List<JobViewModel>>? GetAll(JobSearchModel model);
-		public int GetAllCount();
+		public Task<List<JobViewModel>>? GetAll(JobSearchModel model, out Task<int> totalCount);
+		//public int GetAllCount();
 	}
 }

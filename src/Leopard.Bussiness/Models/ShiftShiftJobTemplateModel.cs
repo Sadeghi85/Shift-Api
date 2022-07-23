@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Model {
-	public  class ShiftShiftJobTemplateModel {
+namespace Leopard.Bussiness {
+	public  class ShiftShiftJobTemplateInputModel {
 		public int Id { get; set; } // Id (Primary key)
 		[Required(ErrorMessage =ValidationConstants.JobIdRquired)]
 		public int JobId { get; set; } // JobId
@@ -14,5 +14,21 @@ namespace Leopard.Bussiness.Model {
 		public int ShiftId { get; set; } // ShiftId
 		
 		public bool IsDeleted { get; set; } // IsDeleted
+	}
+
+	public class ShiftShiftJobTemplateSearchModel : PagerViewModel {
+		public int ShiftId { get; set; }
+		public int JobId { get; set; }
+
+		public bool? IsDeleted { get; set; }
+
+	}
+
+	public class ShiftShiftJobTemplateViewModel {
+		public int Id { get; set; }
+		public int ShiftId { get; set; }
+		public int ResourceId { get; set; }
+		public string ShiftTitle { get; set; }
+		public string JobTitle { get; set; }
 	}
 }

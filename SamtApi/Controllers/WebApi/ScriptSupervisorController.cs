@@ -1,6 +1,4 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
-using Leopard.Bussiness.Services.Interface;
+using Leopard.Bussiness;
 using Leopard.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -54,8 +52,13 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAllScriptSupervisorDescription")]
 		public async Task<IActionResult> GetAllScriptSupervisorDescription(ScriptSupervisorDescriptionSearchModel model) {
 
-			List<ShiftTabletScriptSupervisorDescription>? res = await _scriptSupervisorService.GetAllScriptSupervisorDescription(model);
-			return Ok(OperationResult<List<ShiftTabletScriptSupervisorDescription>?>.SuccessResult(res, _scriptSupervisorService.GetAllScriptSupervisorDescriptionTotalCount()));
+			Task<int> totalCount;
+
+
+			var res = await _scriptSupervisorService.GetAllScriptSupervisorDescription(model, out totalCount);
+			var resCount = await totalCount;
+
+			return Ok(OperationResult<List<ShiftTabletScriptSupervisorDescription>?>.SuccessResult(res, resCount));
 		}
 
 
@@ -83,8 +86,13 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAllTabletConductorChanges")]
 		public async Task<IActionResult> GetAllTabletConductorChanges(TabletConductorChangesSearchModel model) {
 
-			List<ShiftTabletConductorChanx>? res =await _scriptSupervisorService.GetAllTabletConductorChanges(model);
-			return Ok(OperationResult<List<ShiftTabletConductorChanx>?>.SuccessResult(res, _scriptSupervisorService.GetAllTabletConductorChangesTotalCount()));
+			Task<int> totalCount;
+
+
+			List<ShiftTabletConductorChanx>? res = await _scriptSupervisorService.GetAllTabletConductorChanges(model, out totalCount);
+			var resCount = await totalCount;
+
+			return Ok(OperationResult<List<ShiftTabletConductorChanx>?>.SuccessResult(res, resCount));
 		}
 
 		[HttpPost("DeleteTabletConductorChanges")]
@@ -110,8 +118,13 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAllShiftRevisionProblem")]
 		public async Task<IActionResult> GetAllShiftRevisionProblem(ShiftRevisionProblemSearchModel model) {
 
-			List<ShiftRevisionProblem>? res =await _scriptSupervisorService.GetAllShiftRevisionProblem(model);
-			return Ok(OperationResult<List<ShiftRevisionProblem>?>.SuccessResult(res, _scriptSupervisorService.GetAllShiftRevisionProblemTotalCount()));
+			Task<int> totalCount;
+
+
+			List<ShiftRevisionProblem>? res = await _scriptSupervisorService.GetAllShiftRevisionProblem(model, out totalCount);
+			var resCount = await totalCount;
+
+			return Ok(OperationResult<List<ShiftRevisionProblem>?>.SuccessResult(res, resCount));
 			//return Ok(res);
 		}
 
@@ -138,31 +151,5 @@ namespace SamtApi.Controllers.WebApi {
 			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
-		// GET: api/<ScriptSupervisorController>
-		[HttpGet]
-		public IEnumerable<string> Get() {
-			return new string[] { "value1", "value2" };
-		}
-
-		// GET api/<ScriptSupervisorController>/5
-		[HttpGet("{id}")]
-		public string Get(int id) {
-			return "value";
-		}
-
-		// POST api/<ScriptSupervisorController>
-		[HttpPost]
-		public void Post([FromBody] string value) {
-		}
-
-		// PUT api/<ScriptSupervisorController>/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value) {
-		}
-
-		// DELETE api/<ScriptSupervisorController>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id) {
-		}
 	}
 }

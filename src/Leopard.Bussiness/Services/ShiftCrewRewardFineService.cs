@@ -1,5 +1,3 @@
-using Leopard.Bussiness.Model;
-using Leopard.Bussiness.Model.ReturnModel;
 using Leopard.Repository;
 using System;
 using System.Collections.Generic;
@@ -9,12 +7,12 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leopard.Bussiness.Services {
+namespace Leopard.Bussiness {
 	public class ShiftCrewRewardFineService : ServiceBase, IShiftCrewRewardFineService {
 
 		readonly private IShiftCrewRewardFineStore _shiftCrewRewardFineStore;
 		readonly private IShiftLogStore _shiftLogStore;
-		
+
 		List<Expression<Func<ShiftCrewRewardFine, bool>>> Expressions = new List<Expression<Func<ShiftCrewRewardFine, bool>>>();
 
 
@@ -23,7 +21,7 @@ namespace Leopard.Bussiness.Services {
 			_shiftLogStore = shiftLogStore;
 		}
 
-		public async Task<BaseResult> Delete(ShiftCrewRewardFineModel model) {
+		public async Task<BaseResult> Delete(ShiftCrewRewardFineInputModel model) {
 
 			try {
 				var found = _shiftCrewRewardFineStore.FindById(model.Id);
@@ -53,13 +51,13 @@ namespace Leopard.Bussiness.Services {
 
 		}
 
-		public IQueryable<ShiftCrewRewardFine> GetAll() {
-			throw new NotImplementedException();
-		}
+		//public IQueryable<ShiftCrewRewardFine> GetAll() {
+		//	throw new NotImplementedException();
+		//}
 
-		public Task<List<ShiftCrewRewardFine>>? GetAll(ShiftCrewRewardFineSearchModel model) {
+		public Task<List<ShiftCrewRewardFine>>? GetAll(ShiftCrewRewardFineSearchModel model, out Task<int> totalCount) {
 
-			
+
 
 			if (model.IsRewardFine == null && model.RewardFineDate == null && string.IsNullOrWhiteSpace(model.Description) && string.IsNullOrWhiteSpace(model.CrewName)) {
 				Expressions.Add(pp => true);
@@ -76,14 +74,14 @@ namespace Leopard.Bussiness.Services {
 				if (!string.IsNullOrWhiteSpace(model.CrewName)) {
 					Expressions.Add(pp => model.CrewName.Contains(pp.ShiftShiftTabletCrew.SamtAgent.FirstName) || model.CrewName.Contains(pp.ShiftShiftTabletCrew.SamtAgent.LastName));
 				}
-				if (model.IsDeleted!=null) {
-					Expressions.Add(pp=> pp.IsDeleted==model.IsDeleted);
+				if (model.IsDeleted != null) {
+					Expressions.Add(pp => pp.IsDeleted == model.IsDeleted);
 				}
 				//expressions.Add(pp=> pp.IsDeleted==false);
 
 			}
 			Expressions.Add(pp => pp.IsDeleted != true);
-			Task<List<ShiftCrewRewardFine>>? res = _shiftCrewRewardFineStore.GetAllWithPagingAsync(Expressions, pp => new ShiftCrewRewardFine {Id= pp.Id , Ammount= pp.Ammount }, pp=> pp.Id , model.PageSize,model.PageNo , "desc" );
+			Task<List<ShiftCrewRewardFine>>? res = _shiftCrewRewardFineStore.GetAllWithPagingAsync(Expressions, pp => new ShiftCrewRewardFine { Id = pp.Id, Ammount = pp.Ammount }, pp => pp.Id, model.PageSize, model.PageNo, "desc", out totalCount);
 
 
 
@@ -92,9 +90,9 @@ namespace Leopard.Bussiness.Services {
 			return res;
 		}
 
-		
 
-		public async Task<BaseResult> Register(ShiftCrewRewardFineModel model) {
+
+		public async Task<BaseResult> Register(ShiftCrewRewardFineInputModel model) {
 
 
 
@@ -116,7 +114,7 @@ namespace Leopard.Bussiness.Services {
 			return BaseResult;
 		}
 
-		public async Task<BaseResult> Update(ShiftCrewRewardFineModel model) {
+		public async Task<BaseResult> Update(ShiftCrewRewardFineInputModel model) {
 
 			try {
 				var found = _shiftCrewRewardFineStore.FindById(model.Id);
