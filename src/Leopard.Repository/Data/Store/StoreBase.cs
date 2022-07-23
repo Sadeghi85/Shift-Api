@@ -60,26 +60,23 @@ namespace Leopard.Repository {
 		public virtual Task<int> InsertAsync(T entity) {
 			var res = Task.FromResult(-1);
 			try {
-				//entity.CreateDateTime = DateTime.Now;
+
 				var theType = entity.GetType();
-				var CreateDateTimeProp = theType.GetProperty("CreateDateTime");
-				if (CreateDateTimeProp != null) {
-					CreateDateTimeProp.SetValue(entity, DateTime.Now);
+				var createDateTimeProp = theType.GetProperty("CreateDateTime");
+				if (createDateTimeProp != null) {
+					createDateTimeProp.SetValue(entity, DateTime.Now);
 				}
 
-				//var ident = _iPrincipal as ClaimsPrincipal;
-				//var uId = ident?.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
 				var uId = GetUserId();
 				if (null != uId) {
 					var userId = int.Parse(uId);
-					var CreatedByProp = theType.GetProperty("CreatedBy");
-					if (CreatedByProp != null) {
-						CreatedByProp.SetValue(entity, userId);
+					var createdByProp = theType.GetProperty("CreatedBy");
+					if (createdByProp != null) {
+						createdByProp.SetValue(entity, userId);
 					}
 				}
 
 				if (entity is ShiftLog) {
-					//if (typeof(T) == typeof(ShiftLog)) {
 					_ctx.Instance.ChangeTracker.Entries()
 						.Where(e => e.Entity != null).ToList()
 						.ForEach(e => e.State = EntityState.Detached);
@@ -103,20 +100,43 @@ namespace Leopard.Repository {
 		public virtual Task<int> InsertAsync(List<T> entities) {
 			var res = Task.FromResult(-1);
 			try {
-				List<T> newEntities = new List<T>();
+				var newEntities = new List<T>();
+
 				var now = DateTime.Now;
+				var uId = GetUserId();
+
 				foreach (var entity in entities) {
 					var theType = entity.GetType();
-					var CreateDateTimeProp = theType.GetProperty("CreateDateTime");
-					if (CreateDateTimeProp != null) {
-						CreateDateTimeProp.SetValue(entity, DateTime.Now);
+					var createDateTimeProp = theType.GetProperty("CreateDateTime");
+					if (createDateTimeProp != null) {
+						createDateTimeProp.SetValue(entity, DateTime.Now);
 					}
+
+					if (null != uId) {
+						var userId = int.Parse(uId);
+						var createdByProp = theType.GetProperty("CreatedBy");
+						if (createdByProp != null) {
+							createdByProp.SetValue(entity, userId);
+						}
+					}
+
 					newEntities.Add(entity);
 				}
 				//res = _ctx.Instance.BulkInsert(newEntities);
 
 				res = Task.Run(() => {
 					try {
+
+						if (entities.Count == 0) {
+							return 0;
+						}
+
+						if (entities[0] is ShiftLog) {
+							_ctx.Instance.ChangeTracker.Entries()
+								.Where(e => e.Entity != null).ToList()
+								.ForEach(e => e.State = EntityState.Detached);
+						}
+
 						_ctx.Instance.BulkInsert(newEntities);
 						return newEntities.Count;
 					} catch (Exception ex) {
@@ -162,11 +182,18 @@ namespace Leopard.Repository {
 		public virtual Task<List<TResult>> GetAllAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, string orderDirection = "asc") {
 			var res = Task.FromResult(new List<TResult>());
 			try {
-				if (predicate.Count <= 0) {
-					return null;
-				}
-				var queryresult = TEntity.Where(predicate[0]);
-				for (int i = 1; i < predicate.Count; i++) {
+
+				IQueryable<T> queryresult = TEntity;
+
+				//if (predicate.Count <= 0) {
+				//	return null;
+				//}
+				//var queryresult = TEntity.Where(predicate[0]);
+				//for (int i = 1; i < predicate.Count; i++) {
+				//	queryresult = queryresult.Where(predicate[i]);
+				//}
+
+				for (var i = 0; i < predicate.Count; i++) {
 					queryresult = queryresult.Where(predicate[i]);
 				}
 
@@ -183,35 +210,32 @@ namespace Leopard.Repository {
 			return res;
 		}
 
-		public virtual int TotalCount(List<Expression<Func<T, bool>>> predicate) {
-			var res = 0;
-			try {
-				if (predicate.Count <= 0) {
-					return 0;
-				}
-				var queryresult = TEntity.Where(predicate[0]);
-				for (int i = 1; i < predicate.Count; i++) {
-					queryresult = queryresult.Where(predicate[i]);
-				}
+		//public virtual int TotalCount(List<Expression<Func<T, bool>>> predicate) {
+		//	var res = 0;
+		//	try {
+		//		if (predicate.Count <= 0) {
+		//			return 0;
+		//		}
+		//		var queryresult = TEntity.Where(predicate[0]);
+		//		for (int i = 1; i < predicate.Count; i++) {
+		//			queryresult = queryresult.Where(predicate[i]);
+		//		}
 
+		//		res = queryresult.Count();
+		//	} catch (Exception ex) {
+		//		_logger.Error(ex, "db error, method: 'TotalCount'");
+		//	}
+		//	return res;
+		//}
 
-
-				res = queryresult.Count();
-			} catch (Exception ex) {
-				_logger.Error(ex, "db error, method: 'GetAllAsync'");
-			}
-			return res;
-		}
-
-
-		public Task<List<TResult>> GetAllWithPagingAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, int pageSize, int pageNumber, string orderDirection = "asc") {
+		public Task<List<TResult>> GetAllWithPagingAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, int pageSize, int pageNumber, string orderDirection, out Task<int> totalCount) {
 			var res = Task.FromResult(new List<TResult>());
+			totalCount = Task.FromResult(0);
+
 			try {
-				if (predicate.Count <= 0) {
-					return null;
-				}
-				var queryresult = TEntity.Where(predicate[0]);
-				for (int i = 1; i < predicate.Count; i++) {
+				IQueryable<T> queryresult = TEntity;
+
+				for (var i = 0; i < predicate.Count; i++) {
 					queryresult = queryresult.Where(predicate[i]);
 				}
 
@@ -221,11 +245,13 @@ namespace Leopard.Repository {
 					queryresult = queryresult.OrderByDescending(orderKeySelector);
 				}
 
+				totalCount = queryresult.CountAsync();
 
 				res = queryresult.Select(selectList).Skip(pageSize * pageNumber).Take(pageSize).ToListAsync();
 			} catch (Exception ex) {
-				_logger.Error(ex, "db error, method: 'GetAllAsync'");
+				_logger.Error(ex, "db error, method: 'GetAllWithPagingAsync'");
 			}
+
 			return res;
 		}
 
@@ -244,27 +270,25 @@ namespace Leopard.Repository {
 
 		public async Task<int> Update(T entity) {
 			var theType = entity.GetType();
-			var LastModifiedDateTime = theType.GetProperty("LastModifiedDateTime");
-			if (LastModifiedDateTime != null) {
-				LastModifiedDateTime.SetValue(entity, DateTime.Now);
+			var lastModifiedDateTime = theType.GetProperty("LastModifiedDateTime");
+			if (lastModifiedDateTime != null) {
+				lastModifiedDateTime.SetValue(entity, DateTime.Now);
 			}
 
 			var uId = GetUserId();
 			if (null != uId) {
 				var userId = int.Parse(uId);
-				var ModifiedByProp = theType.GetProperty("ModifiedBy");
-				if (ModifiedByProp != null) {
-					ModifiedByProp.SetValue(entity, userId);
+				var modifiedByProp = theType.GetProperty("ModifiedBy");
+				if (modifiedByProp != null) {
+					modifiedByProp.SetValue(entity, userId);
 				}
 			}
 
-
 			TEntity.Update(entity);
 			return await _ctx.Instance.SaveChangesAsync();
-
 		}
 
-		public T FindById(object id) {
+		public T? FindById(object id) {
 			var res = TEntity.Find(id);
 			return res;
 		}

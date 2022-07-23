@@ -12,19 +12,15 @@ namespace Leopard.Repository {
 		Task<List<TResult>> GetAllAsync<TResult, TKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, string orderDirection = "asc");
 		Task<List<TResult>> GetAllAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, string orderDirection = "asc");
 
-		
+		public Task<List<TResult>> GetAllWithPagingAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, int pageSize, int pageNumber, string orderDirection, out Task<int> totalCount);
 
-		public Task<List<TResult>> GetAllWithPagingAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, int pageSize, int pageNumber, string orderDirection = "asc");
+		//public int TotalCount(List<Expression<Func<T, bool>>> predicate);
 
-		public  int TotalCount(List<Expression<Func<T, bool>>> predicate);
+		public Task<int> Update(T entity);
 
-		public  Task<int> Update(T entity);
-
-		T FindById(object id);
+		T? FindById(object id);
 
 		public IQueryable<T> GetAll();
-
-		
 
 		List<Expression<Func<T, bool>>> ExpressionMaker();
 	}
