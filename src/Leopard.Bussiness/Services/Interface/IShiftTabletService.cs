@@ -8,12 +8,10 @@ using System.Threading.Tasks;
 namespace Leopard.Bussiness {
 	public interface IShiftTabletService {
 		public Task<BaseResult> Register(ShiftTabletInputModel model);
-		public List<ShiftShiftTablet> GetTabletShiftByPortalId(int portalId);
-		//public IQueryable<ShiftShiftTablet> GetAll();
+		//public List<ShiftShiftTablet> GetTabletShiftByPortalId(int portalId);
 
 		public Task<BaseResult> Update(ShiftTabletInputModel model);
-		public Task<List<ShiftTabletViewModel>>? GetAll(ShiftTabletSearchModel model, out int totalCount);
-		//public int GetShiftTabletCount();
+		public Task<StoreViewModel<ShiftTabletViewModel>> GetAll(ShiftTabletSearchModel model);
 		public Task<BaseResult> Delete(ShiftTabletInputModel model);
 	}
 }

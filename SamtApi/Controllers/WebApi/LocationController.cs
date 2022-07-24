@@ -28,10 +28,10 @@ namespace SamtApi.Controllers.WebApi {
 			var portalId = GetUserPortalId() ?? 0;
 
 
-			var res = await _locationService.GetAll(model, out var resCount);
+			var res = await _locationService.GetAll(model);
 
 
-			return Ok(OperationResult<List<LocationViewModel>>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<LocationViewModel>>.SuccessResult(res.Result, res.TotalCount));
 		}
 
 		// GET api/<ShiftLocationController>/5

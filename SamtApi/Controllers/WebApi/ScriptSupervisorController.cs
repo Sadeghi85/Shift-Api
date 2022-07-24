@@ -42,7 +42,7 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("DeleteScriptSupervisorDescription")]
 		public async Task<IActionResult> DeleteScriptSupervisorDescription(ScriptSupervisorDescriptionModel model) {
 
-			BaseResult? res = await _scriptSupervisorService.DeleteScriptSupervisorDescription(model);
+			var res = await _scriptSupervisorService.DeleteScriptSupervisorDescription(model);
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -53,9 +53,9 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<IActionResult> GetAllScriptSupervisorDescription(ScriptSupervisorDescriptionSearchModel model) {
 
 
-			var res = await _scriptSupervisorService.GetAllScriptSupervisorDescription(model, out var resCount);
+			var res = await _scriptSupervisorService.GetAllScriptSupervisorDescription(model);
 
-			return Ok(OperationResult<List<ShiftTabletScriptSupervisorDescription>?>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<ShiftTabletScriptSupervisorDescription>>.SuccessResult(res.Result, res.TotalCount));
 		}
 
 
@@ -84,9 +84,9 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<IActionResult> GetAllTabletConductorChanges(TabletConductorChangesSearchModel model) {
 
 
-			List<ShiftTabletConductorChanx>? res = await _scriptSupervisorService.GetAllTabletConductorChanges(model, out var resCount);
+			var res = await _scriptSupervisorService.GetAllTabletConductorChanges(model);
 
-			return Ok(OperationResult<List<ShiftTabletConductorChanx>?>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<ShiftTabletConductorChanx>>.SuccessResult(res.Result, res.TotalCount));
 		}
 
 		[HttpPost("DeleteTabletConductorChanges")]
@@ -114,9 +114,9 @@ namespace SamtApi.Controllers.WebApi {
 
 
 
-			List<ShiftRevisionProblem>? res = await _scriptSupervisorService.GetAllShiftRevisionProblem(model, out var resCount);
+			var res = await _scriptSupervisorService.GetAllShiftRevisionProblem(model);
 
-			return Ok(OperationResult<List<ShiftRevisionProblem>?>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<ShiftRevisionProblem>>.SuccessResult(res.Result, res.TotalCount));
 			//return Ok(res);
 		}
 

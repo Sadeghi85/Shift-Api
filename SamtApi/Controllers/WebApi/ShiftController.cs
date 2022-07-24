@@ -33,24 +33,24 @@ namespace SamtApi.Controllers.WebApi {
 				model.PortalId = portalId;
 			}
 
-			var res = await _shiftService.GetAll(model, out var resCount);
+			var res = await _shiftService.GetAll(model);
 
-			return Ok(OperationResult<List<ShiftViewModel>?>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<ShiftViewModel>>.SuccessResult(res.Result, res.TotalCount));
 
 		}
 
 		// GET api/<ShiftController>/5
-		[HttpPost("FindByPortalId/{portalId}")]
-		public IActionResult Get(int portalId) {
+		//[HttpPost("FindByPortalId/{portalId}")]
+		//public IActionResult Get(int portalId) {
 
-			List<ShiftShift>? res = _shiftService.FindByPortalId(portalId);
-
-
-			return Ok(OperationResult<List<ShiftShift>>.SuccessResult(res, res.Count()));
+		//	List<ShiftShift>? res = _shiftService.FindByPortalId(portalId);
 
 
+		//	return Ok(OperationResult<List<ShiftShift>>.SuccessResult(res, res.Count()));
 
-		}
+
+
+		//}
 
 
 
@@ -103,9 +103,9 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<IActionResult> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model) {
 
 
-			List<ShiftShiftJobTemplateViewModel>? res = await _shiftService.GetAllShiftJobTemplates(model, out var resCount);
+			var res = await _shiftService.GetAllShiftJobTemplates(model);
 
-			return Ok(OperationResult<List<ShiftShiftJobTemplateViewModel>?>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<ShiftShiftJobTemplateViewModel>>.SuccessResult(res.Result, res.TotalCount));
 		}
 
 

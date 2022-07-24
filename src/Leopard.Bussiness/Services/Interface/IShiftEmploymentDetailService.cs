@@ -1,3 +1,4 @@
+using Leopard.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace Leopard.Bussiness {
 		public Task<BaseResult> Register(ShiftEmploymentDetailInputModel model);
 		public Task<BaseResult> Update(ShiftEmploymentDetailInputModel model);
 		public Task<BaseResult> Delete(ShiftEmploymentDetailInputModel model);
-		//public int GetAllCount();
-		public Task<List<ShiftEmploymentDetailViewModel>> GetAll(ShiftEmploymentDetailSearchModel model, out int totalCount);
+		
+		public Task<StoreViewModel<ShiftEmploymentDetailViewModel>> GetAll(ShiftEmploymentDetailSearchModel model);
 
 	}
 }

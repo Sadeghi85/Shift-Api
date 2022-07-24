@@ -25,9 +25,9 @@ namespace SamtApi.Controllers.WebApi {
 			}
 
 
-			var res = await _shiftEmploymentDetail.GetAll(model, out var resCount);
+			var res = await _shiftEmploymentDetail.GetAll(model);
 
-			return Ok(OperationResult<List<ShiftEmploymentDetailViewModel>?>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<ShiftEmploymentDetailViewModel>>.SuccessResult(res.Result, res.TotalCount));
 
 		}
 		[HttpPost("Register")]

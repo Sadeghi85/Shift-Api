@@ -13,7 +13,7 @@ namespace Leopard.Bussiness {
 		readonly private IShiftCrewRewardFineStore _shiftCrewRewardFineStore;
 		readonly private IShiftLogStore _shiftLogStore;
 
-		List<Expression<Func<ShiftCrewRewardFine, bool>>> Expressions = new List<Expression<Func<ShiftCrewRewardFine, bool>>>();
+		private List<Expression<Func<ShiftCrewRewardFine, bool>>> GetAllExpressions = new();
 
 
 		public ShiftCrewRewardFineService(IPrincipal iPrincipal, IShiftCrewRewardFineStore shiftCrewRewardFineStore, IShiftLogStore shiftLogStore) : base(iPrincipal) {
@@ -28,6 +28,7 @@ namespace Leopard.Bussiness {
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+					return BaseResult;
 				} else {
 					found.IsDeleted = true;
 					var res = await _shiftCrewRewardFineStore.UpdateAsync(found);
@@ -43,49 +44,38 @@ namespace Leopard.Bussiness {
 				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
 			}
 
-
-
-
-
 			return BaseResult;
 
 		}
 
-		//public IQueryable<ShiftCrewRewardFine> GetAll() {
-		//	throw new NotImplementedException();
-		//}
+		public async Task<StoreViewModel<ShiftCrewRewardFine>> GetAll(ShiftCrewRewardFineSearchModel model) {
 
-		public Task<List<ShiftCrewRewardFine>>? GetAll(ShiftCrewRewardFineSearchModel model, out int totalCount) {
-
-
+			GetAllExpressions.Clear();
 
 			if (model.IsRewardFine == null && model.RewardFineDate == null && string.IsNullOrWhiteSpace(model.Description) && string.IsNullOrWhiteSpace(model.CrewName)) {
-				Expressions.Add(pp => true);
+				GetAllExpressions.Add(pp => true);
 			} else {
 				if (model.IsRewardFine != null) {
-					Expressions.Add(pp => pp.IsReward == model.IsRewardFine);
+					GetAllExpressions.Add(pp => pp.IsReward == model.IsRewardFine);
 				}
 				if (model.RewardFineDate != null) {
-					Expressions.Add(pp => pp.CreateDateTime.Value.ToShortDateString() == model.RewardFineDate.Value.ToShortDateString());
+					GetAllExpressions.Add(pp => pp.CreateDateTime.Value.ToShortDateString() == model.RewardFineDate.Value.ToShortDateString());
 				}
 				if (!string.IsNullOrWhiteSpace(model.Description)) {
-					Expressions.Add(pp => pp.Description.Contains(model.Description));
+					GetAllExpressions.Add(pp => pp.Description.Contains(model.Description));
 				}
 				if (!string.IsNullOrWhiteSpace(model.CrewName)) {
-					Expressions.Add(pp => model.CrewName.Contains(pp.ShiftShiftTabletCrew.SamtAgent.FirstName) || model.CrewName.Contains(pp.ShiftShiftTabletCrew.SamtAgent.LastName));
+					GetAllExpressions.Add(pp => model.CrewName.Contains(pp.ShiftShiftTabletCrew.SamtAgent.FirstName) || model.CrewName.Contains(pp.ShiftShiftTabletCrew.SamtAgent.LastName));
 				}
 				if (model.IsDeleted != null) {
-					Expressions.Add(pp => pp.IsDeleted == model.IsDeleted);
+					GetAllExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
 				}
 				//expressions.Add(pp=> pp.IsDeleted==false);
 
 			}
-			Expressions.Add(pp => pp.IsDeleted != true);
-			Task<List<ShiftCrewRewardFine>>? res = _shiftCrewRewardFineStore.GetAllWithPagingAsync(Expressions, pp => new ShiftCrewRewardFine { Id = pp.Id, Ammount = pp.Ammount }, pp => pp.Id, "desc", model.PageSize, model.PageNo, out totalCount);
+			GetAllExpressions.Add(pp => pp.IsDeleted != true);
 
-
-
-			//_shiftCrewRewardFineStore.GetAllAsync()
+			var res = await _shiftCrewRewardFineStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftCrewRewardFine { Id = pp.Id, Ammount = pp.Ammount }, pp => pp.Id, model.Desc, model.PageSize, model.PageNo);
 
 			return res;
 		}
@@ -94,10 +84,8 @@ namespace Leopard.Bussiness {
 
 		public async Task<BaseResult> Register(ShiftCrewRewardFineInputModel model) {
 
-
-
 			try {
-				ShiftCrewRewardFine shiftCrewRewardFine = new ShiftCrewRewardFine { ShiftTabletCrewId = model.ShiftTabletCrewId.Value, IsReward = model.IsReward.Value, IsDeleted = false, Ammount = model.Ammount.Value, Shiftpercentage = model.Shiftpercentage.Value, Description = model.Description };
+				var shiftCrewRewardFine = new ShiftCrewRewardFine { ShiftTabletCrewId = model.ShiftTabletCrewId.Value, IsReward = model.IsReward.Value, IsDeleted = false, Ammount = model.Ammount.Value, Shiftpercentage = model.Shiftpercentage.Value, Description = model.Description };
 				var res = await _shiftCrewRewardFineStore.InsertAsync(shiftCrewRewardFine);
 			} catch (Exception ex) {
 
@@ -122,6 +110,7 @@ namespace Leopard.Bussiness {
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+					return BaseResult;
 				} else {
 					found.ShiftTabletCrewId = model.ShiftTabletCrewId.Value;
 					found.IsReward = model.IsReward.Value;

@@ -8,20 +8,21 @@ using System.Threading.Tasks;
 using Leopard.Repository;
 namespace Leopard.Bussiness {
 	public class ShiftEmploymentDetailService : ServiceBase, IShiftEmploymentDetailService {
-		private IShiftEmploymentDetailStore _shiftEmploymentDetailStore;
-		private IShiftLogStore _shiftLogStore;
-		private IPortalStore _portalStore;
-		private ISamtHrCooperationTypeStore _samtHrCooperationTypeStore;
+		private readonly IShiftEmploymentDetailStore _shiftEmploymentDetailStore;
+		private readonly IShiftLogStore _shiftLogStore;
+		private readonly IPortalStore _portalStore;
+		private readonly ISamtHrCooperationTypeStore _samtHrCooperationTypeStore;
 
+		private List<Expression<Func<ShiftEmploymentDetail, bool>>> GetAllExpressions { get; set; } = new();
 
-		public ShiftEmploymentDetailService(IPrincipal iPrincipal, IShiftEmploymentDetailStore shiftEmploymentDetailStore, IShiftLogStore shiftLogStore, ISamtHrCooperationTypeStore samtHrCooperationTypeStore) : base(iPrincipal) {
+		public ShiftEmploymentDetailService(IPrincipal iPrincipal, IShiftEmploymentDetailStore shiftEmploymentDetailStore, IShiftLogStore shiftLogStore, ISamtHrCooperationTypeStore samtHrCooperationTypeStore, IPortalStore portalStore) : base(iPrincipal) {
 			_shiftEmploymentDetailStore = shiftEmploymentDetailStore;
 			_shiftLogStore = shiftLogStore;
 			_samtHrCooperationTypeStore = samtHrCooperationTypeStore;
+			_portalStore = portalStore;
 		}
 
 		public async Task<BaseResult> Register(ShiftEmploymentDetailInputModel model) {
-
 
 			try {
 
@@ -32,10 +33,11 @@ namespace Leopard.Bussiness {
 				if (foundHrCooprationType == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه نوع همکاری جستجو نشد.";
-
+					return BaseResult;
 				} else if (foundPortal == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه پورتال شناسایی نشد.";
+					return BaseResult;
 				} else {
 					//_mapper.Map<>
 					ShiftEmploymentDetail employmentDetail =
@@ -80,14 +82,15 @@ namespace Leopard.Bussiness {
 				if (foundShiftEmployeeDetail == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه جزئیات استخدام یافت نشد.";
-
+					return BaseResult;
 				} else if (foundHrCooprationType == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه نوع همکاری جستجو نشد.";
-
+					return BaseResult;
 				} else if (foundPortal == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه پورتال شناسایی نشد.";
+					return BaseResult;
 				} else {
 
 					foundShiftEmployeeDetail.PortalId = model.PortalId;
@@ -99,6 +102,7 @@ namespace Leopard.Bussiness {
 					foundShiftEmployeeDetail.LivePaymenetAmount = model.LivePaymenetAmount;
 					foundShiftEmployeeDetail.RequiredShift = model.RequiredShift.Value;
 					foundShiftEmployeeDetail.CooperationTypeId = model.CooperationTypeId;
+
 					await _shiftEmploymentDetailStore.UpdateAsync(foundShiftEmployeeDetail);
 
 				}
@@ -125,7 +129,7 @@ namespace Leopard.Bussiness {
 				if (foundShiftEmployeeDetail == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه جزئیات استخدام یافت نشد.";
-
+					return BaseResult;
 				} else {
 
 					foundShiftEmployeeDetail.IsDeleted = true;
@@ -146,10 +150,9 @@ namespace Leopard.Bussiness {
 			return BaseResult;
 		}
 
-		private List<Expression<Func<ShiftEmploymentDetail, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftEmploymentDetail, bool>>>();
+		public async Task<StoreViewModel<ShiftEmploymentDetailViewModel>> GetAll(ShiftEmploymentDetailSearchModel model) {
 
-
-		public Task<List<ShiftEmploymentDetailViewModel>> GetAll(ShiftEmploymentDetailSearchModel model, out int totalCount) {
+			GetAllExpressions.Clear();
 
 			if (model.Id != 0) {
 				GetAllExpressions.Add(pp => pp.Id == model.Id);
@@ -167,7 +170,7 @@ namespace Leopard.Bussiness {
 
 			//ShiftEmploymentDetail
 
-			var res = _shiftEmploymentDetailStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftEmploymentDetailViewModel {
+			var res = await _shiftEmploymentDetailStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftEmploymentDetailViewModel {
 				CooperationTypeId = pp.CooperationTypeId,
 				Id = pp.Id,
 				LivePaymenetAmount = pp.LivePaymenetAmount,
@@ -179,16 +182,13 @@ namespace Leopard.Bussiness {
 				SpecialDayPaymentAmount = pp.SpecialDayPaymentAmount,
 				SpecialDayPaymetMultiplicationPercent = pp.SpecialDayPaymetMultiplicationPercent,
 				UnrequiredShiftPayment = pp.UnrequiredShiftPayment
-			}, pp => pp.Id, "desc", model.PageSize, model.PageNo, out totalCount);
+			}, pp => pp.Id, model.Desc, model.PageSize, model.PageNo);
 
 			return res;
 
 		}
 
-		//public int GetAllCount() {
-		//	var res = _shiftEmploymentDetailStore.TotalCount(GetAllExpressions);
-		//	return res;
-		//}
+
 
 	}
 }

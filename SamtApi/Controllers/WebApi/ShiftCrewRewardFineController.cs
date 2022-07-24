@@ -28,9 +28,9 @@ namespace SamtApi.Controllers.WebApi {
 
 
 
-			var res = await _shiftCrewRewardFineService.GetAll(model, out var resCount);
+			var res = await _shiftCrewRewardFineService.GetAll(model);
 
-			return Ok(OperationResult<List<ShiftCrewRewardFine>>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<ShiftCrewRewardFine>>.SuccessResult(res.Result, res.TotalCount));
 
 		}
 

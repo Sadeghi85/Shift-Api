@@ -14,14 +14,17 @@ namespace Leopard.Bussiness {
 
 		private readonly TelavatAgentResourceTypeStore _telavatAgentResourceTypeStore;
 
+		private List<Expression<Func<SamtAgent, bool>>> GetAllExpressions { get; set; } = new();
+		private List<Expression<Func<TelavatAgentResourceType, bool>>> GetAgentByResourceTypeIDExpressions { get; set; } = new();
+
 		public AgentService(IPrincipal iPrincipal, ISamtAgentStore samtAgentStore, TelavatAgentResourceTypeStore telavatAgentResourceTypeStore) : base(iPrincipal) {
 			_samtAgentStore = samtAgentStore;
 			_telavatAgentResourceTypeStore = telavatAgentResourceTypeStore;
 		}
 
-		private List<Expression<Func<SamtAgent, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<SamtAgent, bool>>>();
+		public async Task<StoreViewModel<AgentViewModel>> GetAll(AgentSearchModel model) {
 
-		public Task<List<AgentViewModel>> GetAll(AgentSearchModel model, out int totalCount) {
+			GetAllExpressions.Clear();
 
 			GetAllExpressions.Add(pp => !pp.IsDeleted);
 
@@ -33,19 +36,15 @@ namespace Leopard.Bussiness {
 				GetAllExpressions.Add(pp => model.Id == pp.Id);
 			}
 
-			var res = _samtAgentStore.GetAllWithPagingAsync(GetAllExpressions, pp => new AgentViewModel { Id = pp.Id, Fullname = $"{pp.FirstName} {pp.LastName}" }, model.OrderKey, model.Desc ? "desc" : "asc", model.PageSize, model.PageNo, out totalCount);
+			var res = await _samtAgentStore.GetAllWithPagingAsync(GetAllExpressions, pp => new AgentViewModel { Id = pp.Id, Fullname = $"{pp.FirstName} {pp.LastName}" }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 			return res;
 		}
 
-		//public int GetAllTotal() {
-		//	var res = _samtAgentStore.TotalCount(GetAllExpressions);
-		//	return res;
-		//}
 
-		private List<Expression<Func<TelavatAgentResourceType, bool>>> GetAgentByResourceTypeIDExpressions { get; set; } = new List<Expression<Func<TelavatAgentResourceType, bool>>>();
+		public async Task<StoreViewModel<GetAgentByResourceTypeIDResult>> GetAgentByResourceTypeID(GetAgentByResourceTypeIDModel model) {
 
+			GetAgentByResourceTypeIDExpressions.Clear();
 
-		public Task<List<GetAgentByResourceTypeIDResult>> GetAgentByResourceTypeID(GetAgentByResourceTypeIDModel model, out int totalCount) {
 			if (model.IsDeleted != null) {
 				GetAgentByResourceTypeIDExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
 			}
@@ -54,15 +53,12 @@ namespace Leopard.Bussiness {
 			}
 
 
-			var res = _telavatAgentResourceTypeStore.GetAllWithPagingAsync(GetAgentByResourceTypeIDExpressions, pp => new GetAgentByResourceTypeIDResult { AgentID = pp.AgentId }, pp => pp.Id, "desc", model.PageSize, model.PageNo, out totalCount);
-			return res;
+			var res = await _telavatAgentResourceTypeStore.GetAllWithPagingAsync(GetAgentByResourceTypeIDExpressions, pp => new GetAgentByResourceTypeIDResult { AgentID = pp.AgentId }, pp => pp.Id, model.Desc, model.PageSize, model.PageNo);
 
+			return res;
 
 		}
 
-		//public int GetAgentByResourceTypeIDTotalCount() {
-		//	var res = _telavatAgentResourceTypeStore.TotalCount(GetAgentByResourceTypeIDExpressions);
-		//	return res;
-		//}
+
 	}
 }

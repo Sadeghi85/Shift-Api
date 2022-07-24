@@ -17,9 +17,9 @@ namespace Leopard.Bussiness {
 		private readonly IShiftShiftJobTemplateStore _shiftShiftJobTemplateStore;
 		private readonly ISamtResourceTypeStore _samtResourceTypeStore;
 
-		private List<Expression<Func<ShiftShift, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftShift, bool>>>();
+		private List<Expression<Func<ShiftShift, bool>>> GetAllExpressions { get; set; } = new();
 
-		private List<Expression<Func<ShiftShiftJobTemplate, bool>>> GetAllShiftShiftJobTemplateExpressions { get; set; } = new List<Expression<Func<ShiftShiftJobTemplate, bool>>>();
+		private List<Expression<Func<ShiftShiftJobTemplate, bool>>> GetAllShiftShiftJobTemplateExpressions { get; set; } = new();
 
 		public ShiftService(IPrincipal iPrincipal, IShiftShiftStore shiftShiftStore, IPortalStore portalStore, IShiftLogStore shiftLogStore, IShiftShiftJobTemplateStore shiftShiftJobTemplateStore, ISamtResourceTypeStore samtResourceTypeStore) : base(iPrincipal) {
 			_shiftShiftStore = shiftShiftStore;
@@ -29,9 +29,6 @@ namespace Leopard.Bussiness {
 			_samtResourceTypeStore = samtResourceTypeStore;
 		}
 
-
-
-
 		public async Task<BaseResult> Delete(ShiftInputModel model) {
 
 			try {
@@ -39,6 +36,7 @@ namespace Leopard.Bussiness {
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+					return BaseResult;
 				} else {
 					found.IsDeleted = true;
 					var res = await _shiftShiftStore.UpdateAsync(found);
@@ -58,17 +56,17 @@ namespace Leopard.Bussiness {
 
 		}
 
-		public List<ShiftShift> FindByPortalId(int portalId) {
+		public async Task<StoreViewModel<ShiftShift>> FindByPortalId(int portalId) {
 
-			List<ShiftShift>? res = _shiftShiftStore.GetAll().Where(pp => pp.PortalId == portalId).ToList();
+			var res = await _shiftShiftStore.GetAllAsync(pp => pp.PortalId == portalId, x => x, x => x.Id);
 
 			return res;
 
 		}
 
-		public Task<List<ShiftViewModel>> GetAll(ShiftSearchModel model, out int totalCount) {
+		public async Task<StoreViewModel<ShiftViewModel>> GetAll(ShiftSearchModel model) {
 
-
+			GetAllExpressions.Clear();
 
 			if (model.PortalId != 0) {
 				GetAllExpressions.Add(pp => pp.PortalId == model.PortalId);
@@ -87,46 +85,37 @@ namespace Leopard.Bussiness {
 			}
 
 			GetAllExpressions.Add(pp => pp.IsDeleted != true);
-			Task<List<ShiftViewModel>>? res = _shiftShiftStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftViewModel { Id = pp.Id, Title = pp.Title, PortalTitle = pp.Portal.Title, PortalId = pp.PortalId, EndTime = pp.EndTime, StartTime = pp.StartTime, ShiftTypeId = pp.ShiftTypeId, ShiftTypeTitle = GetShiftTypeTitleByShiftTypeId(pp.ShiftTypeId) }, pp => pp.Id, "desc", model.PageSize, model.PageNo, out totalCount);
 
-
-
-			//IQueryable<ShiftShift>? res = _shiftShiftStore.GetAll().Where(pp => pp.Title.Contains(model.Title) && pp.PortalId == model.PortalId).Skip(model.PageNo*model.PageSize).Take(model.PageSize);
-			//if (model.desc == false) {
-
-			//	res = res.OrderBy(pp => pp.Title);
-			//} else {
-			//	res = res.OrderByDescending(pp => pp.Title);
-			//}
+			var res = await _shiftShiftStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftViewModel { Id = pp.Id, Title = pp.Title, PortalTitle = pp.Portal.Title, PortalId = pp.PortalId, EndTime = pp.EndTime, StartTime = pp.StartTime, ShiftTypeId = pp.ShiftTypeId, ShiftTypeTitle = GetShiftTypeTitleByShiftTypeId(pp.ShiftTypeId) }, pp => pp.Id, model.Desc, model.PageSize, model.PageNo);
 
 			return res;
 		}
 
 		private static string GetShiftTypeTitleByShiftTypeId(int? ShiftTypeId) {
+
+			string? res;
+
 			switch (ShiftTypeId) {
 				case 1:
-					return "رژی";
+					res = "رژی";
 					break;
 				case 2:
-					return "هماهنگی";
+					res = "هماهنگی";
 					break;
-				default: return "نامشخص";
-
+				default:
+					res = "نامشخص";
+					break;
 			}
-		}
 
-		//public int GetAllCount() {
-		//	var res = _shiftShiftStore.TotalCount(GetAllExpressions);
-		//	return res;
-		//}
-
-
-		public IQueryable<ShiftShift> GetByPortalId(int portalId) {
-			//throw new NotImplementedException();
-			IQueryable<ShiftShift>? res = _shiftShiftStore.GetAll().Where(pp => pp.PortalId == portalId);
 			return res;
-
 		}
+
+		//public async IQueryable<ShiftShift> GetByPortalId(int portalId) {
+		//	//throw new NotImplementedException();
+		//	IQueryable<ShiftShift>? res = _shiftShiftStore.GetAll().Where(pp => pp.PortalId == portalId);
+		//	return res;
+
+		//}
 
 		public async Task<BaseResult> Register(ShiftInputModel model) {
 
@@ -140,7 +129,7 @@ namespace Leopard.Bussiness {
 
 			try {
 
-				var found = _shiftShiftStore.GetAll().Any(x => x.Title == model.Title);
+				var found = await _shiftShiftStore.AnyAsync(x => x.Title == model.Title);
 				if (found) {
 					BaseResult.Success = false;
 					BaseResult.Message = "نام انتخاب شده برای شیفت تکراری است.";
@@ -155,8 +144,6 @@ namespace Leopard.Bussiness {
 
 					return BaseResult;
 				}
-
-
 
 				ShiftShift shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId, ShiftTypeId = model.ShiftTypeId, StartTime = model.StartTime, EndTime = model.EndTime, IsDeleted = false };
 
@@ -207,7 +194,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var found = _shiftShiftStore.GetAll().Any(x => x.Title == model.Title && x.Id != model.Id);
+				var found = await _shiftShiftStore.AnyAsync(x => x.Title == model.Title && x.Id != model.Id);
 				if (found) {
 					BaseResult.Success = false;
 					BaseResult.Message = "نام انتخاب شده برای شیفت تکراری است.";
@@ -248,20 +235,22 @@ namespace Leopard.Bussiness {
 
 		public async Task<BaseResult> RegisterShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
 			try {
-				var foundResourceShift = _shiftShiftJobTemplateStore.GetAll().Any(pp => pp.ShiftId == model.ShiftId && pp.JobId == model.JobId);
+				var foundResourceShift = await _shiftShiftJobTemplateStore.AnyAsync(pp => pp.ShiftId == model.ShiftId && pp.JobId == model.JobId);
 				var foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
 				var foundResource = await _samtResourceTypeStore.FindByIdAsync(model.JobId);
 
 				if (foundResourceShift) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه سمت برای شیفت قبلا ثبت شده است.";
+					return BaseResult;
 				} else if (foundResource == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "سمت مورد نظر یافت نشد.";
-
+					return BaseResult;
 				} else if (foundShift == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شیفت مورد نظر یافت نشد.";
+					return BaseResult;
 				} else {
 					await _shiftShiftJobTemplateStore.InsertAsync(new ShiftShiftJobTemplate {
 						IsDeleted = false,
@@ -279,6 +268,7 @@ namespace Leopard.Bussiness {
 				BaseResult.Success = false;
 				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
 			}
+
 			return BaseResult;
 		}
 
@@ -286,23 +276,26 @@ namespace Leopard.Bussiness {
 
 			try {
 				var founded = await _shiftShiftJobTemplateStore.FindByIdAsync(model.Id);
-				var foundResourceShift = _shiftShiftJobTemplateStore.GetAll().Any(pp => pp.ShiftId == model.ShiftId && pp.JobId == model.JobId);
+				var foundResourceShift = await _shiftShiftJobTemplateStore.AnyAsync(pp => pp.ShiftId == model.ShiftId && pp.JobId == model.JobId);
 				var foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
 				var foundResource = await _samtResourceTypeStore.FindByIdAsync(model.JobId);
 
 				if (foundResourceShift) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه سمت برای شیفت قبلا ثبت شده است.";
+					return BaseResult;
 				} else if (foundResource == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "سمت مورد نظر یافت نشد.";
-
+					return BaseResult;
 				} else if (foundShift == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شیفت مورد نظر یافت نشد.";
+					return BaseResult;
 				} else if (founded == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد.";
+					return BaseResult;
 				} else {
 					founded.ShiftId = model.ShiftId;
 					founded.JobId = model.JobId;
@@ -331,6 +324,7 @@ namespace Leopard.Bussiness {
 				if (founded == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد.";
+					return BaseResult;
 				} else {
 					founded.IsDeleted = true;
 
@@ -350,7 +344,9 @@ namespace Leopard.Bussiness {
 			return BaseResult;
 		}
 
-		public Task<List<ShiftShiftJobTemplateViewModel>?> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model, out int totalCount) {
+		public async Task<StoreViewModel<ShiftShiftJobTemplateViewModel>> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model) {
+
+			GetAllShiftShiftJobTemplateExpressions.Clear();
 
 			if (model.ShiftId != 0) {
 				GetAllShiftShiftJobTemplateExpressions.Add(pp => pp.ShiftId == model.ShiftId);
@@ -362,21 +358,17 @@ namespace Leopard.Bussiness {
 				GetAllShiftShiftJobTemplateExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
 			}
 
-			var res = _shiftShiftJobTemplateStore.GetAllWithPagingAsync(GetAllShiftShiftJobTemplateExpressions, pp =>
+			var res = await _shiftShiftJobTemplateStore.GetAllWithPagingAsync(GetAllShiftShiftJobTemplateExpressions, pp =>
 			new ShiftShiftJobTemplateViewModel {
 				Id = pp.Id,
 				ResourceId = pp.JobId,
 				JobTitle = pp.SamtResourceType.Title,
 				ShiftId = pp.ShiftId,
 				ShiftTitle = pp.ShiftShift.Title
-			}, pp => pp.Id, "desc", model.PageSize, model.PageNo, out totalCount);
+			}, pp => pp.Id, model.Desc, model.PageSize, model.PageNo);
+
 			return res;
 		}
-
-		//public int GetAllShiftNeededResourcesCount() {
-		//	var res = _shiftShiftJobTemplateStore.TotalCount(GetAllShiftShiftJobTemplateExpressions);
-		//	return res;
-		//}
 
 	}
 }

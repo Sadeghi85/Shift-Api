@@ -9,10 +9,10 @@ namespace Leopard.Bussiness {
 
 	public interface IShiftService {
 
-		public List<ShiftShift> FindByPortalId(int Id);
-		public Task<List<ShiftViewModel>> GetAll(ShiftSearchModel model, out int totalCount);
+		public Task<StoreViewModel<ShiftShift>> FindByPortalId(int Id);
+		public Task<StoreViewModel<ShiftViewModel>> GetAll(ShiftSearchModel model);
 
-		public IQueryable<ShiftShift> GetByPortalId(int portalId);
+		//public IQueryable<ShiftShift> GetByPortalId(int portalId);
 
 		public Task<BaseResult> Register(ShiftInputModel model);
 
@@ -20,11 +20,8 @@ namespace Leopard.Bussiness {
 
 		public Task<BaseResult> Delete(ShiftInputModel model);
 
-		//public int GetAllCount();
 
-
-		public Task<List<ShiftShiftJobTemplateViewModel>?> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model, out int totalCount);
-		//public int GetAllShiftNeededResourcesCount();
+		public Task<StoreViewModel<ShiftShiftJobTemplateViewModel>> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model);
 
 		public Task<BaseResult> RegisterShiftJobTemplate(ShiftShiftJobTemplateInputModel model);
 		public Task<BaseResult> DeleteShiftJobTemplate(ShiftShiftJobTemplateInputModel model);

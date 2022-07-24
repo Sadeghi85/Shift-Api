@@ -29,24 +29,23 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(ShiftTabletSearchModel model) {
 
-			//IQueryable<ShiftShiftTablet>? res = _shiftTabletService.GetAll();
-			var res = await _shiftTabletService.GetAll(model, out var resCount);
+			var res = await _shiftTabletService.GetAll(model);
 
 
-			return Ok(OperationResult<List<ShiftTabletViewModel>?>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<ShiftTabletViewModel>>.SuccessResult(res.Result, res.TotalCount));
 
 		}
 
 
 
 		// GET api/<ShiftTabletController>/5
-		[HttpPost("GetByPortalId/{portalId}")]
-		public IActionResult GetByPortalId(int portalId) {
-			List<ShiftShiftTablet>? res = _shiftTabletService.GetTabletShiftByPortalId(portalId);
+		//[HttpPost("GetByPortalId/{portalId}")]
+		//public IActionResult GetByPortalId(int portalId) {
+		//	List<ShiftShiftTablet>? res = _shiftTabletService.GetTabletShiftByPortalId(portalId);
 
-			return Ok(OperationResult<List<ShiftShiftTablet>>.SuccessResult(res, res.Count()));
+		//	return Ok(OperationResult<List<ShiftShiftTablet>>.SuccessResult(res, res.Count()));
 
-		}
+		//}
 
 		// POST api/<ShiftTabletController>
 		[HttpPost("Register")]

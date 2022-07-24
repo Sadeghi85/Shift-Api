@@ -43,20 +43,20 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<IActionResult> GetAll(ShiftTabletCrewSearchModel model) {
 
 
-			var res = await _shiftTabletCrewService.GetAll(model, out var resCount);
+			var res = await _shiftTabletCrewService.GetAll(model);
 
-			return Ok(OperationResult<List<ShiftTabletCrewViewModel>?>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<ShiftTabletCrewViewModel>>.SuccessResult(res.Result, res.TotalCount));
 
 		}
 
-		[HttpPost("GetGeExcel")]
-		public async Task<IActionResult> GetGeExcel(ShiftTabletCrewSearchModel model) {
+		[HttpPost("GetExcel")]
+		public async Task<IActionResult> GetExcel(ShiftTabletCrewSearchModel model) {
 
 
-			var res = await _shiftTabletCrewService.GetAll(model, out var resCount);
+			var res = await _shiftTabletCrewService.GetAll(model);
 
-			var dates = res.Select(pp => new { pp.ShiftDatePersian, pp.PersianWeekDay }).Distinct().ToList();
-			var shifts = res.Select(pp => pp.ShiftTitle).Distinct().ToList();
+			var dates = res.Result.Select(pp => new { pp.ShiftDatePersian, pp.PersianWeekDay }).Distinct().ToList();
+			var shifts = res.Result.Select(pp => pp.ShiftTitle).Distinct().ToList();
 
 			List<ReportTemplate> reportTemplates = new List<ReportTemplate>();
 
@@ -68,7 +68,7 @@ namespace SamtApi.Controllers.WebApi {
 				//reportTemplates.Add(tt);
 				var listOfshifts = new List<TheShift>();
 				foreach (var j in shifts) {
-					var thePersonsListTmp = res.Where(pp => pp.ShiftDatePersian == i.ShiftDatePersian && pp.ShiftTitle == j).Select(pp => new ThePerson { Name = pp.FirstName + " " + pp.LastName, ResourceName = pp.JobTitle }).ToList();
+					var thePersonsListTmp = res.Result.Where(pp => pp.ShiftDatePersian == i.ShiftDatePersian && pp.ShiftTitle == j).Select(pp => new ThePerson { Name = pp.FirstName + " " + pp.LastName, ResourceName = pp.JobTitle }).ToList();
 					var tmpShift = new TheShift { ShiftName = j, ThePersonList = thePersonsListTmp };
 					//
 					listOfshifts.Add(tmpShift);
@@ -174,11 +174,11 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<IActionResult> GetPdf(ShiftTabletCrewSearchModel model) {
 
 
-			List<ShiftTabletCrewViewModel>? res = await _shiftTabletCrewService.GetAll(model, out var resCount);
+			var res = await _shiftTabletCrewService.GetAll(model);
 
 
-			var dates = res.Select(pp => new { pp.ShiftDatePersian, pp.PersianWeekDay }).Distinct().ToList();
-			var shifts = res.Select(pp => pp.ShiftTitle).Distinct().ToList();
+			var dates = res.Result.Select(pp => new { pp.ShiftDatePersian, pp.PersianWeekDay }).Distinct().ToList();
+			var shifts = res.Result.Select(pp => pp.ShiftTitle).Distinct().ToList();
 
 			List<ReportTemplate> reportTemplates = new List<ReportTemplate>();
 			IPdfReportData pdfRes;
@@ -190,7 +190,7 @@ namespace SamtApi.Controllers.WebApi {
 				//reportTemplates.Add(tt);
 				var listOfshifts = new List<TheShift>();
 				foreach (var j in shifts) {
-					var thePersonsListTmp = res.Where(pp => pp.ShiftDatePersian == i.ShiftDatePersian && pp.ShiftTitle == j).Select(pp => new ThePerson { Name = pp.FirstName + " " + pp.LastName, ResourceName = pp.JobTitle }).ToList();
+					var thePersonsListTmp = res.Result.Where(pp => pp.ShiftDatePersian == i.ShiftDatePersian && pp.ShiftTitle == j).Select(pp => new ThePerson { Name = pp.FirstName + " " + pp.LastName, ResourceName = pp.JobTitle }).ToList();
 					var tmpShift = new TheShift { ShiftName = j, ThePersonList = thePersonsListTmp };
 					//
 					listOfshifts.Add(tmpShift);
@@ -312,13 +312,13 @@ namespace SamtApi.Controllers.WebApi {
 
 
 		//GET api/<ShiftTabletCrewController>/5
-		[HttpPost("GetByShiftId/{id}")]
-		public IActionResult GetByShiftId(int id) {
-			List<ShiftShiftTabletCrew>? res = _shiftTabletCrewService.GetByShiftId(id);
+		//[HttpPost("GetByShiftId/{id}")]
+		//public IActionResult GetByShiftId(int id) {
+		//	List<ShiftShiftTabletCrew>? res = _shiftTabletCrewService.GetByShiftId(id);
 
-			return Ok(OperationResult<List<ShiftShiftTabletCrew>>.SuccessResult(res, res.Count()));
+		//	return Ok(OperationResult<List<ShiftShiftTabletCrew>>.SuccessResult(res, res.Count()));
 
-		}
+		//}
 
 		// POST api/<ShiftTabletCrewController>
 		[HttpPost("Register")]

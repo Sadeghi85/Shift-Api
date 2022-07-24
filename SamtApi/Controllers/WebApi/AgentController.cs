@@ -30,9 +30,9 @@ namespace SamtApi.Controllers.WebApi {
 
 			var ss = GetUserId();
 
-			var res = await _agentService.GetAll(model, out var resCount);
+			var res = await _agentService.GetAll(model);
 
-			return Ok(OperationResult<List<AgentViewModel>>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<AgentViewModel>>.SuccessResult(res.Result, res.TotalCount));
 		}
 		/// <summary>
 		/// there is no relation in TelavatAgentResourceTypes to SAMT_Agents and SAMT_ResourceTypes
@@ -49,9 +49,9 @@ namespace SamtApi.Controllers.WebApi {
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
-			var res = await _agentService.GetAgentByResourceTypeID(model, out var resCount);
+			var res = await _agentService.GetAgentByResourceTypeID(model);
 
-			return Ok(OperationResult<List<GetAgentByResourceTypeIDResult>?>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<GetAgentByResourceTypeIDResult>>.SuccessResult(res.Result, res.TotalCount));
 
 		}
 

@@ -6,16 +6,20 @@ using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+
 namespace Leopard.Bussiness {
 	public class PortalService : ServiceBase, IPortalService {
 
 		private readonly IPortalStore _portalStore;
 
-		List<Expression<Func<Portal, bool>>> GetAllExpressions = new List<Expression<Func<Portal, bool>>>();
+		private List<Expression<Func<Portal, bool>>> GetAllExpressions = new();
+
 		public PortalService(IPrincipal iPrincipal, IPortalStore portalStore) : base(iPrincipal) {
 			_portalStore = portalStore;
 		}
-		public Task<List<PortalViewModel>>? GetAll(PortalSearchModel model, out int totalCount) {
+		public async Task<StoreViewModel<PortalViewModel>> GetAll(PortalSearchModel model) {
+
+			GetAllExpressions.Clear();
 
 			GetAllExpressions.Add(pp => !pp.NoDashboard);
 
@@ -28,7 +32,8 @@ namespace Leopard.Bussiness {
 			}
 
 
-			Task<List<PortalViewModel>>? res = _portalStore.GetAllWithPagingAsync(GetAllExpressions, t => new PortalViewModel { Id = t.Id, Title = t.Title }, t => t.Id, "asc", model.PageSize, model.PageNo, out totalCount);
+			var res = await _portalStore.GetAllWithPagingAsync(GetAllExpressions, t => new PortalViewModel { Id = t.Id, Title = t.Title }, t => t.Id, model.Desc, model.PageSize, model.PageNo);
+
 			return res;
 		}
 
@@ -38,8 +43,9 @@ namespace Leopard.Bussiness {
 		//}
 
 
-		public ValueTask<Portal?> GetById(int id) {
-			var res = _portalStore.FindByIdAsync(id);
+		public async ValueTask<Portal?> GetById(int id) {
+			var res = await _portalStore.FindByIdAsync(id);
+
 			return res;
 
 		}

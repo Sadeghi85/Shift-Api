@@ -10,7 +10,7 @@ namespace Leopard.Bussiness {
 		public Task<BaseResult> Register(ShiftCrewRewardFineInputModel model);
 		public Task<BaseResult> Update(ShiftCrewRewardFineInputModel model);
 
-		public Task<List<ShiftCrewRewardFine>>? GetAll(ShiftCrewRewardFineSearchModel model, out int totalCount);
+		public Task<StoreViewModel<ShiftCrewRewardFine>> GetAll(ShiftCrewRewardFineSearchModel model);
 
 		public Task<BaseResult> Delete(ShiftCrewRewardFineInputModel model);
 	}

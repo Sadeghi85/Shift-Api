@@ -10,10 +10,11 @@ using System.Threading.Tasks;
 namespace Leopard.Bussiness {
 	public class PortalLocationService : ServiceBase, IPortalLocationService {
 
-		readonly private IShiftPortalLocationStore _shiftPortalLocationStore;
-		readonly private IPortalStore _portalStore;
-		readonly private IShiftLogStore _shiftLogStore;
-		private List<Expression<Func<ShiftPortalLocation, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftPortalLocation, bool>>>();
+		private readonly IShiftPortalLocationStore _shiftPortalLocationStore;
+		private readonly IPortalStore _portalStore;
+		private readonly IShiftLogStore _shiftLogStore;
+
+		private List<Expression<Func<ShiftPortalLocation, bool>>> GetAllExpressions { get; set; } = new();
 
 		public PortalLocationService(IPrincipal iPrincipal, IShiftPortalLocationStore shiftPortalLocationStore, IShiftLogStore shiftLogStore, IPortalStore portalStore) : base(iPrincipal) {
 			_shiftPortalLocationStore = shiftPortalLocationStore;
@@ -30,11 +31,13 @@ namespace Leopard.Bussiness {
 		}
 
 
-		public Task<List<PortalLocationViewModel>> GetAll(PortalLocationSearchModel model, out int totalCount) {
+		public async Task<StoreViewModel<PortalLocationViewModel>> GetAll(PortalLocationSearchModel model) {
 			//var checkAccess = CheckAccess();
 			//if (!checkAccess.Success) {
 			//	return Task.FromResult(new List<LocationViewModel>());
 			//}
+
+			GetAllExpressions.Clear();
 
 			if (model.Id != 0) {
 				GetAllExpressions.Add(pp => pp.Id == model.Id);
@@ -49,16 +52,11 @@ namespace Leopard.Bussiness {
 			}
 
 
-			var res = _shiftPortalLocationStore.GetAllWithPagingAsync(GetAllExpressions, x => new PortalLocationViewModel { Id = x.Id, PortalId = x.PortalId, LocationId = x.LocationId, PortalTitle = x.Portal.Title, LocationTitle = x.ShiftLocation.Title }, model.OrderKey, model.Desc ? "desc" : "asc", model.PageSize, model.PageNo, out totalCount);
+			var res = await _shiftPortalLocationStore.GetAllWithPagingAsync(GetAllExpressions, x => new PortalLocationViewModel { Id = x.Id, PortalId = x.PortalId, LocationId = x.LocationId, PortalTitle = x.Portal.Title, LocationTitle = x.ShiftLocation.Title }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 
 			return res;
 
 		}
-
-		//public int GetAllTotal() {
-		//	var res = _shiftPortalLocationStore.TotalCount(GetAllExpressions);
-		//	return res;
-		//}
 
 		//public List<ShiftLocation> GetShiftLocationByPortalId(int portalId) {
 
@@ -80,7 +78,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var found = _shiftPortalLocationStore.GetAll().Any(x => x.PortalId == model.PortalId && x.LocationId == model.LocationId);
+				var found = await _shiftPortalLocationStore.AnyAsync(x => x.PortalId == model.PortalId && x.LocationId == model.LocationId);
 
 				if (found) {
 					BaseResult.Success = false;

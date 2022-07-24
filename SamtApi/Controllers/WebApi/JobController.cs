@@ -24,9 +24,9 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<IActionResult> GetAll(JobSearchModel model) {
 
 
-			var res = await _jobService.GetAll(model, out var resCount);
+			var res = await _jobService.GetAll(model);
 
-			return Ok(OperationResult<List<JobViewModel>>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<JobViewModel>>.SuccessResult(res.Result, res.TotalCount));
 
 		}
 

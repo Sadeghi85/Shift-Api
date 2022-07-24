@@ -12,7 +12,8 @@ namespace Leopard.Bussiness {
 
 		readonly private IShiftLocationStore _shiftLocationStore;
 		readonly private IShiftLogStore _shiftLogStore;
-		private List<Expression<Func<ShiftLocation, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<ShiftLocation, bool>>>();
+
+		private List<Expression<Func<ShiftLocation, bool>>> GetAllExpressions { get; set; } = new();
 
 		public LocationService(IPrincipal iPrincipal, IShiftLocationStore shiftLocationStore, IShiftLogStore shiftLogStore) : base(iPrincipal) {
 			_shiftLocationStore = shiftLocationStore;
@@ -28,12 +29,13 @@ namespace Leopard.Bussiness {
 			return new BaseResult();
 		}
 
+		public async Task<StoreViewModel<LocationViewModel>> GetAll(LocationSearchModel model) {
 
-		public Task<List<LocationViewModel>> GetAll(LocationSearchModel model, out int totalCount) {
+			GetAllExpressions.Clear();
+
 			var checkAccess = CheckAccess();
 			if (!checkAccess.Success) {
-				totalCount = 0;
-				return Task.FromResult(new List<LocationViewModel>());
+				return new StoreViewModel<LocationViewModel>() { Result = new List<LocationViewModel>(), TotalCount = 0};
 			}
 
 			if (!string.IsNullOrWhiteSpace(model.Title)) {
@@ -50,16 +52,11 @@ namespace Leopard.Bussiness {
 			//	GetAllExpressions.Add(pp => true);
 			//}
 
-			var res = _shiftLocationStore.GetAllWithPagingAsync(GetAllExpressions, pp => new LocationViewModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, "desc", model.PageSize, model.PageNo, out totalCount);
+			var res = await _shiftLocationStore.GetAllWithPagingAsync(GetAllExpressions, pp => new LocationViewModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, model.Desc, model.PageSize, model.PageNo);
 
 			return res;
 
 		}
-
-		//public int GetAllTotal() {
-		//	var res = _shiftLocationStore.TotalCount(GetAllExpressions);
-		//	return res;
-		//}
 
 		//public List<ShiftLocation> GetShiftLocationByPortalId(int portalId) {
 
@@ -75,7 +72,10 @@ namespace Leopard.Bussiness {
 					return checkAccess;
 				}
 
-				var found = _shiftLocationStore.GetAll().Any(pp => pp.Title == model.Title);
+				//var found = _shiftLocationStore.GetAll().Any(pp => pp.Title == model.Title);
+				var found = await _shiftLocationStore.AnyAsync(x => x.Title == model.Title);
+
+
 				//var foundPortal = _portalStore.FindById(model.PortalId);
 				//if (foundPortal == null) {
 				//	BaseResult.Success = false;

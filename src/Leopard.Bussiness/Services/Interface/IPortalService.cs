@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
 	public interface IPortalService {
-		public Task<List<PortalViewModel>>? GetAll(PortalSearchModel model, out int totalCount);
+		public Task<StoreViewModel<PortalViewModel>> GetAll(PortalSearchModel model);
 		public ValueTask<Portal?> GetById(int id);
-		//public int GetAllTotalCount();
 	}
 }

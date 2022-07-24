@@ -12,14 +12,15 @@ namespace Leopard.Bussiness {
 
 		private readonly ISamtResourceTypeStore _samtResourceTypeStore;
 
+		private List<Expression<Func<SamtResourceType, bool>>> GetAllExpressions { get; set; } = new();
+
 		public JobService(IPrincipal iPrincipal, ISamtResourceTypeStore samtResourceTypeStore) : base(iPrincipal) {
 			_samtResourceTypeStore = samtResourceTypeStore;
 		}
 
-		private List<Expression<Func<SamtResourceType, bool>>> GetAllExpressions { get; set; } = new List<Expression<Func<SamtResourceType, bool>>>();
+		public async Task<StoreViewModel<JobViewModel>>? GetAll(JobSearchModel model) {
 
-
-		public Task<List<JobViewModel>>? GetAll(JobSearchModel model, out int totalCount) {
+			GetAllExpressions.Clear();
 
 			if (string.IsNullOrWhiteSpace(model.Title) && model.Id == 0) {
 				GetAllExpressions.Add(pp => true);
@@ -34,16 +35,11 @@ namespace Leopard.Bussiness {
 			}
 			GetAllExpressions.Add(pp => pp.ParentId == 20 && pp.IsDeleted != true);
 
-			Task<List<JobViewModel>>? res = _samtResourceTypeStore.GetAllWithPagingAsync(GetAllExpressions, pp => new JobViewModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, "desc", model.PageSize, model.PageNo, out totalCount);
+			var res = await _samtResourceTypeStore.GetAllWithPagingAsync(GetAllExpressions, pp => new JobViewModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, model.Desc, model.PageSize, model.PageNo);
+
 			return res;
 
 		}
-
-		//public int GetAllCount() {
-		//	var res = _samtResourceTypeStore.TotalCount(GetAllExpressions);
-		//	return res;
-		//}
-
 
 	}
 }

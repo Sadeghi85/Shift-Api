@@ -28,9 +28,9 @@ namespace SamtApi.Controllers.WebApi {
 			}
 
 
-			var res = await _portal.GetAll(model, out var resCount);
+			var res = await _portal.GetAll(model);
 
-			return Ok(OperationResult<List<PortalViewModel>?>.SuccessResult(res, resCount));
+			return Ok(OperationResult<List<PortalViewModel>>.SuccessResult(res.Result, res.TotalCount));
 		}
 
 	}
