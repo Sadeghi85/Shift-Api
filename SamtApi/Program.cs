@@ -110,9 +110,13 @@ builder.Host.UseLamar((context, registry) => {
 	});
 	registry.AddSwaggerGen();
 
-	registry.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest)
-	.AddNewtonsoftJson(opt => {
-		opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+	//registry.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest)
+	//.AddNewtonsoftJson(opt => {
+	//	opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+	//});
+
+	registry.AddMvc().AddJsonOptions(options => {
+		options.JsonSerializerOptions.Converters.Add(new TrimStringConverter());
 	});
 
 });
