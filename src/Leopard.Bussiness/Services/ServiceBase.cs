@@ -12,8 +12,11 @@ namespace Leopard.Bussiness {
 
 
 		private readonly IPrincipal _iPrincipal;
-		public ServiceBase(IPrincipal iPrincipal) {
+		private readonly IShiftLogStore _shiftLogStore;
+
+		public ServiceBase(IPrincipal iPrincipal, IShiftLogStore shiftLogStore) {
 			_iPrincipal = iPrincipal;
+			_shiftLogStore = shiftLogStore;
 		}
 
 		public int? CurrentUserId {
@@ -30,7 +33,7 @@ namespace Leopard.Bussiness {
 		public int? CurrentUserPortalId {
 			get {
 				//TODO: find difference between ClaimsIdentity & ClaimsPrincipal
-				var ident = _iPrincipal as ClaimsIdentity;
+				var ident = _iPrincipal as ClaimsPrincipal;
 				var uId = ident?.Claims.FirstOrDefault(c => c.Type == "PortalId")?.Value;
 				if (string.IsNullOrWhiteSpace(uId)) {
 					return null;
@@ -39,5 +42,19 @@ namespace Leopard.Bussiness {
 			}
 		}
 		protected BaseResult BaseResult { get; set; } = new BaseResult();
+
+		public async Task<BaseResult> LogError(Exception ex) {
+
+			var shiftLog = new ShiftLog { Message = ex.Message + Environment.NewLine + ex.InnerException?.Message + Environment.NewLine + ex.StackTrace ?? "" };
+
+			await _shiftLogStore.InsertAsync(shiftLog);
+
+			var res = new BaseResult();
+
+			res.Success = false;
+			res.Message = $"خطای سیستمی شماره '{shiftLog.Id}'؛ لطفا به مدیر سیستم اطلاع دهید";
+
+			return res;
+		}
 	}
 }
