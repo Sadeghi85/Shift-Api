@@ -11,18 +11,21 @@ namespace SamtApi.Controllers.WebApi {
 	[ApiController]
 	public class PortalLocationController : YaldaController {
 
-		readonly private IPortalLocationService _portalLocationService;
+		private readonly IPortalLocationService _portalLocationService;
 
 		public PortalLocationController(IPortalLocationService portalLocationService) {
 			_portalLocationService = portalLocationService;
 		}
 
-
-
-		// GET: api/<ShiftTabletLocationController>
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(PortalLocationSearchModel model) {
 
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
 
 			var res = await _portalLocationService.GetAll(model);
 
@@ -39,31 +42,36 @@ namespace SamtApi.Controllers.WebApi {
 
 		//}
 
-		// POST api/<ShiftTabletLocationController>
 		[HttpPost("Register")]
 		public async Task<IActionResult> Register(PortalLocationInputModel model) {
+
 			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
-
-				var errors = ModelState.Select(x => x.Value.Errors)
-						   .Where(y => y.Count > 0)
-						   .ToList();
-
-
-				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
+
 			var res = await _portalLocationService.Register(model);
+
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
 			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
-		// PUT api/<ShiftTabletLocationController>/5
 		[HttpPost("Update")]
 		public async Task<IActionResult> Update(PortalLocationInputModel model) {
+
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
+
 			var res = await _portalLocationService.Update(model);
+
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -71,9 +79,24 @@ namespace SamtApi.Controllers.WebApi {
 
 		}
 
-		// DELETE api/<ShiftTabletLocationController>/5
-		//[HttpDelete("{id}")]
-		//public void Delete(int id) {
-		//}
+		[HttpPost("Delete")]
+		public async Task<OkObjectResult> Delete(PortalLocationInputModel model) {
+
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
+
+			var res = await _portalLocationService.Delete(model);
+
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
+			}
+			return Ok(OperationResult<string>.FailureResult(res.Message));
+
+
+		}
 	}
 }

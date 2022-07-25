@@ -17,16 +17,15 @@ namespace SamtApi.Controllers.WebApi {
 			_portal = portal;
 		}
 
-
-		// GET: api/<PortalController>
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(PortalSearchModel model) {
 
-			var portalId = GetUserPortalId() ?? 0;
-			if (portalId > 1) {
-				model.PortalId = portalId;
-			}
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
 
 			var res = await _portal.GetAll(model);
 

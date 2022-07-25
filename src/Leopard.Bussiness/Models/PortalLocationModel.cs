@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
 	public class PortalLocationInputModel {
+
+		[Required(ErrorMessage = ValidationConstants.IdRequired)]
 		public int Id { get; set; }
 		[Required(ErrorMessage = ValidationConstants.PortalIdRequired)]
 		public int PortalId { get; set; }
@@ -15,9 +17,9 @@ namespace Leopard.Bussiness {
 	}
 
 	public class PortalLocationSearchModel : PagerViewModel {
-		public int Id { get; set; }
-		public int PortalId { get; set; }
-		public int LocationId { get; set; }
+		public int? Id { get; set; }
+		public int? PortalId { get; set; }
+		public int? LocationId { get; set; }
 	}
 
 	public class PortalLocationViewModel {
@@ -25,8 +27,8 @@ namespace Leopard.Bussiness {
 		public int PortalId { get; set; }
 		public int LocationId { get; set; }
 
-		public string PortalTitle { get; set; }
-		public string LocationTitle { get; set; }
+		public string? PortalTitle { get; set; }
+		public string? LocationTitle { get; set; }
 
 	}
 }

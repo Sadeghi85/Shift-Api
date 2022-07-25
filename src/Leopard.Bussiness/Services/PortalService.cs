@@ -12,36 +12,33 @@ namespace Leopard.Bussiness {
 
 		private readonly IPortalStore _portalStore;
 
-		private List<Expression<Func<Portal, bool>>> GetAllExpressions = new();
-
 		public PortalService(IPrincipal iPrincipal, IPortalStore portalStore) : base(iPrincipal) {
 			_portalStore = portalStore;
 		}
+
 		public async Task<StoreViewModel<PortalViewModel>> GetAll(PortalSearchModel model) {
 
-			GetAllExpressions.Clear();
+			var portalId = CurrentUserPortalId ?? int.MaxValue;
+			if (portalId > 1) {
+				model.Id = portalId;
+			}
 
-			GetAllExpressions.Add(pp => !pp.NoDashboard);
+			var getAllExpressions = new List<Expression<Func<Portal, bool>>>();
 
+			getAllExpressions.Add(x => !x.NoDashboard);
 
 			if (!string.IsNullOrWhiteSpace(model.Title)) {
-				GetAllExpressions.Add(pp => pp.Title.Contains(model.Title));
-			}
-			if (model.PortalId != 0) {
-				GetAllExpressions.Add(pp => pp.Id == model.PortalId);
+				getAllExpressions.Add(x => x.Title.Contains(model.Title));
 			}
 
+			if (model.Id > 0) {
+				getAllExpressions.Add(x => x.Id == model.Id);
+			}
 
-			var res = await _portalStore.GetAllWithPagingAsync(GetAllExpressions, t => new PortalViewModel { Id = t.Id, Title = t.Title }, t => t.Id, model.Desc, model.PageSize, model.PageNo);
+			var res = await _portalStore.GetAllWithPagingAsync(getAllExpressions, x => new PortalViewModel { Id = x.Id, Title = x.Title }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 
 			return res;
 		}
-
-		//public int GetAllTotalCount() {
-		//	var res = _portalStore.TotalCount(GetAllExpressions);
-		//	return res;
-		//}
-
 
 		public async ValueTask<Portal?> GetById(int id) {
 			var res = await _portalStore.FindByIdAsync(id);

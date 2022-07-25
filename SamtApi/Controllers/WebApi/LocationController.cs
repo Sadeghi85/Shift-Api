@@ -18,18 +18,17 @@ namespace SamtApi.Controllers.WebApi {
 			_locationService = locationService;
 		}
 
-
-
-
-		// GET: api/<ShiftLocationController>
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(LocationSearchModel model) {
 
-			var portalId = GetUserPortalId() ?? 0;
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
 
 			var res = await _locationService.GetAll(model);
-
 
 			return Ok(OperationResult<List<LocationViewModel>>.SuccessResult(res.Result, res.TotalCount));
 		}
@@ -42,23 +41,19 @@ namespace SamtApi.Controllers.WebApi {
 		//	return Ok(OperationResult<List<ShiftLocation>>.SuccessResult(res, res.Count()));
 		//}
 
-
-		// POST api/<ShiftLocationController>
 		[HttpPost("Register")]
 		public async Task<OkObjectResult> Register(LocationInputModel model) {
+
 			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
-
-				var errors = ModelState.Select(x => x.Value.Errors)
-						   .Where(y => y.Count > 0)
-						   .ToList();
-
-
-				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
 			var res = await _locationService.Register(model);
+
+
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -66,10 +61,19 @@ namespace SamtApi.Controllers.WebApi {
 
 		}
 
-		// PUT api/<ShiftLocationController>/5
+		
 		[HttpPost("Update")]
 		public async Task<OkObjectResult> Update(LocationInputModel model) {
+
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
+
 			var res = await _locationService.Update(model);
+
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -80,7 +84,16 @@ namespace SamtApi.Controllers.WebApi {
 
 		[HttpPost("Delete")]
 		public async Task<OkObjectResult> Delete(LocationInputModel model) {
+
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
+
 			var res = await _locationService.Delete(model);
+
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
