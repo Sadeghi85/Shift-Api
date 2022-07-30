@@ -16,7 +16,7 @@ namespace Leopard.Bussiness {
 		private List<Expression<Func<ShiftCrewRewardFine, bool>>> GetAllExpressions = new();
 
 
-		public ShiftCrewRewardFineService(IPrincipal iPrincipal, IShiftCrewRewardFineStore shiftCrewRewardFineStore, IShiftLogStore shiftLogStore) : base(iPrincipal) {
+		public ShiftCrewRewardFineService(IPrincipal iPrincipal, IShiftCrewRewardFineStore shiftCrewRewardFineStore, IShiftLogStore shiftLogStore) : base(iPrincipal, shiftLogStore) {
 			_shiftCrewRewardFineStore = shiftCrewRewardFineStore;
 			_shiftLogStore = shiftLogStore;
 		}

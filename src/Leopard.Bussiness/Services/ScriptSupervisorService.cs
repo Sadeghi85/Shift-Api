@@ -15,7 +15,7 @@ namespace Leopard.Bussiness {
 		private List<Expression<Func<ShiftTabletConductorChanx, bool>>> GetAllTabletConductorChangesExpressions = new();
 		private List<Expression<Func<ShiftRevisionProblem, bool>>> GetAllShiftRevisionProblemExpressions = new();
 
-		public ScriptSupervisorService(IPrincipal iPrincipal, IShiftTabletScriptSupervisorDescriptionStore scriptSupervisorDescriptionStore, IShiftLogStore shiftLogStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftTabletConductorChanxStore shiftTabletConductorChanxStore, IShiftRevisionProblemStore shiftRevisionProblemStore) : base(iPrincipal) {
+		public ScriptSupervisorService(IPrincipal iPrincipal, IShiftTabletScriptSupervisorDescriptionStore scriptSupervisorDescriptionStore, IShiftLogStore shiftLogStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftTabletConductorChanxStore shiftTabletConductorChanxStore, IShiftRevisionProblemStore shiftRevisionProblemStore) : base(iPrincipal, shiftLogStore) {
 			_scriptSupervisorDescriptionStore = scriptSupervisorDescriptionStore;
 			_shiftLogStore = shiftLogStore;
 			_shiftShiftTabletStore = shiftShiftTabletStore;

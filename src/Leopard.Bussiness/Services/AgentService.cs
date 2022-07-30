@@ -17,7 +17,7 @@ namespace Leopard.Bussiness {
 		private List<Expression<Func<SamtAgent, bool>>> GetAllExpressions { get; set; } = new();
 		private List<Expression<Func<TelavatAgentResourceType, bool>>> GetAgentByResourceTypeIDExpressions { get; set; } = new();
 
-		public AgentService(IPrincipal iPrincipal, ISamtAgentStore samtAgentStore, TelavatAgentResourceTypeStore telavatAgentResourceTypeStore) : base(iPrincipal) {
+		public AgentService(IPrincipal iPrincipal, ISamtAgentStore samtAgentStore, TelavatAgentResourceTypeStore telavatAgentResourceTypeStore, IShiftLogStore shiftLogStore) : base(iPrincipal, shiftLogStore) {
 			_samtAgentStore = samtAgentStore;
 			_telavatAgentResourceTypeStore = telavatAgentResourceTypeStore;
 		}

@@ -15,7 +15,7 @@ namespace Leopard.Bussiness {
 
 		private List<Expression<Func<ShiftEmploymentDetail, bool>>> GetAllExpressions { get; set; } = new();
 
-		public ShiftEmploymentDetailService(IPrincipal iPrincipal, IShiftEmploymentDetailStore shiftEmploymentDetailStore, IShiftLogStore shiftLogStore, ISamtHrCooperationTypeStore samtHrCooperationTypeStore, IPortalStore portalStore) : base(iPrincipal) {
+		public ShiftEmploymentDetailService(IPrincipal iPrincipal, IShiftEmploymentDetailStore shiftEmploymentDetailStore, IShiftLogStore shiftLogStore, ISamtHrCooperationTypeStore samtHrCooperationTypeStore, IPortalStore portalStore) : base(iPrincipal, shiftLogStore) {
 			_shiftEmploymentDetailStore = shiftEmploymentDetailStore;
 			_shiftLogStore = shiftLogStore;
 			_samtHrCooperationTypeStore = samtHrCooperationTypeStore;

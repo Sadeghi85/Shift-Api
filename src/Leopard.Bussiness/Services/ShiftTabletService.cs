@@ -17,7 +17,7 @@ namespace Leopard.Bussiness {
 
 		private List<Expression<Func<ShiftShiftTablet, bool>>> GetAllExpressions { get; set; } = new();
 
-		public ShiftTabletService(IPrincipal iPrincipal, IShiftShiftTabletStore shiftShiftTabletStore, IShiftShiftStore shiftShiftStore, IShiftLogStore shiftLogStore) : base(iPrincipal) {
+		public ShiftTabletService(IPrincipal iPrincipal, IShiftShiftTabletStore shiftShiftTabletStore, IShiftShiftStore shiftShiftStore, IShiftLogStore shiftLogStore) : base(iPrincipal, shiftLogStore) {
 			_shiftShiftTabletStore = shiftShiftTabletStore;
 			_shiftShiftStore = shiftShiftStore;
 			_shiftLogStore = shiftLogStore;

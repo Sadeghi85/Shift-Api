@@ -22,7 +22,7 @@ namespace Leopard.Bussiness {
 
 		private List<Expression<Func<ShiftShiftTabletCrew, bool>>> GetAllExpressions { get; set; } = new();
 
-		public ShiftTabletCrewService(IPrincipal iPrincipal, IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewReplacementStore shiftShiftTabletCrewReplacementStore, ISamtAgentStore samtAgentStore, ISamtResourceTypeStore samtResourceTypeStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftLogStore shiftLogStore, IShiftShiftStore shiftShiftStore) : base(iPrincipal) {
+		public ShiftTabletCrewService(IPrincipal iPrincipal, IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewReplacementStore shiftShiftTabletCrewReplacementStore, ISamtAgentStore samtAgentStore, ISamtResourceTypeStore samtResourceTypeStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftLogStore shiftLogStore, IShiftShiftStore shiftShiftStore) : base(iPrincipal, shiftLogStore) {
 			_shiftShiftTabletCrewStore = shiftShiftTabletCrewStore;
 			_shiftShiftTabletCrewReplacementStore = shiftShiftTabletCrewReplacementStore;
 			_agentStore = samtAgentStore;

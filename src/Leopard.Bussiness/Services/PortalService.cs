@@ -12,7 +12,7 @@ namespace Leopard.Bussiness {
 
 		private readonly IPortalStore _portalStore;
 
-		public PortalService(IPrincipal iPrincipal, IPortalStore portalStore) : base(iPrincipal) {
+		public PortalService(IPrincipal iPrincipal, IPortalStore portalStore, IShiftLogStore shiftLogStore) : base(iPrincipal, shiftLogStore) {
 			_portalStore = portalStore;
 		}
 

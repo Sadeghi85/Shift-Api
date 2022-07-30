@@ -14,7 +14,7 @@ namespace Leopard.Bussiness {
 
 		private List<Expression<Func<SamtResourceType, bool>>> GetAllExpressions { get; set; } = new();
 
-		public JobService(IPrincipal iPrincipal, ISamtResourceTypeStore samtResourceTypeStore) : base(iPrincipal) {
+		public JobService(IPrincipal iPrincipal, ISamtResourceTypeStore samtResourceTypeStore, IShiftLogStore shiftLogStore) : base(iPrincipal, shiftLogStore) {
 			_samtResourceTypeStore = samtResourceTypeStore;
 		}
 
