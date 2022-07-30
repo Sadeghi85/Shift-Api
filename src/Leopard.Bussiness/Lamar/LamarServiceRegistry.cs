@@ -11,7 +11,9 @@ namespace Leopard.Bussiness {
 	public class LamarServiceRegistry : ServiceRegistry {
 
 		public LamarServiceRegistry() {
-			
+
+			IncludeRegistry<LamarStoreRegistry>();
+
 			Scan(_ => {
 				_.AssemblyContainingType(typeof(IServiceBase));
 				_.WithDefaultConventions();
