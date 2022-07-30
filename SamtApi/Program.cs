@@ -83,7 +83,7 @@ builder.Host.UseLamar((context, registry) => {
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 	registry.IncludeRegistry<LamarServiceRegistry>();
-	registry.IncludeRegistry<LamarStoreRegistry>();
+	
 	// register services using Lamar
 
 	//registry.AddScoped<IGenericRepository<>, TheRepository<>>();
@@ -108,7 +108,6 @@ builder.Host.UseLamar((context, registry) => {
 		options.ClientErrorMapping[StatusCodes.Status404NotFound].Link =
 			"https://httpstatuses.com/404";
 	});
-	registry.AddSwaggerGen();
 
 	//registry.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest)
 	//.AddNewtonsoftJson(opt => {
