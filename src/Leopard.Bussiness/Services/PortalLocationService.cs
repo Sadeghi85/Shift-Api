@@ -27,8 +27,10 @@ namespace Leopard.Bussiness {
 				getAllExpressions.Add(x => x.Id == model.Id);
 			}
 
-			if (CurrentUserPortalId == 1 && model.PortalId > 0) {
-				getAllExpressions.Add(x => x.PortalId == model.PortalId);
+			if (CurrentUserPortalId == 1) {
+				if (model.PortalId > 0) {
+					getAllExpressions.Add(x => x.PortalId == model.PortalId);
+				}
 			} else {
 				getAllExpressions.Add(x => x.PortalId == CurrentUserPortalId);
 			}
@@ -101,7 +103,7 @@ namespace Leopard.Bussiness {
 						return BaseResult;
 					}
 
-					//found.PortalId = model.PortalId;
+					found.PortalId = model.PortalId;
 					found.LocationId = model.LocationId;
 					await _shiftPortalLocationStore.UpdateAsync(found);
 				}
