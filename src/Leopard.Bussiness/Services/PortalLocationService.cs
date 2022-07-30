@@ -12,10 +12,12 @@ namespace Leopard.Bussiness {
 
 		private readonly IShiftPortalLocationStore _shiftPortalLocationStore;
 		private readonly IPortalStore _portalStore;
+		private readonly IShiftLocationStore _shiftLocationStore;
 
-		public PortalLocationService(IPrincipal iPrincipal, IShiftPortalLocationStore shiftPortalLocationStore, IShiftLogStore shiftLogStore, IPortalStore portalStore) : base(iPrincipal, shiftLogStore) {
+		public PortalLocationService(IPrincipal iPrincipal, IShiftPortalLocationStore shiftPortalLocationStore, IShiftLogStore shiftLogStore, IPortalStore portalStore, IShiftLocationStore shiftLocationStore) : base(iPrincipal, shiftLogStore) {
 			_shiftPortalLocationStore = shiftPortalLocationStore;
 			_portalStore = portalStore;
+			_shiftLocationStore = shiftLocationStore;
 		}
 
 
@@ -26,7 +28,6 @@ namespace Leopard.Bussiness {
 			if (model.Id > 0) {
 				getAllExpressions.Add(x => x.Id == model.Id);
 			}
-
 			if (CurrentUserPortalId == 1) {
 				if (model.PortalId > 0) {
 					getAllExpressions.Add(x => x.PortalId == model.PortalId);
@@ -34,9 +35,11 @@ namespace Leopard.Bussiness {
 			} else {
 				getAllExpressions.Add(x => x.PortalId == CurrentUserPortalId);
 			}
-
 			if (model.LocationId > 0) {
 				getAllExpressions.Add(x => x.LocationId == model.LocationId);
+			}
+			if (model.IsDeleted != null) {
+				getAllExpressions.Add(x => x.IsDeleted == model.IsDeleted);
 			}
 
 			var res = await _shiftPortalLocationStore.GetAllWithPagingAsync(getAllExpressions, x => new PortalLocationViewModel { Id = x.Id, PortalId = x.PortalId, LocationId = x.LocationId, PortalTitle = x.Portal.Title, LocationTitle = x.ShiftLocation.Title }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
@@ -61,17 +64,35 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var found = await _shiftPortalLocationStore.AnyAsync(x => x.PortalId == model.PortalId && x.LocationId == model.LocationId);
+				var foundPortal = await _portalStore.FindByIdAsync(model.PortalId);
+				if (null == foundPortal) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه پورتال یافت نشد";
 
-				if (found) {
+					return BaseResult;
+				}
+
+				var foundLocation = await _shiftLocationStore.FindByIdAsync(model.LocationId);
+				if (null == foundLocation) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه لوکیشن یافت نشد";
+
+					return BaseResult;
+				}
+
+				var isFound = await _shiftPortalLocationStore.AnyAsync(x => x.IsDeleted == false && x.PortalId == model.PortalId && x.LocationId == model.LocationId);
+
+				if (isFound) {
 					BaseResult.Success = false;
 					BaseResult.Message = "این آیتم قبلا ثبت شده است";
 					return BaseResult;
-				} else {
-
-					var shiftPortalLocation = new ShiftPortalLocation { PortalId = model.PortalId, LocationId = model.LocationId };
-					await _shiftPortalLocationStore.InsertAsync(shiftPortalLocation);
 				}
+
+
+				var shiftPortalLocation = new ShiftPortalLocation { PortalId = model.PortalId, LocationId = model.LocationId };
+
+				await _shiftPortalLocationStore.InsertAsync(shiftPortalLocation);
+
 			} catch (Exception ex) {
 
 				BaseResult = await LogError(ex);
@@ -95,18 +116,41 @@ namespace Leopard.Bussiness {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد";
 					return BaseResult;
-				} else {
-
-					if (CurrentUserPortalId > 1 && CurrentUserPortalId != found.PortalId) {
-						BaseResult.Success = false;
-						BaseResult.Message = "شما به این قسمت دسترسی ندارید";
-						return BaseResult;
-					}
-
-					found.PortalId = model.PortalId;
-					found.LocationId = model.LocationId;
-					await _shiftPortalLocationStore.UpdateAsync(found);
 				}
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != found.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				var foundPortal = await _portalStore.FindByIdAsync(model.PortalId);
+				if (null == foundPortal) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه پورتال یافت نشد";
+
+					return BaseResult;
+				}
+
+				var foundLocation = await _shiftLocationStore.FindByIdAsync(model.LocationId);
+				if (null == foundLocation) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه لوکیشن یافت نشد";
+
+					return BaseResult;
+				}
+
+				var isFound = await _shiftPortalLocationStore.AnyAsync(x => x.Id != model.Id && x.IsDeleted == false && x.PortalId == model.PortalId && x.LocationId == model.LocationId);
+
+				if (isFound) {
+					BaseResult.Success = false;
+					BaseResult.Message = "این آیتم قبلا ثبت شده است";
+					return BaseResult;
+				}
+
+				found.PortalId = model.PortalId;
+				found.LocationId = model.LocationId;
+				await _shiftPortalLocationStore.UpdateAsync(found);
+				
 			} catch (Exception ex) {
 
 				BaseResult = await LogError(ex);
@@ -124,17 +168,18 @@ namespace Leopard.Bussiness {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد";
 					return BaseResult;
-				} else {
-
-					if (CurrentUserPortalId > 1 && CurrentUserPortalId != found.PortalId) {
-						BaseResult.Success = false;
-						BaseResult.Message = "شما به این قسمت دسترسی ندارید";
-						return BaseResult;
-					}
-
-					found.IsDeleted = true;
-					await _shiftPortalLocationStore.UpdateAsync(found);
 				}
+
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != found.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				found.IsDeleted = true;
+
+				await _shiftPortalLocationStore.UpdateAsync(found);
+				
 			} catch (Exception ex) {
 
 				BaseResult = await LogError(ex);

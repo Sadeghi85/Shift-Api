@@ -9,7 +9,7 @@ namespace Leopard.Bussiness {
 
 	public interface IShiftService {
 
-		public Task<StoreViewModel<ShiftShift>> FindByPortalId(int Id);
+		//public Task<StoreViewModel<ShiftShift>> FindByPortalId(int Id);
 		public Task<StoreViewModel<ShiftViewModel>> GetAll(ShiftSearchModel model);
 
 		//public IQueryable<ShiftShift> GetByPortalId(int portalId);

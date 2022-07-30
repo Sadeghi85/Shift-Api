@@ -29,7 +29,7 @@ namespace Leopard.Bussiness {
 
 			var checkAccess = CheckAccess();
 			if (!checkAccess.Success) {
-				return new StoreViewModel<LocationViewModel>() { Result = new List<LocationViewModel>(), TotalCount = 0};
+				return new StoreViewModel<LocationViewModel>() { Result = new List<LocationViewModel>(), TotalCount = 0 };
 			}
 
 			var getAllExpressions = new List<Expression<Func<ShiftLocation, bool>>>();
@@ -46,7 +46,7 @@ namespace Leopard.Bussiness {
 				getAllExpressions.Add(x => x.IsDeleted == model.IsDeleted);
 			}
 
-			var res = await _shiftLocationStore.GetAllWithPagingAsync(getAllExpressions, x => new LocationViewModel { Id = x.Id, Title = x.Title , IsDeleted = x.IsDeleted }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
+			var res = await _shiftLocationStore.GetAllWithPagingAsync(getAllExpressions, x => new LocationViewModel { Id = x.Id, Title = x.Title, IsDeleted = x.IsDeleted }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 
 			return res;
 
@@ -67,17 +67,18 @@ namespace Leopard.Bussiness {
 					return checkAccess;
 				}
 
-				var found = await _shiftLocationStore.AnyAsync(x => x.Title.ToLower() == model.Title.ToLower());
+				var isFound = await _shiftLocationStore.AnyAsync(x => x.IsDeleted == false && x.Title.ToLower() == model.Title.ToLower());
 
-				if (found) {
+				if (isFound) {
 					BaseResult.Success = false;
 					BaseResult.Message = "این آیتم قبلا ثبت شده است";
 					return BaseResult;
-				} else {
-
-					var shiftLocation = new ShiftLocation { Title = model.Title };
-					await _shiftLocationStore.InsertAsync(shiftLocation);
 				}
+
+				var shiftLocation = new ShiftLocation { Title = model.Title, IsDeleted = false };
+
+				await _shiftLocationStore.InsertAsync(shiftLocation);
+
 			} catch (Exception ex) {
 				BaseResult = await LogError(ex);
 			}
@@ -100,10 +101,20 @@ namespace Leopard.Bussiness {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد";
 					return BaseResult;
-				} else {
-					found.Title = model.Title;
-					await _shiftLocationStore.UpdateAsync(found);
 				}
+
+				var isFound = await _shiftLocationStore.AnyAsync(x => x.Id != model.Id && x.IsDeleted == false && x.Title.ToLower() == model.Title.ToLower());
+
+				if (isFound) {
+					BaseResult.Success = false;
+					BaseResult.Message = "این آیتم قبلا ثبت شده است";
+					return BaseResult;
+				}
+
+				found.Title = model.Title;
+
+				await _shiftLocationStore.UpdateAsync(found);
+				
 			} catch (Exception ex) {
 
 				BaseResult = await LogError(ex);
@@ -125,10 +136,12 @@ namespace Leopard.Bussiness {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد";
 					return BaseResult;
-				} else {
-					found.IsDeleted = true;
-					var res = await _shiftLocationStore.UpdateAsync(found);
 				}
+
+				found.IsDeleted = true;
+
+				var res = await _shiftLocationStore.UpdateAsync(found);
+				
 			} catch (Exception ex) {
 
 				BaseResult = await LogError(ex);

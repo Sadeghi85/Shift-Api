@@ -13,83 +13,199 @@ namespace Leopard.Bussiness {
 
 		private readonly IShiftShiftStore _shiftShiftStore;
 		private readonly IPortalStore _portalStore;
-		private readonly IShiftLogStore _shiftLogStore;
 		private readonly IShiftShiftJobTemplateStore _shiftShiftJobTemplateStore;
 		private readonly ISamtResourceTypeStore _samtResourceTypeStore;
-
-		private List<Expression<Func<ShiftShift, bool>>> GetAllExpressions { get; set; } = new();
-
-		private List<Expression<Func<ShiftShiftJobTemplate, bool>>> GetAllShiftShiftJobTemplateExpressions { get; set; } = new();
 
 		public ShiftService(IPrincipal iPrincipal, IShiftShiftStore shiftShiftStore, IPortalStore portalStore, IShiftLogStore shiftLogStore, IShiftShiftJobTemplateStore shiftShiftJobTemplateStore, ISamtResourceTypeStore samtResourceTypeStore) : base(iPrincipal, shiftLogStore) {
 			_shiftShiftStore = shiftShiftStore;
 			_portalStore = portalStore;
-			_shiftLogStore = shiftLogStore;
 			_shiftShiftJobTemplateStore = shiftShiftJobTemplateStore;
 			_samtResourceTypeStore = samtResourceTypeStore;
 		}
 
-		public async Task<BaseResult> Delete(ShiftInputModel model) {
+		public async Task<StoreViewModel<ShiftViewModel>> GetAll(ShiftSearchModel model) {
 
-			try {
-				var found = await _shiftShiftStore.FindByIdAsync(model.Id);
-				if (found == null) {
-					BaseResult.Success = false;
-					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
-					return BaseResult;
-				} else {
-					found.IsDeleted = true;
-					var res = await _shiftShiftStore.UpdateAsync(found);
+			var getAllExpressions = new List<Expression<Func<ShiftShift, bool>>>();
+
+			if (model.Id != 0) {
+				getAllExpressions.Add(x => x.Id == model.Id);
+			}
+			if (CurrentUserPortalId == 1) {
+				if (model.PortalId > 0) {
+					getAllExpressions.Add(x => x.PortalId == model.PortalId);
 				}
+			} else {
+				getAllExpressions.Add(x => x.PortalId == CurrentUserPortalId);
+			}
+			if (!string.IsNullOrWhiteSpace(model.Title)) {
+				getAllExpressions.Add(x => x.Title.Contains(model.Title));
+			}
+			if (model.ShiftTypeId > 0) {
+				getAllExpressions.Add(x => x.ShiftTypeId == model.ShiftTypeId);
+			}
+			if (model.IsDeleted != null) {
+				getAllExpressions.Add(x => x.IsDeleted == model.IsDeleted);
+			}
+			if (model.StartTime != null) {
+				getAllExpressions.Add(x => x.StartTime == model.StartTime);
+			}
+			if (model.EndTime != null) {
+				getAllExpressions.Add(x => x.EndTime == model.EndTime);
+			}
+
+			var res = await _shiftShiftStore.GetAllWithPagingAsync(getAllExpressions, x => new ShiftViewModel { Id = x.Id, Title = x.Title, PortalTitle = x.Portal.Title, PortalId = x.PortalId, EndTime = x.EndTime, StartTime = x.StartTime, ShiftTypeId = x.ShiftTypeId, ShiftTypeTitle = GetShiftTypeTitleByShiftTypeId(x.ShiftTypeId) }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
+
+			return res;
+		}
+
+		public async Task<BaseResult> Register(ShiftInputModel model) {
+			try {
+
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != model.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				var foundPortal = await _portalStore.FindByIdAsync(model.PortalId);
+				if (null == foundPortal) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه پورتال یافت نشد";
+
+					return BaseResult;
+				}
+
+				var isFound = await _shiftShiftStore.AnyAsync(x => x.IsDeleted == false && x.PortalId == model.PortalId && x.ShiftTypeId == model.ShiftTypeId && x.Title.ToLower() == model.Title.ToLower());
+				if (isFound) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شیفت با این نام قبلا ثبت شده است";
+
+					return BaseResult;
+				}
+
+				isFound = _shiftShiftStore.CheckTimeOverlap(0, model.PortalId, model.ShiftTypeId, model.StartTime, model.EndTime);
+				if (isFound) {
+					BaseResult.Success = false;
+					BaseResult.Message = "بازه زمانی انتخاب شده با موارد ثبت شده تداخل دارد";
+
+					return BaseResult;
+				}
+
+				var shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId, ShiftTypeId = model.ShiftTypeId, StartTime = model.StartTime, EndTime = model.EndTime, IsDeleted = false };
+
+				await _shiftShiftStore.InsertAsync(shiftShift);
+
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
-
-				//_shiftLogStore.ResetContext();
-
-				var ss = await _shiftLogStore.InsertAsync(shiftLog);
-				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				BaseResult = await LogError(ex);
 			}
 
 			return BaseResult;
 
 		}
 
-		public async Task<StoreViewModel<ShiftShift>> FindByPortalId(int portalId) {
+		public async Task<BaseResult> Update(ShiftInputModel model) {
+			try {
 
-			var res = await _shiftShiftStore.GetAllAsync(pp => pp.PortalId == portalId, x => x, x => x.Id);
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != model.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
 
-			return res;
+				var found = await _shiftShiftStore.FindByIdAsync(model.Id);
+
+				if (null == found) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر یافت نشد";
+
+					return BaseResult;
+				}
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != found.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				var foundPortal = await _portalStore.FindByIdAsync(model.PortalId);
+				if (null == foundPortal) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه پورتال یافت نشد";
+
+					return BaseResult;
+				}
+
+				var isFound = await _shiftShiftStore.AnyAsync(x => x.Id != model.Id && x.IsDeleted == false && x.PortalId == model.PortalId && x.ShiftTypeId == model.ShiftTypeId && x.Title.ToLower() == model.Title.ToLower());
+				if (isFound) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شیفت با این نام قبلا ثبت شده است";
+
+					return BaseResult;
+				}
+
+				isFound = _shiftShiftStore.CheckTimeOverlap(model.Id, model.PortalId, model.ShiftTypeId, model.StartTime, model.EndTime);
+				if (isFound) {
+					BaseResult.Success = false;
+					BaseResult.Message = "بازه زمانی انتخاب شده با موارد ثبت شده تداخل دارد";
+
+					return BaseResult;
+				}
+
+				found.Title = model.Title;
+				found.StartTime = model.StartTime;
+				found.EndTime = model.EndTime;
+				found.ShiftTypeId = model.ShiftTypeId;
+				found.PortalId = model.PortalId;
+
+				await _shiftShiftStore.UpdateAsync(found);
+
+			} catch (Exception ex) {
+
+				BaseResult = await LogError(ex);
+			}
+
+			return BaseResult;
+		}
+
+		public async Task<BaseResult> Delete(ShiftInputModel model) {
+			try {
+
+				var found = await _shiftShiftStore.FindByIdAsync(model.Id);
+
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر یافت نشد";
+					return BaseResult;
+				}
+
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != found.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				found.IsDeleted = true;
+
+				var res = await _shiftShiftStore.UpdateAsync(found);
+
+			} catch (Exception ex) {
+
+				BaseResult = await LogError(ex);
+			}
+
+			return BaseResult;
 
 		}
 
-		public async Task<StoreViewModel<ShiftViewModel>> GetAll(ShiftSearchModel model) {
+		//public async Task<StoreViewModel<ShiftShift>> FindByPortalId(int portalId) {
 
-			GetAllExpressions.Clear();
+		//	var res = await _shiftShiftStore.GetAllAsync(pp => pp.PortalId == portalId, x => x, x => x.Id);
 
-			if (model.PortalId != 0) {
-				GetAllExpressions.Add(pp => pp.PortalId == model.PortalId);
-			}
-			if (!string.IsNullOrWhiteSpace(model.Title)) {
-				GetAllExpressions.Add(pp => pp.Title.Contains(model.Title));
-			}
-			if (model.ShiftType != 0) {
-				GetAllExpressions.Add(pp => pp.ShiftTypeId == model.ShiftType);
-			}
-			if (model.Id != 0) {
-				GetAllExpressions.Add(pp => pp.Id == model.Id);
-			}
-			if (model.IsDeleted != null) {
-				GetAllExpressions.Add(pp => pp.IsDeleted == model.IsDeleted.Value);
-			}
+		//	return res;
 
-			GetAllExpressions.Add(pp => pp.IsDeleted != true);
+		//}
 
-			var res = await _shiftShiftStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftViewModel { Id = pp.Id, Title = pp.Title, PortalTitle = pp.Portal.Title, PortalId = pp.PortalId, EndTime = pp.EndTime, StartTime = pp.StartTime, ShiftTypeId = pp.ShiftTypeId, ShiftTypeTitle = GetShiftTypeTitleByShiftTypeId(pp.ShiftTypeId) }, pp => pp.Id, model.Desc, model.PageSize, model.PageNo);
 
-			return res;
-		}
 
 		private static string GetShiftTypeTitleByShiftTypeId(int? ShiftTypeId) {
 
@@ -117,257 +233,180 @@ namespace Leopard.Bussiness {
 
 		//}
 
-		public async Task<BaseResult> Register(ShiftInputModel model) {
 
-			var foundPortal = await _portalStore.FindByIdAsync(model.PortalId);
-			if (null == foundPortal) {
-				BaseResult.Success = false;
-				BaseResult.Message = "شناسه پورتال شناسایی نشد.";
 
-				return BaseResult;
+		//private bool IsInShiftType(int shiftType) {
+		//	List<int> shiftTypes = new List<int>() { 1, 2 };
+		//	var res = shiftTypes.Contains(shiftType);
+		//	return res;
+		//}
+
+
+		public async Task<StoreViewModel<ShiftShiftJobTemplateViewModel>> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model) {
+
+			var getAllShiftShiftJobTemplateExpressions = new List<Expression<Func<ShiftShiftJobTemplate, bool>>>();
+
+			if (CurrentUserPortalId == 1) {
+				//if (model.PortalId > 0) {
+				//	getAllShiftShiftJobTemplateExpressions.Add(x => x.PortalId == model.PortalId);
+				//}
+			} else {
+				getAllShiftShiftJobTemplateExpressions.Add(x => x.ShiftShift.PortalId == CurrentUserPortalId);
 			}
 
-			try {
-
-				var found = await _shiftShiftStore.AnyAsync(x => x.Title == model.Title);
-				if (found) {
-					BaseResult.Success = false;
-					BaseResult.Message = "نام انتخاب شده برای شیفت تکراری است.";
-
-					return BaseResult;
-				}
-
-				found = _shiftShiftStore.CheckTimeOverlap(0, model.PortalId, model.ShiftTypeId, model.StartTime, model.EndTime);
-				if (found) {
-					BaseResult.Success = false;
-					BaseResult.Message = "بازه زمانی انتخاب شده با موارد ثبت شده تداخل دارد.";
-
-					return BaseResult;
-				}
-
-				ShiftShift shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId, ShiftTypeId = model.ShiftTypeId, StartTime = model.StartTime, EndTime = model.EndTime, IsDeleted = false };
-
-				await _shiftShiftStore.InsertAsync(shiftShift);
-
-
-			} catch (Exception ex) {
-
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + Environment.NewLine + ex.InnerException?.Message + Environment.NewLine + ex.StackTrace ?? "" };
-
-				//_shiftLogStore.ResetContext();
-
-				await _shiftLogStore.InsertAsync(shiftLog);
-				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفا به مدیر سیستم اطلاع دهید.";
-
-				return BaseResult;
+			if (model.ShiftId > 0) {
+				getAllShiftShiftJobTemplateExpressions.Add(x => x.ShiftId == model.ShiftId);
+			}
+			if (model.JobId > 0) {
+				getAllShiftShiftJobTemplateExpressions.Add(x => x.JobId == model.JobId);
+			}
+			if (model.IsDeleted != null) {
+				getAllShiftShiftJobTemplateExpressions.Add(x => x.IsDeleted == model.IsDeleted);
 			}
 
+			var res = await _shiftShiftJobTemplateStore.GetAllWithPagingAsync(getAllShiftShiftJobTemplateExpressions, x =>
+			new ShiftShiftJobTemplateViewModel {
+				Id = x.Id,
+				JobId = x.JobId,
+				JobTitle = x.SamtResourceType.Title,
+				ShiftId = x.ShiftId,
+				ShiftTitle = x.ShiftShift.Title
+			}, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 
-			return BaseResult;
-
-		}
-
-		private bool IsInShiftType(int shiftType) {
-			List<int> shiftTypes = new List<int>() { 1, 2 };
-			var res = shiftTypes.Contains(shiftType);
 			return res;
-		}
-
-		public async Task<BaseResult> Update(ShiftInputModel model) {
-
-			try {
-				var foundShift = await _shiftShiftStore.FindByIdAsync(model.Id);
-
-				if (null == foundShift) {
-					BaseResult.Success = false;
-					BaseResult.Message = "شناسه مورد نظر جستجو نشد.";
-
-					return BaseResult;
-				}
-
-				var foundPortal = await _portalStore.FindByIdAsync(model.PortalId);
-				if (null == foundPortal) {
-					BaseResult.Success = false;
-					BaseResult.Message = "شناسه پورتال شناسایی نشد.";
-
-					return BaseResult;
-				}
-
-				var found = await _shiftShiftStore.AnyAsync(x => x.Title == model.Title && x.Id != model.Id);
-				if (found) {
-					BaseResult.Success = false;
-					BaseResult.Message = "نام انتخاب شده برای شیفت تکراری است.";
-
-					return BaseResult;
-				}
-
-				found = _shiftShiftStore.CheckTimeOverlap(model.Id, model.PortalId, model.ShiftTypeId, model.StartTime, model.EndTime);
-				if (found) {
-					BaseResult.Success = false;
-					BaseResult.Message = "بازه زمانی انتخاب شده با موارد ثبت شده تداخل دارد.";
-
-					return BaseResult;
-				}
-
-				foundShift.Title = model.Title;
-				foundShift.StartTime = model.StartTime;
-				foundShift.EndTime = model.EndTime;
-				foundShift.ShiftTypeId = model.ShiftTypeId;
-				foundShift.PortalId = model.PortalId;
-				await _shiftShiftStore.UpdateAsync(foundShift);
-
-
-			} catch (Exception ex) {
-
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + Environment.NewLine + ex.InnerException?.Message + Environment.NewLine + ex.StackTrace ?? "" };
-
-				//_shiftLogStore.ResetContext();
-
-				await _shiftLogStore.InsertAsync(shiftLog);
-				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفا به مدیر سیستم اطلاع دهید.";
-
-				return BaseResult;
-			}
-			return BaseResult;
 		}
 
 		public async Task<BaseResult> RegisterShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
 			try {
-				var foundResourceShift = await _shiftShiftJobTemplateStore.AnyAsync(pp => pp.ShiftId == model.ShiftId && pp.JobId == model.JobId);
-				var foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
-				var foundResource = await _samtResourceTypeStore.FindByIdAsync(model.JobId);
 
-				if (foundResourceShift) {
+				var foundJob = await _samtResourceTypeStore.FindByIdAsync(model.JobId);
+				if (null == foundJob) {
 					BaseResult.Success = false;
-					BaseResult.Message = "شناسه سمت برای شیفت قبلا ثبت شده است.";
+					BaseResult.Message = "شناسه عنوان شغلی یافت نشد";
+
 					return BaseResult;
-				} else if (foundResource == null) {
-					BaseResult.Success = false;
-					BaseResult.Message = "سمت مورد نظر یافت نشد.";
-					return BaseResult;
-				} else if (foundShift == null) {
-					BaseResult.Success = false;
-					BaseResult.Message = "شیفت مورد نظر یافت نشد.";
-					return BaseResult;
-				} else {
-					await _shiftShiftJobTemplateStore.InsertAsync(new ShiftShiftJobTemplate {
-						IsDeleted = false,
-						JobId = model.JobId,
-						ShiftId = model.ShiftId
-					});
 				}
+
+				var foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
+				if (null == foundShift) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه شیفت یافت نشد";
+
+					return BaseResult;
+				}
+
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != foundShift.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				var isFound = await _shiftShiftJobTemplateStore.AnyAsync(x => x.IsDeleted == false && x.ShiftId == model.ShiftId && x.JobId == model.JobId);
+
+				if (isFound) {
+					BaseResult.Success = false;
+					BaseResult.Message = "این آیتم قبلا ثبت شده است";
+					return BaseResult;
+				}
+
+				var shiftShiftJobTemplateStore = new ShiftShiftJobTemplate {
+					JobId = model.JobId,
+					ShiftId = model.ShiftId,
+					IsDeleted = false,
+				};
+
+				await _shiftShiftJobTemplateStore.InsertAsync(shiftShiftJobTemplateStore);
+
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
-
-				//_shiftLogStore.ResetContext();
-
-				var ss = await _shiftLogStore.InsertAsync(shiftLog);
-				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				BaseResult = await LogError(ex);
 			}
 
 			return BaseResult;
 		}
 
 		public async Task<BaseResult> UpdateShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
-
 			try {
-				var founded = await _shiftShiftJobTemplateStore.FindByIdAsync(model.Id);
-				var foundResourceShift = await _shiftShiftJobTemplateStore.AnyAsync(pp => pp.ShiftId == model.ShiftId && pp.JobId == model.JobId);
-				var foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
-				var foundResource = await _samtResourceTypeStore.FindByIdAsync(model.JobId);
 
-				if (foundResourceShift) {
+				var found = await _shiftShiftJobTemplateStore.FindByIdAsync(model.Id);
+				if (found == null) {
 					BaseResult.Success = false;
-					BaseResult.Message = "شناسه سمت برای شیفت قبلا ثبت شده است.";
+					BaseResult.Message = "شناسه مورد نظر یافت نشد";
 					return BaseResult;
-				} else if (foundResource == null) {
-					BaseResult.Success = false;
-					BaseResult.Message = "سمت مورد نظر یافت نشد.";
-					return BaseResult;
-				} else if (foundShift == null) {
-					BaseResult.Success = false;
-					BaseResult.Message = "شیفت مورد نظر یافت نشد.";
-					return BaseResult;
-				} else if (founded == null) {
-					BaseResult.Success = false;
-					BaseResult.Message = "شناسه مورد نظر یافت نشد.";
-					return BaseResult;
-				} else {
-					founded.ShiftId = model.ShiftId;
-					founded.JobId = model.JobId;
-					await _shiftShiftJobTemplateStore.UpdateAsync(founded);
 				}
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != found.ShiftShift.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				var foundJob = await _samtResourceTypeStore.FindByIdAsync(model.JobId);
+				if (null == foundJob) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه عنوان شغلی یافت نشد";
+
+					return BaseResult;
+				}
+
+				var foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
+				if (null == foundShift) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه شیفت یافت نشد";
+
+					return BaseResult;
+				}
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != foundShift.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				var isFound = await _shiftShiftJobTemplateStore.AnyAsync(x => x.Id != model.Id && x.IsDeleted == false && x.ShiftId == model.ShiftId && x.JobId == model.JobId);
+
+				if (isFound) {
+					BaseResult.Success = false;
+					BaseResult.Message = "این آیتم قبلا ثبت شده است";
+					return BaseResult;
+				}
+
+				found.ShiftId = model.ShiftId;
+				found.JobId = model.JobId;
+				await _shiftShiftJobTemplateStore.UpdateAsync(found);
+
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
-
-				//_shiftLogStore.ResetContext();
-
-				var ss = await _shiftLogStore.InsertAsync(shiftLog);
-				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				BaseResult = await LogError(ex);
 			}
 
 			return BaseResult;
 		}
 
 		public async Task<BaseResult> DeleteShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
-
 			try {
-				var founded = await _shiftShiftJobTemplateStore.FindByIdAsync(model.Id);
 
+				var found = await _shiftShiftJobTemplateStore.FindByIdAsync(model.Id);
 
-				if (founded == null) {
+				if (found == null) {
 					BaseResult.Success = false;
-					BaseResult.Message = "شناسه مورد نظر یافت نشد.";
+					BaseResult.Message = "شناسه مورد نظر یافت نشد";
 					return BaseResult;
-				} else {
-					founded.IsDeleted = true;
-
-					await _shiftShiftJobTemplateStore.UpdateAsync(founded);
 				}
+
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != found.ShiftShift.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				found.IsDeleted = true;
+				await _shiftShiftJobTemplateStore.UpdateAsync(found);
+
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
-
-				//_shiftLogStore.ResetContext();
-
-				var ss = await _shiftLogStore.InsertAsync(shiftLog);
-				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				BaseResult = await LogError(ex);
 			}
 
 			return BaseResult;
-		}
-
-		public async Task<StoreViewModel<ShiftShiftJobTemplateViewModel>> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model) {
-
-			GetAllShiftShiftJobTemplateExpressions.Clear();
-
-			if (model.ShiftId != 0) {
-				GetAllShiftShiftJobTemplateExpressions.Add(pp => pp.ShiftId == model.ShiftId);
-			}
-			if (model.JobId != 0) {
-				GetAllShiftShiftJobTemplateExpressions.Add(pp => pp.JobId == model.JobId);
-			}
-			if (model.IsDeleted != null) {
-				GetAllShiftShiftJobTemplateExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
-			}
-
-			var res = await _shiftShiftJobTemplateStore.GetAllWithPagingAsync(GetAllShiftShiftJobTemplateExpressions, pp =>
-			new ShiftShiftJobTemplateViewModel {
-				Id = pp.Id,
-				ResourceId = pp.JobId,
-				JobTitle = pp.SamtResourceType.Title,
-				ShiftId = pp.ShiftId,
-				ShiftTitle = pp.ShiftShift.Title
-			}, pp => pp.Id, model.Desc, model.PageSize, model.PageNo);
-
-			return res;
 		}
 
 	}
