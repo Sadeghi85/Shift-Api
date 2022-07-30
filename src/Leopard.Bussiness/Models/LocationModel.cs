@@ -11,7 +11,7 @@ namespace Leopard.Bussiness {
 		[Required(ErrorMessage = ValidationConstants.IdRequired)]
 		public int Id { get; set; }
 		[Required(ErrorMessage = ValidationConstants.TitleRquired)]
-		public string Title { get; set; }// Title (length: 250)
+		public string? Title { get; set; }// Title (length: 250)
 	}
 
 	public class LocationSearchModel : PagerViewModel {

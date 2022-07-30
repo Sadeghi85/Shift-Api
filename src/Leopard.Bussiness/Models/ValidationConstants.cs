@@ -20,7 +20,7 @@ namespace Leopard.Bussiness {
 		public const string RewardAmmountRequired = "مقدار پاداش یا جریمه اجباری است";
 		
 		public const string PortalIdRequired = "شناسه پورتال اجباری است";
-		public const string ShiftTypeRequired = "شناسه نوع شیفت باید 1-رژی و 2-هماهنگی باشد";
+		public const string ShiftTypeIdRequired = "شناسه نوع شیفت باید 1)رژی یا 2)هماهنگی باشد";
 		public const string StartTimeRequired = "زمان شروع شیفت اجباری است";
 		public const string EndTimeRequired = "زمان پایان شیفت اجباری است";
 		public const string FileNumberRequired = "شماره فایل اجباری است";

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
 	public class JobSearchModel : PagerViewModel {
-		public int Id { get; set; }
-		public string Title { get; set; }
+		public int? Id { get; set; }
+		public string? Title { get; set; }
 		public bool? IsDeleted { get; set; }
 	}
 
 	public class JobViewModel {
 		public int Id { get; set; }
-		public string Title { get; set; }
+		public string? Title { get; set; }
 	}
 }

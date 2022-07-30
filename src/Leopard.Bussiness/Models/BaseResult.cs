@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
 	public class BaseResult {
-		public string Message { get; set; } = "عملیات با موفقیت انجام شد.";
+		public string Message { get; set; } = "عملیات با موفقیت انجام شد";
 		public bool Success { get; set; } = true;
 		//public string SystemMessage { get; set; }
 		
