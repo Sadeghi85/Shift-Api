@@ -11,20 +11,14 @@ namespace Leopard.Bussiness {
 
 		//public Task<StoreViewModel<ShiftShift>> FindByPortalId(int Id);
 		public Task<StoreViewModel<ShiftViewModel>> GetAll(ShiftSearchModel model);
-
 		//public IQueryable<ShiftShift> GetByPortalId(int portalId);
-
 		public Task<BaseResult> Register(ShiftInputModel model);
-
 		public Task<BaseResult> Update(ShiftInputModel model);
+		public Task<BaseResult> Delete(int id);
 
-		public Task<BaseResult> Delete(ShiftInputModel model);
-
-
-		public Task<StoreViewModel<ShiftShiftJobTemplateViewModel>> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model);
-
-		public Task<BaseResult> RegisterShiftJobTemplate(ShiftShiftJobTemplateInputModel model);
-		public Task<BaseResult> DeleteShiftJobTemplate(ShiftShiftJobTemplateInputModel model);
-		public Task<BaseResult> UpdateShiftJobTemplate(ShiftShiftJobTemplateInputModel model);
+		public Task<StoreViewModel<ShiftTemplateViewModel>> GetAllShiftTemplates(ShiftTemplateSearchModel model);
+		public Task<BaseResult> RegisterShiftTemplate(ShiftTemplateInputModel model);
+		public Task<BaseResult> UpdateShiftTemplate(ShiftTemplateInputModel model);
+		public Task<BaseResult> DeleteShiftTemplate(int id);
 	}
 }

@@ -12,30 +12,27 @@ namespace Leopard.Bussiness {
 
 		private readonly ISamtResourceTypeStore _samtResourceTypeStore;
 
-		private List<Expression<Func<SamtResourceType, bool>>> GetAllExpressions { get; set; } = new();
-
 		public JobService(IPrincipal iPrincipal, ISamtResourceTypeStore samtResourceTypeStore, IShiftLogStore shiftLogStore) : base(iPrincipal, shiftLogStore) {
 			_samtResourceTypeStore = samtResourceTypeStore;
 		}
 
-		public async Task<StoreViewModel<JobViewModel>>? GetAll(JobSearchModel model) {
+		public async Task<StoreViewModel<JobViewModel>> GetAll(JobSearchModel model) {
 
-			GetAllExpressions.Clear();
+			var getAllExpressions = new List<Expression<Func<SamtResourceType, bool>>>();
 
-			if (string.IsNullOrWhiteSpace(model.Title) && model.Id == 0) {
-				GetAllExpressions.Add(pp => true);
-			} else {
-				if (!string.IsNullOrWhiteSpace(model.Title)) {
-					GetAllExpressions.Add(pp => pp.Title.Contains(model.Title));
-				}
-				if (model.Id != 0) {
-					GetAllExpressions.Add(pp => pp.Id == model.Id);
-				}
-
+			if (model.Id > 0) {
+				getAllExpressions.Add(x => x.Id == model.Id);
 			}
-			GetAllExpressions.Add(pp => pp.ParentId == 20 && pp.IsDeleted != true);
+			if (!string.IsNullOrWhiteSpace(model.Title)) {
+				getAllExpressions.Add(x => x.Title.Contains(model.Title));
+			}
+			if (model.IsDeleted != null) {
+				getAllExpressions.Add(x => x.IsDeleted == model.IsDeleted);
+			}
 
-			var res = await _samtResourceTypeStore.GetAllWithPagingAsync(GetAllExpressions, pp => new JobViewModel { Id = pp.Id, Title = pp.Title }, pp => pp.Id, model.Desc, model.PageSize, model.PageNo);
+			getAllExpressions.Add(x => x.ParentId == 20);
+
+			var res = await _samtResourceTypeStore.GetAllWithPagingAsync(getAllExpressions, x => new JobViewModel { Id = x.Id, Title = x.Title }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 
 			return res;
 

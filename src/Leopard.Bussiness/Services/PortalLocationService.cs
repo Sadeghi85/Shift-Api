@@ -20,7 +20,6 @@ namespace Leopard.Bussiness {
 			_shiftLocationStore = shiftLocationStore;
 		}
 
-
 		public async Task<StoreViewModel<PortalLocationViewModel>> GetAll(PortalLocationSearchModel model) {
 
 			var getAllExpressions = new List<Expression<Func<ShiftPortalLocation, bool>>>();
@@ -150,7 +149,7 @@ namespace Leopard.Bussiness {
 				found.PortalId = model.PortalId;
 				found.LocationId = model.LocationId;
 				await _shiftPortalLocationStore.UpdateAsync(found);
-				
+
 			} catch (Exception ex) {
 
 				BaseResult = await LogError(ex);
@@ -159,10 +158,10 @@ namespace Leopard.Bussiness {
 			return BaseResult;
 		}
 
-		public async Task<BaseResult> Delete(PortalLocationInputModel model) {
+		public async Task<BaseResult> Delete(int id) {
 			try {
 
-				var found = await _shiftPortalLocationStore.FindByIdAsync(model.Id);
+				var found = await _shiftPortalLocationStore.FindByIdAsync(id);
 
 				if (found == null) {
 					BaseResult.Success = false;
@@ -179,7 +178,7 @@ namespace Leopard.Bussiness {
 				found.IsDeleted = true;
 
 				await _shiftPortalLocationStore.UpdateAsync(found);
-				
+
 			} catch (Exception ex) {
 
 				BaseResult = await LogError(ex);

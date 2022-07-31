@@ -9,7 +9,7 @@ namespace Leopard.Bussiness {
 	public interface IAgentService {
 		public Task<StoreViewModel<AgentViewModel>> GetAll(AgentSearchModel model);
 
-		public Task<StoreViewModel<GetAgentByResourceTypeIDResult>> GetAgentByResourceTypeID(GetAgentByResourceTypeIDModel model);
+		public Task<StoreViewModel<AgentViewModel>> GetAgentByJobID(AgentByJobSearchModel model);
 
 	}
 }

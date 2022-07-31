@@ -40,11 +40,11 @@ namespace Leopard.Bussiness {
 			return res;
 		}
 
-		public async ValueTask<Portal?> GetById(int id) {
-			var res = await _portalStore.FindByIdAsync(id);
+		//public async ValueTask<Portal?> GetById(int id) {
+		//	var res = await _portalStore.FindByIdAsync(id);
 
-			return res;
+		//	return res;
 
-		}
+		//}
 	}
 }

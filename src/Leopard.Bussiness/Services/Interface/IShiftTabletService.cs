@@ -12,6 +12,6 @@ namespace Leopard.Bussiness {
 
 		public Task<BaseResult> Update(ShiftTabletInputModel model);
 		public Task<StoreViewModel<ShiftTabletViewModel>> GetAll(ShiftTabletSearchModel model);
-		public Task<BaseResult> Delete(ShiftTabletInputModel model);
+		public Task<BaseResult> Delete(int id);
 	}
 }

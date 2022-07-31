@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
-	public  class ShiftShiftJobTemplateInputModel {
+	public class ShiftTemplateInputModel {
 		[Required(ErrorMessage = ValidationConstants.IdRequired)]
 		public int Id { get; set; } // Id (Primary key)
 		[Required(ErrorMessage =ValidationConstants.JobIdRquired)]
@@ -16,7 +16,8 @@ namespace Leopard.Bussiness {
 		
 	}
 
-	public class ShiftShiftJobTemplateSearchModel : PagerViewModel {
+	public class ShiftTemplateSearchModel : PagerViewModel {
+		public int? Id { get; set; }
 		public int? ShiftId { get; set; }
 		public int? JobId { get; set; }
 
@@ -24,7 +25,7 @@ namespace Leopard.Bussiness {
 
 	}
 
-	public class ShiftShiftJobTemplateViewModel {
+	public class ShiftTemplateViewModel {
 		public int Id { get; set; }
 		public int ShiftId { get; set; }
 		public int JobId { get; set; }

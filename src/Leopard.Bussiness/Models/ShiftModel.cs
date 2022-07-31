@@ -24,11 +24,10 @@ namespace Leopard.Bussiness {
 	}
 
 	public class ShiftSearchModel : PagerViewModel {
-
+		public int? Id { get; set; }
 		public string? Title { get; set; }
 		public int? PortalId { get; set; }
 		public int? ShiftTypeId { get; set; } // ShiftTypeId
-		public int? Id { get; set; }
 		public bool? IsDeleted { get; set; }
 		public TimeSpan? StartTime { get; set; } // StartTime
 		public TimeSpan? EndTime { get; set; } // EndTime
@@ -40,9 +39,9 @@ namespace Leopard.Bussiness {
 		public int Id { get; set; } // ID (Primary key)
 		public string? Title { get; set; } // Title (length: 250)
 		public int PortalId { get; set; } // PortalId
+		public string? PortalTitle { get; set; }
 		public TimeSpan StartTime { get; set; } // StartTime
 		public TimeSpan EndTime { get; set; } // EndTime
-		public string? PortalTitle { get; set; }
 		public int ShiftTypeId { get; set; }
 		public string? ShiftTypeTitle { get; set; }
 	}

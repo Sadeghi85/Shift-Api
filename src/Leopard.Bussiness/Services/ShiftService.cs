@@ -27,7 +27,7 @@ namespace Leopard.Bussiness {
 
 			var getAllExpressions = new List<Expression<Func<ShiftShift, bool>>>();
 
-			if (model.Id != 0) {
+			if (model.Id > 0) {
 				getAllExpressions.Add(x => x.Id == model.Id);
 			}
 			if (CurrentUserPortalId == 1) {
@@ -53,7 +53,7 @@ namespace Leopard.Bussiness {
 				getAllExpressions.Add(x => x.EndTime == model.EndTime);
 			}
 
-			var res = await _shiftShiftStore.GetAllWithPagingAsync(getAllExpressions, x => new ShiftViewModel { Id = x.Id, Title = x.Title, PortalTitle = x.Portal.Title, PortalId = x.PortalId, EndTime = x.EndTime, StartTime = x.StartTime, ShiftTypeId = x.ShiftTypeId, ShiftTypeTitle = GetShiftTypeTitleByShiftTypeId(x.ShiftTypeId) }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
+			var res = await _shiftShiftStore.GetAllWithPagingAsync(getAllExpressions, x => new ShiftViewModel { Id = x.Id, Title = x.Title, PortalTitle = x.Portal.Title, PortalId = x.PortalId, EndTime = x.EndTime, StartTime = x.StartTime, ShiftTypeId = x.ShiftTypeId, ShiftTypeTitle = _getShiftTypeTitleByShiftTypeId(x.ShiftTypeId) }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 
 			return res;
 		}
@@ -64,6 +64,27 @@ namespace Leopard.Bussiness {
 				if (CurrentUserPortalId > 1 && CurrentUserPortalId != model.PortalId) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				TimeSpan diff;
+				switch (TimeSpan.Compare(model.EndTime, model.StartTime)) {
+					case -1:
+						diff = (model.EndTime.Add(TimeSpan.FromDays(1))) - model.StartTime;
+						break;
+					case 0:
+						diff = TimeSpan.Zero;
+						break;
+					case 1:
+						diff = model.EndTime - model.StartTime;
+						break;
+					default:
+						diff = TimeSpan.Zero;
+						break;
+				}
+				if (diff == TimeSpan.Zero) {
+					BaseResult.Success = false;
+					BaseResult.Message = "ساعت شروع و پایان را بدرستی وارد نمایید";
 					return BaseResult;
 				}
 
@@ -110,6 +131,27 @@ namespace Leopard.Bussiness {
 				if (CurrentUserPortalId > 1 && CurrentUserPortalId != model.PortalId) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				TimeSpan diff;
+				switch (TimeSpan.Compare(model.EndTime, model.StartTime)) {
+					case -1:
+						diff = (model.EndTime.Add(TimeSpan.FromDays(1))) - model.StartTime;
+						break;
+					case 0:
+						diff = TimeSpan.Zero;
+						break;
+					case 1:
+						diff = model.EndTime - model.StartTime;
+						break;
+					default:
+						diff = TimeSpan.Zero;
+						break;
+				}
+				if (diff == TimeSpan.Zero) {
+					BaseResult.Success = false;
+					BaseResult.Message = "ساعت شروع و پایان را بدرستی وارد نمایید";
 					return BaseResult;
 				}
 
@@ -167,10 +209,10 @@ namespace Leopard.Bussiness {
 			return BaseResult;
 		}
 
-		public async Task<BaseResult> Delete(ShiftInputModel model) {
+		public async Task<BaseResult> Delete(int id) {
 			try {
 
-				var found = await _shiftShiftStore.FindByIdAsync(model.Id);
+				var found = await _shiftShiftStore.FindByIdAsync(id);
 
 				if (found == null) {
 					BaseResult.Success = false;
@@ -205,9 +247,7 @@ namespace Leopard.Bussiness {
 
 		//}
 
-
-
-		private static string GetShiftTypeTitleByShiftTypeId(int? ShiftTypeId) {
+		private static string _getShiftTypeTitleByShiftTypeId(int? ShiftTypeId) {
 
 			string? res;
 
@@ -233,39 +273,39 @@ namespace Leopard.Bussiness {
 
 		//}
 
-
-
 		//private bool IsInShiftType(int shiftType) {
 		//	List<int> shiftTypes = new List<int>() { 1, 2 };
 		//	var res = shiftTypes.Contains(shiftType);
 		//	return res;
 		//}
 
+		public async Task<StoreViewModel<ShiftTemplateViewModel>> GetAllShiftTemplates(ShiftTemplateSearchModel model) {
 
-		public async Task<StoreViewModel<ShiftShiftJobTemplateViewModel>> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model) {
-
-			var getAllShiftShiftJobTemplateExpressions = new List<Expression<Func<ShiftShiftJobTemplate, bool>>>();
+			var getAllShiftTemplateExpressions = new List<Expression<Func<ShiftShiftJobTemplate, bool>>>();
 
 			if (CurrentUserPortalId == 1) {
 				//if (model.PortalId > 0) {
 				//	getAllShiftShiftJobTemplateExpressions.Add(x => x.PortalId == model.PortalId);
 				//}
 			} else {
-				getAllShiftShiftJobTemplateExpressions.Add(x => x.ShiftShift.PortalId == CurrentUserPortalId);
+				getAllShiftTemplateExpressions.Add(x => x.ShiftShift.PortalId == CurrentUserPortalId);
 			}
 
+			if (model.Id > 0) {
+				getAllShiftTemplateExpressions.Add(x => x.ShiftId == model.ShiftId);
+			}
 			if (model.ShiftId > 0) {
-				getAllShiftShiftJobTemplateExpressions.Add(x => x.ShiftId == model.ShiftId);
+				getAllShiftTemplateExpressions.Add(x => x.ShiftId == model.ShiftId);
 			}
 			if (model.JobId > 0) {
-				getAllShiftShiftJobTemplateExpressions.Add(x => x.JobId == model.JobId);
+				getAllShiftTemplateExpressions.Add(x => x.JobId == model.JobId);
 			}
 			if (model.IsDeleted != null) {
-				getAllShiftShiftJobTemplateExpressions.Add(x => x.IsDeleted == model.IsDeleted);
+				getAllShiftTemplateExpressions.Add(x => x.IsDeleted == model.IsDeleted);
 			}
 
-			var res = await _shiftShiftJobTemplateStore.GetAllWithPagingAsync(getAllShiftShiftJobTemplateExpressions, x =>
-			new ShiftShiftJobTemplateViewModel {
+			var res = await _shiftShiftJobTemplateStore.GetAllWithPagingAsync(getAllShiftTemplateExpressions, x =>
+			new ShiftTemplateViewModel {
 				Id = x.Id,
 				JobId = x.JobId,
 				JobTitle = x.SamtResourceType.Title,
@@ -276,7 +316,7 @@ namespace Leopard.Bussiness {
 			return res;
 		}
 
-		public async Task<BaseResult> RegisterShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
+		public async Task<BaseResult> RegisterShiftTemplate(ShiftTemplateInputModel model) {
 			try {
 
 				var foundJob = await _samtResourceTypeStore.FindByIdAsync(model.JobId);
@@ -325,7 +365,7 @@ namespace Leopard.Bussiness {
 			return BaseResult;
 		}
 
-		public async Task<BaseResult> UpdateShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
+		public async Task<BaseResult> UpdateShiftTemplate(ShiftTemplateInputModel model) {
 			try {
 
 				var found = await _shiftShiftJobTemplateStore.FindByIdAsync(model.Id);
@@ -381,10 +421,10 @@ namespace Leopard.Bussiness {
 			return BaseResult;
 		}
 
-		public async Task<BaseResult> DeleteShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
+		public async Task<BaseResult> DeleteShiftTemplate(int id) {
 			try {
 
-				var found = await _shiftShiftJobTemplateStore.FindByIdAsync(model.Id);
+				var found = await _shiftShiftJobTemplateStore.FindByIdAsync(id);
 
 				if (found == null) {
 					BaseResult.Success = false;

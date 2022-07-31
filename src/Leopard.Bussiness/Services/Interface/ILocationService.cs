@@ -10,9 +10,8 @@ namespace Leopard.Bussiness {
 		public Task<StoreViewModel<LocationViewModel>> GetAll(LocationSearchModel model);
 
 		public Task<BaseResult> Register(LocationInputModel model);
-
 		public Task<BaseResult> Update(LocationInputModel model);
-		public Task<BaseResult> Delete(LocationInputModel model);
+		public Task<BaseResult> Delete(int id);
 
 
 

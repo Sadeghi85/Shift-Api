@@ -14,4 +14,14 @@ namespace Leopard.Bussiness {
 		public int Id { get; set; }
 		public string? Fullname { get; set; }
 	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+
+	public class AgentByJobSearchModel : PagerViewModel {
+		public int? JobId { get; set; }
+		public bool? IsDeleted { get; set; }
+
+	}
 }

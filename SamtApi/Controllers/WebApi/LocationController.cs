@@ -53,7 +53,6 @@ namespace SamtApi.Controllers.WebApi {
 
 			var res = await _locationService.Register(model);
 
-
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -61,7 +60,7 @@ namespace SamtApi.Controllers.WebApi {
 
 		}
 
-		
+
 		[HttpPost("Update")]
 		public async Task<OkObjectResult> Update(LocationInputModel model) {
 
@@ -83,7 +82,7 @@ namespace SamtApi.Controllers.WebApi {
 		}
 
 		[HttpPost("Delete")]
-		public async Task<OkObjectResult> Delete(LocationInputModel model) {
+		public async Task<OkObjectResult> Delete(int id) {
 
 			if (!ModelState.IsValid) {
 				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
@@ -92,7 +91,7 @@ namespace SamtApi.Controllers.WebApi {
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
-			var res = await _locationService.Delete(model);
+			var res = await _locationService.Delete(id);
 
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));

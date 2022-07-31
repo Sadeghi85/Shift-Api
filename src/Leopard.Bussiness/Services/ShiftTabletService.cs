@@ -10,18 +10,13 @@ using System.Threading.Tasks;
 namespace Leopard.Bussiness {
 	public class ShiftTabletService : ServiceBase, IShiftTabletService {
 
-		readonly private IShiftShiftTabletStore _shiftShiftTabletStore;
-		readonly private IShiftShiftStore _shiftShiftStore;
-		readonly private IShiftLogStore _shiftLogStore;
-
-
-		private List<Expression<Func<ShiftShiftTablet, bool>>> GetAllExpressions { get; set; } = new();
+		private readonly IShiftShiftTabletStore _shiftShiftTabletStore;
+		private readonly IShiftShiftStore _shiftShiftStore;
+		private readonly IShiftLogStore _shiftLogStore;
 
 		public ShiftTabletService(IPrincipal iPrincipal, IShiftShiftTabletStore shiftShiftTabletStore, IShiftShiftStore shiftShiftStore, IShiftLogStore shiftLogStore) : base(iPrincipal, shiftLogStore) {
 			_shiftShiftTabletStore = shiftShiftTabletStore;
 			_shiftShiftStore = shiftShiftStore;
-			_shiftLogStore = shiftLogStore;
-
 		}
 
 		//public List<ShiftShiftTablet> GetTabletShiftByPortalId(int portalId) {
@@ -33,85 +28,92 @@ namespace Leopard.Bussiness {
 
 		public async Task<StoreViewModel<ShiftTabletViewModel>> GetAll(ShiftTabletSearchModel model) {
 
-			GetAllExpressions.Clear();
+			var getAllExpressions = new List<Expression<Func<ShiftShiftTablet, bool>>>();
 
-			GetAllExpressions.Add(pp => pp.ShiftShift.IsDeleted == false);
+			getAllExpressions.Add(x => x.ShiftShift.IsDeleted == false);
 
-			if (model.Id != 0) {
-				GetAllExpressions.Add(pp => pp.Id == model.Id);
+			if (CurrentUserPortalId == 1) {
+				//if (model.PortalId > 0) {
+				//	getAllShiftShiftJobTemplateExpressions.Add(x => x.PortalId == model.PortalId);
+				//}
+			} else {
+				getAllExpressions.Add(x => x.ShiftShift.PortalId == CurrentUserPortalId);
 			}
-			if (model.ShiftId != 0) {
-				GetAllExpressions.Add(pp => pp.ShiftId == model.ShiftId);
+			if (model.Id > 0) {
+				getAllExpressions.Add(x => x.Id == model.Id);
 			}
-
+			if (model.ShiftId > 0) {
+				getAllExpressions.Add(x => x.ShiftId == model.ShiftId);
+			}
 			if (model.FromDate != null) {
-				GetAllExpressions.Add(pp => pp.ShiftDate >= model.FromDate);
+				getAllExpressions.Add(x => x.ShiftDate >= model.FromDate);
 			}
 			if (model.ToDate != null) {
-				GetAllExpressions.Add(pp => pp.ShiftDate <= model.ToDate);
+				getAllExpressions.Add(x => x.ShiftDate <= model.ToDate);
 			}
 			if (model.IsDeleted != null) {
-				GetAllExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
+				getAllExpressions.Add(x => x.IsDeleted == model.IsDeleted);
 			}
 			if (model.HasLivePrograms != null) {
-				GetAllExpressions.Add(pp => pp.HasLivePrograms == model.HasLivePrograms);
+				getAllExpressions.Add(x => x.HasLivePrograms == model.HasLivePrograms);
 			}
 
-
-			var res = await _shiftShiftTabletStore.GetAllWithPagingAsync(GetAllExpressions, pp => new ShiftTabletViewModel {
-				Id = pp.Id,
-				ShiftDate = pp.ShiftDate,
-				ShiftTitle = pp.ShiftShift.Title,
-				ShiftId = pp.ShiftId,
-				ShiftWorthPercent = pp.ShiftWorthPercent,
-				PortalId = pp.ShiftShift.PortalId,
-				ShiftStartTime = pp.ShiftShift.StartTime,
-				ShiftEndTime = pp.ShiftShift.EndTime,
-				PortalTitle = pp.ShiftShift.Portal.Title
-
-
+			var res = await _shiftShiftTabletStore.GetAllWithPagingAsync(getAllExpressions, x => new ShiftTabletViewModel {
+				Id = x.Id,
+				ShiftDate = x.ShiftDate,
+				ShiftTitle = x.ShiftShift.Title,
+				ShiftId = x.ShiftId,
+				ShiftWorthPercent = x.ShiftWorthPercent,
+				PortalId = x.ShiftShift.PortalId,
+				ShiftStartTime = x.ShiftShift.StartTime,
+				ShiftEndTime = x.ShiftShift.EndTime,
+				PortalTitle = x.ShiftShift.Portal.Title
 			}, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 
 			return res;
 		}
 
-
 		public async Task<BaseResult> Register(ShiftTabletInputModel model) {
 
 			try {
 
-				var foundShiftTabletSameDate = await _shiftShiftTabletStore.AnyAsync(pp => pp.ShiftDate.Date == model.ShiftDate.Date && pp.ShiftId == model.ShiftId);
-
 				var foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
-				if (foundShift == null) {
+				if (null == foundShift) {
 					BaseResult.Success = false;
-					BaseResult.Message = "شیفت مورد نظر جستجو نشد.";
-					return BaseResult;
-				} else if (foundShiftTabletSameDate) {
+					BaseResult.Message = "شناسه شیفت یافت نشد";
 
-					BaseResult.Success = false;
-					BaseResult.Message = "این شیفت در این روز حاص از قبل موجود است.";
 					return BaseResult;
-				} else {
-					ShiftShiftTablet shiftTablet = new ShiftShiftTablet {
-						ShiftId = model.ShiftId,
-						ShiftDate = model.ShiftDate,
-						ShiftWorthPercent = model.ShiftWorthPercent.Value,
-						IsDeleted = false,
-						HasLivePrograms = model.HasLivePrograms.Value
-					};
-					foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
-					shiftTablet.ShiftDuration = foundShift.EndTime - foundShift.StartTime;
-
-					var res = await _shiftShiftTabletStore.InsertAsync(shiftTablet);
 				}
+
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != foundShift.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				var isFound = await _shiftShiftTabletStore.AnyAsync(x => x.IsDeleted == false && x.ShiftDate.Date == model.ShiftDate.Date && x.ShiftId == model.ShiftId);
+
+				if (isFound) {
+					BaseResult.Success = false;
+					BaseResult.Message = "این آیتم قبلا ثبت شده است";
+					return BaseResult;
+				}
+
+				var shiftTablet = new ShiftShiftTablet {
+					ShiftId = model.ShiftId,
+					ShiftDate = model.ShiftDate,
+					ShiftWorthPercent = model.ShiftWorthPercent ?? 0,
+					IsDeleted = false,
+					HasLivePrograms = model.HasLivePrograms,
+
+					ShiftDuration = foundShift.EndTime - foundShift.StartTime
+				};
+
+				await _shiftShiftTabletStore.InsertAsync(shiftTablet);
+
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
-
-				var ss = await _shiftLogStore.InsertAsync(shiftLog);
-				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				BaseResult = await LogError(ex);
 			}
 
 			return BaseResult;
@@ -120,66 +122,78 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> Update(ShiftTabletInputModel model) {
 			try {
 
-				var foundShiftTabletSameDate = await _shiftShiftTabletStore.AnyAsync(pp => pp.ShiftDate.Date == model.ShiftDate.Date && pp.ShiftId == model.ShiftId && pp.Id != model.Id);
-
 				var found = await _shiftShiftTabletStore.FindByIdAsync(model.Id);
-
 				if (found == null) {
 					BaseResult.Success = false;
-					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+					BaseResult.Message = "شناسه مورد نظر یافت نشد";
 					return BaseResult;
-				} else if (foundShiftTabletSameDate) {
-
-					BaseResult.Success = false;
-					BaseResult.Message = "این شیفت در تاریخ " + model.ShiftDate + " قبلا تعریف شده است";
-					return BaseResult;
-				} else {
-
-					found.ShiftId = model.ShiftId;
-					found.ShiftDate = model.ShiftDate;
-					found.ShiftWorthPercent = model.ShiftWorthPercent.Value;
-					found.HasLivePrograms = model.HasLivePrograms.Value;
-
-					var res = await _shiftShiftTabletStore.UpdateAsync(found);
 				}
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != found.ShiftShift.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				var foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
+				if (null == foundShift) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه شیفت یافت نشد";
+
+					return BaseResult;
+				}
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != foundShift.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				var isFound = await _shiftShiftTabletStore.AnyAsync(x => x.Id != model.Id &&  x.IsDeleted == false && x.ShiftDate.Date == model.ShiftDate.Date && x.ShiftId == model.ShiftId);
+
+				if (isFound) {
+					BaseResult.Success = false;
+					BaseResult.Message = "این آیتم قبلا ثبت شده است";
+					return BaseResult;
+				}
+
+				found.ShiftId = model.ShiftId;
+				found.ShiftDate = model.ShiftDate;
+				found.ShiftWorthPercent = model.ShiftWorthPercent ?? found.ShiftWorthPercent;
+				found.HasLivePrograms = model.HasLivePrograms;
+
+				var res = await _shiftShiftTabletStore.UpdateAsync(found);
+				
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
-
-				//_shiftLogStore.ResetContext();
-
-				var ss = await _shiftLogStore.InsertAsync(shiftLog);
-				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				BaseResult = await LogError(ex);
 			}
 
 			return BaseResult;
 
 		}
 
-		public async Task<BaseResult> Delete(ShiftTabletInputModel model) {
+		public async Task<BaseResult> Delete(int id) {
 			try {
-				var found = await _shiftShiftTabletStore.FindByIdAsync(model.Id);
+
+				var found = await _shiftShiftTabletStore.FindByIdAsync(id);
 
 				if (found == null) {
 					BaseResult.Success = false;
-					BaseResult.Message = "شناسه مورد نظر شناسایی نشد.";
+					BaseResult.Message = "شناسه مورد نظر یافت نشد";
 					return BaseResult;
-				} else {
-
-					found.IsDeleted = true;
-
-					var res = await _shiftShiftTabletStore.UpdateAsync(found);
 				}
+
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != found.ShiftShift.PortalId) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				found.IsDeleted = true;
+				await _shiftShiftTabletStore.UpdateAsync(found);
+
 			} catch (Exception ex) {
 
-				ShiftLog shiftLog = new ShiftLog { Message = ex.Message + " " + ex.InnerException?.Message ?? ex.Message };
-
-				//_shiftLogStore.ResetContext();
-
-				var ss = await _shiftLogStore.InsertAsync(shiftLog);
-				BaseResult.Success = false;
-				base.BaseResult.Message = $"خطای سیستمی شماره {shiftLog.Id} لطفای به مدیر سیستم اطلاع دهید.";
+				BaseResult = await LogError(ex);
 			}
 
 			return BaseResult;

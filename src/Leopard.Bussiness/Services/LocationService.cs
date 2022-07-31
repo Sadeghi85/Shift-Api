@@ -114,7 +114,7 @@ namespace Leopard.Bussiness {
 				found.Title = model.Title;
 
 				await _shiftLocationStore.UpdateAsync(found);
-				
+
 			} catch (Exception ex) {
 
 				BaseResult = await LogError(ex);
@@ -123,14 +123,14 @@ namespace Leopard.Bussiness {
 			return BaseResult;
 		}
 
-		public async Task<BaseResult> Delete(LocationInputModel model) {
+		public async Task<BaseResult> Delete(int id) {
 			try {
 				var checkAccess = CheckAccess();
 				if (!checkAccess.Success) {
 					return checkAccess;
 				}
 
-				var found = await _shiftLocationStore.FindByIdAsync(model.Id);
+				var found = await _shiftLocationStore.FindByIdAsync(id);
 
 				if (found == null) {
 					BaseResult.Success = false;
@@ -141,7 +141,7 @@ namespace Leopard.Bussiness {
 				found.IsDeleted = true;
 
 				var res = await _shiftLocationStore.UpdateAsync(found);
-				
+
 			} catch (Exception ex) {
 
 				BaseResult = await LogError(ex);

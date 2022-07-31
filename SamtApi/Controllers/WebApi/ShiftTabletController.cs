@@ -13,30 +13,27 @@ namespace SamtApi.Controllers.WebApi {
 	[ApiController]
 	public class ShiftTabletController : YaldaController {
 
-
-
-		readonly private IShiftTabletService _shiftTabletService;
-
-
+		private readonly IShiftTabletService _shiftTabletService;
 
 		public ShiftTabletController(IShiftTabletService shiftTabletService) {
 			_shiftTabletService = shiftTabletService;
 		}
 
-
-
 		// GET: api/<ShiftTabletController>
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(ShiftTabletSearchModel model) {
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
 
 			var res = await _shiftTabletService.GetAll(model);
-
 
 			return Ok(OperationResult<List<ShiftTabletViewModel>>.SuccessResult(res.Result, res.TotalCount));
 
 		}
-
-
 
 		// GET api/<ShiftTabletController>/5
 		//[HttpPost("GetByPortalId/{portalId}")]
@@ -51,16 +48,14 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("Register")]
 		public async Task<OkObjectResult> Register(ShiftTabletInputModel model) {
 			if (!ModelState.IsValid) {
-				var errors = ModelState.Select(x => x.Value.Errors)
-						   .Where(y => y.Count > 0)
-						   .ToList();
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
-
-				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
 			var res = await _shiftTabletService.Register(model);
+
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -72,16 +67,14 @@ namespace SamtApi.Controllers.WebApi {
 		[HttpPost("Update")]
 		public async Task<OkObjectResult> Update(ShiftTabletInputModel model) {
 			if (!ModelState.IsValid) {
-				var errors = ModelState.Select(x => x.Value.Errors)
-						   .Where(y => y.Count > 0)
-						   .ToList();
-				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
-
-
 			var res = await _shiftTabletService.Update(model);
+
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
@@ -89,10 +82,17 @@ namespace SamtApi.Controllers.WebApi {
 
 		}
 
-
 		[HttpPost("Delete")]
-		public async Task<IActionResult> Delete(ShiftTabletInputModel model) {
-			var res = await _shiftTabletService.Delete(model);
+		public async Task<IActionResult> Delete(int id) {
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
+
+			var res = await _shiftTabletService.Delete(id);
+
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}

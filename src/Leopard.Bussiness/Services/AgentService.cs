@@ -11,54 +11,47 @@ namespace Leopard.Bussiness {
 	public class AgentService : ServiceBase, IAgentService {
 
 		private readonly ISamtAgentStore _samtAgentStore;
+		private readonly ITelavatAgentResourceTypeStore _telavatAgentResourceTypeStore;
 
-		private readonly TelavatAgentResourceTypeStore _telavatAgentResourceTypeStore;
-
-		private List<Expression<Func<SamtAgent, bool>>> GetAllExpressions { get; set; } = new();
-		private List<Expression<Func<TelavatAgentResourceType, bool>>> GetAgentByResourceTypeIDExpressions { get; set; } = new();
-
-		public AgentService(IPrincipal iPrincipal, ISamtAgentStore samtAgentStore, TelavatAgentResourceTypeStore telavatAgentResourceTypeStore, IShiftLogStore shiftLogStore) : base(iPrincipal, shiftLogStore) {
+		public AgentService(IPrincipal iPrincipal, ISamtAgentStore samtAgentStore, ITelavatAgentResourceTypeStore telavatAgentResourceTypeStore, IShiftLogStore shiftLogStore) : base(iPrincipal, shiftLogStore) {
 			_samtAgentStore = samtAgentStore;
 			_telavatAgentResourceTypeStore = telavatAgentResourceTypeStore;
 		}
 
 		public async Task<StoreViewModel<AgentViewModel>> GetAll(AgentSearchModel model) {
 
-			GetAllExpressions.Clear();
+			var getAllExpressions = new List<Expression<Func<SamtAgent, bool>>>();
 
-			GetAllExpressions.Add(pp => !pp.IsDeleted);
+			getAllExpressions.Add(x => x.IsDeleted == false);
 
+			if (model.Id > 0) {
+				getAllExpressions.Add(x => x.Id == model.Id);
+			}
 			if (!string.IsNullOrWhiteSpace(model.Name)) {
-				GetAllExpressions.Add(pp => pp.FirstName.Contains(model.Name) || pp.LastName.Contains(model.Name));
+				getAllExpressions.Add(x => x.FirstName.Contains(model.Name) || x.LastName.Contains(model.Name));
 			}
 
-			if (model.Id != 0) {
-				GetAllExpressions.Add(pp => model.Id == pp.Id);
-			}
+			var res = await _samtAgentStore.GetAllWithPagingAsync(getAllExpressions, x => new AgentViewModel { Id = x.Id, Fullname = $"{x.FirstName} {x.LastName}" }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 
-			var res = await _samtAgentStore.GetAllWithPagingAsync(GetAllExpressions, pp => new AgentViewModel { Id = pp.Id, Fullname = $"{pp.FirstName} {pp.LastName}" }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 			return res;
 		}
 
+		public async Task<StoreViewModel<AgentViewModel>> GetAgentByJobID(AgentByJobSearchModel model) {
 
-		public async Task<StoreViewModel<GetAgentByResourceTypeIDResult>> GetAgentByResourceTypeID(GetAgentByResourceTypeIDModel model) {
-
-			GetAgentByResourceTypeIDExpressions.Clear();
+			var getAgentByJobExpressions = new List<Expression<Func<TelavatAgentResourceType, bool>>>();
 
 			if (model.IsDeleted != null) {
-				GetAgentByResourceTypeIDExpressions.Add(pp => pp.IsDeleted == model.IsDeleted);
+				getAgentByJobExpressions.Add(x => x.IsDeleted == model.IsDeleted);
 			}
-			if (model.ResourceTypeId != 0) {
-				GetAgentByResourceTypeIDExpressions.Add(pp => pp.ResourceTypeId == model.ResourceTypeId);
+			if (model.JobId > 0) {
+				getAgentByJobExpressions.Add(x => x.ResourceTypeId == model.JobId);
 			}
 
-
-			var res = await _telavatAgentResourceTypeStore.GetAllWithPagingAsync(GetAgentByResourceTypeIDExpressions, pp => new GetAgentByResourceTypeIDResult { AgentID = pp.AgentId }, pp => pp.Id, model.Desc, model.PageSize, model.PageNo);
+			var res = await _telavatAgentResourceTypeStore.GetAllWithPagingAsync(getAgentByJobExpressions, x => new AgentViewModel { Id = x.AgentId }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 
 			return res;
 
 		}
-
 
 	}
 }
