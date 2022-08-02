@@ -5,6 +5,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
@@ -71,7 +73,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var foundLocation = await _shiftLocationStore.FindByIdAsync(model.LocationId);
+				var foundLocation = await _shiftLocationStore.FindByIdAsync(x => x.Id == model.LocationId && x.IsDeleted == false);
 				if (null == foundLocation) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه لوکیشن یافت نشد";
@@ -90,7 +92,15 @@ namespace Leopard.Bussiness {
 
 				var shiftPortalLocation = new ShiftPortalLocation { PortalId = model.PortalId, LocationId = model.LocationId };
 
-				await _shiftPortalLocationStore.InsertAsync(shiftPortalLocation);
+				var res = await _shiftPortalLocationStore.InsertAsync(shiftPortalLocation);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to insert shiftPortalLocation\r\n\r\n" + JsonSerializer.Serialize(shiftPortalLocation, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 
@@ -110,7 +120,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var found = await _shiftPortalLocationStore.FindByIdAsync(model.Id);
+				var found = await _shiftPortalLocationStore.FindByIdAsync(x => x.Id == model.Id && x.IsDeleted == false);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد";
@@ -130,7 +140,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var foundLocation = await _shiftLocationStore.FindByIdAsync(model.LocationId);
+				var foundLocation = await _shiftLocationStore.FindByIdAsync(x => x.Id == model.LocationId && x.IsDeleted == false);
 				if (null == foundLocation) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه لوکیشن یافت نشد";
@@ -148,7 +158,16 @@ namespace Leopard.Bussiness {
 
 				found.PortalId = model.PortalId;
 				found.LocationId = model.LocationId;
-				await _shiftPortalLocationStore.UpdateAsync(found);
+
+				var res = await _shiftPortalLocationStore.UpdateAsync(found);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to update shiftPortalLocation\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 
@@ -177,7 +196,15 @@ namespace Leopard.Bussiness {
 
 				found.IsDeleted = true;
 
-				await _shiftPortalLocationStore.UpdateAsync(found);
+				var res = await _shiftPortalLocationStore.UpdateAsync(found);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to dalete shiftPortalLocation\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 

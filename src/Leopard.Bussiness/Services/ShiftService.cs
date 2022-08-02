@@ -6,6 +6,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
@@ -13,13 +15,13 @@ namespace Leopard.Bussiness {
 
 		private readonly IShiftShiftStore _shiftShiftStore;
 		private readonly IPortalStore _portalStore;
-		private readonly IShiftShiftJobTemplateStore _shiftShiftJobTemplateStore;
+		private readonly IShiftShiftTemplateStore _shiftShiftTemplateStore;
 		private readonly ISamtResourceTypeStore _samtResourceTypeStore;
 
-		public ShiftService(IPrincipal iPrincipal, IShiftShiftStore shiftShiftStore, IPortalStore portalStore, IShiftLogStore shiftLogStore, IShiftShiftJobTemplateStore shiftShiftJobTemplateStore, ISamtResourceTypeStore samtResourceTypeStore) : base(iPrincipal, shiftLogStore) {
+		public ShiftService(IPrincipal iPrincipal, IShiftShiftStore shiftShiftStore, IPortalStore portalStore, IShiftLogStore shiftLogStore, IShiftShiftTemplateStore shiftShiftTemplateStore, ISamtResourceTypeStore samtResourceTypeStore) : base(iPrincipal, shiftLogStore) {
 			_shiftShiftStore = shiftShiftStore;
 			_portalStore = portalStore;
-			_shiftShiftJobTemplateStore = shiftShiftJobTemplateStore;
+			_shiftShiftTemplateStore = shiftShiftTemplateStore;
 			_samtResourceTypeStore = samtResourceTypeStore;
 		}
 
@@ -114,7 +116,15 @@ namespace Leopard.Bussiness {
 
 				var shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId, ShiftTypeId = model.ShiftTypeId, StartTime = model.StartTime, EndTime = model.EndTime, IsDeleted = false };
 
-				await _shiftShiftStore.InsertAsync(shiftShift);
+				var res = await _shiftShiftStore.InsertAsync(shiftShift);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to insert shiftShift\r\n\r\n" + JsonSerializer.Serialize(shiftShift, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 
@@ -155,7 +165,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var found = await _shiftShiftStore.FindByIdAsync(model.Id);
+				var found = await _shiftShiftStore.FindByIdAsync(x => x.Id == model.Id && x.IsDeleted == false);
 
 				if (null == found) {
 					BaseResult.Success = false;
@@ -199,7 +209,15 @@ namespace Leopard.Bussiness {
 				found.ShiftTypeId = model.ShiftTypeId;
 				found.PortalId = model.PortalId;
 
-				await _shiftShiftStore.UpdateAsync(found);
+				var res = await _shiftShiftStore.UpdateAsync(found);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to update shiftShift\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 
@@ -229,6 +247,14 @@ namespace Leopard.Bussiness {
 				found.IsDeleted = true;
 
 				var res = await _shiftShiftStore.UpdateAsync(found);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to delete shiftShift\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 
@@ -281,7 +307,7 @@ namespace Leopard.Bussiness {
 
 		public async Task<StoreViewModel<ShiftTemplateViewModel>> GetAllShiftTemplates(ShiftTemplateSearchModel model) {
 
-			var getAllShiftTemplateExpressions = new List<Expression<Func<ShiftShiftJobTemplate, bool>>>();
+			var getAllShiftTemplateExpressions = new List<Expression<Func<ShiftShiftTemplate, bool>>>();
 
 			if (CurrentUserPortalId == 1) {
 				//if (model.PortalId > 0) {
@@ -304,7 +330,7 @@ namespace Leopard.Bussiness {
 				getAllShiftTemplateExpressions.Add(x => x.IsDeleted == model.IsDeleted);
 			}
 
-			var res = await _shiftShiftJobTemplateStore.GetAllWithPagingAsync(getAllShiftTemplateExpressions, x =>
+			var res = await _shiftShiftTemplateStore.GetAllWithPagingAsync(getAllShiftTemplateExpressions, x =>
 			new ShiftTemplateViewModel {
 				Id = x.Id,
 				JobId = x.JobId,
@@ -319,7 +345,7 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> RegisterShiftTemplate(ShiftTemplateInputModel model) {
 			try {
 
-				var foundJob = await _samtResourceTypeStore.FindByIdAsync(model.JobId);
+				var foundJob = await _samtResourceTypeStore.FindByIdAsync(x => x.Id == model.JobId && x.IsDeleted == false);
 				if (null == foundJob) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه عنوان شغلی یافت نشد";
@@ -327,7 +353,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
+				var foundShift = await _shiftShiftStore.FindByIdAsync(x => x.Id == model.ShiftId && x.IsDeleted == false);
 				if (null == foundShift) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه شیفت یافت نشد";
@@ -341,7 +367,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var isFound = await _shiftShiftJobTemplateStore.AnyAsync(x => x.IsDeleted == false && x.ShiftId == model.ShiftId && x.JobId == model.JobId);
+				var isFound = await _shiftShiftTemplateStore.AnyAsync(x => x.IsDeleted == false && x.ShiftId == model.ShiftId && x.JobId == model.JobId);
 
 				if (isFound) {
 					BaseResult.Success = false;
@@ -349,13 +375,21 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var shiftShiftJobTemplateStore = new ShiftShiftJobTemplate {
+				var shiftShiftTemplate = new ShiftShiftTemplate {
 					JobId = model.JobId,
 					ShiftId = model.ShiftId,
 					IsDeleted = false,
 				};
 
-				await _shiftShiftJobTemplateStore.InsertAsync(shiftShiftJobTemplateStore);
+				var res = await _shiftShiftTemplateStore.InsertAsync(shiftShiftTemplate);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to insert shiftShiftTemplate\r\n\r\n" + JsonSerializer.Serialize(shiftShiftTemplate, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 
@@ -368,7 +402,7 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> UpdateShiftTemplate(ShiftTemplateInputModel model) {
 			try {
 
-				var found = await _shiftShiftJobTemplateStore.FindByIdAsync(model.Id);
+				var found = await _shiftShiftTemplateStore.FindByIdAsync(x => x.Id == model.Id && x.IsDeleted == false);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد";
@@ -380,7 +414,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var foundJob = await _samtResourceTypeStore.FindByIdAsync(model.JobId);
+				var foundJob = await _samtResourceTypeStore.FindByIdAsync(x => x.Id == model.JobId && x.IsDeleted == false);
 				if (null == foundJob) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه عنوان شغلی یافت نشد";
@@ -388,7 +422,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
+				var foundShift = await _shiftShiftStore.FindByIdAsync(x => x.Id == model.ShiftId && x.IsDeleted == false);
 				if (null == foundShift) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه شیفت یافت نشد";
@@ -401,7 +435,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var isFound = await _shiftShiftJobTemplateStore.AnyAsync(x => x.Id != model.Id && x.IsDeleted == false && x.ShiftId == model.ShiftId && x.JobId == model.JobId);
+				var isFound = await _shiftShiftTemplateStore.AnyAsync(x => x.Id != model.Id && x.IsDeleted == false && x.ShiftId == model.ShiftId && x.JobId == model.JobId);
 
 				if (isFound) {
 					BaseResult.Success = false;
@@ -411,7 +445,16 @@ namespace Leopard.Bussiness {
 
 				found.ShiftId = model.ShiftId;
 				found.JobId = model.JobId;
-				await _shiftShiftJobTemplateStore.UpdateAsync(found);
+
+				var res = await _shiftShiftTemplateStore.UpdateAsync(found);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to update shiftShiftTemplate\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 
@@ -424,7 +467,7 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> DeleteShiftTemplate(int id) {
 			try {
 
-				var found = await _shiftShiftJobTemplateStore.FindByIdAsync(id);
+				var found = await _shiftShiftTemplateStore.FindByIdAsync(id);
 
 				if (found == null) {
 					BaseResult.Success = false;
@@ -439,7 +482,16 @@ namespace Leopard.Bussiness {
 				}
 
 				found.IsDeleted = true;
-				await _shiftShiftJobTemplateStore.UpdateAsync(found);
+
+				var res = await _shiftShiftTemplateStore.UpdateAsync(found);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to delete shiftShiftTemplate\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 

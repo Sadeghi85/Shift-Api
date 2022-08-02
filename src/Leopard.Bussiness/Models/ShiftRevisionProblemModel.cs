@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Leopard.Bussiness {
 	public class ShiftRevisionProblemModel {
 		public int Id { get; set; } // Id (Primary key)
-		[Required(ErrorMessage =ValidationConstants.ShiftTabletIdRequred)]
+		[Required(ErrorMessage =ValidationConstants.ShiftTabletIdRequired)]
 		public int? ShiftTabletId { get; set; } // ShiftTabletId
 
 		[Required(ErrorMessage =ValidationConstants.FileNumberRequired)]

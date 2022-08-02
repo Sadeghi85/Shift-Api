@@ -99,8 +99,8 @@ namespace SamtApi.Controllers.WebApi {
 			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
-		[HttpPost("ShiftJobTemplate/GetAll")]
-		public async Task<IActionResult> GetAllShiftJobTemplates(ShiftShiftJobTemplateSearchModel model) {
+		[HttpPost("ShiftTemplate/GetAll")]
+		public async Task<IActionResult> GetAllShiftTemplates(ShiftTemplateSearchModel model) {
 			if (!ModelState.IsValid) {
 				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
@@ -108,14 +108,14 @@ namespace SamtApi.Controllers.WebApi {
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
-			var res = await _shiftService.GetAllShiftJobTemplates(model);
+			var res = await _shiftService.GetAllShiftTemplates(model);
 
-			return Ok(OperationResult<List<ShiftShiftJobTemplateViewModel>>.SuccessResult(res.Result, res.TotalCount));
+			return Ok(OperationResult<List<ShiftTemplateViewModel>>.SuccessResult(res.Result, res.TotalCount));
 		}
 
 
-		[HttpPost("ShiftJobTemplate/Register")]
-		public async Task<IActionResult> RegisterShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
+		[HttpPost("ShiftTemplate/Register")]
+		public async Task<IActionResult> RegisterShiftTemplate(ShiftTemplateInputModel model) {
 			if (!ModelState.IsValid) {
 				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
@@ -123,7 +123,7 @@ namespace SamtApi.Controllers.WebApi {
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
-			var res = await _shiftService.RegisterShiftJobTemplate(model);
+			var res = await _shiftService.RegisterShiftTemplate(model);
 
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
@@ -132,8 +132,8 @@ namespace SamtApi.Controllers.WebApi {
 
 		}
 
-		[HttpPost("ShiftJobTemplate/Delete")]
-		public async Task<IActionResult> DeleteShiftJobTemplate(int id) {
+		[HttpPost("ShiftTemplate/Delete")]
+		public async Task<IActionResult> DeleteShiftTemplate(int id) {
 			if (!ModelState.IsValid) {
 				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
@@ -141,7 +141,7 @@ namespace SamtApi.Controllers.WebApi {
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
-			var res = await _shiftService.DeleteShiftJobTemplate(id);
+			var res = await _shiftService.DeleteShiftTemplate(id);
 
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
@@ -149,8 +149,8 @@ namespace SamtApi.Controllers.WebApi {
 			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
-		[HttpPost("ShiftJobTemplate/Update")]
-		public async Task<IActionResult> UpdateShiftJobTemplate(ShiftShiftJobTemplateInputModel model) {
+		[HttpPost("ShiftTemplate/Update")]
+		public async Task<IActionResult> UpdateShiftTemplate(ShiftTemplateInputModel model) {
 			if (!ModelState.IsValid) {
 				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
@@ -158,7 +158,7 @@ namespace SamtApi.Controllers.WebApi {
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
-			var res = await _shiftService.UpdateShiftJobTemplate(model);
+			var res = await _shiftService.UpdateShiftTemplate(model);
 
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));

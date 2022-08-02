@@ -25,7 +25,7 @@ namespace Leopard.Bussiness {
 
 			var getAllExpressions = new List<Expression<Func<Portal, bool>>>();
 
-			getAllExpressions.Add(x => !x.NoDashboard);
+			getAllExpressions.Add(x => x.NoDashboard == false);
 
 			if (!string.IsNullOrWhiteSpace(model.Title)) {
 				getAllExpressions.Add(x => x.Title.Contains(model.Title));

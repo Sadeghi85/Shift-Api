@@ -23,25 +23,15 @@ namespace SamtApi.Controllers.WebApi {
 			_shiftTabletCrewService = shiftTabletCrewService;
 		}
 
-		//[HttpGet("GetReport")]
-		//public IActionResult GetReport(int take , int skip) {
-
-		//	var fromDate = DateTime.Parse("2022-06-12 00:00:00.000");
-		//	var toDate = DateTime.Parse("2022-07-12 00:00:00.00");
-
-		//	//var res = _shiftTabletCrewService.GetAll().Where(pp=> (pp.ShiftShiftTablet.ShiftDate>=fromDate && pp.ShiftShiftTablet.ShiftDate<= toDate)   ).Skip(5).Take(5).Select(pp=> new {pp.Id,  shiftTitle= pp.ShiftShiftTablet.ShiftShift.Title, firstName= pp.SamtAgent.FirstName , lastName = pp.SamtAgent.LastName, jobName = pp.SamtResourceType.Title , pp.ShiftShiftTablet.ShiftDate , WeekDay= pp.ShiftShiftTablet.ShiftDate.Value.DayOfWeek.ToString()  }).OrderBy(pp=> pp.ShiftDate) ;
-		//	var res=	_shiftTabletCrewService.ShfitTabletReport(DateTime.Parse("2022-06-12 00:00:00.000"), DateTime.Parse("2022-07-12 00:00:00.000"), 3,take,skip);
-
-		//	return Ok(res);
-
-		//}
-
-
-
 		// GET: api/<ShiftTabletCrewController>
 		[HttpPost("GetAll")]
 		public async Task<IActionResult> GetAll(ShiftTabletCrewSearchModel model) {
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
 
 			var res = await _shiftTabletCrewService.GetAll(model);
 
@@ -51,7 +41,12 @@ namespace SamtApi.Controllers.WebApi {
 
 		[HttpPost("GetExcel")]
 		public async Task<IActionResult> GetExcel(ShiftTabletCrewSearchModel model) {
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
 
 			var res = await _shiftTabletCrewService.GetAll(model);
 
@@ -166,13 +161,19 @@ namespace SamtApi.Controllers.WebApi {
 				package.SaveAs(stream);
 				stream.Position = 0;
 			}
+
 			return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Report.xlsx");
 		}
 
 
 		[HttpPost("GetPdf")]
 		public async Task<IActionResult> GetPdf(ShiftTabletCrewSearchModel model) {
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
 
 			var res = await _shiftTabletCrewService.GetAll(model);
 
@@ -308,9 +309,6 @@ namespace SamtApi.Controllers.WebApi {
 			//return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Report.xlsx");
 		}
 
-
-
-
 		//GET api/<ShiftTabletCrewController>/5
 		//[HttpPost("GetByShiftId/{id}")]
 		//public IActionResult GetByShiftId(int id) {
@@ -325,12 +323,12 @@ namespace SamtApi.Controllers.WebApi {
 		public async Task<IActionResult> Register(ShiftTabletCrewInputModel model) {
 
 			if (!ModelState.IsValid) {
-				var errors = ModelState.Select(x => x.Value.Errors)
-						   .Where(y => y.Count > 0)
-						   .ToList();
-				var errMsgs = string.Join(",", errors[0].Select(pp => pp.ErrorMessage));
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
+
 			var res = await _shiftTabletCrewService.Register(model);
 
 			if (res.Success) {
@@ -340,29 +338,43 @@ namespace SamtApi.Controllers.WebApi {
 
 		}
 
-		// PUT api/<ShiftTabletCrewController>/5
 		[HttpPost("Update")]
 		public async Task<IActionResult> Update(ShiftTabletCrewInputModel model) {
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
+
 			var res = await _shiftTabletCrewService.Update(model);
+
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}
 			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
-		[HttpPost("Replace/{replaced}/{replacedBy}")]
-		public async Task<IActionResult> Replace(int replaced, int replacedBy) {
-			var res = await _shiftTabletCrewService.Replace(replaced, replacedBy);
-			if (res > 0) {
-				return Ok(OperationResult<int>.SuccessResult(res));
-			}
-			return Ok(OperationResult<string>.FailureResult(""));
-		}
+		//[HttpPost("Replace/{replaced}/{replacedBy}")]
+		//public async Task<IActionResult> Replace(int replaced, int replacedBy) {
+		//	var res = await _shiftTabletCrewService.Replace(replaced, replacedBy);
+		//	if (res > 0) {
+		//		return Ok(OperationResult<int>.SuccessResult(res));
+		//	}
+		//	return Ok(OperationResult<string>.FailureResult(""));
+		//}
 
-		// DELETE api/<ShiftTabletCrewController>/5
 		[HttpPost("Delete")]
-		public async Task<IActionResult> Delete(ShiftTabletCrewInputModel model) {
-			var res = await _shiftTabletCrewService.Delete(model);
+		public async Task<IActionResult> Delete(int id) {
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
+
+			var res = await _shiftTabletCrewService.Delete(id);
+
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));
 			}

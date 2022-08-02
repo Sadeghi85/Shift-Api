@@ -5,6 +5,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
@@ -77,7 +79,15 @@ namespace Leopard.Bussiness {
 
 				var shiftLocation = new ShiftLocation { Title = model.Title, IsDeleted = false };
 
-				await _shiftLocationStore.InsertAsync(shiftLocation);
+				var res = await _shiftLocationStore.InsertAsync(shiftLocation);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to insert shiftLocation\r\n\r\n" + JsonSerializer.Serialize(shiftLocation, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 				BaseResult = await LogError(ex);
@@ -95,7 +105,7 @@ namespace Leopard.Bussiness {
 					return checkAccess;
 				}
 
-				var found = await _shiftLocationStore.FindByIdAsync(model.Id);
+				var found = await _shiftLocationStore.FindByIdAsync(x => x.Id == model.Id && x.IsDeleted == false);
 
 				if (found == null) {
 					BaseResult.Success = false;
@@ -113,7 +123,15 @@ namespace Leopard.Bussiness {
 
 				found.Title = model.Title;
 
-				await _shiftLocationStore.UpdateAsync(found);
+				var res = await _shiftLocationStore.UpdateAsync(found);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to update shiftLocation\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 
@@ -141,6 +159,14 @@ namespace Leopard.Bussiness {
 				found.IsDeleted = true;
 
 				var res = await _shiftLocationStore.UpdateAsync(found);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to delete shiftLocation\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 

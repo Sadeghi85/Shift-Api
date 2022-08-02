@@ -5,6 +5,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Leopard.Bussiness {
@@ -12,11 +14,12 @@ namespace Leopard.Bussiness {
 
 		private readonly IShiftShiftTabletStore _shiftShiftTabletStore;
 		private readonly IShiftShiftStore _shiftShiftStore;
-		private readonly IShiftLogStore _shiftLogStore;
+		private readonly IShiftLocationStore _shiftLocationStore;
 
-		public ShiftTabletService(IPrincipal iPrincipal, IShiftShiftTabletStore shiftShiftTabletStore, IShiftShiftStore shiftShiftStore, IShiftLogStore shiftLogStore) : base(iPrincipal, shiftLogStore) {
+		public ShiftTabletService(IPrincipal iPrincipal, IShiftShiftTabletStore shiftShiftTabletStore, IShiftShiftStore shiftShiftStore, IShiftLocationStore shiftLocationStore, IShiftLogStore shiftLogStore) : base(iPrincipal, shiftLogStore) {
 			_shiftShiftTabletStore = shiftShiftTabletStore;
 			_shiftShiftStore = shiftShiftStore;
+			_shiftLocationStore = shiftLocationStore;
 		}
 
 		//public List<ShiftShiftTablet> GetTabletShiftByPortalId(int portalId) {
@@ -45,6 +48,9 @@ namespace Leopard.Bussiness {
 			if (model.ShiftId > 0) {
 				getAllExpressions.Add(x => x.ShiftId == model.ShiftId);
 			}
+			if (model.LocationId > 0) {
+				getAllExpressions.Add(x => x.LocationId == model.LocationId);
+			}
 			if (model.FromDate != null) {
 				getAllExpressions.Add(x => x.ShiftDate >= model.FromDate);
 			}
@@ -65,9 +71,14 @@ namespace Leopard.Bussiness {
 				ShiftId = x.ShiftId,
 				ShiftWorthPercent = x.ShiftWorthPercent,
 				PortalId = x.ShiftShift.PortalId,
+				PortalTitle = x.ShiftShift.Portal.Title,
+				LocationId = x.ShiftLocation.Id,
+				LocationTitle = x.ShiftLocation.Title,
 				ShiftStartTime = x.ShiftShift.StartTime,
 				ShiftEndTime = x.ShiftShift.EndTime,
-				PortalTitle = x.ShiftShift.Portal.Title
+				HasLivePrograms = x.HasLivePrograms,
+				ShiftDuration = x.ShiftDuration
+
 			}, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 
 			return res;
@@ -76,8 +87,15 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> Register(ShiftTabletInputModel model) {
 
 			try {
+				var foundLocation = await _shiftLocationStore.FindByIdAsync(x => x.Id == model.LocationId && x.IsDeleted == false);
+				if (null == foundLocation) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه لوکیشن یافت نشد";
 
-				var foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
+					return BaseResult;
+				}
+
+				var foundShift = await _shiftShiftStore.FindByIdAsync(x => x.Id == model.ShiftId && x.IsDeleted == false);
 				if (null == foundShift) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه شیفت یافت نشد";
@@ -99,17 +117,44 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
+				TimeSpan diff;
+				switch (TimeSpan.Compare(foundShift.EndTime, foundShift.StartTime)) {
+					case -1:
+						diff = (foundShift.EndTime.Add(TimeSpan.FromDays(1))) - foundShift.StartTime;
+						break;
+					case 0:
+						diff = TimeSpan.Zero;
+						break;
+					case 1:
+						diff = foundShift.EndTime - foundShift.StartTime;
+						break;
+					default:
+						diff = TimeSpan.Zero;
+						break;
+				}
+
 				var shiftTablet = new ShiftShiftTablet {
 					ShiftId = model.ShiftId,
+					LocationId = model.LocationId,
 					ShiftDate = model.ShiftDate,
 					ShiftWorthPercent = model.ShiftWorthPercent ?? 0,
 					IsDeleted = false,
 					HasLivePrograms = model.HasLivePrograms,
 
-					ShiftDuration = foundShift.EndTime - foundShift.StartTime
+					ShiftDuration = diff,
+					PortalId = foundShift.PortalId,
+
 				};
 
-				await _shiftShiftTabletStore.InsertAsync(shiftTablet);
+				var res = await _shiftShiftTabletStore.InsertAsync(shiftTablet);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to insert ShiftTablet\r\n\r\n" + JsonSerializer.Serialize(shiftTablet, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 
@@ -122,7 +167,7 @@ namespace Leopard.Bussiness {
 		public async Task<BaseResult> Update(ShiftTabletInputModel model) {
 			try {
 
-				var found = await _shiftShiftTabletStore.FindByIdAsync(model.Id);
+				var found = await _shiftShiftTabletStore.FindByIdAsync(x => x.Id == model.Id && x.IsDeleted == false);
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد";
@@ -134,7 +179,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var foundShift = await _shiftShiftStore.FindByIdAsync(model.ShiftId);
+				var foundShift = await _shiftShiftStore.FindByIdAsync(x => x.Id == model.ShiftId && x.IsDeleted == false);
 				if (null == foundShift) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه شیفت یافت نشد";
@@ -147,7 +192,7 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
-				var isFound = await _shiftShiftTabletStore.AnyAsync(x => x.Id != model.Id &&  x.IsDeleted == false && x.ShiftDate.Date == model.ShiftDate.Date && x.ShiftId == model.ShiftId);
+				var isFound = await _shiftShiftTabletStore.AnyAsync(x => x.Id != model.Id && x.IsDeleted == false && x.ShiftDate.Date == model.ShiftDate.Date && x.ShiftId == model.ShiftId);
 
 				if (isFound) {
 					BaseResult.Success = false;
@@ -155,13 +200,41 @@ namespace Leopard.Bussiness {
 					return BaseResult;
 				}
 
+				TimeSpan diff;
+				switch (TimeSpan.Compare(foundShift.EndTime, foundShift.StartTime)) {
+					case -1:
+						diff = (foundShift.EndTime.Add(TimeSpan.FromDays(1))) - foundShift.StartTime;
+						break;
+					case 0:
+						diff = TimeSpan.Zero;
+						break;
+					case 1:
+						diff = foundShift.EndTime - foundShift.StartTime;
+						break;
+					default:
+						diff = TimeSpan.Zero;
+						break;
+				}
+
 				found.ShiftId = model.ShiftId;
+				found.LocationId = model.LocationId;
 				found.ShiftDate = model.ShiftDate;
 				found.ShiftWorthPercent = model.ShiftWorthPercent ?? found.ShiftWorthPercent;
 				found.HasLivePrograms = model.HasLivePrograms;
 
+				found.ShiftDuration = diff;
+				found.PortalId = foundShift.PortalId;
+
 				var res = await _shiftShiftTabletStore.UpdateAsync(found);
-				
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to update ShiftTablet\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
+
 			} catch (Exception ex) {
 
 				BaseResult = await LogError(ex);
@@ -189,7 +262,16 @@ namespace Leopard.Bussiness {
 				}
 
 				found.IsDeleted = true;
-				await _shiftShiftTabletStore.UpdateAsync(found);
+
+				var res = await _shiftShiftTabletStore.UpdateAsync(found);
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to delete ShiftTablet\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
+				}
 
 			} catch (Exception ex) {
 

@@ -9,7 +9,7 @@ namespace Leopard.Bussiness {
 	public class ScriptSupervisorDescriptionModel {
 
 		public int Id { get; set; } // Id (Primary key)
-		[Required(ErrorMessage = ValidationConstants.ShiftTabletIdRequred)]
+		[Required(ErrorMessage = ValidationConstants.ShiftTabletIdRequired)]
 		public int? ShiftTabletId { get; set; } // ShiftTabletId
 		[Required(ErrorMessage =ValidationConstants.DescriptionRequired)]
 		public string Description { get; set; } // Description (length: 1000)

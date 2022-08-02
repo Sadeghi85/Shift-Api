@@ -15,7 +15,7 @@ namespace Leopard.Bussiness {
 		[Required(ErrorMessage =ValidationConstants.ReplacedProgramTitleRequired)]
 		public string ReplacedProgramTitle { get; set; } // ReplacedProgramTitle (length: 250)
 		
-		[Required(ErrorMessage =ValidationConstants.ShiftTabletIdRequred)]
+		[Required(ErrorMessage =ValidationConstants.ShiftTabletIdRequired)]
 		public int? ShiftTabletId { get; set; } // ShiftTabletId
 		
 		[Required(ErrorMessage =ValidationConstants.DescriptionRequired)]
