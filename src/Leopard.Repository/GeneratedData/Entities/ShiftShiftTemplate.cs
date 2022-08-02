@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Leopard.Repository
 {
-    // Shift_ShiftJobTemplate
-    public partial class ShiftShiftJobTemplate
+    // Shift_ShiftTemplate
+    public partial class ShiftShiftTemplate
     {
         public int Id { get; set; } // ID (Primary key)
         public int JobId { get; set; } // JobID
@@ -23,16 +23,16 @@ namespace Leopard.Repository
         // Foreign keys
 
         /// <summary>
-        /// Parent SamtResourceType pointed by [Shift_ShiftJobTemplate].([JobId]) (FK_ShiftNeededResource_SAMT_ResourceTypes)
+        /// Parent SamtResourceType pointed by [Shift_ShiftTemplate].([JobId]) (FK_ShiftNeededResource_SAMT_ResourceTypes)
         /// </summary>
         public virtual SamtResourceType SamtResourceType { get; set; } // FK_ShiftNeededResource_SAMT_ResourceTypes
 
         /// <summary>
-        /// Parent ShiftShift pointed by [Shift_ShiftJobTemplate].([ShiftId]) (FK_ShiftNeededResource_Shift_Shift)
+        /// Parent ShiftShift pointed by [Shift_ShiftTemplate].([ShiftId]) (FK_ShiftNeededResource_Shift_Shift)
         /// </summary>
         public virtual ShiftShift ShiftShift { get; set; } // FK_ShiftNeededResource_Shift_Shift
 
-        public ShiftShiftJobTemplate()
+        public ShiftShiftTemplate()
         {
             IsDeleted = false;
             InitializePartial();

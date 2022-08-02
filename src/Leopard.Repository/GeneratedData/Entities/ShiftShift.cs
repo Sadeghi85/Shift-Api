@@ -32,14 +32,14 @@ namespace Leopard.Repository
         // Reverse navigation
 
         /// <summary>
-        /// Child ShiftShiftJobTemplates where [Shift_ShiftJobTemplate].[ShiftID] point to this entity (FK_ShiftNeededResource_Shift_Shift)
-        /// </summary>
-        public virtual ICollection<ShiftShiftJobTemplate> ShiftShiftJobTemplates { get; set; } // Shift_ShiftJobTemplate.FK_ShiftNeededResource_Shift_Shift
-
-        /// <summary>
         /// Child ShiftShiftTablets where [Shift_ShiftTablet].[ShiftID] point to this entity (FK_ShiftExecution_PortalShift)
         /// </summary>
         public virtual ICollection<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet.FK_ShiftExecution_PortalShift
+
+        /// <summary>
+        /// Child ShiftShiftTemplates where [Shift_ShiftTemplate].[ShiftID] point to this entity (FK_ShiftNeededResource_Shift_Shift)
+        /// </summary>
+        public virtual ICollection<ShiftShiftTemplate> ShiftShiftTemplates { get; set; } // Shift_ShiftTemplate.FK_ShiftNeededResource_Shift_Shift
 
         // Foreign keys
 
@@ -53,8 +53,8 @@ namespace Leopard.Repository
             HasRewardFine = false;
             RewardFineAmount = 0;
             IsDeleted = false;
-            ShiftShiftJobTemplates = new List<ShiftShiftJobTemplate>();
             ShiftShiftTablets = new List<ShiftShiftTablet>();
+            ShiftShiftTemplates = new List<ShiftShiftTemplate>();
             InitializePartial();
         }
 

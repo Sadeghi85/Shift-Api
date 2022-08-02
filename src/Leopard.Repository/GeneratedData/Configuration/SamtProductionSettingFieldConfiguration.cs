@@ -22,6 +22,7 @@ namespace Leopard.Repository
             builder.Property(x => x.Enabled).HasColumnName(@"Enabled").HasColumnType("bit").IsRequired();
             builder.Property(x => x.IsWriting).HasColumnName(@"IsWriting").HasColumnType("bit").IsRequired();
             builder.Property(x => x.FieldKey).HasColumnName(@"FieldKey").HasColumnType("nvarchar(1000)").IsRequired(false).HasMaxLength(1000);
+            builder.Property(x => x.Hide).HasColumnName(@"Hide").HasColumnType("bit").IsRequired();
             builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);

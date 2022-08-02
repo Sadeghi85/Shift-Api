@@ -12,7 +12,7 @@ namespace Leopard.Repository
     public partial class ShiftLog
     {
         public int Id { get; set; } // ID (Primary key)
-        public string Message { get; set; } // Message (length: 1000)
+        public string Message { get; set; } // Message (length: 2147483647)
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
 
         public ShiftLog()

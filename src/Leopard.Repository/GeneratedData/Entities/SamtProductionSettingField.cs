@@ -19,6 +19,7 @@ namespace Leopard.Repository
         public bool Enabled { get; set; } // Enabled
         public bool IsWriting { get; set; } // IsWriting
         public string FieldKey { get; set; } // FieldKey (length: 1000)
+        public bool Hide { get; set; } // Hide
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
@@ -36,6 +37,7 @@ namespace Leopard.Repository
             Type = 1;
             Enabled = true;
             IsWriting = false;
+            Hide = false;
             SamtProductionSettingItems = new List<SamtProductionSettingItem>();
             InitializePartial();
         }

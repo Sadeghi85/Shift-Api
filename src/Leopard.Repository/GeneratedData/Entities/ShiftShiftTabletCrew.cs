@@ -15,8 +15,8 @@ namespace Leopard.Repository
         public int AgentId { get; set; } // AgentID
         public int JobId { get; set; } // JobID
         public int ShiftTabletId { get; set; } // ShiftTabletID
-        public DateTime? EntranceTime { get; set; } // EntranceTime
-        public DateTime? ExitTime { get; set; } // ExitTime
+        public TimeSpan? EntranceTime { get; set; } // EntranceTime
+        public TimeSpan? ExitTime { get; set; } // ExitTime
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime

@@ -276,11 +276,11 @@ namespace Leopard.Repository
         DbSet<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations
         DbSet<ShiftRevisionProblem> ShiftRevisionProblems { get; set; } // Shift_RevisionProblem
         DbSet<ShiftShift> ShiftShifts { get; set; } // Shift_Shift
-        DbSet<ShiftShiftJobTemplate> ShiftShiftJobTemplates { get; set; } // Shift_ShiftJobTemplate
         DbSet<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet
         DbSet<ShiftShiftTabletConductor> ShiftShiftTabletConductors { get; set; } // Shift_ShiftTabletConductor
         DbSet<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew
         DbSet<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement
+        DbSet<ShiftShiftTemplate> ShiftShiftTemplates { get; set; } // Shift_ShiftTemplate
         DbSet<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges
         DbSet<ShiftTabletScriptSupervisorDescription> ShiftTabletScriptSupervisorDescriptions { get; set; } // Shift_TabletScriptSupervisorDescription
         DbSet<SimaDataLog> SimaDataLogs { get; set; } // SimaDataLogs
@@ -374,6 +374,7 @@ namespace Leopard.Repository
         DbSet<VwPaymentDetailByBaseYear> VwPaymentDetailByBaseYears { get; set; } // vwPaymentDetailByBaseYear
         DbSet<VwRequestProductionProgress> VwRequestProductionProgresses { get; set; } // VW_RequestProductionProgresses
         DbSet<VwSamtBase> VwSamtBases { get; set; } // VW_SAMT_Base
+        DbSet<VwSamtBase2> VwSamtBase2 { get; set; } // VW_SAMT_Base2
         DbSet<VwSamtBaseLog> VwSamtBaseLogs { get; set; } // VW_SAMT_BaseLog
         DbSet<VwSamtBaseWithParticipation> VwSamtBaseWithParticipations { get; set; } // VW_SAMT_Base_With_Participation
         DbSet<VwSamtBaseYearSima> VwSamtBaseYearSimas { get; set; } // VW_SAMT_BaseYear_SIMA
@@ -451,6 +452,9 @@ namespace Leopard.Repository
         int SpByChannelGradeReport(int? baseYear, int? portalId, string flags);
         // SpByChannelGradeReportAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
+        int SpByChannelGradeReport2(int? baseYear, int? portalId, string flags);
+        // SpByChannelGradeReport2Async() cannot be created due to having out parameters, or is relying on the procedure result (int)
+
         int SpByChannelGradeReportNamayeshi(int? baseYear, int? portalId);
         // SpByChannelGradeReportNamayeshiAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
@@ -518,6 +522,9 @@ namespace Leopard.Repository
         int SpByGradeByChannels2(int? baseYear, string channelIds);
         // SpByGradeByChannels2Async() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
+        int SpByGradeByChannels3(int? baseYear, string channelIds);
+        // SpByGradeByChannels3Async() cannot be created due to having out parameters, or is relying on the procedure result (int)
+
         List<SpByGroupPerformancePerGradeReturnModel> SpByGroupPerformancePerGrade(int? baseYear, int? groupId);
         List<SpByGroupPerformancePerGradeReturnModel> SpByGroupPerformancePerGrade(int? baseYear, int? groupId, out int procResult);
         Task<List<SpByGroupPerformancePerGradeReturnModel>> SpByGroupPerformancePerGradeAsync(int? baseYear, int? groupId);
@@ -535,6 +542,9 @@ namespace Leopard.Repository
 
         int SpByPaymentReport(int? baseYear, int? portalId, DateTime? fromDate, DateTime? toDate, string groupId, string progname, string licenseNo, string estimateNo, int? gradeId, int? structureId, int? structureTypeId, bool? justDeleted, int? producerId, int? hasproduction, int? prodPercentFrom, int? prodPercentto, int? haspayment, int? paymentPercentFrom, int? paymentPercentto, int? orderbywhat, int? approachId);
         // SpByPaymentReportAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
+
+        int SpByPaymentReport2(int? baseYear, int? portalId, DateTime? fromDate, DateTime? toDate, string groupId, string progname, string licenseNo, string estimateNo, int? gradeId, int? structureId, int? structureTypeId, bool? justDeleted, int? producerId, int? hasproduction, int? prodPercentFrom, int? prodPercentto, int? haspayment, int? paymentPercentFrom, int? paymentPercentto, int? orderbywhat, int? approachId);
+        // SpByPaymentReport2Async() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
         List<SpByPerformanceOfGroupByGradeAndChannelIdReturnModel> SpByPerformanceOfGroupByGradeAndChannelId(int? baseYear, int? channelIds, int? gradeId, int? structureId, int? approachId, string flags, int? eventId);
         List<SpByPerformanceOfGroupByGradeAndChannelIdReturnModel> SpByPerformanceOfGroupByGradeAndChannelId(int? baseYear, int? channelIds, int? gradeId, int? structureId, int? approachId, string flags, int? eventId, out int procResult);
@@ -660,6 +670,9 @@ namespace Leopard.Repository
         List<SpChannelsproductionReturnModel> SpChannelsproduction(int? baseYear, string channelIds, DateTime? fromdate, DateTime? todate, out int procResult);
         Task<List<SpChannelsproductionReturnModel>> SpChannelsproductionAsync(int? baseYear, string channelIds, DateTime? fromdate, DateTime? todate);
 
+        int SpChannelsproduction2(int? baseYear, string channelIds, DateTime? fromdate, DateTime? todate);
+        // SpChannelsproduction2Async() cannot be created due to having out parameters, or is relying on the procedure result (int)
+
         int SpChannelsProgramsStatus3(int? baseYear, int? portalId, string groupId, string progname, string estimateNo, string licenseNo, int? gradeId, int? structureId, int? structureTypeId, bool? justDeleted, int? producerId, int? isTranfered, string hasPrposalStatus, string hasNotPrposalStatus, string hasBaravordStatus, string hasNotBaravordStatus, int? hasEstimate, int? subjectlevel1, int? subjectlevel2, int? startrow, int? pagesize, int? orderbyWhat, int? hasproduction, int? eventId, int? productionProgressFrom, int? productionProgressTo, int? playProgressFrom, int? playProgressTo, int? paymentProgressFrom, int? paymentProgressTo, string deliveryDateFrom, string deliveryDateTo, string flags, string productionEndtDate);
         // SpChannelsProgramsStatus3Async() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
@@ -751,6 +764,9 @@ namespace Leopard.Repository
         List<SpFullPaymentReportReturnModel> SpFullPaymentReport(int? baseYear, int? portalId, DateTime? fromDate, DateTime? toDate, string groupId, string progname, string licenseNo, string estimateNo, int? gradeId, int? structureId, int? structureTypeId, bool? justDeleted, int? producerId, int? hasproduction, int? prodPercentFrom, int? prodPercentto, int? haspayment, int? paymentPercentFrom, int? paymentPercentto, int? orderbywhat, int? approachId);
         List<SpFullPaymentReportReturnModel> SpFullPaymentReport(int? baseYear, int? portalId, DateTime? fromDate, DateTime? toDate, string groupId, string progname, string licenseNo, string estimateNo, int? gradeId, int? structureId, int? structureTypeId, bool? justDeleted, int? producerId, int? hasproduction, int? prodPercentFrom, int? prodPercentto, int? haspayment, int? paymentPercentFrom, int? paymentPercentto, int? orderbywhat, int? approachId, out int procResult);
         Task<List<SpFullPaymentReportReturnModel>> SpFullPaymentReportAsync(int? baseYear, int? portalId, DateTime? fromDate, DateTime? toDate, string groupId, string progname, string licenseNo, string estimateNo, int? gradeId, int? structureId, int? structureTypeId, bool? justDeleted, int? producerId, int? hasproduction, int? prodPercentFrom, int? prodPercentto, int? haspayment, int? paymentPercentFrom, int? paymentPercentto, int? orderbywhat, int? approachId);
+
+        int SpFullPaymentReport2(int? baseYear, int? portalId, DateTime? fromDate, DateTime? toDate, string groupId, string progname, string licenseNo, string estimateNo, int? gradeId, int? structureId, int? structureTypeId, bool? justDeleted, int? producerId, int? hasproduction, int? prodPercentFrom, int? prodPercentto, int? haspayment, int? paymentPercentFrom, int? paymentPercentto, int? orderbywhat, int? approachId);
+        // SpFullPaymentReport2Async() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
         int SpGeneralVu(int? baseYear, string channelIds);
         // SpGeneralVuAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)

@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Leopard.Repository
 {
-    // VW_SAMT_Base
-    public partial class VwSamtBase
+    // VW_SAMT_Base2
+    public partial class VwSamtBase2
     {
         public int Id { get; set; } // ID
         public string Program { get; set; } // Program (length: 1000)
@@ -49,7 +49,7 @@ namespace Leopard.Repository
         public int? ProductionMode { get; set; } // ProductionMode
         public int? LivePercent { get; set; } // LivePercent
 
-        public VwSamtBase()
+        public VwSamtBase2()
         {
             InitializePartial();
         }

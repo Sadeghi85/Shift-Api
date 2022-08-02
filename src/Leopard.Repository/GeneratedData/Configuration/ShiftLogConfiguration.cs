@@ -15,7 +15,7 @@ namespace Leopard.Repository
             builder.HasKey(x => x.Id).HasName("PK_Shift_Log").IsClustered();
 
             builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
-            builder.Property(x => x.Message).HasColumnName(@"Message").HasColumnType("nvarchar(1000)").IsRequired(false).HasMaxLength(1000);
+            builder.Property(x => x.Message).HasColumnName(@"Message").HasColumnType("text(2147483647)").IsRequired(false).IsUnicode(false).HasMaxLength(2147483647);
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);
 
             InitializePartial(builder);

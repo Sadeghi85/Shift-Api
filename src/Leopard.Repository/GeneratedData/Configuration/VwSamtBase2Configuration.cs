@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Leopard.Repository
 {
-    // VW_SAMT_Base
-    public partial class VwSamtBaseConfiguration : IEntityTypeConfiguration<VwSamtBase>
+    // VW_SAMT_Base2
+    public partial class VwSamtBase2Configuration : IEntityTypeConfiguration<VwSamtBase2>
     {
-        public void Configure(EntityTypeBuilder<VwSamtBase> builder)
+        public void Configure(EntityTypeBuilder<VwSamtBase2> builder)
         {
-            builder.ToView("VW_SAMT_Base", "dbo");
+            builder.ToView("VW_SAMT_Base2", "dbo");
             builder.HasNoKey();
 
             builder.Property(x => x.Id).HasColumnName(@"ID").HasColumnType("int").IsRequired();
@@ -55,7 +55,7 @@ namespace Leopard.Repository
             InitializePartial(builder);
         }
 
-        partial void InitializePartial(EntityTypeBuilder<VwSamtBase> builder);
+        partial void InitializePartial(EntityTypeBuilder<VwSamtBase2> builder);
     }
 
 }

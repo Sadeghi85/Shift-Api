@@ -296,11 +296,11 @@ namespace Leopard.Repository
         public DbSet<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations
         public DbSet<ShiftRevisionProblem> ShiftRevisionProblems { get; set; } // Shift_RevisionProblem
         public DbSet<ShiftShift> ShiftShifts { get; set; } // Shift_Shift
-        public DbSet<ShiftShiftJobTemplate> ShiftShiftJobTemplates { get; set; } // Shift_ShiftJobTemplate
         public DbSet<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet
         public DbSet<ShiftShiftTabletConductor> ShiftShiftTabletConductors { get; set; } // Shift_ShiftTabletConductor
         public DbSet<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew
         public DbSet<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement
+        public DbSet<ShiftShiftTemplate> ShiftShiftTemplates { get; set; } // Shift_ShiftTemplate
         public DbSet<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges
         public DbSet<ShiftTabletScriptSupervisorDescription> ShiftTabletScriptSupervisorDescriptions { get; set; } // Shift_TabletScriptSupervisorDescription
         public DbSet<SimaDataLog> SimaDataLogs { get; set; } // SimaDataLogs
@@ -394,6 +394,7 @@ namespace Leopard.Repository
         public DbSet<VwPaymentDetailByBaseYear> VwPaymentDetailByBaseYears { get; set; } // vwPaymentDetailByBaseYear
         public DbSet<VwRequestProductionProgress> VwRequestProductionProgresses { get; set; } // VW_RequestProductionProgresses
         public DbSet<VwSamtBase> VwSamtBases { get; set; } // VW_SAMT_Base
+        public DbSet<VwSamtBase2> VwSamtBase2 { get; set; } // VW_SAMT_Base2
         public DbSet<VwSamtBaseLog> VwSamtBaseLogs { get; set; } // VW_SAMT_BaseLog
         public DbSet<VwSamtBaseWithParticipation> VwSamtBaseWithParticipations { get; set; } // VW_SAMT_Base_With_Participation
         public DbSet<VwSamtBaseYearSima> VwSamtBaseYearSimas { get; set; } // VW_SAMT_BaseYear_SIMA
@@ -692,11 +693,11 @@ namespace Leopard.Repository
             modelBuilder.ApplyConfiguration(new ShiftPortalLocationConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftRevisionProblemConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftConfiguration());
-            modelBuilder.ApplyConfiguration(new ShiftShiftJobTemplateConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletConductorConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewReplacementConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftShiftTemplateConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftTabletConductorChanxConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftTabletScriptSupervisorDescriptionConfiguration());
             modelBuilder.ApplyConfiguration(new SimaDataLogConfiguration());
@@ -790,6 +791,7 @@ namespace Leopard.Repository
             modelBuilder.ApplyConfiguration(new VwPaymentDetailByBaseYearConfiguration());
             modelBuilder.ApplyConfiguration(new VwRequestProductionProgressConfiguration());
             modelBuilder.ApplyConfiguration(new VwSamtBaseConfiguration());
+            modelBuilder.ApplyConfiguration(new VwSamtBase2Configuration());
             modelBuilder.ApplyConfiguration(new VwSamtBaseLogConfiguration());
             modelBuilder.ApplyConfiguration(new VwSamtBaseWithParticipationConfiguration());
             modelBuilder.ApplyConfiguration(new VwSamtBaseYearSimaConfiguration());
@@ -1142,6 +1144,29 @@ namespace Leopard.Repository
         }
 
         // SpByChannelGradeReportAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
+
+        public int SpByChannelGradeReport2(int? baseYear, int? portalId, string flags)
+        {
+            var baseYearParam = new SqlParameter { ParameterName = "@BaseYear", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = baseYear.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!baseYear.HasValue)
+                baseYearParam.Value = DBNull.Value;
+
+            var portalIdParam = new SqlParameter { ParameterName = "@PortalID", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = portalId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!portalId.HasValue)
+                portalIdParam.Value = DBNull.Value;
+
+            var flagsParam = new SqlParameter { ParameterName = "@Flags", SqlDbType = SqlDbType.Char, Direction = ParameterDirection.Input, Value = flags, Size = 3 };
+            if (flagsParam.Value == null)
+                flagsParam.Value = DBNull.Value;
+
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+
+            Database.ExecuteSqlRaw("EXEC @procResult = [dbo].[sp_BY_ChannelGradeReport2] @BaseYear, @PortalID, @Flags", baseYearParam, portalIdParam, flagsParam, procResultParam);
+
+            return (int)procResultParam.Value;
+        }
+
+        // SpByChannelGradeReport2Async() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
         public int SpByChannelGradeReportNamayeshi(int? baseYear, int? portalId)
         {
@@ -2682,6 +2707,25 @@ namespace Leopard.Repository
 
         // SpByGradeByChannels2Async() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
+        public int SpByGradeByChannels3(int? baseYear, string channelIds)
+        {
+            var baseYearParam = new SqlParameter { ParameterName = "@BaseYear", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = baseYear.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!baseYear.HasValue)
+                baseYearParam.Value = DBNull.Value;
+
+            var channelIdsParam = new SqlParameter { ParameterName = "@channelIds", SqlDbType = SqlDbType.VarChar, Direction = ParameterDirection.Input, Value = channelIds, Size = 1500 };
+            if (channelIdsParam.Value == null)
+                channelIdsParam.Value = DBNull.Value;
+
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+
+            Database.ExecuteSqlRaw("EXEC @procResult = [dbo].[sp_BY_GradeByChannels3] @BaseYear, @channelIds", baseYearParam, channelIdsParam, procResultParam);
+
+            return (int)procResultParam.Value;
+        }
+
+        // SpByGradeByChannels3Async() cannot be created due to having out parameters, or is relying on the procedure result (int)
+
         public List<SpByGroupPerformancePerGradeReturnModel> SpByGroupPerformancePerGrade(int? baseYear, int? groupId)
         {
             int procResult;
@@ -2963,6 +3007,101 @@ namespace Leopard.Repository
         }
 
         // SpByPaymentReportAsync() cannot be created due to having out parameters, or is relying on the procedure result (int)
+
+        public int SpByPaymentReport2(int? baseYear, int? portalId, DateTime? fromDate, DateTime? toDate, string groupId, string progname, string licenseNo, string estimateNo, int? gradeId, int? structureId, int? structureTypeId, bool? justDeleted, int? producerId, int? hasproduction, int? prodPercentFrom, int? prodPercentto, int? haspayment, int? paymentPercentFrom, int? paymentPercentto, int? orderbywhat, int? approachId)
+        {
+            var baseYearParam = new SqlParameter { ParameterName = "@baseYear", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = baseYear.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!baseYear.HasValue)
+                baseYearParam.Value = DBNull.Value;
+
+            var portalIdParam = new SqlParameter { ParameterName = "@portalId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = portalId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!portalId.HasValue)
+                portalIdParam.Value = DBNull.Value;
+
+            var fromDateParam = new SqlParameter { ParameterName = "@fromDate", SqlDbType = SqlDbType.DateTime, Direction = ParameterDirection.Input, Value = fromDate.GetValueOrDefault() };
+            if (!fromDate.HasValue)
+                fromDateParam.Value = DBNull.Value;
+
+            var toDateParam = new SqlParameter { ParameterName = "@toDate", SqlDbType = SqlDbType.DateTime, Direction = ParameterDirection.Input, Value = toDate.GetValueOrDefault() };
+            if (!toDate.HasValue)
+                toDateParam.Value = DBNull.Value;
+
+            var groupIdParam = new SqlParameter { ParameterName = "@groupId", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = groupId, Size = 1500 };
+            if (groupIdParam.Value == null)
+                groupIdParam.Value = DBNull.Value;
+
+            var prognameParam = new SqlParameter { ParameterName = "@progname", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = progname, Size = 50 };
+            if (prognameParam.Value == null)
+                prognameParam.Value = DBNull.Value;
+
+            var licenseNoParam = new SqlParameter { ParameterName = "@LicenseNo", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = licenseNo, Size = 20 };
+            if (licenseNoParam.Value == null)
+                licenseNoParam.Value = DBNull.Value;
+
+            var estimateNoParam = new SqlParameter { ParameterName = "@estimateNo", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = estimateNo, Size = 12 };
+            if (estimateNoParam.Value == null)
+                estimateNoParam.Value = DBNull.Value;
+
+            var gradeIdParam = new SqlParameter { ParameterName = "@gradeId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = gradeId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!gradeId.HasValue)
+                gradeIdParam.Value = DBNull.Value;
+
+            var structureIdParam = new SqlParameter { ParameterName = "@structureId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = structureId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!structureId.HasValue)
+                structureIdParam.Value = DBNull.Value;
+
+            var structureTypeIdParam = new SqlParameter { ParameterName = "@structureTypeId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = structureTypeId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!structureTypeId.HasValue)
+                structureTypeIdParam.Value = DBNull.Value;
+
+            var justDeletedParam = new SqlParameter { ParameterName = "@justDeleted", SqlDbType = SqlDbType.Bit, Direction = ParameterDirection.Input, Value = justDeleted.GetValueOrDefault() };
+            if (!justDeleted.HasValue)
+                justDeletedParam.Value = DBNull.Value;
+
+            var producerIdParam = new SqlParameter { ParameterName = "@producerId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = producerId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!producerId.HasValue)
+                producerIdParam.Value = DBNull.Value;
+
+            var hasproductionParam = new SqlParameter { ParameterName = "@hasproduction", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = hasproduction.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!hasproduction.HasValue)
+                hasproductionParam.Value = DBNull.Value;
+
+            var prodPercentFromParam = new SqlParameter { ParameterName = "@prodPercentFrom", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = prodPercentFrom.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!prodPercentFrom.HasValue)
+                prodPercentFromParam.Value = DBNull.Value;
+
+            var prodPercenttoParam = new SqlParameter { ParameterName = "@prodPercentto", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = prodPercentto.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!prodPercentto.HasValue)
+                prodPercenttoParam.Value = DBNull.Value;
+
+            var haspaymentParam = new SqlParameter { ParameterName = "@haspayment", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = haspayment.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!haspayment.HasValue)
+                haspaymentParam.Value = DBNull.Value;
+
+            var paymentPercentFromParam = new SqlParameter { ParameterName = "@paymentPercentFrom", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = paymentPercentFrom.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!paymentPercentFrom.HasValue)
+                paymentPercentFromParam.Value = DBNull.Value;
+
+            var paymentPercenttoParam = new SqlParameter { ParameterName = "@paymentPercentto", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = paymentPercentto.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!paymentPercentto.HasValue)
+                paymentPercenttoParam.Value = DBNull.Value;
+
+            var orderbywhatParam = new SqlParameter { ParameterName = "@orderbywhat", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = orderbywhat.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!orderbywhat.HasValue)
+                orderbywhatParam.Value = DBNull.Value;
+
+            var approachIdParam = new SqlParameter { ParameterName = "@approachId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = approachId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!approachId.HasValue)
+                approachIdParam.Value = DBNull.Value;
+
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+
+            Database.ExecuteSqlRaw("EXEC @procResult = [dbo].[sp_BY_PaymentReport2] @baseYear, @portalId, @fromDate, @toDate, @groupId, @progname, @LicenseNo, @estimateNo, @gradeId, @structureId, @structureTypeId, @justDeleted, @producerId, @hasproduction, @prodPercentFrom, @prodPercentto, @haspayment, @paymentPercentFrom, @paymentPercentto, @orderbywhat, @approachId", baseYearParam, portalIdParam, fromDateParam, toDateParam, groupIdParam, prognameParam, licenseNoParam, estimateNoParam, gradeIdParam, structureIdParam, structureTypeIdParam, justDeletedParam, producerIdParam, hasproductionParam, prodPercentFromParam, prodPercenttoParam, haspaymentParam, paymentPercentFromParam, paymentPercenttoParam, orderbywhatParam, approachIdParam, procResultParam);
+
+            return (int)procResultParam.Value;
+        }
+
+        // SpByPaymentReport2Async() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
         public List<SpByPerformanceOfGroupByGradeAndChannelIdReturnModel> SpByPerformanceOfGroupByGradeAndChannelId(int? baseYear, int? channelIds, int? gradeId, int? structureId, int? approachId, string flags, int? eventId)
         {
@@ -5398,6 +5537,33 @@ namespace Leopard.Repository
             return procResultData;
         }
 
+        public int SpChannelsproduction2(int? baseYear, string channelIds, DateTime? fromdate, DateTime? todate)
+        {
+            var baseYearParam = new SqlParameter { ParameterName = "@BaseYear", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = baseYear.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!baseYear.HasValue)
+                baseYearParam.Value = DBNull.Value;
+
+            var channelIdsParam = new SqlParameter { ParameterName = "@channelIds", SqlDbType = SqlDbType.VarChar, Direction = ParameterDirection.Input, Value = channelIds, Size = 1500 };
+            if (channelIdsParam.Value == null)
+                channelIdsParam.Value = DBNull.Value;
+
+            var fromdateParam = new SqlParameter { ParameterName = "@fromdate", SqlDbType = SqlDbType.DateTime, Direction = ParameterDirection.Input, Value = fromdate.GetValueOrDefault() };
+            if (!fromdate.HasValue)
+                fromdateParam.Value = DBNull.Value;
+
+            var todateParam = new SqlParameter { ParameterName = "@todate", SqlDbType = SqlDbType.DateTime, Direction = ParameterDirection.Input, Value = todate.GetValueOrDefault() };
+            if (!todate.HasValue)
+                todateParam.Value = DBNull.Value;
+
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+
+            Database.ExecuteSqlRaw("EXEC @procResult = [dbo].[sp_Channelsproduction2] @BaseYear, @channelIds, @fromdate, @todate", baseYearParam, channelIdsParam, fromdateParam, todateParam, procResultParam);
+
+            return (int)procResultParam.Value;
+        }
+
+        // SpChannelsproduction2Async() cannot be created due to having out parameters, or is relying on the procedure result (int)
+
         public int SpChannelsProgramsStatus3(int? baseYear, int? portalId, string groupId, string progname, string estimateNo, string licenseNo, int? gradeId, int? structureId, int? structureTypeId, bool? justDeleted, int? producerId, int? isTranfered, string hasPrposalStatus, string hasNotPrposalStatus, string hasBaravordStatus, string hasNotBaravordStatus, int? hasEstimate, int? subjectlevel1, int? subjectlevel2, int? startrow, int? pagesize, int? orderbyWhat, int? hasproduction, int? eventId, int? productionProgressFrom, int? productionProgressTo, int? playProgressFrom, int? playProgressTo, int? paymentProgressFrom, int? paymentProgressTo, string deliveryDateFrom, string deliveryDateTo, string flags, string productionEndtDate)
         {
             var baseYearParam = new SqlParameter { ParameterName = "@baseYear", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = baseYear.GetValueOrDefault(), Precision = 10, Scale = 0 };
@@ -6719,6 +6885,101 @@ namespace Leopard.Repository
 
             return procResultData;
         }
+
+        public int SpFullPaymentReport2(int? baseYear, int? portalId, DateTime? fromDate, DateTime? toDate, string groupId, string progname, string licenseNo, string estimateNo, int? gradeId, int? structureId, int? structureTypeId, bool? justDeleted, int? producerId, int? hasproduction, int? prodPercentFrom, int? prodPercentto, int? haspayment, int? paymentPercentFrom, int? paymentPercentto, int? orderbywhat, int? approachId)
+        {
+            var baseYearParam = new SqlParameter { ParameterName = "@baseYear", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = baseYear.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!baseYear.HasValue)
+                baseYearParam.Value = DBNull.Value;
+
+            var portalIdParam = new SqlParameter { ParameterName = "@portalId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = portalId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!portalId.HasValue)
+                portalIdParam.Value = DBNull.Value;
+
+            var fromDateParam = new SqlParameter { ParameterName = "@fromDate", SqlDbType = SqlDbType.DateTime, Direction = ParameterDirection.Input, Value = fromDate.GetValueOrDefault() };
+            if (!fromDate.HasValue)
+                fromDateParam.Value = DBNull.Value;
+
+            var toDateParam = new SqlParameter { ParameterName = "@toDate", SqlDbType = SqlDbType.DateTime, Direction = ParameterDirection.Input, Value = toDate.GetValueOrDefault() };
+            if (!toDate.HasValue)
+                toDateParam.Value = DBNull.Value;
+
+            var groupIdParam = new SqlParameter { ParameterName = "@groupId", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = groupId, Size = 1500 };
+            if (groupIdParam.Value == null)
+                groupIdParam.Value = DBNull.Value;
+
+            var prognameParam = new SqlParameter { ParameterName = "@progname", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = progname, Size = 50 };
+            if (prognameParam.Value == null)
+                prognameParam.Value = DBNull.Value;
+
+            var licenseNoParam = new SqlParameter { ParameterName = "@LicenseNo", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = licenseNo, Size = 20 };
+            if (licenseNoParam.Value == null)
+                licenseNoParam.Value = DBNull.Value;
+
+            var estimateNoParam = new SqlParameter { ParameterName = "@estimateNo", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = estimateNo, Size = 12 };
+            if (estimateNoParam.Value == null)
+                estimateNoParam.Value = DBNull.Value;
+
+            var gradeIdParam = new SqlParameter { ParameterName = "@gradeId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = gradeId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!gradeId.HasValue)
+                gradeIdParam.Value = DBNull.Value;
+
+            var structureIdParam = new SqlParameter { ParameterName = "@structureId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = structureId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!structureId.HasValue)
+                structureIdParam.Value = DBNull.Value;
+
+            var structureTypeIdParam = new SqlParameter { ParameterName = "@structureTypeId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = structureTypeId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!structureTypeId.HasValue)
+                structureTypeIdParam.Value = DBNull.Value;
+
+            var justDeletedParam = new SqlParameter { ParameterName = "@justDeleted", SqlDbType = SqlDbType.Bit, Direction = ParameterDirection.Input, Value = justDeleted.GetValueOrDefault() };
+            if (!justDeleted.HasValue)
+                justDeletedParam.Value = DBNull.Value;
+
+            var producerIdParam = new SqlParameter { ParameterName = "@producerId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = producerId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!producerId.HasValue)
+                producerIdParam.Value = DBNull.Value;
+
+            var hasproductionParam = new SqlParameter { ParameterName = "@hasproduction", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = hasproduction.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!hasproduction.HasValue)
+                hasproductionParam.Value = DBNull.Value;
+
+            var prodPercentFromParam = new SqlParameter { ParameterName = "@prodPercentFrom", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = prodPercentFrom.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!prodPercentFrom.HasValue)
+                prodPercentFromParam.Value = DBNull.Value;
+
+            var prodPercenttoParam = new SqlParameter { ParameterName = "@prodPercentto", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = prodPercentto.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!prodPercentto.HasValue)
+                prodPercenttoParam.Value = DBNull.Value;
+
+            var haspaymentParam = new SqlParameter { ParameterName = "@haspayment", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = haspayment.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!haspayment.HasValue)
+                haspaymentParam.Value = DBNull.Value;
+
+            var paymentPercentFromParam = new SqlParameter { ParameterName = "@paymentPercentFrom", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = paymentPercentFrom.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!paymentPercentFrom.HasValue)
+                paymentPercentFromParam.Value = DBNull.Value;
+
+            var paymentPercenttoParam = new SqlParameter { ParameterName = "@paymentPercentto", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = paymentPercentto.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!paymentPercentto.HasValue)
+                paymentPercenttoParam.Value = DBNull.Value;
+
+            var orderbywhatParam = new SqlParameter { ParameterName = "@orderbywhat", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = orderbywhat.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!orderbywhat.HasValue)
+                orderbywhatParam.Value = DBNull.Value;
+
+            var approachIdParam = new SqlParameter { ParameterName = "@approachId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = approachId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!approachId.HasValue)
+                approachIdParam.Value = DBNull.Value;
+
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+
+            Database.ExecuteSqlRaw("EXEC @procResult = [dbo].[sp_FULL_PaymentReport2] @baseYear, @portalId, @fromDate, @toDate, @groupId, @progname, @LicenseNo, @estimateNo, @gradeId, @structureId, @structureTypeId, @justDeleted, @producerId, @hasproduction, @prodPercentFrom, @prodPercentto, @haspayment, @paymentPercentFrom, @paymentPercentto, @orderbywhat, @approachId", baseYearParam, portalIdParam, fromDateParam, toDateParam, groupIdParam, prognameParam, licenseNoParam, estimateNoParam, gradeIdParam, structureIdParam, structureTypeIdParam, justDeletedParam, producerIdParam, hasproductionParam, prodPercentFromParam, prodPercenttoParam, haspaymentParam, paymentPercentFromParam, paymentPercenttoParam, orderbywhatParam, approachIdParam, procResultParam);
+
+            return (int)procResultParam.Value;
+        }
+
+        // SpFullPaymentReport2Async() cannot be created due to having out parameters, or is relying on the procedure result (int)
 
         public int SpGeneralVu(int? baseYear, string channelIds)
         {

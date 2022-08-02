@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Leopard.Repository
 {
-    public partial interface IShiftShiftJobTemplateStore : IStoreBase<ShiftShiftJobTemplate>
+    public partial interface IVwSamtBase2Store : IStoreBase<VwSamtBase2>
     {
     }
 }

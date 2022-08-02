@@ -70,7 +70,9 @@ namespace Leopard.Repository
 
         public ShiftShiftTablet()
         {
+            ShiftWorthPercent = 0;
             IsDeleted = false;
+            HasLivePrograms = false;
             ShiftRevisionProblems = new List<ShiftRevisionProblem>();
             ShiftShiftTabletCrews = new List<ShiftShiftTabletCrew>();
             ShiftTabletConductorChanges = new List<ShiftTabletConductorChanx>();
