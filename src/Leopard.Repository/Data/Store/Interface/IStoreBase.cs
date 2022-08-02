@@ -20,6 +20,7 @@ namespace Leopard.Repository {
 		List<Expression<Func<T, bool>>> ExpressionMaker();
 		new void Dispose();
 		ValueTask<T?> FindByIdAsync(object id);
+		Task<T?> FindByIdAsync(Expression<Func<T, bool>> predicate);
 		string? GetUserId();
 	}
 }

@@ -342,6 +342,12 @@ namespace Leopard.Repository {
 
 			return res;
 		}
+		public virtual async Task<T?> FindByIdAsync(Expression<Func<T, bool>> predicate) {
+			//var res = await TEntity.FindAsync(id);
+			var res = await TEntity.FirstOrDefaultAsync(predicate);
+
+			return res;
+		}
 
 		public virtual string? GetUserId() {
 			var ident = _iPrincipal as ClaimsPrincipal;
