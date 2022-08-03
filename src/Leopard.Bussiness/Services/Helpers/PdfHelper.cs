@@ -3,8 +3,8 @@ using OfficeOpenXml.Packaging.Ionic.Zlib;
 using PdfRpt.Core.Contracts;
 using PdfRpt.FluentInterface;
 
-namespace SamtApi.Models {
-	public class ReportActions {
+namespace Leopard.Bussiness {
+	public class PdfHelper {
 		public IPdfReportData CreateExcelToPdfReport(ExcelPackage package, string filePath, string excelWorksheet, string filename, MemoryStream stream) {
 
 			ExcelDataReaderDataSource excelDataReaderDataSource;

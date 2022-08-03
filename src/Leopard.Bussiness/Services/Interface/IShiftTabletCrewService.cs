@@ -15,6 +15,9 @@ namespace Leopard.Bussiness {
 		public Task<StoreViewModel<ShiftTabletCrewViewModel>> GetAll(ShiftTabletCrewSearchModel model);
 		public Task<BaseResult> Register(ShiftTabletCrewInputModel model);
 
+		public Task<MemoryStream> GetExcelReport(ShiftTabletCrewSearchModel model);
+		public Task<MemoryStream> GetPdfReport(ShiftTabletCrewSearchModel model);
+
 
 	}
 }

@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Net.Mail;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using XSystem.Security.Cryptography;
 
 namespace SamtApi.Models {
 	public static class Extensions {
@@ -9,14 +9,14 @@ namespace SamtApi.Models {
 
 
 		public static string CalculateMD5(this string strToEncript) {
-			var md5 = new MD5CryptoServiceProvider();
+			var md5 = MD5.Create();
 			var byteuser = System.Text.Encoding.UTF8.GetBytes(strToEncript);
 			var hashedvalue = md5.ComputeHash(byteuser);
 			return Convert.ToBase64String(hashedvalue);
 		}
 
 		public static string CalculateMD5String(this string strToEncript) {
-			var md5 = new MD5CryptoServiceProvider();
+			var md5 = MD5.Create();
 			var byteuser = System.Text.Encoding.UTF8.GetBytes(strToEncript);
 			var hashedvalue = md5.ComputeHash(byteuser);
 			return BitConverter.ToString(hashedvalue).Replace("-", "");

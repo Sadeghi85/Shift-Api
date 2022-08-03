@@ -1,4 +1,4 @@
-namespace SamtApi.Models {
+namespace Leopard.Bussiness {
 	public class ReportTemplate {
 
 		public string PersianDate { get; set; }

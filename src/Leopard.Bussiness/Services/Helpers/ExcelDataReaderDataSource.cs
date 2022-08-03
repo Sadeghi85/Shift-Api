@@ -1,7 +1,7 @@
 using OfficeOpenXml;
 using PdfRpt.Core.Contracts;
 
-namespace SamtApi.Models {
+namespace Leopard.Bussiness {
 	public class ExcelDataReaderDataSource : IDataSource {
 		private readonly string _filePath;
 		private readonly string _worksheet;
