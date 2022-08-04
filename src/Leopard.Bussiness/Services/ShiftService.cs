@@ -55,7 +55,7 @@ namespace Leopard.Bussiness {
 				getAllExpressions.Add(x => x.EndTime == model.EndTime);
 			}
 
-			var res = await _shiftShiftStore.GetAllWithPagingAsync(getAllExpressions, x => new ShiftViewModel { Id = x.Id, Title = x.Title, PortalTitle = x.Portal.Title, PortalId = x.PortalId, EndTime = x.EndTime, StartTime = x.StartTime, ShiftTypeId = x.ShiftTypeId, ShiftTypeTitle = _getShiftTypeTitleByShiftTypeId(x.ShiftTypeId) }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
+			var res = await _shiftShiftStore.GetAllWithPagingAsync(getAllExpressions, x => new ShiftViewModel { Id = x.Id, Title = x.Title, PortalTitle = x.Portal.Title, PortalId = x.PortalId, EndTime = x.EndTime, StartTime = x.StartTime, ShiftTypeId = x.ShiftTypeId, ShiftTypeTitle = _getShiftTypeTitleByShiftTypeId(x.ShiftTypeId), DisplayLabel = _getShiftDropdownDiplayLabel(CurrentUserPortalId, x.Title, x.Portal.Title) }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 
 			return res;
 		}
@@ -273,6 +273,14 @@ namespace Leopard.Bussiness {
 
 		//}
 
+		private static string _getShiftDropdownDiplayLabel(int? CurrentUserPortalId, string shiftTitle, string portalTitle) {
+			if (CurrentUserPortalId == 1) {
+				return $"{shiftTitle} ({portalTitle})";
+			} else {
+				return shiftTitle;
+			}
+
+		}
 		private static string _getShiftTypeTitleByShiftTypeId(int? ShiftTypeId) {
 
 			string? res;

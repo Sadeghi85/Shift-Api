@@ -38,6 +38,7 @@ namespace Leopard.Bussiness {
 
 		public int Id { get; set; } // ID (Primary key)
 		public string? Title { get; set; } // Title (length: 250)
+		public string? DisplayLabel { get; set; }
 		public int PortalId { get; set; } // PortalId
 		public string? PortalTitle { get; set; }
 		public TimeSpan StartTime { get; set; } // StartTime
