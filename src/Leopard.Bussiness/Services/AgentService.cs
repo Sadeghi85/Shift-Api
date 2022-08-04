@@ -32,6 +32,9 @@ namespace Leopard.Bussiness {
 			if (!string.IsNullOrWhiteSpace(model.Name)) {
 				getAllExpressions.Add(x => x.FirstName.Contains(model.Name) || x.LastName.Contains(model.Name));
 			}
+			if (model.JobId > 0) {
+				getAllExpressions.Add(x => x.TelavatAgentResourceTypes.Any(y => y.ResourceTypeId == model.JobId));
+			}
 
 			var res = await _samtAgentStore.GetAllWithPagingAsync(getAllExpressions, x => new AgentViewModel { Id = x.Id, Fullname = $"{x.FirstName} {x.LastName}" }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 

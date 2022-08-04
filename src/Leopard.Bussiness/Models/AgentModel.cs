@@ -8,6 +8,7 @@ namespace Leopard.Bussiness {
 	public class AgentSearchModel : PagerViewModel {
 		public int? Id { get; set; }
 		public string? Name { get; set; } // FirstName (length: 1000)
+		public int? JobId { get; set; }
 	}
 
 	public class AgentViewModel {
