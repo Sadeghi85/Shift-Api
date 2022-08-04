@@ -272,12 +272,14 @@ namespace Leopard.Repository {
 				}
 
 				var type = typeof(T);
-				var property = type.GetProperty(orderKeySelector ?? "id", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) ?? type.GetProperties().FirstOrDefault(x => x.GetCustomAttribute(typeof(KeyAttribute), true) != null) ?? type.GetProperties().First();
+				var property = type.GetProperty(!string.IsNullOrWhiteSpace(orderKeySelector) ? orderKeySelector : "id", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
 
-				if (orderDirectionDesc) {
-					queryresult = queryresult.OrderByExtended(property.Name, true);
-				} else {
-					queryresult = queryresult.OrderByExtended(property.Name, false);
+				if (property != null) {
+					if (orderDirectionDesc) {
+						queryresult = queryresult.OrderByExtended(property.Name, true);
+					} else {
+						queryresult = queryresult.OrderByExtended(property.Name, false);
+					}
 				}
 
 				res.TotalCount = await queryresult.CountAsync();
