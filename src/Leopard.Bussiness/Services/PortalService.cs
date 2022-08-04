@@ -18,9 +18,8 @@ namespace Leopard.Bussiness {
 
 		public async Task<StoreViewModel<PortalViewModel>> GetAll(PortalSearchModel model) {
 
-			var portalId = CurrentUserPortalId ?? int.MaxValue;
-			if (portalId > 1) {
-				model.Id = portalId;
+			if (CurrentUserPortalId > 1) {
+				model.Id = CurrentUserPortalId;
 			}
 
 			var getAllExpressions = new List<Expression<Func<Portal, bool>>>();

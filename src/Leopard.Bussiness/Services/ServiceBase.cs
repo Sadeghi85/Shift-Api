@@ -30,13 +30,14 @@ namespace Leopard.Bussiness {
 			}
 		}
 
-		public int? CurrentUserPortalId {
+		public int CurrentUserPortalId {
 			get {
 				//TODO: find difference between ClaimsIdentity & ClaimsPrincipal
 				var ident = _iPrincipal as ClaimsPrincipal;
 				var uId = ident?.Claims.FirstOrDefault(c => c.Type == "PortalId")?.Value;
 				if (string.IsNullOrWhiteSpace(uId)) {
-					return null;
+					// not logged-in
+					return int.MaxValue;
 				}
 				return int.Parse(uId);
 			}

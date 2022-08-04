@@ -7,7 +7,7 @@ namespace Leopard.Bussiness {
 			get;
 		}
 
-		public int? CurrentUserPortalId {
+		public int CurrentUserPortalId {
 			get;
 		}
 
