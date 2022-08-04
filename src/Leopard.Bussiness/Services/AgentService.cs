@@ -23,6 +23,8 @@ namespace Leopard.Bussiness {
 			var getAllExpressions = new List<Expression<Func<SamtAgent, bool>>>();
 
 			getAllExpressions.Add(x => x.IsDeleted == false);
+			getAllExpressions.Add(x => !string.IsNullOrWhiteSpace(x.FirstName));
+			getAllExpressions.Add(x => !string.IsNullOrWhiteSpace(x.LastName));
 
 			if (model.Id > 0) {
 				getAllExpressions.Add(x => x.Id == model.Id);
