@@ -31,6 +31,8 @@ namespace Leopard.Bussiness {
 			}
 
 			getAllExpressions.Add(x => x.ParentId == 20);
+			getAllExpressions.Add(x => x.ShiftJob != null);
+
 
 			var res = await _samtResourceTypeStore.GetAllWithPagingAsync(getAllExpressions, x => new JobViewModel { Id = x.Id, Title = x.Title }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
 
