@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Leopard.Repository
 {
-    // SAMT_HRJOB
-    public partial class SamtHrjobConfiguration : IEntityTypeConfiguration<SamtHrjob>
+    // SAMT_HRJob
+    public partial class SamtHrJobConfiguration : IEntityTypeConfiguration<SamtHrJob>
     {
-        public void Configure(EntityTypeBuilder<SamtHrjob> builder)
+        public void Configure(EntityTypeBuilder<SamtHrJob> builder)
         {
-            builder.ToTable("SAMT_HRJOB", "dbo");
+            builder.ToTable("SAMT_HRJob", "dbo");
             builder.HasKey(x => x.HrJobId).HasName("PK_SAMT_HRJOB").IsClustered();
 
             builder.Property(x => x.HrJobId).HasColumnName(@"HRJobID").HasColumnType("int").IsRequired().ValueGeneratedNever();
@@ -20,7 +20,7 @@ namespace Leopard.Repository
             InitializePartial(builder);
         }
 
-        partial void InitializePartial(EntityTypeBuilder<SamtHrjob> builder);
+        partial void InitializePartial(EntityTypeBuilder<SamtHrJob> builder);
     }
 
 }

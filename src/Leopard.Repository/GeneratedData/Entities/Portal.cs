@@ -47,71 +47,6 @@ namespace Leopard.Repository
         // Reverse navigation
 
         /// <summary>
-        /// Child ChannelGroups where [ChannelGroups].[PortalID] point to this entity (FK_ChannelGroup_Portals)
-        /// </summary>
-        public virtual ICollection<ChannelGroup> ChannelGroups { get; set; } // ChannelGroups.FK_ChannelGroup_Portals
-
-        /// <summary>
-        /// Child ConductorBroadcastCertificates where [ConductorBroadcastCertificates].[ChannelID] point to this entity (FK_ConductorBroadcastCertificates_Portals)
-        /// </summary>
-        public virtual ICollection<ConductorBroadcastCertificate> ConductorBroadcastCertificates { get; set; } // ConductorBroadcastCertificates.FK_ConductorBroadcastCertificates_Portals
-
-        /// <summary>
-        /// Child ConductorChannelProgramTags where [ConductorChannelProgramTags].[PortalID] point to this entity (FK_ConductorChannelProgramTags_Portals)
-        /// </summary>
-        public virtual ICollection<ConductorChannelProgramTag> ConductorChannelProgramTags { get; set; } // ConductorChannelProgramTags.FK_ConductorChannelProgramTags_Portals
-
-        /// <summary>
-        /// Child OldTelavatGrades2 where [OLD_TelavatGrades2].[PortalID] point to this entity (FK_TelavatGrades_Portals)
-        /// </summary>
-        public virtual ICollection<OldTelavatGrades2> OldTelavatGrades2 { get; set; } // OLD_TelavatGrades2.FK_TelavatGrades_Portals
-
-        /// <summary>
-        /// Child PakhshChannelLocations where [Pakhsh_ChannelLocations].[ChannelID] point to this entity (FK_Pakhsh_ChanelLocations_Portals)
-        /// </summary>
-        public virtual ICollection<PakhshChannelLocation> PakhshChannelLocations { get; set; } // Pakhsh_ChannelLocations.FK_Pakhsh_ChanelLocations_Portals
-
-        /// <summary>
-        /// Child PakhshChannelSettings where [Pakhsh_ChannelSettings].[ChannelID] point to this entity (FK_Pakhsh_ChanelSettings_Portals)
-        /// </summary>
-        public virtual ICollection<PakhshChannelSetting> PakhshChannelSettings { get; set; } // Pakhsh_ChannelSettings.FK_Pakhsh_ChanelSettings_Portals
-
-        /// <summary>
-        /// Child PakhshManageShifts where [Pakhsh_ManageShifts].[ChannelID] point to this entity (FK_Pakhsh_ManageShifts_Portals)
-        /// </summary>
-        public virtual ICollection<PakhshManageShift> PakhshManageShifts { get; set; } // Pakhsh_ManageShifts.FK_Pakhsh_ManageShifts_Portals
-
-        /// <summary>
-        /// Child PakhshShiftSettings where [Pakhsh_ShiftSettings].[ChannelID] point to this entity (FK_Pakhsh_ShiftWorks_Portals)
-        /// </summary>
-        public virtual ICollection<PakhshShiftSetting> PakhshShiftSettings { get; set; } // Pakhsh_ShiftSettings.FK_Pakhsh_ShiftWorks_Portals
-
-        /// <summary>
-        /// Child PortalAddresses where [PortalAddresses].[PortalID] point to this entity (FK_PortalAddresses_Portals)
-        /// </summary>
-        public virtual ICollection<PortalAddress> PortalAddresses { get; set; } // PortalAddresses.FK_PortalAddresses_Portals
-
-        /// <summary>
-        /// Child RayanCounterOnlineUsers where [RayanCounterOnlineUsers].[PortalID] point to this entity (FK_RayanCounterOnlineUsers_Portals)
-        /// </summary>
-        public virtual ICollection<RayanCounterOnlineUser> RayanCounterOnlineUsers { get; set; } // RayanCounterOnlineUsers.FK_RayanCounterOnlineUsers_Portals
-
-        /// <summary>
-        /// Child SamtGroups where [SAMT_Groups].[PortalID] point to this entity (FK_TelavatGroups_Portals)
-        /// </summary>
-        public virtual ICollection<SamtGroup> SamtGroups { get; set; } // SAMT_Groups.FK_TelavatGroups_Portals
-
-        /// <summary>
-        /// Child SamtMonthlyBudgets where [SAMT_MonthlyBudgets].[PortalID] point to this entity (FK_SAMT_MonthlyBudgets_Portals)
-        /// </summary>
-        public virtual ICollection<SamtMonthlyBudget> SamtMonthlyBudgets { get; set; } // SAMT_MonthlyBudgets.FK_SAMT_MonthlyBudgets_Portals
-
-        /// <summary>
-        /// Child SamtRequests where [SAMT_Requests].[PortalID] point to this entity (FK_TelavatRequests_Portals)
-        /// </summary>
-        public virtual ICollection<SamtRequest> SamtRequests { get; set; } // SAMT_Requests.FK_TelavatRequests_Portals
-
-        /// <summary>
         /// Child ShiftEmploymentDetails where [Shift_EmploymentDetail].[portalID] point to this entity (FK_Shift_EmploymentDetail_Portals)
         /// </summary>
         public virtual ICollection<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail.FK_Shift_EmploymentDetail_Portals
@@ -132,81 +67,6 @@ namespace Leopard.Repository
         public virtual ICollection<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet.FK_Shift_ShiftTablet_Portals
 
         /// <summary>
-        /// Child TelavatAgentPosts where [TelavatAgentPosts].[PortalID] point to this entity (FK_TelavatAgentPosts_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatAgentPost> TelavatAgentPosts { get; set; } // TelavatAgentPosts.FK_TelavatAgentPosts_Portals
-
-        /// <summary>
-        /// Child TelavatBandSounds where [TelavatBandSounds].[PortalID] point to this entity (FK_TelavatBandSounds_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatBandSound> TelavatBandSounds { get; set; } // TelavatBandSounds.FK_TelavatBandSounds_Portals
-
-        /// <summary>
-        /// Child TelavatCategoryAges where [TelavatCategoryAges].[PortalID] point to this entity (FK_TelavatCategoryAges_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatCategoryAge> TelavatCategoryAges { get; set; } // TelavatCategoryAges.FK_TelavatCategoryAges_Portals
-
-        /// <summary>
-        /// Child TelavatCertifications where [TelavatCertifications].[PortalID] point to this entity (FK_TelavatCertifications_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatCertification> TelavatCertifications { get; set; } // TelavatCertifications.FK_TelavatCertifications_Portals
-
-        /// <summary>
-        /// Child TelavatPlayStatus where [TelavatPlayStatus].[PortalID] point to this entity (FK_TelavatPlayStatus_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatPlayStatu> TelavatPlayStatus { get; set; } // TelavatPlayStatus.FK_TelavatPlayStatus_Portals
-
-        /// <summary>
-        /// Child TelavatProgramExperts where [TelavatProgramExperts].[PortalID] point to this entity (FK_TelavatProgramExperts_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatProgramExpert> TelavatProgramExperts { get; set; } // TelavatProgramExperts.FK_TelavatProgramExperts_Portals
-
-        /// <summary>
-        /// Child TelavatProgramOccasions where [TelavatProgramOccasions].[PortalID] point to this entity (FK_TelavatProgramOccasions_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatProgramOccasion> TelavatProgramOccasions { get; set; } // TelavatProgramOccasions.FK_TelavatProgramOccasions_Portals
-
-        /// <summary>
-        /// Child TelavatProgramTypes where [TelavatProgramTypes].[PortalID] point to this entity (FK_TelavatProgramTypes_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatProgramType> TelavatProgramTypes { get; set; } // TelavatProgramTypes.FK_TelavatProgramTypes_Portals
-
-        /// <summary>
-        /// Child TelavatSourceTypes where [TelavatSourceTypes].[PortalID] point to this entity (FK_TelavatSourceTypes_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatSourceType> TelavatSourceTypes { get; set; } // TelavatSourceTypes.FK_TelavatSourceTypes_Portals
-
-        /// <summary>
-        /// Child TelavatStructures where [TelavatStructures].[PortalID] point to this entity (FK_TelavatStructures_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatStructure> TelavatStructures { get; set; } // TelavatStructures.FK_TelavatStructures_Portals
-
-        /// <summary>
-        /// Child TelavatSubsidiarySubjects where [TelavatSubsidiarySubjects].[PortalID] point to this entity (FK_TelavatSubsidiarySubjects_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatSubsidiarySubject> TelavatSubsidiarySubjects { get; set; } // TelavatSubsidiarySubjects.FK_TelavatSubsidiarySubjects_Portals
-
-        /// <summary>
-        /// Child TelavatSubtitleStatus where [TelavatSubtitleStatus].[PortalID] point to this entity (FK_TelavatProgramSubtitles_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatSubtitleStatu> TelavatSubtitleStatus { get; set; } // TelavatSubtitleStatus.FK_TelavatProgramSubtitles_Portals
-
-        /// <summary>
-        /// Child TelavatSuras where [TelavatSuras].[PortalID] point to this entity (FK_TelavatSuras_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatSura> TelavatSuras { get; set; } // TelavatSuras.FK_TelavatSuras_Portals
-
-        /// <summary>
-        /// Child TelavatTopics where [TelavatTopics].[PortalID] point to this entity (FK_TelavatTopics_Portals)
-        /// </summary>
-        public virtual ICollection<TelavatTopic> TelavatTopics { get; set; } // TelavatTopics.FK_TelavatTopics_Portals
-
-        /// <summary>
-        /// Child Users where [Users].[PortalID] point to this entity (FK_Users_Portals)
-        /// </summary>
-        public virtual ICollection<User> Users { get; set; } // Users.FK_Users_Portals
-
-        /// <summary>
         /// Child UsersPortals where [UsersPortals].[PortalId] point to this entity (FK_UsersPortals_Portals)
         /// </summary>
         public virtual ICollection<UsersPortal> UsersPortals { get; set; } // UsersPortals.FK_UsersPortals_Portals
@@ -224,38 +84,10 @@ namespace Leopard.Repository
             Ordering = 0;
             IsSelected = false;
             Enable = true;
-            ChannelGroups = new List<ChannelGroup>();
-            ConductorBroadcastCertificates = new List<ConductorBroadcastCertificate>();
-            ConductorChannelProgramTags = new List<ConductorChannelProgramTag>();
-            OldTelavatGrades2 = new List<OldTelavatGrades2>();
-            PakhshChannelLocations = new List<PakhshChannelLocation>();
-            PakhshChannelSettings = new List<PakhshChannelSetting>();
-            PakhshManageShifts = new List<PakhshManageShift>();
-            PakhshShiftSettings = new List<PakhshShiftSetting>();
-            PortalAddresses = new List<PortalAddress>();
-            RayanCounterOnlineUsers = new List<RayanCounterOnlineUser>();
-            SamtGroups = new List<SamtGroup>();
-            SamtMonthlyBudgets = new List<SamtMonthlyBudget>();
-            SamtRequests = new List<SamtRequest>();
             ShiftEmploymentDetails = new List<ShiftEmploymentDetail>();
             ShiftPortalLocations = new List<ShiftPortalLocation>();
             ShiftShifts = new List<ShiftShift>();
             ShiftShiftTablets = new List<ShiftShiftTablet>();
-            TelavatAgentPosts = new List<TelavatAgentPost>();
-            TelavatBandSounds = new List<TelavatBandSound>();
-            TelavatCategoryAges = new List<TelavatCategoryAge>();
-            TelavatCertifications = new List<TelavatCertification>();
-            TelavatPlayStatus = new List<TelavatPlayStatu>();
-            TelavatProgramExperts = new List<TelavatProgramExpert>();
-            TelavatProgramOccasions = new List<TelavatProgramOccasion>();
-            TelavatProgramTypes = new List<TelavatProgramType>();
-            TelavatSourceTypes = new List<TelavatSourceType>();
-            TelavatStructures = new List<TelavatStructure>();
-            TelavatSubsidiarySubjects = new List<TelavatSubsidiarySubject>();
-            TelavatSubtitleStatus = new List<TelavatSubtitleStatu>();
-            TelavatSuras = new List<TelavatSura>();
-            TelavatTopics = new List<TelavatTopic>();
-            Users = new List<User>();
             UsersPortals = new List<UsersPortal>();
             InitializePartial();
         }

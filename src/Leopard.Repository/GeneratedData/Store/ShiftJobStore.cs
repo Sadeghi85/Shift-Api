@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace Leopard.Repository
 {
-    public partial class SamtHrJobStore : StoreBase<SamtHrJob>, ISamtHrJobStore
+    public partial class ShiftJobStore : StoreBase<ShiftJob>, IShiftJobStore
     {
         private readonly ILeopardDbContext _ctx;
         private readonly ILogger _logger;
         private readonly IPrincipal _iPrincipal;
 
-        public SamtHrJobStore(ILeopardDbContext ctx, ILogger logger, IPrincipal principal) : base(ctx, logger, principal)
+        public ShiftJobStore(ILeopardDbContext ctx, ILogger logger, IPrincipal principal) : base(ctx, logger, principal)
         {
             _ctx = ctx;
     		_logger = logger;

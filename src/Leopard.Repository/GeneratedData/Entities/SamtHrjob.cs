@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Leopard.Repository
 {
-    // SAMT_HRJOB
-    public partial class SamtHrjob
+    // SAMT_HRJob
+    public partial class SamtHrJob
     {
         public int HrJobId { get; set; } // HRJobID (Primary key)
         public string JobTitle { get; set; } // JobTitle (length: 500)
 
-        public SamtHrjob()
+        public SamtHrJob()
         {
             InitializePartial();
         }

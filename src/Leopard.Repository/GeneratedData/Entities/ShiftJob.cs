@@ -8,12 +8,10 @@ using System.Threading.Tasks;
 
 namespace Leopard.Repository
 {
-    // UsersPortals
-    public partial class UsersPortal
+    // Shift_Job
+    public partial class ShiftJob
     {
-        public int Id { get; set; } // ID (Primary key)
-        public int UserId { get; set; } // UserId
-        public int PortalId { get; set; } // PortalId
+        public int SamtResourceTypeId { get; set; } // SamtResourceTypeID (Primary key)
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
@@ -22,11 +20,11 @@ namespace Leopard.Repository
         // Foreign keys
 
         /// <summary>
-        /// Parent Portal pointed by [UsersPortals].([PortalId]) (FK_UsersPortals_Portals)
+        /// Parent SamtResourceType pointed by [Shift_Job].([SamtResourceTypeId]) (FK_Shift_Jobs_SAMT_ResourceTypes)
         /// </summary>
-        public virtual Portal Portal { get; set; } // FK_UsersPortals_Portals
+        public virtual SamtResourceType SamtResourceType { get; set; } // FK_Shift_Jobs_SAMT_ResourceTypes
 
-        public UsersPortal()
+        public ShiftJob()
         {
             InitializePartial();
         }

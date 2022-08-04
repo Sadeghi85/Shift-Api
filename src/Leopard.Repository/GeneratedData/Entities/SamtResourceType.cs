@@ -20,11 +20,6 @@ namespace Leopard.Repository
         // Reverse navigation
 
         /// <summary>
-        /// Child ConductorChannelProgramAgents where [ConductorChannelProgramAgents].[ResourceTypeID] point to this entity (FK_ConductorChannelProgramAgents_SAMT_ResourceTypes)
-        /// </summary>
-        public virtual ICollection<ConductorChannelProgramAgent> ConductorChannelProgramAgents { get; set; } // ConductorChannelProgramAgents.FK_ConductorChannelProgramAgents_SAMT_ResourceTypes
-
-        /// <summary>
         /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[JobID] point to this entity (FK_Shift_ShiftTableCrew_SAMT_ResourceTypes)
         /// </summary>
         public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTableCrew_SAMT_ResourceTypes
@@ -35,18 +30,16 @@ namespace Leopard.Repository
         public virtual ICollection<ShiftShiftTemplate> ShiftShiftTemplates { get; set; } // Shift_ShiftTemplate.FK_ShiftNeededResource_SAMT_ResourceTypes
 
         /// <summary>
-        /// Child TelavatPaymentLogDetails where [TelavatPaymentLogDetails].[AgentPostID] point to this entity (FK_TelavatPaymentLogDetails_TelavatResourceTypes)
+        /// Parent (One-to-One) SamtResourceType pointed by [Shift_Job].[SamtResourceTypeID] (FK_Shift_Jobs_SAMT_ResourceTypes)
         /// </summary>
-        public virtual ICollection<TelavatPaymentLogDetail> TelavatPaymentLogDetails { get; set; } // TelavatPaymentLogDetails.FK_TelavatPaymentLogDetails_TelavatResourceTypes
+        public virtual ShiftJob ShiftJob { get; set; } // Shift_Job.FK_Shift_Jobs_SAMT_ResourceTypes
 
         public SamtResourceType()
         {
             AmountWage = 0;
             IsDeleted = false;
-            ConductorChannelProgramAgents = new List<ConductorChannelProgramAgent>();
             ShiftShiftTabletCrews = new List<ShiftShiftTabletCrew>();
             ShiftShiftTemplates = new List<ShiftShiftTemplate>();
-            TelavatPaymentLogDetails = new List<TelavatPaymentLogDetail>();
             InitializePartial();
         }
 
