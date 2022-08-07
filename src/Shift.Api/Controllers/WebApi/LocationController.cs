@@ -3,8 +3,8 @@ using Shift.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shift.Api.Models;
+using Cheetah.Utilities;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Shift.Api.Controllers.WebApi {
 	[Authorize]

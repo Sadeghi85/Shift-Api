@@ -1,15 +1,13 @@
 using Lamar.Microsoft.DependencyInjection;
-using Shift.Repository;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-using Shift.Bussiness;
-using Serilog;
-using Serilog.Extensions;
-using Microsoft.AspNetCore.Mvc;
-using Shift.Api;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Shift.Api;
+using Shift.Bussiness;
+using Shift.Repository;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Principal;
 
 var configuration = new ConfigurationBuilder()
