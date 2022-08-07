@@ -12,24 +12,28 @@ namespace Shift.Repository
     public partial class ShiftShiftTabletCrewReplacement
     {
         public int Id { get; set; } // ID (Primary key)
-        public int ShiftTabletCrewId { get; set; } // ShiftTabletCrewId
-        public int ShiftTabletCrewIdReplaceMent { get; set; } // ShiftTabletCrewIdReplaceMent
+        public int ShiftTabletCrewId { get; set; } // ShiftTabletCrewID
         public int? CreatedBy { get; set; } // CreatedBy
-        public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
-        public DateTime? LastModifiedDateTime { get; set; } // LastModifiedDateTime
+        public int OldAgentId { get; set; } // OldAgentID
+        public int NewAgentId { get; set; } // NewAgentID
 
         // Foreign keys
 
         /// <summary>
-        /// Parent ShiftShiftTabletCrew pointed by [Shift_ShiftTabletCrewReplacement].([ShiftTabletCrewIdReplaceMent]) (FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew1)
+        /// Parent SamtAgent pointed by [Shift_ShiftTabletCrewReplacement].([NewAgentId]) (FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents1)
         /// </summary>
-        public virtual ShiftShiftTabletCrew ShiftShiftTabletCrew_ShiftTabletCrewIdReplaceMent { get; set; } // FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew1
+        public virtual SamtAgent NewAgent { get; set; } // FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents1
+
+        /// <summary>
+        /// Parent SamtAgent pointed by [Shift_ShiftTabletCrewReplacement].([OldAgentId]) (FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents)
+        /// </summary>
+        public virtual SamtAgent OldAgent { get; set; } // FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents
 
         /// <summary>
         /// Parent ShiftShiftTabletCrew pointed by [Shift_ShiftTabletCrewReplacement].([ShiftTabletCrewId]) (FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew)
         /// </summary>
-        public virtual ShiftShiftTabletCrew ShiftTabletCrew { get; set; } // FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew
+        public virtual ShiftShiftTabletCrew ShiftShiftTabletCrew { get; set; } // FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew
 
         public ShiftShiftTabletCrewReplacement()
         {

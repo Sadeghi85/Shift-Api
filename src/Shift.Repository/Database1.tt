@@ -53,13 +53,21 @@
     FilterSettings.TableFilters.Add(new RegexExcludeFilter("AspNet.*")); // This excludes all tables starting with 'AspNet'
     FilterSettings.TableFilters.Add(new RegexExcludeFilter("__EFMigrationsHistory")); // This excludes a table called '__EFMigrationsHistory'
     //FilterSettings.TableFilters.Add(new RegexExcludeFilter("SAMT_Agents2")); // This excludes all tables starting with 'AspNet'
-    FilterSettings.TableFilters.Add(new RegexIncludeFilter("Portals$"));
-    FilterSettings.TableFilters.Add(new RegexIncludeFilter("Shift_.*"));
-    FilterSettings.TableFilters.Add(new RegexIncludeFilter("SAMT_Agents$"));
-    FilterSettings.TableFilters.Add(new RegexIncludeFilter("SAMT_HRCooperationType$"));
-    FilterSettings.TableFilters.Add(new RegexIncludeFilter("SAMT_HRJob$"));
-    FilterSettings.TableFilters.Add(new RegexIncludeFilter("SAMT_ResourceTypes$"));
-    FilterSettings.TableFilters.Add(new RegexIncludeFilter("TelavatAgentResourceTypes$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^Portals$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^Shift_.*"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^SAMT_Agents$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^SAMT_HRCooperationType$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^SAMT_HRJob$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^SAMT_ResourceTypes$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^TelavatAgentResourceTypes$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^Users$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^UsersPortals$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^UserTypeGroupRoleMenus$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^UserTypeGroupRoleModules$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^UserTypeGroups$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^UserTypes$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^UserUserTypeGroups$"));
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^UserUserTypes$"));
     
 
     //FilterSettings.ColumnFilters.Add(new RegexExcludeFilter("[Cc]reated[Aa]t.*")); // This excludes all columns starting with 'CreatedAt' e.g CreatedAtUtc

@@ -32,14 +32,9 @@ namespace Shift.Repository
         public virtual ICollection<ShiftCrewRewardFine> ShiftCrewRewardFines { get; set; } // Shift_CrewRewardFine.FK_Shift_CrewRewardFine_Shift_ShiftTabletCrew
 
         /// <summary>
-        /// Child ShiftShiftTabletCrewReplacements where [Shift_ShiftTabletCrewReplacement].[ShiftTabletCrewId] point to this entity (FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew)
+        /// Child ShiftShiftTabletCrewReplacements where [Shift_ShiftTabletCrewReplacement].[ShiftTabletCrewID] point to this entity (FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew)
         /// </summary>
-        public virtual ICollection<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements_ShiftTabletCrewId { get; set; } // Shift_ShiftTabletCrewReplacement.FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew
-
-        /// <summary>
-        /// Child ShiftShiftTabletCrewReplacements where [Shift_ShiftTabletCrewReplacement].[ShiftTabletCrewIdReplaceMent] point to this entity (FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew1)
-        /// </summary>
-        public virtual ICollection<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements_ShiftTabletCrewIdReplaceMent { get; set; } // Shift_ShiftTabletCrewReplacement.FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew1
+        public virtual ICollection<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement.FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew
 
         // Foreign keys
 
@@ -63,8 +58,7 @@ namespace Shift.Repository
             IsReplaced = false;
             IsDeleted = false;
             ShiftCrewRewardFines = new List<ShiftCrewRewardFine>();
-            ShiftShiftTabletCrewReplacements_ShiftTabletCrewId = new List<ShiftShiftTabletCrewReplacement>();
-            ShiftShiftTabletCrewReplacements_ShiftTabletCrewIdReplaceMent = new List<ShiftShiftTabletCrewReplacement>();
+            ShiftShiftTabletCrewReplacements = new List<ShiftShiftTabletCrewReplacement>();
             InitializePartial();
         }
 

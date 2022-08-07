@@ -26,6 +26,11 @@ namespace Shift.Repository
         /// </summary>
         public virtual Portal Portal { get; set; } // FK_UsersPortals_Portals
 
+        /// <summary>
+        /// Parent User pointed by [UsersPortals].([UserId]) (FK_UsersPortals_Users)
+        /// </summary>
+        public virtual User User { get; set; } // FK_UsersPortals_Users
+
         public UsersPortal()
         {
             InitializePartial();
