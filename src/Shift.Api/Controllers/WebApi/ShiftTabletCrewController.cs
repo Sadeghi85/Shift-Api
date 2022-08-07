@@ -112,6 +112,23 @@ namespace Shift.Api.Controllers.WebApi {
 			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
+		[HttpPost("HamahangiUpdate")]
+		public async Task<IActionResult> HamahangiUpdate(ShiftTabletCrewInputModel model) {
+			if (!ModelState.IsValid) {
+				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+
+				var errMsgs = string.Join(Environment.NewLine, allErrors);
+				return Ok(OperationResult<string>.FailureResult(errMsgs));
+			}
+
+			var res = await _shiftTabletCrewService.HamahangiUpdate(model);
+
+			if (res.Success) {
+				return Ok(OperationResult<string>.SuccessResult(res.Message));
+			}
+			return Ok(OperationResult<string>.FailureResult(res.Message));
+		}
+
 		//[HttpPost("Replace/{replaced}/{replacedBy}")]
 		//public async Task<IActionResult> Replace(int replaced, int replacedBy) {
 		//	var res = await _shiftTabletCrewService.Replace(replaced, replacedBy);

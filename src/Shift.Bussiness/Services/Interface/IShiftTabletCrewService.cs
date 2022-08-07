@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Shift.Bussiness {
 	public interface IShiftTabletCrewService {
+		public Task<BaseResult> HamahangiUpdate(ShiftTabletCrewInputModel model);
 		public Task<BaseResult> Update(ShiftTabletCrewInputModel model);
 		public Task<BaseResult> Delete(int id);
 		//public Task<int> Replace(int replaced, int replacedBy);

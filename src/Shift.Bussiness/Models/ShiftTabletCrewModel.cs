@@ -17,7 +17,6 @@ namespace Shift.Bussiness {
 		public int ShiftTabletId { get; set; } // ShifTabletId
 		public TimeSpan? EntranceTime { get; set; } // EntranceTime
 		public TimeSpan? ExitTime { get; set; } // ExitTime
-		public bool? IsReplaced { get; set; } // IsReplaced
 	}
 
 	public class ShiftTabletCrewSearchModel : PagerViewModel {

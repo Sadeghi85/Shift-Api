@@ -236,7 +236,7 @@ namespace Shift.Bussiness {
 
 					IsReplaced = false,
 					IsDeleted = false
-					
+
 				};
 
 				var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
@@ -366,6 +366,26 @@ namespace Shift.Bussiness {
 				// TODO: sp: check that agent is not already in another shift that overlaps this shift
 				///
 
+				// جابجایی (هماهنگی و منشی صحنه)؛
+				if (found.AgentId != model.AgentId) {
+					var shiftCrewReplacement = new ShiftShiftTabletCrewReplacement() {
+						ShiftTabletCrewId = found.Id,
+						OldAgentId = found.AgentId,
+						NewAgentId = model.AgentId
+					};
+
+					var res1 = await _shiftShiftTabletCrewReplacementStore.InsertAsync(shiftCrewReplacement);
+
+					if (res1 < 0) {
+						BaseResult = await LogError(new Exception("Failed to insert shiftShiftTabletCrewReplacement\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+							ReferenceHandler = ReferenceHandler.IgnoreCycles,
+							WriteIndented = true
+						})));
+						return BaseResult;
+					}
+
+					found.IsReplaced = true;
+				}
 
 				found.JobId = model.JobId;
 				found.AgentId = model.AgentId;
@@ -391,6 +411,30 @@ namespace Shift.Bussiness {
 
 			return BaseResult;
 
+		}
+
+		// Crew(Hamahangi) update is different, in that, current row is logically deleted and new row will be inserted
+		public async Task<BaseResult> HamahangiUpdate(ShiftTabletCrewInputModel model) {
+			try {
+
+				var res = await Delete(model.Id);
+
+				if (!res.Success) {
+					return res;
+				}
+
+				res = await Register(model);
+
+				if (!res.Success) {
+					return res;
+				}
+
+			} catch (Exception ex) {
+
+				BaseResult = await LogError(ex);
+			}
+
+			return BaseResult;
 		}
 
 		public async Task<BaseResult> Delete(int id) {
@@ -594,7 +638,7 @@ namespace Shift.Bussiness {
 
 
 
-				
+
 
 				ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -690,7 +734,7 @@ namespace Shift.Bussiness {
 					pdfResStreamOutput = (MemoryStream) pdfRes.PdfStreamOutput;
 				}
 
-				
+
 
 
 			} catch (Exception ex) {
