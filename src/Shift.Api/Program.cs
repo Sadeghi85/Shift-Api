@@ -106,7 +106,7 @@ builder.Host.UseLamar((context, registry) => {
 	registry.AddControllersWithViews()
 	.AddJsonOptions(jsonOptions => {
 		// null to leave property names unchanged
-		jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
+		//jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
 		jsonOptions.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 		jsonOptions.JsonSerializerOptions.Converters.Add(new TrimStringConverter());
 		//jsonOptions.JsonSerializerOptions.Converters.Add(UnixTimeStampDateConverter)

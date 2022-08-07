@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shift.Api.Models;
 using Cheetah.Utilities;
-
+using Cheetah.ApiHelpers.Filters;
 
 namespace Shift.Api.Controllers.WebApi {
 	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
+	[FluentModelState]
 	public class LocationController : YaldaController {
 
 		readonly private ILocationService _locationService;
