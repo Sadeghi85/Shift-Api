@@ -79,11 +79,15 @@ builder.Host.UseLamar((context, registry) => {
 
 
 
-	registry.AddDbContext<LeopardDbContext>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+	registry.AddDbContext<LeopardDbContext>(options => {
+		options.UseSqlServer(configuration.GetConnectionString(@"DefaultConnection"));
+		options.UseLazyLoadingProxies();
+	});
+
+
 
 	registry.IncludeRegistry<LamarServiceRegistry>();
-	
+
 	// register services using Lamar
 
 	//registry.AddScoped<IGenericRepository<>, TheRepository<>>();

@@ -9,7 +9,6 @@ using EFCore.BulkExtensions;
 using Serilog;
 using System.Security.Principal;
 using System.Security.Claims;
-using System.Linq.Dynamic.Core;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
