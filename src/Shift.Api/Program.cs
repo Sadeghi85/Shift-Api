@@ -1,3 +1,4 @@
+using Cheetah.ApiHelpers;
 using Lamar.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -141,6 +142,12 @@ app.UseSwagger();
 
 app.UseSwaggerUI();
 app.UseStaticFiles();
+
+if (app.Environment.IsDevelopment()) {
+	app.UseMiddleware<LogResponseMiddleware>();
+	app.UseMiddleware<LogRequestMiddleware>();
+}
+
 
 app.UseRouting();
 app.UseCors("TemporaryCorsPolicy");

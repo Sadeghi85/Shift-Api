@@ -5,72 +5,10 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using ILogger = Serilog.ILogger;
 using Microsoft.AspNetCore.Http.Extensions;
+using Cheetah.ApiHelpers.Filters;
+
 namespace Shift.Api {
 	
-
-		public class RemoveVersionFromParameter : IOperationFilter {
-			public void Apply(OpenApiOperation operation, OperationFilterContext context) {
-				var versionParameter = operation.Parameters.SingleOrDefault(p => p.Name == "v");
-				if (versionParameter != null) {
-					operation.Parameters.Remove(versionParameter);
-				}
-			}
-		}
-		public class ReplaceVersionWithExactValueInPath : IDocumentFilter {
-			public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context) {
-				var paths = new OpenApiPaths();
-				foreach (var path in swaggerDoc.Paths) {
-					paths.Add(path.Key.Replace("v{v}", swaggerDoc.Info.Version), path.Value);
-				}
-				swaggerDoc.Paths = paths;
-			}
-		}
-
-		public class LogRequestMiddleware {
-			private readonly RequestDelegate _next;
-			private readonly ILogger _logger;
-
-			public LogRequestMiddleware(RequestDelegate next, ILogger logger) {
-				_next = next;
-				_logger = logger;
-			}
-
-			public async Task Invoke(HttpContext context) {
-				var requestBodyStream = new MemoryStream();
-				var originalRequestBody = context.Request.Body;
-				await context.Request.Body.CopyToAsync(requestBodyStream);
-				requestBodyStream.Seek(0L, SeekOrigin.Begin);
-				var url = context.Request.GetDisplayUrl();
-				var requestBodyText = new StreamReader(requestBodyStream).ReadToEnd();
-				_logger.Information(string.Format("\r\nREQUEST METHOD: {0}\r\nREQUEST BODY: {1}\r\nREQUEST URL: {2}\r\n", context.Request.Method, requestBodyText, url));
-				requestBodyStream.Seek(0L, SeekOrigin.Begin);
-				context.Request.Body = requestBodyStream;
-				await _next(context);
-				context.Request.Body = originalRequestBody;
-			}
-		}
-		public class LogResponseMiddleware {
-			private readonly RequestDelegate _next;
-			private readonly ILogger _logger;
-
-			public LogResponseMiddleware(RequestDelegate next, ILogger logger) {
-				_next = next;
-				_logger = logger;
-			}
-
-			public async Task Invoke(HttpContext context) {
-				var bodyStream = context.Response.Body;
-				var responseBodyStream = new MemoryStream();
-				context.Response.Body = responseBodyStream;
-				await _next(context);
-				responseBodyStream.Seek(0, SeekOrigin.Begin);
-				var responseBody = new StreamReader(responseBodyStream).ReadToEnd();
-				_logger.Information(string.Format("\r\nRESPONSE LOG: {0}\r\n", responseBody));
-				responseBodyStream.Seek(0, SeekOrigin.Begin);
-				await responseBodyStream.CopyToAsync(bodyStream);
-			}
-		}
-
 
 		public class ConfigServices {
 			public static void ConfigSwagger(ServiceRegistry services) {
