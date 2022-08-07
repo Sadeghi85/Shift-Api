@@ -1,0 +1,3 @@
+namespace Shift.Api.Models {
+	
+}
