@@ -67,6 +67,11 @@ namespace Shift.Repository
         public virtual ICollection<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet.FK_Shift_ShiftTablet_Portals
 
         /// <summary>
+        /// Child Users where [Users].[PortalID] point to this entity (FK_Users_Portals)
+        /// </summary>
+        public virtual ICollection<User> Users { get; set; } // Users.FK_Users_Portals
+
+        /// <summary>
         /// Child UsersPortals where [UsersPortals].[PortalId] point to this entity (FK_UsersPortals_Portals)
         /// </summary>
         public virtual ICollection<UsersPortal> UsersPortals { get; set; } // UsersPortals.FK_UsersPortals_Portals
@@ -88,6 +93,7 @@ namespace Shift.Repository
             ShiftPortalLocations = new List<ShiftPortalLocation>();
             ShiftShifts = new List<ShiftShift>();
             ShiftShiftTablets = new List<ShiftShiftTablet>();
+            Users = new List<User>();
             UsersPortals = new List<UsersPortal>();
             InitializePartial();
         }

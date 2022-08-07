@@ -40,7 +40,14 @@ namespace Shift.Repository
         DbSet<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges
         DbSet<ShiftTabletScriptSupervisorDescription> ShiftTabletScriptSupervisorDescriptions { get; set; } // Shift_TabletScriptSupervisorDescription
         DbSet<TelavatAgentResourceType> TelavatAgentResourceTypes { get; set; } // TelavatAgentResourceTypes
+        DbSet<User> Users { get; set; } // Users
         DbSet<UsersPortal> UsersPortals { get; set; } // UsersPortals
+        DbSet<UserType> UserTypes { get; set; } // UserTypes
+        DbSet<UserTypeGroup> UserTypeGroups { get; set; } // UserTypeGroups
+        DbSet<UserTypeGroupRoleMenu> UserTypeGroupRoleMenus { get; set; } // UserTypeGroupRoleMenus
+        DbSet<UserTypeGroupRoleModule> UserTypeGroupRoleModules { get; set; } // UserTypeGroupRoleModules
+        DbSet<UserUserType> UserUserTypes { get; set; } // UserUserTypes
+        DbSet<UserUserTypeGroup> UserUserTypeGroups { get; set; } // UserUserTypeGroups
 
         int SaveChanges();
         int SaveChanges(bool acceptAllChangesOnSuccess);

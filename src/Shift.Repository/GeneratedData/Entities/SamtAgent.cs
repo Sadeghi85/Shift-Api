@@ -55,10 +55,22 @@ namespace Shift.Repository
         /// </summary>
         public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTabletCrew_SAMT_Agents
 
+        /// <summary>
+        /// Child ShiftShiftTabletCrewReplacements where [Shift_ShiftTabletCrewReplacement].[NewAgentID] point to this entity (FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents1)
+        /// </summary>
+        public virtual ICollection<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements_NewAgentId { get; set; } // Shift_ShiftTabletCrewReplacement.FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents1
+
+        /// <summary>
+        /// Child ShiftShiftTabletCrewReplacements where [Shift_ShiftTabletCrewReplacement].[OldAgentID] point to this entity (FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents)
+        /// </summary>
+        public virtual ICollection<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements_OldAgentId { get; set; } // Shift_ShiftTabletCrewReplacement.FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents
+
         public SamtAgent()
         {
             ShiftCalculations = new List<ShiftCalculation>();
             ShiftShiftTabletCrews = new List<ShiftShiftTabletCrew>();
+            ShiftShiftTabletCrewReplacements_NewAgentId = new List<ShiftShiftTabletCrewReplacement>();
+            ShiftShiftTabletCrewReplacements_OldAgentId = new List<ShiftShiftTabletCrewReplacement>();
             InitializePartial();
         }
 

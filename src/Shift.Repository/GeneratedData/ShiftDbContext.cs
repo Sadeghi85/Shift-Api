@@ -60,7 +60,14 @@ namespace Shift.Repository
         public DbSet<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges
         public DbSet<ShiftTabletScriptSupervisorDescription> ShiftTabletScriptSupervisorDescriptions { get; set; } // Shift_TabletScriptSupervisorDescription
         public DbSet<TelavatAgentResourceType> TelavatAgentResourceTypes { get; set; } // TelavatAgentResourceTypes
+        public DbSet<User> Users { get; set; } // Users
         public DbSet<UsersPortal> UsersPortals { get; set; } // UsersPortals
+        public DbSet<UserType> UserTypes { get; set; } // UserTypes
+        public DbSet<UserTypeGroup> UserTypeGroups { get; set; } // UserTypeGroups
+        public DbSet<UserTypeGroupRoleMenu> UserTypeGroupRoleMenus { get; set; } // UserTypeGroupRoleMenus
+        public DbSet<UserTypeGroupRoleModule> UserTypeGroupRoleModules { get; set; } // UserTypeGroupRoleModules
+        public DbSet<UserUserType> UserUserTypes { get; set; } // UserUserTypes
+        public DbSet<UserUserTypeGroup> UserUserTypeGroups { get; set; } // UserUserTypeGroups
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -107,7 +114,14 @@ namespace Shift.Repository
             modelBuilder.ApplyConfiguration(new ShiftTabletConductorChanxConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftTabletScriptSupervisorDescriptionConfiguration());
             modelBuilder.ApplyConfiguration(new TelavatAgentResourceTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new UsersPortalConfiguration());
+            modelBuilder.ApplyConfiguration(new UserTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new UserTypeGroupConfiguration());
+            modelBuilder.ApplyConfiguration(new UserTypeGroupRoleMenuConfiguration());
+            modelBuilder.ApplyConfiguration(new UserTypeGroupRoleModuleConfiguration());
+            modelBuilder.ApplyConfiguration(new UserUserTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new UserUserTypeGroupConfiguration());
 
             modelBuilder.Entity<SpShiftCheckShiftTimeOverlapReturnModel>().HasNoKey();
 

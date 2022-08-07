@@ -24,6 +24,7 @@ namespace Shift.Repository
 
             // Foreign keys
             builder.HasOne(a => a.Portal).WithMany(b => b.UsersPortals).HasForeignKey(c => c.PortalId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_UsersPortals_Portals");
+            builder.HasOne(a => a.User).WithMany(b => b.UsersPortals).HasForeignKey(c => c.UserId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_UsersPortals_Users");
 
             InitializePartial(builder);
         }
