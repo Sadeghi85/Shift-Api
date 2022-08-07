@@ -1,4 +1,5 @@
 using Cheetah.ApiHelpers;
+using FluentValidation.AspNetCore;
 using Lamar.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using Shift.Bussiness;
 using Shift.Repository;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Principal;
+using System.Text.Json.Serialization;
 
 var configuration = new ConfigurationBuilder()
 				.SetBasePath(Directory.GetCurrentDirectory())
@@ -101,7 +103,16 @@ builder.Host.UseLamar((context, registry) => {
 	// Lamar V8
 	registry.AddControllers();
 
-	registry.AddControllersWithViews().ConfigureApiBehaviorOptions(options => {
+	registry.AddControllersWithViews()
+	.AddJsonOptions(jsonOptions => {
+		// null to leave property names unchanged
+		jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
+		jsonOptions.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+		jsonOptions.JsonSerializerOptions.Converters.Add(new TrimStringConverter());
+		//jsonOptions.JsonSerializerOptions.Converters.Add(UnixTimeStampDateConverter)
+	})
+	.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LocationInputModelValidator>())
+	.ConfigureApiBehaviorOptions(options => {
 		//https://docs.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-6.0#disable-automatic-400-response
 		// so we can manage error messages by our own hands
 		options.SuppressConsumesConstraintForFormFileParameters = true;
@@ -117,9 +128,9 @@ builder.Host.UseLamar((context, registry) => {
 	//	opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 	//});
 
-	registry.AddMvc().AddJsonOptions(options => {
-		options.JsonSerializerOptions.Converters.Add(new TrimStringConverter());
-	});
+	//registry.AddMvc().AddJsonOptions(options => {
+		
+	//});
 
 });
 

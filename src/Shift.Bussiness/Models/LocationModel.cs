@@ -1,3 +1,5 @@
+using FluentValidation;
+using Shift.Bussiness;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,6 +15,16 @@ namespace Shift.Bussiness {
 		[Required(ErrorMessage = ValidationConstants.TitleRquired)]
 		public string? Title { get; set; }// Title (length: 250)
 	}
+
+
+	public class LocationInputModelValidator : AbstractValidator<LocationInputModel> {
+		public LocationInputModelValidator() {
+			RuleFor(x => x.Id).NotEmpty().WithMessage(ValidationConstants.IdRequired);
+			RuleFor(x => x.Title).NotEmpty().NotNull().MinimumLength(1).WithMessage(ValidationConstants.TitleRquired);
+		}
+	}
+
+
 
 	public class LocationSearchModel : PagerViewModel {
 

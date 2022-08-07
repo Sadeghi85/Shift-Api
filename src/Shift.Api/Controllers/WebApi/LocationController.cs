@@ -44,12 +44,12 @@ namespace Shift.Api.Controllers.WebApi {
 		[HttpPost("Register")]
 		public async Task<OkObjectResult> Register(LocationInputModel model) {
 
-			if (!ModelState.IsValid) {
-				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+			//if (!ModelState.IsValid) {
+			//	var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
-				var errMsgs = string.Join(Environment.NewLine, allErrors);
-				return Ok(OperationResult<string>.FailureResult(errMsgs));
-			}
+			//	var errMsgs = string.Join(Environment.NewLine, allErrors);
+			//	return Ok(OperationResult<string>.FailureResult(errMsgs));
+			//}
 
 			var res = await _locationService.Register(model);
 
@@ -64,12 +64,12 @@ namespace Shift.Api.Controllers.WebApi {
 		[HttpPost("Update")]
 		public async Task<OkObjectResult> Update(LocationInputModel model) {
 
-			if (!ModelState.IsValid) {
-				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+			//if (!ModelState.IsValid) {
+			//	var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
-				var errMsgs = string.Join(Environment.NewLine, allErrors);
-				return Ok(OperationResult<string>.FailureResult(errMsgs));
-			}
+			//	var errMsgs = string.Join(Environment.NewLine, allErrors);
+			//	return Ok(OperationResult<string>.FailureResult(errMsgs));
+			//}
 
 			var res = await _locationService.Update(model);
 
