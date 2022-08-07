@@ -27,12 +27,11 @@ namespace Leopard.Bussiness {
 			return new BaseResult();
 		}
 
-		public async Task<StoreViewModel<LocationViewModel>> GetAll(LocationSearchModel model) {
-
-			var checkAccess = CheckAccess();
-			if (!checkAccess.Success) {
-				return new StoreViewModel<LocationViewModel>() { Result = new List<LocationViewModel>(), TotalCount = 0 };
-			}
+		public async Task<StoreViewModel<LocationViewModel>> GetAll(LocationSearchModel model) {				
+			//var checkAccess = CheckAccess();
+			//if (!checkAccess.Success) {
+			//	return new StoreViewModel<LocationViewModel>() { Result = new List<LocationViewModel>(), TotalCount = 0 };
+			//}
 
 			var getAllExpressions = new List<Expression<Func<ShiftLocation, bool>>>();
 
