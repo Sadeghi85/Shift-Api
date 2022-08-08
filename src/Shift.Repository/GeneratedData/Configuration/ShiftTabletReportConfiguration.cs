@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Shift.Repository
 {
-    // Shift_TabletScriptSupervisorDescription
-    public partial class ShiftTabletScriptSupervisorDescriptionConfiguration : IEntityTypeConfiguration<ShiftTabletScriptSupervisorDescription>
+    // Shift_TabletReport
+    public partial class ShiftTabletReportConfiguration : IEntityTypeConfiguration<ShiftTabletReport>
     {
-        public void Configure(EntityTypeBuilder<ShiftTabletScriptSupervisorDescription> builder)
+        public void Configure(EntityTypeBuilder<ShiftTabletReport> builder)
         {
-            builder.ToTable("Shift_TabletScriptSupervisorDescription", "dbo");
+            builder.ToTable("Shift_TabletReport", "dbo");
             builder.HasKey(x => x.Id).HasName("PK_Shift_TabletScriptSupervisorDescription").IsClustered();
 
             builder.Property(x => x.Id).HasColumnName(@"Id").HasColumnType("int").IsRequired().ValueGeneratedOnAdd().UseIdentityColumn();
@@ -24,12 +24,12 @@ namespace Shift.Repository
             builder.Property(x => x.IsDeleted).HasColumnName(@"IsDeleted").HasColumnType("bit").IsRequired();
 
             // Foreign keys
-            builder.HasOne(a => a.ShiftShiftTablet).WithMany(b => b.ShiftTabletScriptSupervisorDescriptions).HasForeignKey(c => c.ShiftTabletId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet");
+            builder.HasOne(a => a.ShiftShiftTablet).WithMany(b => b.ShiftTabletReports).HasForeignKey(c => c.ShiftTabletId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet");
 
             InitializePartial(builder);
         }
 
-        partial void InitializePartial(EntityTypeBuilder<ShiftTabletScriptSupervisorDescription> builder);
+        partial void InitializePartial(EntityTypeBuilder<ShiftTabletReport> builder);
     }
 
 }

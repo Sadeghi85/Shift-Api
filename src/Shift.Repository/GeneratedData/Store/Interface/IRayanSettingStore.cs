@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Shift.Repository
 {
-    public partial interface IShiftTabletScriptSupervisorDescriptionStore : IStoreBase<ShiftTabletScriptSupervisorDescription>
+    public partial interface IRayanSettingStore : IStoreBase<RayanSetting>
     {
     }
 }

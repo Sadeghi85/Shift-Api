@@ -47,9 +47,9 @@ namespace Shift.Repository
         public virtual ICollection<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges.FK_Shift_TabletConductorChanges_Shift_ShiftTablet
 
         /// <summary>
-        /// Child ShiftTabletScriptSupervisorDescriptions where [Shift_TabletScriptSupervisorDescription].[ShiftTabletId] point to this entity (FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet)
+        /// Child ShiftTabletReports where [Shift_TabletReport].[ShiftTabletId] point to this entity (FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet)
         /// </summary>
-        public virtual ICollection<ShiftTabletScriptSupervisorDescription> ShiftTabletScriptSupervisorDescriptions { get; set; } // Shift_TabletScriptSupervisorDescription.FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet
+        public virtual ICollection<ShiftTabletReport> ShiftTabletReports { get; set; } // Shift_TabletReport.FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet
 
         // Foreign keys
 
@@ -76,7 +76,7 @@ namespace Shift.Repository
             ShiftRevisionProblems = new List<ShiftRevisionProblem>();
             ShiftShiftTabletCrews = new List<ShiftShiftTabletCrew>();
             ShiftTabletConductorChanges = new List<ShiftTabletConductorChanx>();
-            ShiftTabletScriptSupervisorDescriptions = new List<ShiftTabletScriptSupervisorDescription>();
+            ShiftTabletReports = new List<ShiftTabletReport>();
             InitializePartial();
         }
 

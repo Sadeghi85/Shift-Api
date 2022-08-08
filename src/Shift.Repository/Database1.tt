@@ -68,6 +68,8 @@
     FilterSettings.TableFilters.Add(new RegexIncludeFilter("^UserTypes$"));
     FilterSettings.TableFilters.Add(new RegexIncludeFilter("^UserUserTypeGroups$"));
     FilterSettings.TableFilters.Add(new RegexIncludeFilter("^UserUserTypes$"));
+    //
+    FilterSettings.TableFilters.Add(new RegexIncludeFilter("^RayanSettings$"));
     
 
     //FilterSettings.ColumnFilters.Add(new RegexExcludeFilter("[Cc]reated[Aa]t.*")); // This excludes all columns starting with 'CreatedAt' e.g CreatedAtUtc

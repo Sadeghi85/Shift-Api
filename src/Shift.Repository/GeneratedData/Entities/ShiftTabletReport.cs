@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Shift.Repository
 {
-    // Shift_TabletScriptSupervisorDescription
-    public partial class ShiftTabletScriptSupervisorDescription
+    // Shift_TabletReport
+    public partial class ShiftTabletReport
     {
         public int Id { get; set; } // Id (Primary key)
         public int? ShiftTabletId { get; set; } // ShiftTabletId
@@ -23,11 +23,11 @@ namespace Shift.Repository
         // Foreign keys
 
         /// <summary>
-        /// Parent ShiftShiftTablet pointed by [Shift_TabletScriptSupervisorDescription].([ShiftTabletId]) (FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet)
+        /// Parent ShiftShiftTablet pointed by [Shift_TabletReport].([ShiftTabletId]) (FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet)
         /// </summary>
         public virtual ShiftShiftTablet ShiftShiftTablet { get; set; } // FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet
 
-        public ShiftTabletScriptSupervisorDescription()
+        public ShiftTabletReport()
         {
             InitializePartial();
         }

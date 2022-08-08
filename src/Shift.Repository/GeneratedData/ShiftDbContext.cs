@@ -37,6 +37,7 @@ namespace Shift.Repository
         }
 
         public DbSet<Portal> Portals { get; set; } // Portals
+        public DbSet<RayanSetting> RayanSettings { get; set; } // RayanSettings
         public DbSet<SamtAgent> SamtAgents { get; set; } // SAMT_Agents
         public DbSet<SamtHrCooperationType> SamtHrCooperationTypes { get; set; } // SAMT_HRCooperationType
         public DbSet<SamtHrJob> SamtHrJobs { get; set; } // SAMT_HRJob
@@ -58,7 +59,7 @@ namespace Shift.Repository
         public DbSet<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement
         public DbSet<ShiftShiftTemplate> ShiftShiftTemplates { get; set; } // Shift_ShiftTemplate
         public DbSet<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges
-        public DbSet<ShiftTabletScriptSupervisorDescription> ShiftTabletScriptSupervisorDescriptions { get; set; } // Shift_TabletScriptSupervisorDescription
+        public DbSet<ShiftTabletReport> ShiftTabletReports { get; set; } // Shift_TabletReport
         public DbSet<TelavatAgentResourceType> TelavatAgentResourceTypes { get; set; } // TelavatAgentResourceTypes
         public DbSet<User> Users { get; set; } // Users
         public DbSet<UsersPortal> UsersPortals { get; set; } // UsersPortals
@@ -91,6 +92,7 @@ namespace Shift.Repository
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new PortalConfiguration());
+            modelBuilder.ApplyConfiguration(new RayanSettingConfiguration());
             modelBuilder.ApplyConfiguration(new SamtAgentConfiguration());
             modelBuilder.ApplyConfiguration(new SamtHrCooperationTypeConfiguration());
             modelBuilder.ApplyConfiguration(new SamtHrJobConfiguration());
@@ -112,7 +114,7 @@ namespace Shift.Repository
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewReplacementConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTemplateConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftTabletConductorChanxConfiguration());
-            modelBuilder.ApplyConfiguration(new ShiftTabletScriptSupervisorDescriptionConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftTabletReportConfiguration());
             modelBuilder.ApplyConfiguration(new TelavatAgentResourceTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new UsersPortalConfiguration());
@@ -124,6 +126,7 @@ namespace Shift.Repository
             modelBuilder.ApplyConfiguration(new UserUserTypeGroupConfiguration());
 
             modelBuilder.Entity<SpShiftCheckShiftTimeOverlapReturnModel>().HasNoKey();
+            modelBuilder.Entity<SpShiftPermissionsReturnModel>().HasNoKey();
 
             OnModelCreatingPartial(modelBuilder);
         }
@@ -198,6 +201,50 @@ namespace Shift.Repository
             const string sqlCommand = "EXEC [dbo].[SP_Shift_CheckShiftTimeOverlap] @_id, @_portalId, @_shiftTypeId, @_startTime, @_endTime";
             var procResultData = await Set<SpShiftCheckShiftTimeOverlapReturnModel>()
                 .FromSqlRaw(sqlCommand, idParam, portalIdParam, shiftTypeIdParam, startTimeParam, endTimeParam)
+                .ToListAsync();
+
+            return procResultData;
+        }
+
+        public List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId)
+        {
+            int procResult;
+            return SpShiftPermissions(userId, moduleId, out procResult);
+        }
+
+        public List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId, out int procResult)
+        {
+            var userIdParam = new SqlParameter { ParameterName = "@userId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = userId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!userId.HasValue)
+                userIdParam.Value = DBNull.Value;
+
+            var moduleIdParam = new SqlParameter { ParameterName = "@moduleId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = moduleId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!moduleId.HasValue)
+                moduleIdParam.Value = DBNull.Value;
+
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+            const string sqlCommand = "EXEC @procResult = [dbo].[SP_Shift_permissions] @userId, @moduleId";
+            var procResultData = Set<SpShiftPermissionsReturnModel>()
+                .FromSqlRaw(sqlCommand, userIdParam, moduleIdParam, procResultParam)
+                .ToList();
+
+            procResult = (int) procResultParam.Value;
+            return procResultData;
+        }
+
+        public async Task<List<SpShiftPermissionsReturnModel>> SpShiftPermissionsAsync(int? userId, int? moduleId)
+        {
+            var userIdParam = new SqlParameter { ParameterName = "@userId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = userId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!userId.HasValue)
+                userIdParam.Value = DBNull.Value;
+
+            var moduleIdParam = new SqlParameter { ParameterName = "@moduleId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = moduleId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!moduleId.HasValue)
+                moduleIdParam.Value = DBNull.Value;
+
+            const string sqlCommand = "EXEC [dbo].[SP_Shift_permissions] @userId, @moduleId";
+            var procResultData = await Set<SpShiftPermissionsReturnModel>()
+                .FromSqlRaw(sqlCommand, userIdParam, moduleIdParam)
                 .ToListAsync();
 
             return procResultData;

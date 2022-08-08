@@ -17,6 +17,7 @@ namespace Shift.Repository
     public partial interface IShiftDbContext : IDisposable
     {
         DbSet<Portal> Portals { get; set; } // Portals
+        DbSet<RayanSetting> RayanSettings { get; set; } // RayanSettings
         DbSet<SamtAgent> SamtAgents { get; set; } // SAMT_Agents
         DbSet<SamtHrCooperationType> SamtHrCooperationTypes { get; set; } // SAMT_HRCooperationType
         DbSet<SamtHrJob> SamtHrJobs { get; set; } // SAMT_HRJob
@@ -38,7 +39,7 @@ namespace Shift.Repository
         DbSet<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement
         DbSet<ShiftShiftTemplate> ShiftShiftTemplates { get; set; } // Shift_ShiftTemplate
         DbSet<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges
-        DbSet<ShiftTabletScriptSupervisorDescription> ShiftTabletScriptSupervisorDescriptions { get; set; } // Shift_TabletScriptSupervisorDescription
+        DbSet<ShiftTabletReport> ShiftTabletReports { get; set; } // Shift_TabletReport
         DbSet<TelavatAgentResourceType> TelavatAgentResourceTypes { get; set; } // TelavatAgentResourceTypes
         DbSet<User> Users { get; set; } // Users
         DbSet<UsersPortal> UsersPortals { get; set; } // UsersPortals
@@ -97,6 +98,10 @@ namespace Shift.Repository
         List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime);
         List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime, out int procResult);
         Task<List<SpShiftCheckShiftTimeOverlapReturnModel>> SpShiftCheckShiftTimeOverlapAsync(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime);
+
+        List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId);
+        List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId, out int procResult);
+        Task<List<SpShiftPermissionsReturnModel>> SpShiftPermissionsAsync(int? userId, int? moduleId);
 
     }
 }
