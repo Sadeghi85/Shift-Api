@@ -13,7 +13,7 @@ namespace Shift.Api.Controllers.WebApi {
 
 		// GET: api/<ShiftTabletController>
 		[HttpPost("GetUserInfo")]
-		public async Task<IActionResult> GetAll(ShiftTabletSearchModel model) {
+		public async Task<IActionResult> GetUserInfo() {
 			var uInfo = _userService.GetUserInfo();
 			return Ok(uInfo);
 		}

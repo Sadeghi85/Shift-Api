@@ -21,7 +21,7 @@ namespace Shift.Bussiness.Services {
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private const string COOKIEIDENTIFIER = "rtcookie";
 		private const string CookiePath = "/";
-		private const string CookieDomain = "smt.irib.ir";
+		private const string CookieDomain = "localhost";
 
 
 		public UserService(IPrincipal iPrincipal, IUserStore userStore, IShiftLogStore shiftLogStore
@@ -37,15 +37,21 @@ namespace Shift.Bussiness.Services {
 
 		public UserInfoViewModel GetUserInfo() {
 
+			var UserInfoViewModelResult = new UserInfoViewModel();
+
+			string t1 = "WebService/PortalWebService.asmx/GetToken";
+
 			//using var httpClient = new HttpClient();
 			var request = _httpContextAccessor.HttpContext.Request;
 			string rtCookieValue = _httpContextAccessor.HttpContext.Request.Cookies[COOKIEIDENTIFIER];
 
 			var client2 = new RestClient(_token_server);
 			client2.AddCookie(COOKIEIDENTIFIER, rtCookieValue, CookiePath, CookieDomain);
-			var samtTokenRequest = new RestRequest();
+			var samtTokenRequest = new RestRequest(_token_server + t1, Method.Post);
+			//samtTokenRequest.Method = Method.Post;
 			samtTokenRequest.AddHeader("Content-Type", "application/json; charset=utf-8");
-			samtTokenRequest.AddParameter("refresh_token", null);
+			samtTokenRequest.AddBody(new { refresh_token = (string?) null });
+			//samtTokenRequest.AddParameter("refresh_token", null);
 			var samtTokenResponse = client2.Execute(samtTokenRequest);
 			if (samtTokenResponse.StatusCode != HttpStatusCode.OK) {
 				//_iOauthLogServ.AddLog("response2.Content is : " + response2.Content ?? "", 0);
@@ -54,7 +60,12 @@ namespace Shift.Bussiness.Services {
 			var tokenresult = samtTokenResponse.Content ?? "";
 			var samtToken = JsonSerializer.Deserialize<ApiToken>(tokenresult);
 
-			return null;
+			UserInfoViewModelResult.Token = samtToken;
+
+			//var userInfo = _userStore.FindByIdAsync();
+
+
+			return UserInfoViewModelResult;
 
 
 
