@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shift.Bussiness {
 	public interface IUserService {
-		public UserInfoViewModel GetUser();
+		public UserInfoViewModel GetUserInfo();
 	}
 
 }

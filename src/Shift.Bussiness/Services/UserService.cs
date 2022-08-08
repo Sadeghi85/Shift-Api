@@ -35,7 +35,7 @@ namespace Shift.Bussiness.Services {
 			_httpContextAccessor = httpContextAccessor;
 		}
 
-		public UserInfoViewModel GetUser() {
+		public UserInfoViewModel GetUserInfo() {
 
 			//using var httpClient = new HttpClient();
 			var request = _httpContextAccessor.HttpContext.Request;
