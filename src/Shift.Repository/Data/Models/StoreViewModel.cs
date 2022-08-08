@@ -9,5 +9,6 @@ namespace Shift.Repository {
 
 		public int TotalCount { get; set; } = 0;
 		public List<T> Result { get; set; } = new List<T>();
+
 	}
 }
