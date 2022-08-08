@@ -18,129 +18,129 @@ namespace Shift.Api.Controllers.WebApi {
 
 
 
-		[HttpPost("RegisterScriptSupervisorDescription")]
-		public async Task<IActionResult> RegisterScriptSupervisorDescription(ScriptSupervisorDescriptionModel model) {
+		//[HttpPost("RegisterScriptSupervisorDescription")]
+		//public async Task<IActionResult> RegisterScriptSupervisorDescription(ScriptSupervisorDescriptionModel model) {
 
-			BaseResult? res = await _scriptSupervisorService.RegisterScriptSupervisorDescription(model);
-			if (res.Success) {
-				return Ok(OperationResult<string>.SuccessResult(res.Message));
-			}
-			return Ok(OperationResult<string>.FailureResult(res.Message));
-		}
+		//	BaseResult? res = await _scriptSupervisorService.RegisterScriptSupervisorDescription(model);
+		//	if (res.Success) {
+		//		return Ok(OperationResult<string>.SuccessResult(res.Message));
+		//	}
+		//	return Ok(OperationResult<string>.FailureResult(res.Message));
+		//}
 
-		[HttpPost("UpdateScriptSupervisorDescription")]
-		public async Task<IActionResult> UpdateScriptSupervisorDescription(ScriptSupervisorDescriptionModel model) {
+		//[HttpPost("UpdateScriptSupervisorDescription")]
+		//public async Task<IActionResult> UpdateScriptSupervisorDescription(ScriptSupervisorDescriptionModel model) {
 
-			BaseResult? res = await _scriptSupervisorService.UpdateScriptSupervisorDescription(model);
-			if (res.Success) {
-				return Ok(OperationResult<string>.SuccessResult(res.Message));
-			}
-			return Ok(OperationResult<string>.FailureResult(res.Message));
-		}
+		//	BaseResult? res = await _scriptSupervisorService.UpdateScriptSupervisorDescription(model);
+		//	if (res.Success) {
+		//		return Ok(OperationResult<string>.SuccessResult(res.Message));
+		//	}
+		//	return Ok(OperationResult<string>.FailureResult(res.Message));
+		//}
 
-		[HttpPost("DeleteScriptSupervisorDescription")]
-		public async Task<IActionResult> DeleteScriptSupervisorDescription(ScriptSupervisorDescriptionModel model) {
+		//[HttpPost("DeleteScriptSupervisorDescription")]
+		//public async Task<IActionResult> DeleteScriptSupervisorDescription(ScriptSupervisorDescriptionModel model) {
 
-			var res = await _scriptSupervisorService.DeleteScriptSupervisorDescription(model);
-			if (res.Success) {
-				return Ok(OperationResult<string>.SuccessResult(res.Message));
-			}
-			return Ok(OperationResult<string>.FailureResult(res.Message));
-		}
+		//	var res = await _scriptSupervisorService.DeleteScriptSupervisorDescription(model);
+		//	if (res.Success) {
+		//		return Ok(OperationResult<string>.SuccessResult(res.Message));
+		//	}
+		//	return Ok(OperationResult<string>.FailureResult(res.Message));
+		//}
 
-		[HttpPost("GetAllScriptSupervisorDescription")]
-		public async Task<IActionResult> GetAllScriptSupervisorDescription(ScriptSupervisorDescriptionSearchModel model) {
-
-
-			var res = await _scriptSupervisorService.GetAllScriptSupervisorDescription(model);
-
-			return Ok(OperationResult<List<ShiftTabletScriptSupervisorDescription>>.SuccessResult(res.Result, res.TotalCount));
-		}
+		//[HttpPost("GetAllScriptSupervisorDescription")]
+		//public async Task<IActionResult> GetAllScriptSupervisorDescription(ScriptSupervisorDescriptionSearchModel model) {
 
 
-		[HttpPost("RegisterTabletConductorChanges")]
-		public async Task<IActionResult> RegisterTabletConductorChanges(TabletConductorChangesModel model) {
+		//	var res = await _scriptSupervisorService.GetAllScriptSupervisorDescription(model);
 
-			BaseResult? res = await _scriptSupervisorService.RegisterTabletConductorChanges(model);
-			if (res.Success) {
-				return Ok(OperationResult<string>.SuccessResult(res.Message));
-			}
-			return Ok(OperationResult<string>.FailureResult(res.Message));
-		}
-
-		[HttpPost("UpdateTabletConductorChanges")]
-		public async Task<IActionResult> UpdateTabletConductorChanges(TabletConductorChangesModel model) {
-
-			BaseResult? res = await _scriptSupervisorService.UpdateTabletConductorChanges(model);
-			if (res.Success) {
-				return Ok(OperationResult<string>.SuccessResult(res.Message));
-			}
-			return Ok(OperationResult<string>.FailureResult(res.Message));
-		}
+		//	return Ok(OperationResult<List<ShiftTabletScriptSupervisorDescription>>.SuccessResult(res.Result, res.TotalCount));
+		//}
 
 
-		[HttpPost("GetAllTabletConductorChanges")]
-		public async Task<IActionResult> GetAllTabletConductorChanges(TabletConductorChangesSearchModel model) {
+		//[HttpPost("RegisterTabletConductorChanges")]
+		//public async Task<IActionResult> RegisterTabletConductorChanges(TabletConductorChangesModel model) {
+
+		//	BaseResult? res = await _scriptSupervisorService.RegisterTabletConductorChanges(model);
+		//	if (res.Success) {
+		//		return Ok(OperationResult<string>.SuccessResult(res.Message));
+		//	}
+		//	return Ok(OperationResult<string>.FailureResult(res.Message));
+		//}
+
+		//[HttpPost("UpdateTabletConductorChanges")]
+		//public async Task<IActionResult> UpdateTabletConductorChanges(TabletConductorChangesModel model) {
+
+		//	BaseResult? res = await _scriptSupervisorService.UpdateTabletConductorChanges(model);
+		//	if (res.Success) {
+		//		return Ok(OperationResult<string>.SuccessResult(res.Message));
+		//	}
+		//	return Ok(OperationResult<string>.FailureResult(res.Message));
+		//}
 
 
-			var res = await _scriptSupervisorService.GetAllTabletConductorChanges(model);
-
-			return Ok(OperationResult<List<ShiftTabletConductorChanx>>.SuccessResult(res.Result, res.TotalCount));
-		}
-
-		[HttpPost("DeleteTabletConductorChanges")]
-		public async Task<IActionResult> DeleteTabletConductorChanges(TabletConductorChangesModel model) {
-
-			BaseResult? res = await _scriptSupervisorService.DeleteTabletConductorChanges(model);
-			if (res.Success) {
-				return Ok(OperationResult<string>.SuccessResult(res.Message));
-			}
-			return Ok(OperationResult<string>.FailureResult(res.Message));
-		}
-
-		[HttpPost("RegisterShiftRevisionProblem")]
-		public async Task<IActionResult> RegisterShiftRevisionProblem(ShiftRevisionProblemModel model) {
-
-			BaseResult? res = await _scriptSupervisorService.RegisterShiftRevisionProblem(model);
-			if (res.Success) {
-				return Ok(OperationResult<string>.SuccessResult(res.Message));
-			}
-			return Ok(OperationResult<string>.FailureResult(res.Message));
-		}
-
-		[HttpPost("GetAllShiftRevisionProblem")]
-		public async Task<IActionResult> GetAllShiftRevisionProblem(ShiftRevisionProblemSearchModel model) {
+		//[HttpPost("GetAllTabletConductorChanges")]
+		//public async Task<IActionResult> GetAllTabletConductorChanges(TabletConductorChangesSearchModel model) {
 
 
+		//	var res = await _scriptSupervisorService.GetAllTabletConductorChanges(model);
 
-			var res = await _scriptSupervisorService.GetAllShiftRevisionProblem(model);
+		//	return Ok(OperationResult<List<ShiftTabletConductorChanx>>.SuccessResult(res.Result, res.TotalCount));
+		//}
 
-			return Ok(OperationResult<List<ShiftRevisionProblem>>.SuccessResult(res.Result, res.TotalCount));
-			//return Ok(res);
-		}
+		//[HttpPost("DeleteTabletConductorChanges")]
+		//public async Task<IActionResult> DeleteTabletConductorChanges(TabletConductorChangesModel model) {
 
+		//	BaseResult? res = await _scriptSupervisorService.DeleteTabletConductorChanges(model);
+		//	if (res.Success) {
+		//		return Ok(OperationResult<string>.SuccessResult(res.Message));
+		//	}
+		//	return Ok(OperationResult<string>.FailureResult(res.Message));
+		//}
 
-		[HttpPost("UpdateShiftRevisionProblem")]
-		public async Task<IActionResult> UpdateShiftRevisionProblem(ShiftRevisionProblemModel model) {
+		//[HttpPost("RegisterShiftRevisionProblem")]
+		//public async Task<IActionResult> RegisterShiftRevisionProblem(ShiftRevisionProblemModel model) {
 
-			BaseResult? res = await _scriptSupervisorService.UpdateShiftRevisionProblem(model);
-			if (res.Success) {
-				return Ok(OperationResult<string>.SuccessResult(res.Message));
-			}
-			return Ok(OperationResult<string>.FailureResult(res.Message));
-		}
+		//	BaseResult? res = await _scriptSupervisorService.RegisterShiftRevisionProblem(model);
+		//	if (res.Success) {
+		//		return Ok(OperationResult<string>.SuccessResult(res.Message));
+		//	}
+		//	return Ok(OperationResult<string>.FailureResult(res.Message));
+		//}
+
+		//[HttpPost("GetAllShiftRevisionProblem")]
+		//public async Task<IActionResult> GetAllShiftRevisionProblem(ShiftRevisionProblemSearchModel model) {
 
 
 
-		[HttpPost("DeleteShiftRevisionProblem")]
-		public async Task<IActionResult> DeleteShiftRevisionProblem(ShiftRevisionProblemModel model) {
+		//	var res = await _scriptSupervisorService.GetAllShiftRevisionProblem(model);
 
-			BaseResult? res = await _scriptSupervisorService.DeleteShiftRevisionProblem(model);
-			if (res.Success) {
-				return Ok(OperationResult<string>.SuccessResult(res.Message));
-			}
-			return Ok(OperationResult<string>.FailureResult(res.Message));
-		}
+		//	return Ok(OperationResult<List<ShiftRevisionProblem>>.SuccessResult(res.Result, res.TotalCount));
+		//	//return Ok(res);
+		//}
+
+
+		//[HttpPost("UpdateShiftRevisionProblem")]
+		//public async Task<IActionResult> UpdateShiftRevisionProblem(ShiftRevisionProblemModel model) {
+
+		//	BaseResult? res = await _scriptSupervisorService.UpdateShiftRevisionProblem(model);
+		//	if (res.Success) {
+		//		return Ok(OperationResult<string>.SuccessResult(res.Message));
+		//	}
+		//	return Ok(OperationResult<string>.FailureResult(res.Message));
+		//}
+
+
+
+		//[HttpPost("DeleteShiftRevisionProblem")]
+		//public async Task<IActionResult> DeleteShiftRevisionProblem(ShiftRevisionProblemModel model) {
+
+		//	BaseResult? res = await _scriptSupervisorService.DeleteShiftRevisionProblem(model);
+		//	if (res.Success) {
+		//		return Ok(OperationResult<string>.SuccessResult(res.Message));
+		//	}
+		//	return Ok(OperationResult<string>.FailureResult(res.Message));
+		//}
 
 	}
 }
