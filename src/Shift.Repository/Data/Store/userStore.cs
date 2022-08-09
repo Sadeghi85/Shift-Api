@@ -14,5 +14,12 @@ namespace Shift.Repository {
 			var results = await _ctx.SpShiftPermissionsAsync(userId, 0, permissionKey);
 			return (results?.Any()) ?? false;
 		}
+
+
+		public async Task<List<SpShiftPermissionsReturnModel>> GetUserPermissions(int userId) {
+			return  await _ctx.SpShiftPermissionsAsync(userId, 0, "");
+		}
+
+
 	}
 }
