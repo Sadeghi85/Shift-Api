@@ -8,27 +8,29 @@ using System.Threading.Tasks;
 
 namespace Shift.Repository
 {
-    // Shift_TabletReport
-    public partial class ShiftTabletReport
+    // Shift_ShiftTabletReports
+    public partial class ShiftShiftTabletReport
     {
-        public int Id { get; set; } // Id (Primary key)
-        public int? ShiftTabletId { get; set; } // ShiftTabletId
+        public int Id { get; set; } // ID (Primary key)
+        public int ShiftTabletId { get; set; } // ShiftTabletID
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
         public DateTime? LastModifiedDateTime { get; set; } // LastModifiedDateTime
-        public string Description { get; set; } // Description (length: 1000)
+        public string ReportDescription { get; set; } // ReportDescription (length: 2147483647)
         public bool IsDeleted { get; set; } // IsDeleted
+        public int RoleTypeId { get; set; } // RoleTypeID
 
         // Foreign keys
 
         /// <summary>
-        /// Parent ShiftShiftTablet pointed by [Shift_TabletReport].([ShiftTabletId]) (FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet)
+        /// Parent ShiftShiftTablet pointed by [Shift_ShiftTabletReports].([ShiftTabletId]) (FK_Shift_ShiftTabletReports_Shift_ShiftTablet)
         /// </summary>
-        public virtual ShiftShiftTablet ShiftShiftTablet { get; set; } // FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet
+        public virtual ShiftShiftTablet ShiftShiftTablet { get; set; } // FK_Shift_ShiftTabletReports_Shift_ShiftTablet
 
-        public ShiftTabletReport()
+        public ShiftShiftTabletReport()
         {
+            IsDeleted = false;
             InitializePartial();
         }
 

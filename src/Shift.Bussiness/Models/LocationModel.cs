@@ -12,7 +12,7 @@ namespace Shift.Bussiness {
 
 		[Required(ErrorMessage = ValidationConstants.IdRequired)]
 		public int Id { get; set; }
-		[Required(ErrorMessage = ValidationConstants.TitleRquired)]
+		[Required(ErrorMessage = ValidationConstants.TitleRequired)]
 		public string? Title { get; set; }// Title (length: 250)
 	}
 
@@ -20,7 +20,7 @@ namespace Shift.Bussiness {
 	public class LocationInputModelValidator : AbstractValidator<LocationInputModel> {
 		public LocationInputModelValidator() {
 			RuleFor(x => x.Id).NotEmpty().WithMessage(ValidationConstants.IdRequired);
-			RuleFor(x => x.Title).NotEmpty().NotNull().MinimumLength(1).WithMessage(ValidationConstants.TitleRquired);
+			RuleFor(x => x.Title).NotEmpty().NotNull().MinimumLength(1).WithMessage(ValidationConstants.TitleRequired);
 		}
 	}
 

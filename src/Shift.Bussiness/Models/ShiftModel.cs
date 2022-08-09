@@ -9,7 +9,7 @@ namespace Shift.Bussiness {
 	public class ShiftInputModel {
 		[Required(ErrorMessage = ValidationConstants.IdRequired)]
 		public int Id { get; set; } // ID (Primary key)
-		[Required(ErrorMessage = ValidationConstants.TitleRquired)]
+		[Required(ErrorMessage = ValidationConstants.TitleRequired)]
 		public string? Title { get; set; } // Title (length: 250)
 
 		[Required(ErrorMessage = ValidationConstants.PortalIdRequired)]

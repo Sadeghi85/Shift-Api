@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace Shift.Repository
 {
-    public partial class ShiftTabletReportStore : StoreBase<ShiftTabletReport>, IShiftTabletReportStore
+    public partial class ShiftShiftTabletReviewProblemStore : StoreBase<ShiftShiftTabletReviewProblem>, IShiftShiftTabletReviewProblemStore
     {
         private readonly IShiftDbContext _ctx;
         private readonly ILogger _logger;
         private readonly IPrincipal _iPrincipal;
 
-        public ShiftTabletReportStore(IShiftDbContext ctx, ILogger logger, IPrincipal principal) : base(ctx, logger, principal)
+        public ShiftShiftTabletReviewProblemStore(IShiftDbContext ctx, ILogger logger, IPrincipal principal) : base(ctx, logger, principal)
         {
             _ctx = ctx;
     		_logger = logger;

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Shift.Repository
 {
-    public partial interface IShiftShiftTabletConductorStore : IStoreBase<ShiftShiftTabletConductor>
+    public partial interface IShiftShiftTabletReportStore : IStoreBase<ShiftShiftTabletReport>
     {
     }
 }

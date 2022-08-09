@@ -51,15 +51,14 @@ namespace Shift.Repository
         public DbSet<ShiftLocation> ShiftLocations { get; set; } // Shift_Locations
         public DbSet<ShiftLog> ShiftLogs { get; set; } // Shift_Log
         public DbSet<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations
-        public DbSet<ShiftRevisionProblem> ShiftRevisionProblems { get; set; } // Shift_RevisionProblem
         public DbSet<ShiftShift> ShiftShifts { get; set; } // Shift_Shift
         public DbSet<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet
-        public DbSet<ShiftShiftTabletConductor> ShiftShiftTabletConductors { get; set; } // Shift_ShiftTabletConductor
+        public DbSet<ShiftShiftTabletConductorChanx> ShiftShiftTabletConductorChanges { get; set; } // Shift_ShiftTabletConductorChanges
         public DbSet<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew
         public DbSet<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement
+        public DbSet<ShiftShiftTabletReport> ShiftShiftTabletReports { get; set; } // Shift_ShiftTabletReports
+        public DbSet<ShiftShiftTabletReviewProblem> ShiftShiftTabletReviewProblems { get; set; } // Shift_ShiftTabletReviewProblems
         public DbSet<ShiftShiftTemplate> ShiftShiftTemplates { get; set; } // Shift_ShiftTemplate
-        public DbSet<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges
-        public DbSet<ShiftTabletReport> ShiftTabletReports { get; set; } // Shift_TabletReport
         public DbSet<TelavatAgentResourceType> TelavatAgentResourceTypes { get; set; } // TelavatAgentResourceTypes
         public DbSet<User> Users { get; set; } // Users
         public DbSet<UsersPortal> UsersPortals { get; set; } // UsersPortals
@@ -106,15 +105,14 @@ namespace Shift.Repository
             modelBuilder.ApplyConfiguration(new ShiftLocationConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftLogConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftPortalLocationConfiguration());
-            modelBuilder.ApplyConfiguration(new ShiftRevisionProblemConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletConfiguration());
-            modelBuilder.ApplyConfiguration(new ShiftShiftTabletConductorConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftShiftTabletConductorChanxConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewReplacementConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftShiftTabletReportConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftShiftTabletReviewProblemConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTemplateConfiguration());
-            modelBuilder.ApplyConfiguration(new ShiftTabletConductorChanxConfiguration());
-            modelBuilder.ApplyConfiguration(new ShiftTabletReportConfiguration());
             modelBuilder.ApplyConfiguration(new TelavatAgentResourceTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new UsersPortalConfiguration());

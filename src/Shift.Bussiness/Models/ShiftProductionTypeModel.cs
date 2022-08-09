@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Shift.Bussiness.Model {
 	public class ShiftProductionTypeModel {
 		public int Id { get; set; } // ID (Primary key)
-		[Required(ErrorMessage =ValidationConstants.TitleRquired)]
+		[Required(ErrorMessage =ValidationConstants.TitleRequired)]
 		public string Title { get; set; } // Title (length: 250)
 	}
 }
