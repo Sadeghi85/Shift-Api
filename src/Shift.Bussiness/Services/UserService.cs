@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using RestSharp;
 using Shift.Repository;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Shift.Bussiness.Services {
 
+	[Authorize()]
 	public class UserService : ServiceBase, IUserService {
 
 
@@ -37,7 +39,7 @@ namespace Shift.Bussiness.Services {
 
 		public UserInfoViewModel GetUserInfo() {
 
-			var UserInfoViewModelResult = new UserInfoViewModel();
+			var userInfoViewModelResult = new UserInfoViewModel();
 
 			string t1 = "WebService/PortalWebService.asmx/GetToken";
 
@@ -60,12 +62,12 @@ namespace Shift.Bussiness.Services {
 			var tokenresult = samtTokenResponse.Content ?? "";
 			var samtToken = JsonSerializer.Deserialize<ApiToken>(tokenresult);
 
-			UserInfoViewModelResult.Token = samtToken;
+			userInfoViewModelResult.Token = samtToken;
 
 			//var userInfo = _userStore.FindByIdAsync();
 
 
-			return UserInfoViewModelResult;
+			return userInfoViewModelResult;
 
 
 
