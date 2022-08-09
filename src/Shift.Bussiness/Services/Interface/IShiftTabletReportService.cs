@@ -10,7 +10,7 @@ namespace Shift.Bussiness {
 	public interface IShiftTabletReportService {
 		
 		public Task<StoreViewModel<ShiftTabletReportViewModel>> GetAll(ShiftTabletReportSearchModel model);
-		public Task<BaseResult> Create(ShiftTabletReportInputModel model);
+		public Task<BaseResult> CreateOrUpdate(ShiftTabletReportInputModel model);
 
 
 

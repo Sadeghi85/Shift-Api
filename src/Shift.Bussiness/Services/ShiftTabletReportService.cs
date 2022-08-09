@@ -63,7 +63,7 @@ namespace Shift.Bussiness {
 
 			return res;
 		}
-		public async Task<BaseResult> Create(ShiftTabletReportInputModel model) {
+		public async Task<BaseResult> CreateOrUpdate(ShiftTabletReportInputModel model) {
 
 			try {
 

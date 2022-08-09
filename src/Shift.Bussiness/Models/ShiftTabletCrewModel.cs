@@ -23,7 +23,7 @@ namespace Shift.Bussiness {
 		public int? Id { get; set; }
 		public int? AgentId { get; set; } // AgentId
 		public int? JobId { get; set; } // ResourceId
-		public int? ShifTabletId { get; set; } // ShifTabletId
+		public int? ShiftTabletId { get; set; } // ShifTabletId
 		public TimeSpan? EntranceTime { get; set; } // EntranceTime
 		public TimeSpan? ExitTime { get; set; } // ExitTime
 		public bool? IsReplaced { get; set; } // IsReplaced

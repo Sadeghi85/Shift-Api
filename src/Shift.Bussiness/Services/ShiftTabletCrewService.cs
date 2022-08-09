@@ -60,8 +60,8 @@ namespace Shift.Bussiness {
 			if (model.Id > 0) {
 				getAllExpressions.Add(x => x.Id == model.Id);
 			}
-			if (model.ShifTabletId > 0) {
-				getAllExpressions.Add(x => x.ShiftTabletId == model.ShifTabletId);
+			if (model.ShiftTabletId > 0) {
+				getAllExpressions.Add(x => x.ShiftTabletId == model.ShiftTabletId);
 			}
 			if (model.AgentId > 0) {
 				getAllExpressions.Add(x => x.AgentId == model.AgentId);
