@@ -10,6 +10,9 @@ namespace Shift.Repository {
 
 	public partial class UserStore : StoreBase<User>, IUserStore {
 
+		const int ModuleId = 37;
+
+
 		public async Task<bool> HasUserPermission(int userId, string permissionKey) {
 			var results = await _ctx.SpShiftPermissionsAsync(userId, 0, permissionKey);
 			return (results?.Any()) ?? false;
@@ -17,7 +20,7 @@ namespace Shift.Repository {
 
 
 		public async Task<List<SpShiftPermissionsReturnModel>> GetUserPermissions(int userId) {
-			return  await _ctx.SpShiftPermissionsAsync(userId, 0, "");
+			return  await _ctx.SpShiftPermissionsAsync(userId, ModuleId, "");
 		}
 
 
