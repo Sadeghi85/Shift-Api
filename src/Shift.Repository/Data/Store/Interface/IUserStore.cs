@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shift.Bussiness {
-	public interface IUserService {
+namespace Shift.Repository {
 
-		public Task<UserInfoViewModel> GetUserInfoAsync();
+	public partial interface IUserStore : IStoreBase<User> {
+
 		public Task<bool> HasUserPermission(int userId, string permissionKey);
-	}
 
+	}
 }

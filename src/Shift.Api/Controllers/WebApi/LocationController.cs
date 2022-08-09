@@ -5,12 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using Shift.Api.Models;
 using Cheetah.Utilities;
 using Cheetah.ApiHelpers.Filters;
+using Shift.Api.Permission;
 
 namespace Shift.Api.Controllers.WebApi {
+
 	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	[FluentModelState]
+	[Permission("locations.full")]
 	public class LocationController : YaldaController {
 
 		readonly private ILocationService _locationService;
@@ -20,6 +23,7 @@ namespace Shift.Api.Controllers.WebApi {
 		}
 
 		[HttpPost("GetAll")]
+		//[Permission("locations.full")]
 		public async Task<IActionResult> GetAll(LocationSearchModel model) {
 
 			if (!ModelState.IsValid) {

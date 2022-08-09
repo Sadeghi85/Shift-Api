@@ -2,11 +2,13 @@ using Cheetah.ApiHelpers;
 using FluentValidation.AspNetCore;
 using Lamar.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Shift.Api;
+using Shift.Api.Permission;
 using Shift.Bussiness;
 using Shift.Repository;
 using System.IdentityModel.Tokens.Jwt;
@@ -78,6 +80,17 @@ builder.Host.UseLamar((context, registry) => {
 		});
 
 
+	//registry.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
+	//registry.AddAuthorization(options => {
+	//	options.AddPolicy("Permission", policyBuilder => {
+	//		policyBuilder.AddRequirements(new PermissionAuthorizationRequirement());
+	//		//policyBuilder.Requirements.Add(new PermissionAuthorizationRequirement());
+	//	});
+	//});
+
+
+
 
 
 	registry.AddDbContext<ShiftDbContext>(options => {
@@ -129,7 +142,7 @@ builder.Host.UseLamar((context, registry) => {
 	//});
 
 	//registry.AddMvc().AddJsonOptions(options => {
-		
+
 	//});
 
 });

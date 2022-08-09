@@ -98,9 +98,9 @@ namespace Shift.Repository
         List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime, out int procResult);
         Task<List<SpShiftCheckShiftTimeOverlapReturnModel>> SpShiftCheckShiftTimeOverlapAsync(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime);
 
-        List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId);
-        List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId, out int procResult);
-        Task<List<SpShiftPermissionsReturnModel>> SpShiftPermissionsAsync(int? userId, int? moduleId);
+        List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId, string permissionkey);
+        List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId, string permissionkey, out int procResult);
+        Task<List<SpShiftPermissionsReturnModel>> SpShiftPermissionsAsync(int? userId, int? moduleId, string permissionkey);
 
     }
 }

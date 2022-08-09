@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using RestSharp;
 using Shift.Repository;
@@ -35,9 +36,9 @@ namespace Shift.Bussiness.Services {
 			_httpContextAccessor = httpContextAccessor;
 		}
 
-		public UserInfoViewModel GetUserInfo() {
+		public async Task<UserInfoViewModel> GetUserInfoAsync() {
 
-			var UserInfoViewModelResult = new UserInfoViewModel();
+			var userInfoViewModelResult = new UserInfoViewModel();
 
 			string t1 = "WebService/PortalWebService.asmx/GetToken";
 
@@ -52,7 +53,7 @@ namespace Shift.Bussiness.Services {
 			samtTokenRequest.AddHeader("Content-Type", "application/json; charset=utf-8");
 			samtTokenRequest.AddBody(new { refresh_token = (string?) null });
 			//samtTokenRequest.AddParameter("refresh_token", null);
-			var samtTokenResponse = client2.Execute(samtTokenRequest);
+			var samtTokenResponse = await client2.ExecuteAsync(samtTokenRequest);
 			if (samtTokenResponse.StatusCode != HttpStatusCode.OK) {
 				//_iOauthLogServ.AddLog("response2.Content is : " + response2.Content ?? "", 0);
 				//return;
@@ -60,57 +61,19 @@ namespace Shift.Bussiness.Services {
 			var tokenresult = samtTokenResponse.Content ?? "";
 			var samtToken = JsonSerializer.Deserialize<ApiToken>(tokenresult);
 
-			UserInfoViewModelResult.Token = samtToken;
+			userInfoViewModelResult.Token = samtToken;
 
 			//var userInfo = _userStore.FindByIdAsync();
 
 
-			return UserInfoViewModelResult;
+			return userInfoViewModelResult;
 
 
 
-			//var localIdentityRequest = new RestRequest();
-			//localIdentityRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+		}
 
-
-			//localIdentityRequest.AddParameter("client_id", LocalSsoConstants.SHIFT_CLIENT_NAME);
-			//localIdentityRequest.AddParameter("client_secret", LocalSsoConstants.SHIFT_CLIENT_SECRET);
-
-			//if (string.IsNullOrWhiteSpace(refresh_token)) {
-			//	//it is first token
-			//	localIdentityRequest.AddParameter("grant_type", LocalSsoConstants.SHIFT_CLIENT_GRANT);
-			//	localIdentityRequest.AddParameter("uname", _portalUser.UserName);
-			//	localIdentityRequest.AddParameter("scope", LocalSsoConstants.SHIFT_CLIENT_SCOPE);
-			//	_iOauthLogServ.AddLog("Exchanging User By Local Identity: " + oAUTH_SERVER + ", user is:" + _portalUser.UserName, 0);
-			//} else {
-			//	localIdentityRequest.AddParameter("grant_type", LocalSsoConstants.REFRESH_TOKEN);
-			//	localIdentityRequest.AddParameter(LocalSsoConstants.REFRESH_TOKEN, refresh_token);
-			//	_iOauthLogServ.AddLog("Refreshing Token for: " + _portalUser.UserName + ", RT: " + refresh_token, 0);
-			//}
-
-			//ApiToken bearerToken2 = null;
-			//try {
-			//	IRestResponse response2 = client2.Execute(localIdentityRequest);
-			//	if (response2.StatusCode != HttpStatusCode.OK) {
-			//		_iOauthLogServ.AddLog("response2.Content is : " + response2.Content ?? "", 0);
-			//		return;
-			//	}
-			//	var tokenresult = response2.Content ?? "";
-			//	bearerToken2 = serializer.Deserialize<ApiToken>(tokenresult);
-			//} catch (Exception ex3) {
-			//	_iOauthLogServ.AddLog("Exchange has errors: " + oAUTH_SERVER + ", user is:" + _portalUser.UserName, 0);
-			//	_iOauthLogServ.AddLog("ex3 is: " + ex3.Message ?? "", 0);
-			//	return;
-			//}
-
-			//if (null == bearerToken2) {
-			//	_iOauthLogServ.AddLog("Local Token is null", 0);
-			//	return;
-			//}
-			//SerializeIt(bearerToken2);
-
-
-			//throw new NotImplementedException();
+		public async Task<bool> HasUserPermission(int userId, string permissionKey) {
+			return await _userStore.HasUserPermission(userId, permissionKey);
 		}
 
 

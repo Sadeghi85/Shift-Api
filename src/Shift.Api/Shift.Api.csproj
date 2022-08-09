@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Permission\backup\**" />
+    <Content Remove="Permission\backup\**" />
+    <EmbeddedResource Remove="Permission\backup\**" />
+    <None Remove="Permission\backup\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Cheetah.ApiHelpers" Version="1.0.4" />
     <PackageReference Include="Cheetah.Utilities" Version="1.0.6" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.1.3" />
