@@ -1,7 +1,13 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shift.Api.Permission;
 using Shift.Bussiness;
 
 namespace Shift.Api.Controllers.WebApi {
+
+	
+	[Route("api/[controller]")]
+	[ApiController]
 	public class UserController : YaldaController {
 
 
@@ -13,6 +19,7 @@ namespace Shift.Api.Controllers.WebApi {
 
 		// GET: api/<ShiftTabletController>
 		[HttpPost("GetUserInfo")]
+		[Authorize]
 		public async Task<IActionResult> GetUserInfo() {
 			var uInfo = _userService.GetUserInfo();
 			return Ok(uInfo);

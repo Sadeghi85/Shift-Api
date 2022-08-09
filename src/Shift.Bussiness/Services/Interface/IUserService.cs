@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Shift.Bussiness {
 	public interface IUserService {
-		public UserInfoViewModel GetUserInfo();
+
+		public Task<UserInfoViewModel> GetUserInfoAsync();
+		public Task<bool> HasUserPermission(int userId, string permissionKey);
 	}
 
 }

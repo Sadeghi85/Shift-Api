@@ -10,8 +10,9 @@ namespace Shift.Repository {
 
 	public partial class UserStore : StoreBase<User>, IUserStore {
 
-		public bool HasUserPermission(int userId, string permissionKey) {
-			var results = _ctx.SpShiftCheckShiftTimeOverlap(id, portalId, shiftType, startTime, endTime).FirstOrDefault()?.checkOverlap ?? false;
+		public async Task<bool> HasUserPermission(int userId, string permissionKey) {
+			var results = await _ctx.SpShiftPermissionsAsync(userId, 0, permissionKey);
+			return (results?.Any()) ?? false;
 		}
 	}
 }
