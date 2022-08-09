@@ -7,7 +7,11 @@ using System.Threading.Tasks;
 namespace Shift.Bussiness {
 	public static class ValidationConstants {
 
-		public const string TitleRquired = "عنوان اجباری است";
+
+		public const string RoleTypeIdRequired = "نوع نقش اجباری است";
+		public const string ReportDescriptionRequired = "متن گزارش اجباری است";
+
+		public const string TitleRequired = "عنوان اجباری است";
 
 		public const string IdRequired = "شناسه اجباری است";
 		public const string LocationIdRequired = "شناسه لوکیشن اجباری است";
