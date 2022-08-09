@@ -36,40 +36,50 @@ namespace Shift.Bussiness.Services {
 			_httpContextAccessor = httpContextAccessor;
 		}
 
-		public async Task<UserInfoViewModel> GetUserInfoAsync() {
+		public async Task<UserInfoViewModel?> GetUserInfoAsync() {
 
-			var userInfoViewModelResult = new UserInfoViewModel();
-
-			string t1 = "WebService/PortalWebService.asmx/GetToken";
-
-			//using var httpClient = new HttpClient();
-			var request = _httpContextAccessor.HttpContext.Request;
-			string rtCookieValue = _httpContextAccessor.HttpContext.Request.Cookies[COOKIEIDENTIFIER];
-
-			var client2 = new RestClient(_token_server);
-			client2.AddCookie(COOKIEIDENTIFIER, rtCookieValue, CookiePath, CookieDomain);
-			var samtTokenRequest = new RestRequest(_token_server + t1, Method.Post);
-			//samtTokenRequest.Method = Method.Post;
-			samtTokenRequest.AddHeader("Content-Type", "application/json; charset=utf-8");
-			samtTokenRequest.AddBody(new { refresh_token = (string?) null });
-			//samtTokenRequest.AddParameter("refresh_token", null);
-			var samtTokenResponse = await client2.ExecuteAsync(samtTokenRequest);
-			if (samtTokenResponse.StatusCode != HttpStatusCode.OK) {
-				//_iOauthLogServ.AddLog("response2.Content is : " + response2.Content ?? "", 0);
-				//return;
+			var uId = CurrentUserId;
+			if (null == uId) {
+				return null;
 			}
-			var tokenresult = samtTokenResponse.Content ?? "";
-			var samtToken = JsonSerializer.Deserialize<ApiToken>(tokenresult);
 
-			userInfoViewModelResult.Token = samtToken;
+			var uInfo = await _userStore.FindByIdAsync(uId);
+			if (null == uInfo) {
+				return null;
+			}
 
-			//var userInfo = _userStore.FindByIdAsync();
+			var userInfoViewModelResult = new UserInfoViewModel() {
+				FirstName = uInfo.FirstName,
+				LastName = uInfo.LastName,
+				FullName = uInfo.FirstName + " " + uInfo.LastName,
+				PortalId = uInfo.PortalId,
+				//UserId = uInfo.Id,
+			};
 
-
+			var userPermissionsList = await _userStore.GetUserPermissions(uId.Value);
+			userInfoViewModelResult.Permissions = userPermissionsList.Select(x => x.ModuleKey).ToList();
 			return userInfoViewModelResult;
+			//string t1 = "WebService/PortalWebService.asmx/GetToken";
+			////using var httpClient = new HttpClient();
+			//var request = _httpContextAccessor.HttpContext.Request;
+			//string rtCookieValue = _httpContextAccessor.HttpContext.Request.Cookies[COOKIEIDENTIFIER];
+			//var client2 = new RestClient(_token_server);
+			//client2.AddCookie(COOKIEIDENTIFIER, rtCookieValue, CookiePath, CookieDomain);
+			//var samtTokenRequest = new RestRequest(_token_server + t1, Method.Post);
+			////samtTokenRequest.Method = Method.Post;
+			//samtTokenRequest.AddHeader("Content-Type", "application/json; charset=utf-8");
+			//samtTokenRequest.AddBody(new { refresh_token = (string?) null });
+			////samtTokenRequest.AddParameter("refresh_token", null);
+			//var samtTokenResponse = await client2.ExecuteAsync(samtTokenRequest);
+			//if (samtTokenResponse.StatusCode != HttpStatusCode.OK) {
+			//	//_iOauthLogServ.AddLog("response2.Content is : " + response2.Content ?? "", 0);
+			//	//return;
+			//}
+			//var tokenresult = samtTokenResponse.Content ?? "";
+			//var samtToken = JsonSerializer.Deserialize<ApiToken>(tokenresult);
 
-
-
+			//userInfoViewModelResult.Token = samtToken;
+			//return userInfoViewModelResult;
 		}
 
 		public async Task<bool> HasUserPermission(int userId, string permissionKey) {
