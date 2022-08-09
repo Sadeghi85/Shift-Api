@@ -31,15 +31,14 @@ namespace Shift.Repository
         DbSet<ShiftLocation> ShiftLocations { get; set; } // Shift_Locations
         DbSet<ShiftLog> ShiftLogs { get; set; } // Shift_Log
         DbSet<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations
-        DbSet<ShiftRevisionProblem> ShiftRevisionProblems { get; set; } // Shift_RevisionProblem
         DbSet<ShiftShift> ShiftShifts { get; set; } // Shift_Shift
         DbSet<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet
-        DbSet<ShiftShiftTabletConductor> ShiftShiftTabletConductors { get; set; } // Shift_ShiftTabletConductor
+        DbSet<ShiftShiftTabletConductorChanx> ShiftShiftTabletConductorChanges { get; set; } // Shift_ShiftTabletConductorChanges
         DbSet<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew
         DbSet<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement
+        DbSet<ShiftShiftTabletReport> ShiftShiftTabletReports { get; set; } // Shift_ShiftTabletReports
+        DbSet<ShiftShiftTabletReviewProblem> ShiftShiftTabletReviewProblems { get; set; } // Shift_ShiftTabletReviewProblems
         DbSet<ShiftShiftTemplate> ShiftShiftTemplates { get; set; } // Shift_ShiftTemplate
-        DbSet<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges
-        DbSet<ShiftTabletReport> ShiftTabletReports { get; set; } // Shift_TabletReport
         DbSet<TelavatAgentResourceType> TelavatAgentResourceTypes { get; set; } // TelavatAgentResourceTypes
         DbSet<User> Users { get; set; } // Users
         DbSet<UsersPortal> UsersPortals { get; set; } // UsersPortals

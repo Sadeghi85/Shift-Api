@@ -32,9 +32,9 @@ namespace Shift.Repository
         // Reverse navigation
 
         /// <summary>
-        /// Child ShiftRevisionProblems where [Shift_RevisionProblem].[ShiftTabletId] point to this entity (FK_Shift_RevisionProblem_Shift_ShiftTablet)
+        /// Child ShiftShiftTabletConductorChanges where [Shift_ShiftTabletConductorChanges].[ShiftTabletID] point to this entity (FK_Shift_ShiftTabletConductorChanges_Shift_ShiftTablet)
         /// </summary>
-        public virtual ICollection<ShiftRevisionProblem> ShiftRevisionProblems { get; set; } // Shift_RevisionProblem.FK_Shift_RevisionProblem_Shift_ShiftTablet
+        public virtual ICollection<ShiftShiftTabletConductorChanx> ShiftShiftTabletConductorChanges { get; set; } // Shift_ShiftTabletConductorChanges.FK_Shift_ShiftTabletConductorChanges_Shift_ShiftTablet
 
         /// <summary>
         /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[ShiftTabletID] point to this entity (FK_Shift_ShiftTableCrew_Shift_ShiftTablet)
@@ -42,14 +42,14 @@ namespace Shift.Repository
         public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTableCrew_Shift_ShiftTablet
 
         /// <summary>
-        /// Child ShiftTabletConductorChanges where [Shift_TabletConductorChanges].[ShiftTabletId] point to this entity (FK_Shift_TabletConductorChanges_Shift_ShiftTablet)
+        /// Child ShiftShiftTabletReports where [Shift_ShiftTabletReports].[ShiftTabletID] point to this entity (FK_Shift_ShiftTabletReports_Shift_ShiftTablet)
         /// </summary>
-        public virtual ICollection<ShiftTabletConductorChanx> ShiftTabletConductorChanges { get; set; } // Shift_TabletConductorChanges.FK_Shift_TabletConductorChanges_Shift_ShiftTablet
+        public virtual ICollection<ShiftShiftTabletReport> ShiftShiftTabletReports { get; set; } // Shift_ShiftTabletReports.FK_Shift_ShiftTabletReports_Shift_ShiftTablet
 
         /// <summary>
-        /// Child ShiftTabletReports where [Shift_TabletReport].[ShiftTabletId] point to this entity (FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet)
+        /// Child ShiftShiftTabletReviewProblems where [Shift_ShiftTabletReviewProblems].[ShiftTabletID] point to this entity (FK_Shift_ShiftTabletReviewProblems_Shift_ShiftTablet)
         /// </summary>
-        public virtual ICollection<ShiftTabletReport> ShiftTabletReports { get; set; } // Shift_TabletReport.FK_Shift_TabletScriptSupervisorDescription_Shift_ShiftTablet
+        public virtual ICollection<ShiftShiftTabletReviewProblem> ShiftShiftTabletReviewProblems { get; set; } // Shift_ShiftTabletReviewProblems.FK_Shift_ShiftTabletReviewProblems_Shift_ShiftTablet
 
         // Foreign keys
 
@@ -73,10 +73,10 @@ namespace Shift.Repository
             ShiftWorthPercent = 0;
             IsDeleted = false;
             HasLivePrograms = false;
-            ShiftRevisionProblems = new List<ShiftRevisionProblem>();
+            ShiftShiftTabletConductorChanges = new List<ShiftShiftTabletConductorChanx>();
             ShiftShiftTabletCrews = new List<ShiftShiftTabletCrew>();
-            ShiftTabletConductorChanges = new List<ShiftTabletConductorChanx>();
-            ShiftTabletReports = new List<ShiftTabletReport>();
+            ShiftShiftTabletReports = new List<ShiftShiftTabletReport>();
+            ShiftShiftTabletReviewProblems = new List<ShiftShiftTabletReviewProblem>();
             InitializePartial();
         }
 
