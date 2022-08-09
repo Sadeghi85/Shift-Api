@@ -21,7 +21,7 @@ namespace Shift.Api.Controllers.WebApi {
 		[HttpPost("GetUserInfo")]
 		[Authorize]
 		public async Task<IActionResult> GetUserInfo() {
-			var uInfo = await _userService.GetUserInfo();
+			var uInfo = await _userService.GetUserInfoAsync();
 			return Ok(uInfo);
 		}
 	}
