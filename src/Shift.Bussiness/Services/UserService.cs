@@ -69,7 +69,7 @@ namespace Shift.Bussiness.Services {
 			return userInfoViewModelResult;
 
 
-			
+
 		}
 
 		public async Task<bool> HasUserPermission(int userId, string permissionKey) {
