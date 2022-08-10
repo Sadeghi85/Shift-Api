@@ -15,7 +15,7 @@ namespace Shift.Repository
         public string OldProgramTitle { get; set; } // OldProgramTitle (length: 250)
         public string NewProgramTitle { get; set; } // NewProgramTitle (length: 250)
         public int ShiftTabletId { get; set; } // ShiftTabletID
-        public string Description { get; set; } // Description (length: 2147483647)
+        public string Description { get; set; } // Description
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime

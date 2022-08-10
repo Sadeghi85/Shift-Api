@@ -16,7 +16,7 @@ namespace Shift.Repository
         public string FileNumber { get; set; } // FileNumber (length: 50)
         public string ProgramTitle { get; set; } // ProgramTitle (length: 250)
         public int ClacketNo { get; set; } // ClacketNo
-        public string ProblemDescription { get; set; } // ProblemDescription (length: 2147483647)
+        public string ProblemDescription { get; set; } // ProblemDescription
         public string ReviewerCode { get; set; } // ReviewerCode (length: 50)
         public string Description { get; set; } // Description (length: 2147483647)
         public int? CreatedBy { get; set; } // CreatedBy

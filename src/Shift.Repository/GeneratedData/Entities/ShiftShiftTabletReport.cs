@@ -17,7 +17,7 @@ namespace Shift.Repository
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
         public DateTime? LastModifiedDateTime { get; set; } // LastModifiedDateTime
-        public string ReportDescription { get; set; } // ReportDescription (length: 2147483647)
+        public string ReportDescription { get; set; } // ReportDescription
         public bool IsDeleted { get; set; } // IsDeleted
         public int RoleTypeId { get; set; } // RoleTypeID
 
