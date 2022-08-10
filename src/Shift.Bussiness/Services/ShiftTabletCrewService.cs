@@ -118,9 +118,9 @@ namespace Shift.Bussiness {
 			return res;
 		}
 
-		//public List<ShiftShiftTabletCrew> GetByShiftId(int shifTabletId) {
+		//public List<ShiftShiftTabletCrew> GetByShiftId(int ShiftTabletId) {
 
-		//	List<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll().Where(pp => pp.ShiftTabletId == shifTabletId).ToList();
+		//	List<ShiftShiftTabletCrew>? res = _shiftShiftTabletCrewStore.GetAll().Where(pp => pp.ShiftTabletId == ShiftTabletId).ToList();
 
 		//	return res;
 

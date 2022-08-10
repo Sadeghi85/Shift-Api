@@ -10,7 +10,7 @@ namespace Shift.Bussiness {
 		[Required(ErrorMessage = ValidationConstants.IdRequired)]
 		public int Id { get; set; } // ID (Primary key)
 		[Required(ErrorMessage = ValidationConstants.ShiftTabletIdRequired)]
-		public int ShiftTabletId { get; set; } // ShifTabletId
+		public int ShiftTabletId { get; set; } // ShiftTabletId
 		[Required(ErrorMessage = ValidationConstants.RoleTypeIdRequired)]
 		public int RoleTypeId { get; set; }
 		[Required(ErrorMessage = ValidationConstants.ReportDescriptionRequired)]
@@ -19,7 +19,7 @@ namespace Shift.Bussiness {
 
 	public class ShiftTabletReportSearchModel : PagerViewModel {
 		public int? Id { get; set; }
-		public int? ShifTabletId { get; set; } // ShifTabletId
+		public int? ShiftTabletId { get; set; } // ShiftTabletId
 		public int? RoleTypeId { get; set; }
 		public bool? IsDeleted { get; set; }
 	}
