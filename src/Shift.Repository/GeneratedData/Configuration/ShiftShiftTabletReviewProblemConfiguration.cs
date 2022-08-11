@@ -21,7 +21,7 @@ namespace Shift.Repository
             builder.Property(x => x.ClacketNo).HasColumnName(@"ClacketNo").HasColumnType("int").IsRequired();
             builder.Property(x => x.ProblemDescription).HasColumnName(@"ProblemDescription").HasColumnType("nvarchar(max)").IsRequired();
             builder.Property(x => x.ReviewerCode).HasColumnName(@"ReviewerCode").HasColumnType("nvarchar(50)").IsRequired().HasMaxLength(50);
-            builder.Property(x => x.Description).HasColumnName(@"Description").HasColumnType("text(2147483647)").IsRequired(false).IsUnicode(false).HasMaxLength(2147483647);
+            builder.Property(x => x.Description).HasColumnName(@"Description").HasColumnType("nvarchar(max)").IsRequired(false);
             builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);
