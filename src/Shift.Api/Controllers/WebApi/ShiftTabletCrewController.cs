@@ -112,8 +112,8 @@ namespace Shift.Api.Controllers.WebApi {
 			return Ok(OperationResult<string>.FailureResult(res.Message));
 		}
 
-		[HttpPost("HamahangiUpdate")]
-		public async Task<IActionResult> HamahangiUpdate(ShiftTabletCrewInputModel model) {
+		[HttpPost("CoordinatorUpdate")]
+		public async Task<IActionResult> CoordinatorUpdate(ShiftTabletCrewInputModel model) {
 			if (!ModelState.IsValid) {
 				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
 
@@ -121,7 +121,7 @@ namespace Shift.Api.Controllers.WebApi {
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
-			var res = await _shiftTabletCrewService.HamahangiUpdate(model);
+			var res = await _shiftTabletCrewService.CoordinatorUpdate(model);
 
 			if (res.Success) {
 				return Ok(OperationResult<string>.SuccessResult(res.Message));

@@ -16,14 +16,16 @@ namespace Shift.Bussiness {
 
 		private readonly IShiftShiftTabletCrewStore _shiftShiftTabletCrewStore;
 		private readonly IShiftShiftTabletCrewReplacementStore _shiftShiftTabletCrewReplacementStore;
+		private readonly IShiftShiftTabletCrewAttendanceStore _shiftShiftTabletCrewAttendanceStore;
 		private readonly ISamtResourceTypeStore _samtResourceTypeStore;
 		private readonly ISamtAgentStore _agentStore;
 		private readonly IShiftShiftTabletStore _shiftShiftTabletStore;
 		private readonly IShiftShiftStore _shiftShiftStore;
 
-		public ShiftTabletCrewService(IPrincipal iPrincipal, IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewReplacementStore shiftShiftTabletCrewReplacementStore, ISamtAgentStore samtAgentStore, ISamtResourceTypeStore samtResourceTypeStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftLogStore shiftLogStore, IShiftShiftStore shiftShiftStore) : base(iPrincipal, shiftLogStore) {
+		public ShiftTabletCrewService(IPrincipal iPrincipal, IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewReplacementStore shiftShiftTabletCrewReplacementStore, ISamtAgentStore samtAgentStore, ISamtResourceTypeStore samtResourceTypeStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftLogStore shiftLogStore, IShiftShiftStore shiftShiftStore, IShiftShiftTabletCrewAttendanceStore shiftShiftTabletCrewAttendanceStore) : base(iPrincipal, shiftLogStore) {
 			_shiftShiftTabletCrewStore = shiftShiftTabletCrewStore;
 			_shiftShiftTabletCrewReplacementStore = shiftShiftTabletCrewReplacementStore;
+			_shiftShiftTabletCrewAttendanceStore = shiftShiftTabletCrewAttendanceStore;
 			_agentStore = samtAgentStore;
 			_samtResourceTypeStore = samtResourceTypeStore;
 			_shiftShiftTabletStore = shiftShiftTabletStore;
@@ -69,12 +71,6 @@ namespace Shift.Bussiness {
 			if (model.JobId > 0) {
 				getAllExpressions.Add(x => x.JobId == model.JobId);
 			}
-			if (model.EntranceTime != null) {
-				getAllExpressions.Add(x => x.EntranceTime == model.EntranceTime);
-			}
-			if (model.ExitTime != null) {
-				getAllExpressions.Add(x => x.ExitTime == model.ExitTime);
-			}
 			if (model.IsReplaced != null) {
 				getAllExpressions.Add(x => x.IsReplaced == model.IsReplaced);
 			}
@@ -107,8 +103,9 @@ namespace Shift.Bussiness {
 					ShiftDate = x.ShiftShiftTablet.ShiftDate,
 					PortalTitle = x.ShiftShiftTablet.ShiftShift.Portal.Title,
 
-					EntranceTime = x.EntranceTime,
-					ExitTime = x.ExitTime,
+					EntranceTime = x.ShiftShiftTabletCrewAttendances.FirstOrDefault(y => y.RoleTypeId == model.RoleTypeId) != null ? x.ShiftShiftTabletCrewAttendances.First(y => y.RoleTypeId == model.RoleTypeId).EntranceTime : null,
+					ExitTime = x.ShiftShiftTabletCrewAttendances.FirstOrDefault(y => y.RoleTypeId == model.RoleTypeId) != null ? x.ShiftShiftTabletCrewAttendances.First(y => y.RoleTypeId == model.RoleTypeId).ExitTime : null,
+
 					DefaultEntranceTime = x.ShiftShiftTablet.ShiftShift.StartTime,
 					DefaultExitTime = x.ShiftShiftTablet.ShiftShift.EndTime
 				},
@@ -278,6 +275,8 @@ namespace Shift.Bussiness {
 			try {
 
 				var found = await _shiftShiftTabletCrewStore.FindByIdAsync(x => x.Id == model.Id && x.IsDeleted == false);
+				var today = DateTime.Now.Date;
+
 				if (found == null) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شناسه مورد نظر یافت نشد";
@@ -286,6 +285,12 @@ namespace Shift.Bussiness {
 				if (CurrentUserPortalId > 1 && CurrentUserPortalId != found.ShiftShiftTablet.ShiftShift.PortalId) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				if ((RoleType) model.RoleTypeId == RoleType.Coordinator && today >= found.ShiftShiftTablet.ShiftDate) {
+					BaseResult.Success = false;
+					BaseResult.Message = "ویرایش تا قبل از روز شیفت مجاز است";
 					return BaseResult;
 				}
 
@@ -371,7 +376,8 @@ namespace Shift.Bussiness {
 					var shiftCrewReplacement = new ShiftShiftTabletCrewReplacement() {
 						ShiftTabletCrewId = found.Id,
 						OldAgentId = found.AgentId,
-						NewAgentId = model.AgentId
+						NewAgentId = model.AgentId,
+						RoleTypeId = model.RoleTypeId,
 					};
 
 					var res1 = await _shiftShiftTabletCrewReplacementStore.InsertAsync(shiftCrewReplacement);
@@ -387,11 +393,47 @@ namespace Shift.Bussiness {
 					found.IsReplaced = true;
 				}
 
+				// حضور و غیاب (ناظر پخش و منشی صحنه)؛
+				if (model.EntranceTime != null && model.ExitTime != null) {
+					var shiftCrewAttendance = await _shiftShiftTabletCrewAttendanceStore.FindByIdAsync(x => x.ShiftTabletCrewId == found.Id && x.RoleTypeId == model.RoleTypeId);
+
+					if (null != shiftCrewAttendance) {
+						shiftCrewAttendance.EntranceTime = (TimeSpan) model.EntranceTime;
+						shiftCrewAttendance.ExitTime = (TimeSpan) model.ExitTime;
+
+						var res1 = await _shiftShiftTabletCrewAttendanceStore.UpdateAsync(shiftCrewAttendance);
+
+						if (res1 < 0) {
+							BaseResult = await LogError(new Exception("Failed to update shiftShiftTabletCrewAttendance\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+								ReferenceHandler = ReferenceHandler.IgnoreCycles,
+								WriteIndented = true
+							})));
+							return BaseResult;
+						}
+					} else {
+						shiftCrewAttendance = new ShiftShiftTabletCrewAttendance() {
+							ShiftTabletCrewId = found.Id,
+							RoleTypeId = model.RoleTypeId,
+							EntranceTime = (TimeSpan) model.EntranceTime,
+							ExitTime = (TimeSpan) model.ExitTime
+						};
+
+						var res1 = await _shiftShiftTabletCrewAttendanceStore.InsertAsync(shiftCrewAttendance);
+
+						if (res1 < 0) {
+							BaseResult = await LogError(new Exception("Failed to insert shiftShiftTabletCrewAttendance\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+								ReferenceHandler = ReferenceHandler.IgnoreCycles,
+								WriteIndented = true
+							})));
+							return BaseResult;
+						}
+					}
+					
+				}
+
 				found.JobId = model.JobId;
 				found.AgentId = model.AgentId;
 				found.ShiftTabletId = model.ShiftTabletId;
-				found.EntranceTime = model.EntranceTime;
-				found.ExitTime = model.ExitTime;
 
 				var res = await _shiftShiftTabletCrewStore.UpdateAsync(found);
 
@@ -413,9 +455,26 @@ namespace Shift.Bussiness {
 
 		}
 
-		// Crew(Hamahangi) update is different, in that, current row is logically deleted and new row will be inserted
-		public async Task<BaseResult> HamahangiUpdate(ShiftTabletCrewInputModel model) {
+		// Crew(Coordinator) update is different, in that, current row is logically deleted and new row will be inserted
+		public async Task<BaseResult> CoordinatorUpdate(ShiftTabletCrewInputModel model) {
 			try {
+
+				model.RoleTypeId = (int) RoleType.Coordinator;
+
+				var found = await _shiftShiftTabletCrewStore.FindByIdAsync(model.Id);
+				var today = DateTime.Now.Date;
+
+				if (found == null) {
+					BaseResult.Success = false;
+					BaseResult.Message = "شناسه مورد نظر یافت نشد";
+					return BaseResult;
+				}
+
+				if ((RoleType) model.RoleTypeId == RoleType.Coordinator && today >= found.ShiftShiftTablet.ShiftDate) {
+					BaseResult.Success = false;
+					BaseResult.Message = "ویرایش تا قبل از روز شیفت مجاز است";
+					return BaseResult;
+				}
 
 				var res = await Delete(model.Id);
 
@@ -441,6 +500,7 @@ namespace Shift.Bussiness {
 			try {
 
 				var found = await _shiftShiftTabletCrewStore.FindByIdAsync(id);
+				var today = DateTime.Now.Date;
 
 				if (found == null) {
 					BaseResult.Success = false;
@@ -451,6 +511,12 @@ namespace Shift.Bussiness {
 				if (CurrentUserPortalId > 1 && CurrentUserPortalId != found.ShiftShiftTablet.ShiftShift.PortalId) {
 					BaseResult.Success = false;
 					BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+					return BaseResult;
+				}
+
+				if (today >= found.ShiftShiftTablet.ShiftDate) {
+					BaseResult.Success = false;
+					BaseResult.Message = "حذف تا قبل از روز شیفت مجاز است";
 					return BaseResult;
 				}
 

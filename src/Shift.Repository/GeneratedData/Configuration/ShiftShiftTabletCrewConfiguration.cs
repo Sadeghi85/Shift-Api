@@ -18,8 +18,6 @@ namespace Shift.Repository
             builder.Property(x => x.AgentId).HasColumnName(@"AgentID").HasColumnType("int").IsRequired();
             builder.Property(x => x.JobId).HasColumnName(@"JobID").HasColumnType("int").IsRequired();
             builder.Property(x => x.ShiftTabletId).HasColumnName(@"ShiftTabletID").HasColumnType("int").IsRequired();
-            builder.Property(x => x.EntranceTime).HasColumnName(@"EntranceTime").HasColumnType("time").IsRequired(false);
-            builder.Property(x => x.ExitTime).HasColumnName(@"ExitTime").HasColumnType("time").IsRequired(false);
             builder.Property(x => x.CreatedBy).HasColumnName(@"CreatedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);

@@ -20,6 +20,7 @@ namespace Shift.Repository
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.OldAgentId).HasColumnName(@"OldAgentID").HasColumnType("int").IsRequired();
             builder.Property(x => x.NewAgentId).HasColumnName(@"NewAgentID").HasColumnType("int").IsRequired();
+            builder.Property(x => x.RoleTypeId).HasColumnName(@"RoleTypeID").HasColumnType("int").IsRequired();
 
             // Foreign keys
             builder.HasOne(a => a.NewAgent).WithMany(b => b.ShiftShiftTabletCrewReplacements_NewAgentId).HasForeignKey(c => c.NewAgentId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents1");

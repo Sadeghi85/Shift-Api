@@ -15,8 +15,6 @@ namespace Shift.Repository
         public int AgentId { get; set; } // AgentID
         public int JobId { get; set; } // JobID
         public int ShiftTabletId { get; set; } // ShiftTabletID
-        public TimeSpan? EntranceTime { get; set; } // EntranceTime
-        public TimeSpan? ExitTime { get; set; } // ExitTime
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
@@ -30,6 +28,11 @@ namespace Shift.Repository
         /// Child ShiftCrewRewardFines where [Shift_CrewRewardFine].[ShiftTabletCrewId] point to this entity (FK_Shift_CrewRewardFine_Shift_ShiftTabletCrew)
         /// </summary>
         public virtual ICollection<ShiftCrewRewardFine> ShiftCrewRewardFines { get; set; } // Shift_CrewRewardFine.FK_Shift_CrewRewardFine_Shift_ShiftTabletCrew
+
+        /// <summary>
+        /// Child ShiftShiftTabletCrewAttendances where [Shift_ShiftTabletCrewAttendance].[ShiftTabletCrewID] point to this entity (FK_Shift_ShiftTabletCrewAttendance_Shift_ShiftTabletCrew)
+        /// </summary>
+        public virtual ICollection<ShiftShiftTabletCrewAttendance> ShiftShiftTabletCrewAttendances { get; set; } // Shift_ShiftTabletCrewAttendance.FK_Shift_ShiftTabletCrewAttendance_Shift_ShiftTabletCrew
 
         /// <summary>
         /// Child ShiftShiftTabletCrewReplacements where [Shift_ShiftTabletCrewReplacement].[ShiftTabletCrewID] point to this entity (FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew)
@@ -58,6 +61,7 @@ namespace Shift.Repository
             IsReplaced = false;
             IsDeleted = false;
             ShiftCrewRewardFines = new List<ShiftCrewRewardFine>();
+            ShiftShiftTabletCrewAttendances = new List<ShiftShiftTabletCrewAttendance>();
             ShiftShiftTabletCrewReplacements = new List<ShiftShiftTabletCrewReplacement>();
             InitializePartial();
         }

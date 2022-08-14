@@ -33,7 +33,7 @@ namespace Shift.Bussiness {
 		public const string ProblemDescriptionRquired = "مورد اشکال اجباری است";
 		public const string ReviewerCodeRequired = "کد بازبین اجباری است";
 		public const string AgenetIdRequired = "شناسه کارمند اجباری است";
-		public const string JobIdRquired = "عنوان شغلی اجباری است";
+		public const string JobIdRequired = "عنوان شغلی اجباری است";
 		
 		public const string ShiftIdRequired = "شناسه شیفت اجباری است";
 		public const string ShiftDateRequired = "تاریخ لوح شیفت اجباری است";
