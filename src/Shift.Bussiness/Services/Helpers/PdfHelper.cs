@@ -92,7 +92,7 @@ namespace Shift.Bussiness {
 					foreach (var columnInfo in this.GetColumns(package, filePath, excelWorksheet)) {
 						columns.AddColumn(column => {
 							column.PropertyName(columnInfo);
-							column.CellsHorizontalAlignment(HorizontalAlignment.Center);
+							column.CellsHorizontalAlignment(PdfRpt.Core.Contracts.HorizontalAlignment.Center);
 							column.IsVisible(true);
 							column.Order(order++);
 							column.Width(1);

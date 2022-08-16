@@ -231,7 +231,7 @@ namespace Shift.Repository
                 permissionKeyParam.Value = DBNull.Value;
 
             var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
-            const string sqlCommand = "EXEC @procResult = [dbo].[SP_Shift_permissions] @userId, @moduleId, @moduleTitle, @permissionKey";
+            const string sqlCommand = "EXEC @procResult = [dbo].[SP_Shift_Permissions] @userId, @moduleId, @moduleTitle, @permissionKey";
             var procResultData = Set<SpShiftPermissionsReturnModel>()
                 .FromSqlRaw(sqlCommand, userIdParam, moduleIdParam, moduleTitleParam, permissionKeyParam, procResultParam)
                 .ToList();
@@ -258,7 +258,7 @@ namespace Shift.Repository
             if (permissionKeyParam.Value == null)
                 permissionKeyParam.Value = DBNull.Value;
 
-            const string sqlCommand = "EXEC [dbo].[SP_Shift_permissions] @userId, @moduleId, @moduleTitle, @permissionKey";
+            const string sqlCommand = "EXEC [dbo].[SP_Shift_Permissions] @userId, @moduleId, @moduleTitle, @permissionKey";
             var procResultData = await Set<SpShiftPermissionsReturnModel>()
                 .FromSqlRaw(sqlCommand, userIdParam, moduleIdParam, moduleTitleParam, permissionKeyParam)
                 .ToListAsync();
