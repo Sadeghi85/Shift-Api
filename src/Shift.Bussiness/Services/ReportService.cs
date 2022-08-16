@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Hosting;
 using Shift.Repository;
 using Stimulsoft.Report;
 using System;
@@ -40,35 +41,39 @@ namespace Shift.Bussiness {
 				StiReport _report = new StiReport();
 				_report.ReportCacheMode = StiReportCacheMode.Off;
 
-				if (File.Exists(@"C:\Users\Sadeghi\Documents\Report.mrt")) {
-					_report.Load(@"C:\Users\Sadeghi\Documents\Report.mrt");
+				var reportPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SecretaryReport.mrt");
+
+				if (File.Exists(reportPath)) {
+					_report.Load(reportPath);
+
+					_report.RegBusinessObject("ConductorChanges", conductorChanges.Result);
+
+					var settings = new Stimulsoft.Report.Export.StiPdfExportSettings() {
+						UseUnicode = true,
+						StandardPdfFonts = false,
+						EmbeddedFonts = true
+
+					};
+
+
+
+
+
+					var r = await _report.RenderAsync();
+
+					//_report.Render(false);
+
+					await r.ExportDocumentAsync(StiExportFormat.Pdf, stream, settings);
+
+					stream.Seek(0, SeekOrigin.Begin);
+
+					//Stimulsoft.Report.Web.StiReportResponse.ResponseAsPdf(r);
+					// Respond with generated PDF
+					//Stimulsoft.Report.Web.StiReportResponse.ResponseAsPdf(_report);
 				}
-				
-
-				_report.RegBusinessObject("ConductorChanges", conductorChanges.Result);
-
-				var settings = new Stimulsoft.Report.Export.StiPdfExportSettings() {
-					UseUnicode = true,
-					StandardPdfFonts = false,
-					EmbeddedFonts = true
-
-				};
 
 
-				
 
-
-				var r = await _report.RenderAsync();
-
-				//_report.Render(false);
-
-				await r.ExportDocumentAsync(StiExportFormat.Pdf, stream, settings);
-
-				stream.Seek(0, SeekOrigin.Begin);
-
-				//Stimulsoft.Report.Web.StiReportResponse.ResponseAsPdf(r);
-				// Respond with generated PDF
-				//Stimulsoft.Report.Web.StiReportResponse.ResponseAsPdf(_report);
 
 			} catch (Exception ex) {
 				var i = 0;

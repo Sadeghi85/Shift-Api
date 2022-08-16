@@ -40,4 +40,15 @@
     <ProjectReference Include="..\Shift.Bussiness\Shift.Bussiness.csproj" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /y $(SolutionDir)\shift-reports\*.mrt $(ProjectDir)$(OutDir)" />
+  </Target>
+  
+  <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
+  <ItemGroup>
+    <DataModelFiles Include="$(ProjectDir)$(OutDir)\*.mrt" />
+  </ItemGroup>
+  <Copy SourceFiles="@(DataModelFiles)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="false" />
+</Target>
+
 </Project>
