@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Shift.Bussiness {
 	public interface IReportService {
-		public Task<MemoryStream> GetReport(PortalSearchModel model);
+		public Task<MemoryStream?> GetSecretaryReport(int shiftTabletId);
 		//public ValueTask<Portal?> GetById(int id);
 	}
 }

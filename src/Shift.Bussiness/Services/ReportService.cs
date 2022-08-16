@@ -13,40 +13,49 @@ namespace Shift.Bussiness {
 	public class ReportService : ServiceBase, IReportService {
 
 		private readonly IPortalStore _portalStore;
-		private readonly IShiftShiftTabletConductorChanxStore  _shiftShiftTabletConductorChanxStore;
+		private readonly IShiftShiftTabletStore _shiftShiftTabletStore;
+		private readonly IShiftShiftTabletConductorChanxStore _shiftShiftTabletConductorChanxStore;
+		private readonly IShiftShiftTabletReviewProblemStore _shiftShiftTabletReviewProblemStore;
 
-		public ReportService(IPrincipal iPrincipal, IPortalStore portalStore, IShiftShiftTabletConductorChanxStore shiftShiftTabletConductorChanxStore, IShiftLogStore shiftLogStore) : base(iPrincipal, shiftLogStore) {
+		public ReportService(IPrincipal iPrincipal, IPortalStore portalStore, IShiftShiftTabletConductorChanxStore shiftShiftTabletConductorChanxStore, IShiftLogStore shiftLogStore, IShiftShiftTabletStore shiftShiftTabletStore, IShiftShiftTabletReviewProblemStore shiftShiftTabletReviewProblemStore) : base(iPrincipal, shiftLogStore) {
 			_portalStore = portalStore;
 			_shiftShiftTabletConductorChanxStore = shiftShiftTabletConductorChanxStore;
+			_shiftShiftTabletStore = shiftShiftTabletStore;
+			_shiftShiftTabletReviewProblemStore = shiftShiftTabletReviewProblemStore;
 		}
 
-		public async Task<MemoryStream> GetReport(PortalSearchModel model) {
+		public async Task<MemoryStream?> GetSecretaryReport(int shiftTabletId) {
 			var stream = new MemoryStream();
 
 			try {
-				if (CurrentUserPortalId > 1) {
-				model.Id = CurrentUserPortalId;
-			}
 
-			var getAllExpressions = new List<Expression<Func<ShiftShiftTabletConductorChanx, bool>>>();
+				var foundShiftTablet = await _shiftShiftTabletStore.FindByIdAsync(shiftTabletId);
+				if (null == foundShiftTablet) {
+					return null;
+				}
 
-			getAllExpressions.Add(x => x.IsDeleted == false);
+				if (CurrentUserPortalId > 1 && CurrentUserPortalId != foundShiftTablet.PortalId) {
+					return null;
+				}
 
-			var conductorChanges = await _shiftShiftTabletConductorChanxStore.GetAllWithPagingAsync(getAllExpressions, x => new ShiftTabletConductorChangeViewModel { Id = x.Id, OldProgramTitle = x.OldProgramTitle, NewProgramTitle = x.NewProgramTitle }, model.OrderKey, model.Desc, model.PageSize, model.PageNo);
+				var conductorChanges = await _shiftShiftTabletConductorChanxStore.GetAllAsync(x => x.IsDeleted == false && x.ShiftTabletId == shiftTabletId, x => new ShiftTabletConductorChangeViewModel { Id = x.Id, OldProgramTitle = x.OldProgramTitle, NewProgramTitle = x.NewProgramTitle, Description = x.Description }, x => x.Id);
+
+				var reviewProblems = await _shiftShiftTabletReviewProblemStore.GetAllAsync(x => x.IsDeleted == false && x.ShiftTabletId == shiftTabletId, x => new ShiftTabletReviewProblemViewModel { Id = x.Id, Description = x.Description, ClacketNo = x.ClacketNo, FileNumber = x.FileNumber, ProblemDescription = x.ProblemDescription, ProgramTitle = x.ProgramTitle, ReviewerCode = x.ReviewerCode }, x => x.Id);
 
 
 				StiOptions.Viewer.RightToLeft = StiRightToLeftType.Yes;
 				//StiOptions.Engine.AllowSetCurrentDirectory = false;
 
-				StiReport _report = new StiReport();
-				_report.ReportCacheMode = StiReportCacheMode.Off;
+				StiReport report = new StiReport();
+				report.ReportCacheMode = StiReportCacheMode.Off;
 
 				var reportPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SecretaryReport.mrt");
 
 				if (File.Exists(reportPath)) {
-					_report.Load(reportPath);
+					report.Load(reportPath);
 
-					_report.RegBusinessObject("ConductorChanges", conductorChanges.Result);
+					report.RegBusinessObject("ConductorChanges", conductorChanges.Result);
+					report.RegBusinessObject("ReviewProblems", reviewProblems.Result);
 
 					var settings = new Stimulsoft.Report.Export.StiPdfExportSettings() {
 						UseUnicode = true,
@@ -59,11 +68,11 @@ namespace Shift.Bussiness {
 
 
 
-					var r = await _report.RenderAsync();
+					await report.RenderAsync();
 
 					//_report.Render(false);
 
-					await r.ExportDocumentAsync(StiExportFormat.Pdf, stream, settings);
+					await report.ExportDocumentAsync(StiExportFormat.Pdf, stream, settings);
 
 					stream.Seek(0, SeekOrigin.Begin);
 

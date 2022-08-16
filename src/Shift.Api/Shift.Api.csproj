@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y $(SolutionDir)\shift-reports\*.mrt $(ProjectDir)$(OutDir)" />
+    <Exec Command="xcopy /e /s /c /y $(SolutionDir)\shift-reports\*.mrt $(ProjectDir)$(OutDir)" />
   </Target>
   
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">

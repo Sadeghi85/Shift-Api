@@ -16,8 +16,8 @@ namespace Shift.Api.Controllers.WebApi {
 			_reportService = reportService;
 		}
 
-		[HttpPost("GetReport")]
-		public async Task<IActionResult> GetReport(PortalSearchModel model) {
+		[HttpPost("GetSecretaryReport")]
+		public async Task<IActionResult> GetSecretaryReport(int shiftTabletId) {
 
 			if (!ModelState.IsValid) {
 				var allErrors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
@@ -26,7 +26,9 @@ namespace Shift.Api.Controllers.WebApi {
 				return Ok(OperationResult<string>.FailureResult(errMsgs));
 			}
 
-			var stream = await _reportService.GetReport(model);
+			var stream = await _reportService.GetSecretaryReport(shiftTabletId);
+
+			stream ??= new MemoryStream();
 
 			return File(stream, "application/pdf", $"Report.pdf");
 		}
