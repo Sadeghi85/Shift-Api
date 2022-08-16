@@ -13,7 +13,7 @@ namespace Shift.Api.Controllers.WebApi {
 	[Route("api/[controller]")]
 	[ApiController]
 	[FluentModelState]
-	[Permission("locations.full")]
+	[Permission("locations")]
 	public class LocationController : YaldaController {
 
 		readonly private ILocationService _locationService;

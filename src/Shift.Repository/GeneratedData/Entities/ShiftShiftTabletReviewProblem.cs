@@ -18,7 +18,7 @@ namespace Shift.Repository
         public int ClacketNo { get; set; } // ClacketNo
         public string ProblemDescription { get; set; } // ProblemDescription
         public string ReviewerCode { get; set; } // ReviewerCode (length: 50)
-        public string Description { get; set; } // Description (length: 2147483647)
+        public string Description { get; set; } // Description
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime

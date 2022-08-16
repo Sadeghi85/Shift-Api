@@ -11,8 +11,10 @@ namespace Shift.Bussiness {
 		public int Id { get; set; } // ID (Primary key)
 		[Required(ErrorMessage =ValidationConstants.AgenetIdRequired)]
 		public int AgentId { get; set; } // AgentId
-		[Required(ErrorMessage = ValidationConstants.JobIdRquired)]
-		public int JobId { get; set; } // ResourceId
+		[Required(ErrorMessage = ValidationConstants.JobIdRequired)]
+		public int JobId { get; set; }
+		[Required(ErrorMessage = ValidationConstants.RoleTypeIdRequired)]
+		public int RoleTypeId { get; set; }
 		[Required(ErrorMessage = ValidationConstants.ShiftTabletIdRequired)]
 		public int ShiftTabletId { get; set; } // ShiftTabletId
 		public TimeSpan? EntranceTime { get; set; } // EntranceTime
@@ -23,9 +25,8 @@ namespace Shift.Bussiness {
 		public int? Id { get; set; }
 		public int? AgentId { get; set; } // AgentId
 		public int? JobId { get; set; } // ResourceId
+		public int? RoleTypeId { get; set; }
 		public int? ShiftTabletId { get; set; } // ShiftTabletId
-		public TimeSpan? EntranceTime { get; set; } // EntranceTime
-		public TimeSpan? ExitTime { get; set; } // ExitTime
 		public bool? IsReplaced { get; set; } // IsReplaced
 		public string? AgentName { get; set; }
 		public string? ShiftTitle { get; set; }

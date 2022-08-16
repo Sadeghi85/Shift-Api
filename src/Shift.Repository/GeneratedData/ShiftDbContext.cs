@@ -55,6 +55,7 @@ namespace Shift.Repository
         public DbSet<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet
         public DbSet<ShiftShiftTabletConductorChanx> ShiftShiftTabletConductorChanges { get; set; } // Shift_ShiftTabletConductorChanges
         public DbSet<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew
+        public DbSet<ShiftShiftTabletCrewAttendance> ShiftShiftTabletCrewAttendances { get; set; } // Shift_ShiftTabletCrewAttendance
         public DbSet<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement
         public DbSet<ShiftShiftTabletReport> ShiftShiftTabletReports { get; set; } // Shift_ShiftTabletReports
         public DbSet<ShiftShiftTabletReviewProblem> ShiftShiftTabletReviewProblems { get; set; } // Shift_ShiftTabletReviewProblems
@@ -109,6 +110,7 @@ namespace Shift.Repository
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletConductorChanxConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewAttendanceConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewReplacementConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletReportConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletReviewProblemConfiguration());
@@ -204,13 +206,13 @@ namespace Shift.Repository
             return procResultData;
         }
 
-        public List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId, string permissionkey)
+        public List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId, string moduleTitle, string permissionKey)
         {
             int procResult;
-            return SpShiftPermissions(userId, moduleId, permissionkey, out procResult);
+            return SpShiftPermissions(userId, moduleId, moduleTitle, permissionKey, out procResult);
         }
 
-        public List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId, string permissionkey, out int procResult)
+        public List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId, string moduleTitle, string permissionKey, out int procResult)
         {
             var userIdParam = new SqlParameter { ParameterName = "@userId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = userId.GetValueOrDefault(), Precision = 10, Scale = 0 };
             if (!userId.HasValue)
@@ -220,21 +222,25 @@ namespace Shift.Repository
             if (!moduleId.HasValue)
                 moduleIdParam.Value = DBNull.Value;
 
-            var permissionkeyParam = new SqlParameter { ParameterName = "@permissionkey", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = permissionkey, Size = 50 };
-            if (permissionkeyParam.Value == null)
-                permissionkeyParam.Value = DBNull.Value;
+            var moduleTitleParam = new SqlParameter { ParameterName = "@moduleTitle", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = moduleTitle, Size = 50 };
+            if (moduleTitleParam.Value == null)
+                moduleTitleParam.Value = DBNull.Value;
+
+            var permissionKeyParam = new SqlParameter { ParameterName = "@permissionKey", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = permissionKey, Size = 50 };
+            if (permissionKeyParam.Value == null)
+                permissionKeyParam.Value = DBNull.Value;
 
             var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
-            const string sqlCommand = "EXEC @procResult = [dbo].[SP_Shift_permissions] @userId, @moduleId, @permissionkey";
+            const string sqlCommand = "EXEC @procResult = [dbo].[SP_Shift_permissions] @userId, @moduleId, @moduleTitle, @permissionKey";
             var procResultData = Set<SpShiftPermissionsReturnModel>()
-                .FromSqlRaw(sqlCommand, userIdParam, moduleIdParam, permissionkeyParam, procResultParam)
+                .FromSqlRaw(sqlCommand, userIdParam, moduleIdParam, moduleTitleParam, permissionKeyParam, procResultParam)
                 .ToList();
 
             procResult = (int) procResultParam.Value;
             return procResultData;
         }
 
-        public async Task<List<SpShiftPermissionsReturnModel>> SpShiftPermissionsAsync(int? userId, int? moduleId, string permissionkey)
+        public async Task<List<SpShiftPermissionsReturnModel>> SpShiftPermissionsAsync(int? userId, int? moduleId, string moduleTitle, string permissionKey)
         {
             var userIdParam = new SqlParameter { ParameterName = "@userId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = userId.GetValueOrDefault(), Precision = 10, Scale = 0 };
             if (!userId.HasValue)
@@ -244,13 +250,17 @@ namespace Shift.Repository
             if (!moduleId.HasValue)
                 moduleIdParam.Value = DBNull.Value;
 
-            var permissionkeyParam = new SqlParameter { ParameterName = "@permissionkey", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = permissionkey, Size = 50 };
-            if (permissionkeyParam.Value == null)
-                permissionkeyParam.Value = DBNull.Value;
+            var moduleTitleParam = new SqlParameter { ParameterName = "@moduleTitle", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = moduleTitle, Size = 50 };
+            if (moduleTitleParam.Value == null)
+                moduleTitleParam.Value = DBNull.Value;
 
-            const string sqlCommand = "EXEC [dbo].[SP_Shift_permissions] @userId, @moduleId, @permissionkey";
+            var permissionKeyParam = new SqlParameter { ParameterName = "@permissionKey", SqlDbType = SqlDbType.NVarChar, Direction = ParameterDirection.Input, Value = permissionKey, Size = 50 };
+            if (permissionKeyParam.Value == null)
+                permissionKeyParam.Value = DBNull.Value;
+
+            const string sqlCommand = "EXEC [dbo].[SP_Shift_permissions] @userId, @moduleId, @moduleTitle, @permissionKey";
             var procResultData = await Set<SpShiftPermissionsReturnModel>()
-                .FromSqlRaw(sqlCommand, userIdParam, moduleIdParam, permissionkeyParam)
+                .FromSqlRaw(sqlCommand, userIdParam, moduleIdParam, moduleTitleParam, permissionKeyParam)
                 .ToListAsync();
 
             return procResultData;

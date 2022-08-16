@@ -17,6 +17,7 @@ namespace Shift.Repository
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
         public int OldAgentId { get; set; } // OldAgentID
         public int NewAgentId { get; set; } // NewAgentID
+        public int RoleTypeId { get; set; } // RoleTypeID
 
         // Foreign keys
 

@@ -35,6 +35,7 @@ namespace Shift.Repository
         DbSet<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet
         DbSet<ShiftShiftTabletConductorChanx> ShiftShiftTabletConductorChanges { get; set; } // Shift_ShiftTabletConductorChanges
         DbSet<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew
+        DbSet<ShiftShiftTabletCrewAttendance> ShiftShiftTabletCrewAttendances { get; set; } // Shift_ShiftTabletCrewAttendance
         DbSet<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement
         DbSet<ShiftShiftTabletReport> ShiftShiftTabletReports { get; set; } // Shift_ShiftTabletReports
         DbSet<ShiftShiftTabletReviewProblem> ShiftShiftTabletReviewProblems { get; set; } // Shift_ShiftTabletReviewProblems
@@ -98,9 +99,9 @@ namespace Shift.Repository
         List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime, out int procResult);
         Task<List<SpShiftCheckShiftTimeOverlapReturnModel>> SpShiftCheckShiftTimeOverlapAsync(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime);
 
-        List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId, string permissionkey);
-        List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId, string permissionkey, out int procResult);
-        Task<List<SpShiftPermissionsReturnModel>> SpShiftPermissionsAsync(int? userId, int? moduleId, string permissionkey);
+        List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId, string moduleTitle, string permissionKey);
+        List<SpShiftPermissionsReturnModel> SpShiftPermissions(int? userId, int? moduleId, string moduleTitle, string permissionKey, out int procResult);
+        Task<List<SpShiftPermissionsReturnModel>> SpShiftPermissionsAsync(int? userId, int? moduleId, string moduleTitle, string permissionKey);
 
     }
 }
