@@ -19,7 +19,7 @@ namespace Shift.Bussiness {
 
 	public class LocationInputModelValidator : AbstractValidator<LocationInputModel> {
 		public LocationInputModelValidator() {
-			RuleFor(x => x.Id).NotEmpty().WithMessage(ValidationConstants.IdRequired);
+			RuleFor(x => x.Id).NotNull().WithMessage(ValidationConstants.IdRequired);
 			RuleFor(x => x.Title).NotEmpty().NotNull().MinimumLength(1).WithMessage(ValidationConstants.TitleRequired);
 		}
 	}
