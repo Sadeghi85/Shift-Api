@@ -30,6 +30,7 @@ namespace Shift.Repository
         DbSet<ShiftJob> ShiftJobs { get; set; } // Shift_Job
         DbSet<ShiftLocation> ShiftLocations { get; set; } // Shift_Locations
         DbSet<ShiftLog> ShiftLogs { get; set; } // Shift_Log
+        DbSet<ShiftMonetarySetting> ShiftMonetarySettings { get; set; } // Shift_MonetarySettings
         DbSet<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations
         DbSet<ShiftShift> ShiftShifts { get; set; } // Shift_Shift
         DbSet<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet

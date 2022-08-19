@@ -50,6 +50,7 @@ namespace Shift.Repository
         public DbSet<ShiftJob> ShiftJobs { get; set; } // Shift_Job
         public DbSet<ShiftLocation> ShiftLocations { get; set; } // Shift_Locations
         public DbSet<ShiftLog> ShiftLogs { get; set; } // Shift_Log
+        public DbSet<ShiftMonetarySetting> ShiftMonetarySettings { get; set; } // Shift_MonetarySettings
         public DbSet<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations
         public DbSet<ShiftShift> ShiftShifts { get; set; } // Shift_Shift
         public DbSet<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet
@@ -105,6 +106,7 @@ namespace Shift.Repository
             modelBuilder.ApplyConfiguration(new ShiftJobConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftLocationConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftLogConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftMonetarySettingConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftPortalLocationConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletConfiguration());

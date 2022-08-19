@@ -52,6 +52,11 @@ namespace Shift.Repository
         public virtual ICollection<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail.FK_Shift_EmploymentDetail_Portals
 
         /// <summary>
+        /// Child ShiftMonetarySettings where [Shift_MonetarySettings].[PortalID] point to this entity (FK_Shift_MonetarySettings_Portals)
+        /// </summary>
+        public virtual ICollection<ShiftMonetarySetting> ShiftMonetarySettings { get; set; } // Shift_MonetarySettings.FK_Shift_MonetarySettings_Portals
+
+        /// <summary>
         /// Child ShiftPortalLocations where [Shift_PortalLocations].[PortalID] point to this entity (FK_Shift_ShiftTabletLocation_Portals)
         /// </summary>
         public virtual ICollection<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations.FK_Shift_ShiftTabletLocation_Portals
@@ -90,6 +95,7 @@ namespace Shift.Repository
             IsSelected = false;
             Enable = true;
             ShiftEmploymentDetails = new List<ShiftEmploymentDetail>();
+            ShiftMonetarySettings = new List<ShiftMonetarySetting>();
             ShiftPortalLocations = new List<ShiftPortalLocation>();
             ShiftShifts = new List<ShiftShift>();
             ShiftShiftTablets = new List<ShiftShiftTablet>();
