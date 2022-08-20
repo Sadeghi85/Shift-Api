@@ -18,10 +18,6 @@ namespace Shift.Bussiness {
 
 		public async Task<StoreViewModel<CooperationTypeViewModel>> GetAll(CooperationTypeSearchModel model) {
 
-			if (CurrentUserPortalId > 1) {
-				model.Id = CurrentUserPortalId;
-			}
-
 			var getAllExpressions = new List<Expression<Func<SamtHrCooperationType, bool>>>();
 
 			if (!string.IsNullOrWhiteSpace(model.Title)) {
