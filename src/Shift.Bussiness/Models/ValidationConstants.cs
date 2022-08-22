@@ -16,6 +16,8 @@ namespace Shift.Bussiness {
 		public const string IdRequired = "شناسه اجباری است";
 		public const string LocationIdRequired = "شناسه لوکیشن اجباری است";
 
+		public const string FinalPaymentRequired = "مبلغ نهایی اجباری است";
+
 		public const string ShiftTabletIdRequired = "شناسه لوح شیفت اجباری است";
 		public const string DescriptionRequired = "توضیحات اجباری است";
 		public const string ShiftTabletCrewIdRequired = "شناسه لوح شیفت کارمند اجباری است";

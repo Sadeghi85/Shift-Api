@@ -46,6 +46,11 @@ namespace Shift.Repository
         // Reverse navigation
 
         /// <summary>
+        /// Child ShiftAgentMainPositions where [Shift_AgentMainPosition].[AgentID] point to this entity (FK_Shift_AgentMainPosition_SAMT_Agents)
+        /// </summary>
+        public virtual ICollection<ShiftAgentMainPosition> ShiftAgentMainPositions { get; set; } // Shift_AgentMainPosition.FK_Shift_AgentMainPosition_SAMT_Agents
+
+        /// <summary>
         /// Child ShiftCalculations where [Shift_Calculations].[AgentId] point to this entity (FK_Shift_Calculations_SAMT_Agents)
         /// </summary>
         public virtual ICollection<ShiftCalculation> ShiftCalculations { get; set; } // Shift_Calculations.FK_Shift_Calculations_SAMT_Agents
@@ -65,12 +70,19 @@ namespace Shift.Repository
         /// </summary>
         public virtual ICollection<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements_OldAgentId { get; set; } // Shift_ShiftTabletCrewReplacement.FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents
 
+        /// <summary>
+        /// Child ShiftShiftTabletPayments where [Shift_ShiftTabletPayments].[AgentID] point to this entity (FK_Shift_ShiftTabletPayments_SAMT_Agents)
+        /// </summary>
+        public virtual ICollection<ShiftShiftTabletPayment> ShiftShiftTabletPayments { get; set; } // Shift_ShiftTabletPayments.FK_Shift_ShiftTabletPayments_SAMT_Agents
+
         public SamtAgent()
         {
+            ShiftAgentMainPositions = new List<ShiftAgentMainPosition>();
             ShiftCalculations = new List<ShiftCalculation>();
             ShiftShiftTabletCrews = new List<ShiftShiftTabletCrew>();
             ShiftShiftTabletCrewReplacements_NewAgentId = new List<ShiftShiftTabletCrewReplacement>();
             ShiftShiftTabletCrewReplacements_OldAgentId = new List<ShiftShiftTabletCrewReplacement>();
+            ShiftShiftTabletPayments = new List<ShiftShiftTabletPayment>();
             InitializePartial();
         }
 

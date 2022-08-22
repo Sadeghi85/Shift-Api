@@ -47,6 +47,11 @@ namespace Shift.Repository
         // Reverse navigation
 
         /// <summary>
+        /// Child ShiftAgentMainPositions where [Shift_AgentMainPosition].[PortalID] point to this entity (FK_Shift_AgentMainPosition_Portals)
+        /// </summary>
+        public virtual ICollection<ShiftAgentMainPosition> ShiftAgentMainPositions { get; set; } // Shift_AgentMainPosition.FK_Shift_AgentMainPosition_Portals
+
+        /// <summary>
         /// Child ShiftEmploymentDetails where [Shift_EmploymentDetail].[portalID] point to this entity (FK_Shift_EmploymentDetail_Portals)
         /// </summary>
         public virtual ICollection<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail.FK_Shift_EmploymentDetail_Portals
@@ -72,6 +77,11 @@ namespace Shift.Repository
         public virtual ICollection<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet.FK_Shift_ShiftTablet_Portals
 
         /// <summary>
+        /// Child ShiftShiftTabletPayments where [Shift_ShiftTabletPayments].[PortalID] point to this entity (FK_Shift_ShiftTabletPayments_Portals)
+        /// </summary>
+        public virtual ICollection<ShiftShiftTabletPayment> ShiftShiftTabletPayments { get; set; } // Shift_ShiftTabletPayments.FK_Shift_ShiftTabletPayments_Portals
+
+        /// <summary>
         /// Child Users where [Users].[PortalID] point to this entity (FK_Users_Portals)
         /// </summary>
         public virtual ICollection<User> Users { get; set; } // Users.FK_Users_Portals
@@ -94,11 +104,13 @@ namespace Shift.Repository
             Ordering = 0;
             IsSelected = false;
             Enable = true;
+            ShiftAgentMainPositions = new List<ShiftAgentMainPosition>();
             ShiftEmploymentDetails = new List<ShiftEmploymentDetail>();
             ShiftMonetarySettings = new List<ShiftMonetarySetting>();
             ShiftPortalLocations = new List<ShiftPortalLocation>();
             ShiftShifts = new List<ShiftShift>();
             ShiftShiftTablets = new List<ShiftShiftTablet>();
+            ShiftShiftTabletPayments = new List<ShiftShiftTabletPayment>();
             Users = new List<User>();
             UsersPortals = new List<UsersPortal>();
             InitializePartial();

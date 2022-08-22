@@ -42,6 +42,7 @@ namespace Shift.Repository
         public DbSet<SamtHrCooperationType> SamtHrCooperationTypes { get; set; } // SAMT_HRCooperationType
         public DbSet<SamtHrJob> SamtHrJobs { get; set; } // SAMT_HRJob
         public DbSet<SamtResourceType> SamtResourceTypes { get; set; } // SAMT_ResourceTypes
+        public DbSet<ShiftAgentMainPosition> ShiftAgentMainPositions { get; set; } // Shift_AgentMainPosition
         public DbSet<ShiftAgentReport> ShiftAgentReports { get; set; } // Shift_AgentReport
         public DbSet<ShiftCalculation> ShiftCalculations { get; set; } // Shift_Calculations
         public DbSet<ShiftCrewRewardFine> ShiftCrewRewardFines { get; set; } // Shift_CrewRewardFine
@@ -58,6 +59,7 @@ namespace Shift.Repository
         public DbSet<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew
         public DbSet<ShiftShiftTabletCrewAttendance> ShiftShiftTabletCrewAttendances { get; set; } // Shift_ShiftTabletCrewAttendance
         public DbSet<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement
+        public DbSet<ShiftShiftTabletPayment> ShiftShiftTabletPayments { get; set; } // Shift_ShiftTabletPayments
         public DbSet<ShiftShiftTabletReport> ShiftShiftTabletReports { get; set; } // Shift_ShiftTabletReports
         public DbSet<ShiftShiftTabletReviewProblem> ShiftShiftTabletReviewProblems { get; set; } // Shift_ShiftTabletReviewProblems
         public DbSet<ShiftShiftTemplate> ShiftShiftTemplates { get; set; } // Shift_ShiftTemplate
@@ -98,6 +100,7 @@ namespace Shift.Repository
             modelBuilder.ApplyConfiguration(new SamtHrCooperationTypeConfiguration());
             modelBuilder.ApplyConfiguration(new SamtHrJobConfiguration());
             modelBuilder.ApplyConfiguration(new SamtResourceTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftAgentMainPositionConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftAgentReportConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftCalculationConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftCrewRewardFineConfiguration());
@@ -114,6 +117,7 @@ namespace Shift.Repository
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewAttendanceConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletCrewReplacementConfiguration());
+            modelBuilder.ApplyConfiguration(new ShiftShiftTabletPaymentConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletReportConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTabletReviewProblemConfiguration());
             modelBuilder.ApplyConfiguration(new ShiftShiftTemplateConfiguration());

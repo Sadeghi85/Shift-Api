@@ -14,8 +14,16 @@ namespace Shift.Repository
         public int HrJobId { get; set; } // HRJobID (Primary key)
         public string JobTitle { get; set; } // JobTitle (length: 500)
 
+        // Reverse navigation
+
+        /// <summary>
+        /// Child ShiftAgentMainPositions where [Shift_AgentMainPosition].[HRJobID] point to this entity (FK_Shift_AgentMainPosition_SAMT_HRJob)
+        /// </summary>
+        public virtual ICollection<ShiftAgentMainPosition> ShiftAgentMainPositions { get; set; } // Shift_AgentMainPosition.FK_Shift_AgentMainPosition_SAMT_HRJob
+
         public SamtHrJob()
         {
+            ShiftAgentMainPositions = new List<ShiftAgentMainPosition>();
             InitializePartial();
         }
 

@@ -20,6 +20,11 @@ namespace Shift.Repository
         // Reverse navigation
 
         /// <summary>
+        /// Child ShiftAgentMainPositions where [Shift_AgentMainPosition].[JobID] point to this entity (FK_Shift_AgentMainPosition_SAMT_ResourceTypes)
+        /// </summary>
+        public virtual ICollection<ShiftAgentMainPosition> ShiftAgentMainPositions { get; set; } // Shift_AgentMainPosition.FK_Shift_AgentMainPosition_SAMT_ResourceTypes
+
+        /// <summary>
         /// Child ShiftMonetarySettings where [Shift_MonetarySettings].[JobID] point to this entity (FK_Shift_MonetarySettings_SAMT_ResourceTypes)
         /// </summary>
         public virtual ICollection<ShiftMonetarySetting> ShiftMonetarySettings { get; set; } // Shift_MonetarySettings.FK_Shift_MonetarySettings_SAMT_ResourceTypes
@@ -43,6 +48,7 @@ namespace Shift.Repository
         {
             AmountWage = 0;
             IsDeleted = false;
+            ShiftAgentMainPositions = new List<ShiftAgentMainPosition>();
             ShiftMonetarySettings = new List<ShiftMonetarySetting>();
             ShiftShiftTabletCrews = new List<ShiftShiftTabletCrew>();
             ShiftShiftTemplates = new List<ShiftShiftTemplate>();

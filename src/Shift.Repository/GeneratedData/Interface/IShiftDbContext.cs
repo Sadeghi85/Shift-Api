@@ -22,6 +22,7 @@ namespace Shift.Repository
         DbSet<SamtHrCooperationType> SamtHrCooperationTypes { get; set; } // SAMT_HRCooperationType
         DbSet<SamtHrJob> SamtHrJobs { get; set; } // SAMT_HRJob
         DbSet<SamtResourceType> SamtResourceTypes { get; set; } // SAMT_ResourceTypes
+        DbSet<ShiftAgentMainPosition> ShiftAgentMainPositions { get; set; } // Shift_AgentMainPosition
         DbSet<ShiftAgentReport> ShiftAgentReports { get; set; } // Shift_AgentReport
         DbSet<ShiftCalculation> ShiftCalculations { get; set; } // Shift_Calculations
         DbSet<ShiftCrewRewardFine> ShiftCrewRewardFines { get; set; } // Shift_CrewRewardFine
@@ -38,6 +39,7 @@ namespace Shift.Repository
         DbSet<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew
         DbSet<ShiftShiftTabletCrewAttendance> ShiftShiftTabletCrewAttendances { get; set; } // Shift_ShiftTabletCrewAttendance
         DbSet<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement
+        DbSet<ShiftShiftTabletPayment> ShiftShiftTabletPayments { get; set; } // Shift_ShiftTabletPayments
         DbSet<ShiftShiftTabletReport> ShiftShiftTabletReports { get; set; } // Shift_ShiftTabletReports
         DbSet<ShiftShiftTabletReviewProblem> ShiftShiftTabletReviewProblems { get; set; } // Shift_ShiftTabletReviewProblems
         DbSet<ShiftShiftTemplate> ShiftShiftTemplates { get; set; } // Shift_ShiftTemplate

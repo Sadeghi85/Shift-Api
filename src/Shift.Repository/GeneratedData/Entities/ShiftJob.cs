@@ -16,6 +16,7 @@ namespace Shift.Repository
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
         public DateTime? LastModifiedDateTime { get; set; } // LastModifiedDateTime
+        public int? HrJobId { get; set; } // HRJobID
 
         // Foreign keys
 

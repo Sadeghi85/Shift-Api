@@ -19,6 +19,7 @@ namespace Shift.Repository
             builder.Property(x => x.ModifiedBy).HasColumnName(@"ModifiedBy").HasColumnType("int").IsRequired(false);
             builder.Property(x => x.CreateDateTime).HasColumnName(@"CreateDateTime").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.LastModifiedDateTime).HasColumnName(@"LastModifiedDateTime").HasColumnType("datetime").IsRequired(false);
+            builder.Property(x => x.HrJobId).HasColumnName(@"HRJobID").HasColumnType("int").IsRequired(false);
 
             // Foreign keys
             builder.HasOne(a => a.SamtResourceType).WithOne(b => b.ShiftJob).HasForeignKey<ShiftJob>(c => c.SamtResourceTypeId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_Shift_Jobs_SAMT_ResourceTypes");
