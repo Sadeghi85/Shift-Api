@@ -236,7 +236,9 @@ namespace Shift.Bussiness {
 
 				};
 
-				var res = await _shiftShiftTabletCrewStore.InsertAsync(shiftShiftTabletCrew);
+				_shiftShiftTabletCrewStore.Insert(shiftShiftTabletCrew);
+
+				var res = await _shiftShiftTabletCrewStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to insert shiftShiftTabletCrew\r\n\r\n" + JsonSerializer.Serialize(shiftShiftTabletCrew, new JsonSerializerOptions() {
@@ -380,15 +382,7 @@ namespace Shift.Bussiness {
 						RoleTypeId = model.RoleTypeId,
 					};
 
-					var res1 = await _shiftShiftTabletCrewReplacementStore.InsertAsync(shiftCrewReplacement);
-
-					if (res1 < 0) {
-						BaseResult = await LogError(new Exception("Failed to insert shiftShiftTabletCrewReplacement\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
-							ReferenceHandler = ReferenceHandler.IgnoreCycles,
-							WriteIndented = true
-						})));
-						return BaseResult;
-					}
+					_shiftShiftTabletCrewReplacementStore.Insert(shiftCrewReplacement);
 
 					found.IsReplaced = true;
 				}
@@ -401,15 +395,8 @@ namespace Shift.Bussiness {
 						shiftCrewAttendance.EntranceTime = (TimeSpan) model.EntranceTime;
 						shiftCrewAttendance.ExitTime = (TimeSpan) model.ExitTime;
 
-						var res1 = await _shiftShiftTabletCrewAttendanceStore.UpdateAsync(shiftCrewAttendance);
+						_shiftShiftTabletCrewAttendanceStore.Update(shiftCrewAttendance);
 
-						if (res1 < 0) {
-							BaseResult = await LogError(new Exception("Failed to update shiftShiftTabletCrewAttendance\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
-								ReferenceHandler = ReferenceHandler.IgnoreCycles,
-								WriteIndented = true
-							})));
-							return BaseResult;
-						}
 					} else {
 						shiftCrewAttendance = new ShiftShiftTabletCrewAttendance() {
 							ShiftTabletCrewId = found.Id,
@@ -418,15 +405,8 @@ namespace Shift.Bussiness {
 							ExitTime = (TimeSpan) model.ExitTime
 						};
 
-						var res1 = await _shiftShiftTabletCrewAttendanceStore.InsertAsync(shiftCrewAttendance);
+						_shiftShiftTabletCrewAttendanceStore.Insert(shiftCrewAttendance);
 
-						if (res1 < 0) {
-							BaseResult = await LogError(new Exception("Failed to insert shiftShiftTabletCrewAttendance\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
-								ReferenceHandler = ReferenceHandler.IgnoreCycles,
-								WriteIndented = true
-							})));
-							return BaseResult;
-						}
 					}
 					
 				}
@@ -435,12 +415,16 @@ namespace Shift.Bussiness {
 				found.AgentId = model.AgentId;
 				found.ShiftTabletId = model.ShiftTabletId;
 
-				var res = await _shiftShiftTabletCrewStore.UpdateAsync(found);
+				_shiftShiftTabletCrewStore.Update(found);
+
+
+
+				var res = await _shiftShiftTabletCrewStore.SaveChangesAsync();
 
 				if (res < 0) {
-					BaseResult = await LogError(new Exception("Failed to update shiftShiftTabletCrew\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+					BaseResult = await LogError(new Exception("Failed to update shiftShiftTabletCrew and shiftShiftTabletCrewAttendance and shiftShiftTabletCrewReplacement\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
 						ReferenceHandler = ReferenceHandler.IgnoreCycles,
-						WriteIndented = true
+						WriteIndented = true,
 					})));
 					return BaseResult;
 				}
@@ -522,7 +506,9 @@ namespace Shift.Bussiness {
 
 				found.IsDeleted = true;
 
-				var res = await _shiftShiftTabletCrewStore.UpdateAsync(found);
+				_shiftShiftTabletCrewStore.Update(found);
+
+				var res = await _shiftShiftTabletCrewStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to delete shiftShiftTabletCrew\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {

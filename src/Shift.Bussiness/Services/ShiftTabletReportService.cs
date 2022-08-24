@@ -87,7 +87,8 @@ namespace Shift.Bussiness {
 
 				if (null != shiftShiftTabletReport) {
 					shiftShiftTabletReport.ReportDescription = model.ReportDescription;
-					res = await _shiftShiftTabletReportStore.UpdateAsync(shiftShiftTabletReport);
+
+					_shiftShiftTabletReportStore.Update(shiftShiftTabletReport);
 				} else {
 					shiftShiftTabletReport = new ShiftShiftTabletReport {
 						RoleTypeId = model.RoleTypeId,
@@ -96,8 +97,10 @@ namespace Shift.Bussiness {
 						IsDeleted = false
 					};
 
-					res = await _shiftShiftTabletReportStore.InsertAsync(shiftShiftTabletReport);
+					_shiftShiftTabletReportStore.Insert(shiftShiftTabletReport);
 				}
+
+				res = await _shiftShiftTabletReportStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to insert/update shiftShiftTabletReport\r\n\r\n" + JsonSerializer.Serialize(shiftShiftTabletReport, new JsonSerializerOptions() {

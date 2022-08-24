@@ -135,7 +135,9 @@ namespace Shift.Bussiness {
 
 				found.FinalPayment = model.FinalPayment;
 
-				var res = await _shiftShiftTabletPaymentStore.UpdateAsync(found);
+				_shiftShiftTabletPaymentStore.Update(found);
+
+				var res = await _shiftShiftTabletPaymentStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to update shiftShiftTabletPayment\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {

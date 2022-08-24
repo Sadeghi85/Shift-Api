@@ -92,7 +92,9 @@ namespace Shift.Bussiness {
 
 				var shiftPortalLocation = new ShiftPortalLocation { PortalId = model.PortalId, LocationId = model.LocationId };
 
-				var res = await _shiftPortalLocationStore.InsertAsync(shiftPortalLocation);
+				_shiftPortalLocationStore.Insert(shiftPortalLocation);
+
+				var res = await _shiftPortalLocationStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to insert shiftPortalLocation\r\n\r\n" + JsonSerializer.Serialize(shiftPortalLocation, new JsonSerializerOptions() {
@@ -159,7 +161,9 @@ namespace Shift.Bussiness {
 				found.PortalId = model.PortalId;
 				found.LocationId = model.LocationId;
 
-				var res = await _shiftPortalLocationStore.UpdateAsync(found);
+				_shiftPortalLocationStore.Update(found);
+
+				var res = await _shiftPortalLocationStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to update shiftPortalLocation\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
@@ -196,7 +200,9 @@ namespace Shift.Bussiness {
 
 				found.IsDeleted = true;
 
-				var res = await _shiftPortalLocationStore.UpdateAsync(found);
+				_shiftPortalLocationStore.Update(found);
+
+				var res = await _shiftPortalLocationStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to dalete shiftPortalLocation\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {

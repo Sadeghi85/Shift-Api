@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 
 namespace Shift.Repository {
 	public interface IStoreBase<T> : IDisposable where T : class {
-		//Task<int> SaveChangesAsync();
+		Task<int> SaveChangesAsync();
 		//Task<int> SoftDeleteAsync(Expression<Func<T, bool>> predicate);
-		Task<int> DeleteAsync(Expression<Func<T, bool>> predicate);
-		Task<int> InsertAsync(T entity);
-		Task<int> InsertAsync(List<T> entities);
-		Task<int> UpdateAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, T>> updateExpression);
-		Task<int> UpdateAsync(T entity);
+		//Task<int> DeleteAsync(Expression<Func<T, bool>> predicate);
+		void Insert(T entity);
+		//Task<int> InsertAsync(List<T> entities);
+		//Task<int> UpdateAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, T>> updateExpression);
+		void Update(T entity);
 		Task<StoreViewModel<TResult>> GetAllAsync<TResult, TKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, bool orderDirectionDesc = true);
 		Task<StoreViewModel<TResult>> GetAllAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, bool orderDirectionDesc = true);
 		Task<StoreViewModel<TResult>> GetAllWithPagingAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, bool orderDirectionDesc, int pageSize = 10, int pageNumber = 0);

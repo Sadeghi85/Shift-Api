@@ -146,7 +146,9 @@ namespace Shift.Bussiness {
 
 				};
 
-				var res = await _shiftShiftTabletStore.InsertAsync(shiftTablet);
+				_shiftShiftTabletStore.Insert(shiftTablet);
+
+				var res = await _shiftShiftTabletStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to insert ShiftTablet\r\n\r\n" + JsonSerializer.Serialize(shiftTablet, new JsonSerializerOptions() {
@@ -225,7 +227,9 @@ namespace Shift.Bussiness {
 				found.ShiftDuration = diff;
 				found.PortalId = foundShift.PortalId;
 
-				var res = await _shiftShiftTabletStore.UpdateAsync(found);
+				_shiftShiftTabletStore.Update(found);
+
+				var res = await _shiftShiftTabletStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to update ShiftTablet\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
@@ -263,7 +267,9 @@ namespace Shift.Bussiness {
 
 				found.IsDeleted = true;
 
-				var res = await _shiftShiftTabletStore.UpdateAsync(found);
+				_shiftShiftTabletStore.Update(found);
+
+				var res = await _shiftShiftTabletStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to delete ShiftTablet\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {

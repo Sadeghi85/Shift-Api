@@ -92,7 +92,9 @@ namespace Shift.Bussiness {
 					IsDeleted = false
 				};
 
-				var res = await _shiftShiftTabletConductorChanxStore.InsertAsync(shiftShiftTabletConductorChange);
+				_shiftShiftTabletConductorChanxStore.Insert(shiftShiftTabletConductorChange);
+
+				var res = await _shiftShiftTabletConductorChanxStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to insert shiftShiftTabletConductorChange\r\n\r\n" + JsonSerializer.Serialize(shiftShiftTabletConductorChange, new JsonSerializerOptions() {
@@ -141,7 +143,9 @@ namespace Shift.Bussiness {
 				foundShiftTabletConductorChange.OldProgramTitle = model.OldProgramTitle;
 				foundShiftTabletConductorChange.NewProgramTitle = model.NewProgramTitle;
 
-				var res = await _shiftShiftTabletConductorChanxStore.UpdateAsync(foundShiftTabletConductorChange);
+				_shiftShiftTabletConductorChanxStore.Update(foundShiftTabletConductorChange);
+
+				var res = await _shiftShiftTabletConductorChanxStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to update shiftShiftTabletConductorChange\r\n\r\n" + JsonSerializer.Serialize(foundShiftTabletConductorChange, new JsonSerializerOptions() {
@@ -178,7 +182,9 @@ namespace Shift.Bussiness {
 
 				found.IsDeleted = true;
 
-				var res = await _shiftShiftTabletConductorChanxStore.UpdateAsync(found);
+				_shiftShiftTabletConductorChanxStore.Update(found);
+
+				var res = await _shiftShiftTabletConductorChanxStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to delete shiftShiftTabletConductorChange\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
@@ -219,7 +225,9 @@ namespace Shift.Bussiness {
 
 					found.IsDeleted = true;
 
-					var res = await _shiftShiftTabletConductorChanxStore.UpdateAsync(found);
+					_shiftShiftTabletConductorChanxStore.Update(found);
+
+					var res = await _shiftShiftTabletConductorChanxStore.SaveChangesAsync();
 
 					if (res < 0) {
 						BaseResult = await LogError(new Exception("Failed to delete shiftShiftTabletConductorChange\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {

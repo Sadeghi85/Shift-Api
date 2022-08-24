@@ -99,7 +99,9 @@ namespace Shift.Bussiness {
 					IsDeleted = false
 				};
 
-				var res = await _shiftShiftTabletReviewProblemStore.InsertAsync(shiftShiftTabletReviewProblem);
+				_shiftShiftTabletReviewProblemStore.Insert(shiftShiftTabletReviewProblem);
+
+				var res = await _shiftShiftTabletReviewProblemStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to insert shiftShiftTabletReviewProblem\r\n\r\n" + JsonSerializer.Serialize(shiftShiftTabletReviewProblem, new JsonSerializerOptions() {
@@ -152,7 +154,9 @@ namespace Shift.Bussiness {
 				foundShiftTabletReviewProblem.ReviewerCode = model.ReviewerCode;
 
 
-				var res = await _shiftShiftTabletReviewProblemStore.UpdateAsync(foundShiftTabletReviewProblem);
+				_shiftShiftTabletReviewProblemStore.Update(foundShiftTabletReviewProblem);
+
+				var res = await _shiftShiftTabletReviewProblemStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to update shiftShiftTabletReviewProblem\r\n\r\n" + JsonSerializer.Serialize(foundShiftTabletReviewProblem, new JsonSerializerOptions() {
@@ -189,7 +193,9 @@ namespace Shift.Bussiness {
 
 				found.IsDeleted = true;
 
-				var res = await _shiftShiftTabletReviewProblemStore.UpdateAsync(found);
+				_shiftShiftTabletReviewProblemStore.Update(found);
+
+				var res = await _shiftShiftTabletReviewProblemStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to delete shiftShiftTabletReviewProblem\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
@@ -230,15 +236,18 @@ namespace Shift.Bussiness {
 
 					found.IsDeleted = true;
 
-					var res = await _shiftShiftTabletReviewProblemStore.UpdateAsync(found);
+					_shiftShiftTabletReviewProblemStore.Update(found);
 
-					if (res < 0) {
-						BaseResult = await LogError(new Exception("Failed to delete shiftShiftTabletReviewProblem\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
-							ReferenceHandler = ReferenceHandler.IgnoreCycles,
-							WriteIndented = true
-						})));
-						return BaseResult;
-					}
+				}
+
+				var res = await _shiftShiftTabletReviewProblemStore.SaveChangesAsync();
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to delete shiftShiftTabletReviewProblem\r\n\r\n" + JsonSerializer.Serialize(foundReviewProblems.Result, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
 				}
 
 			} catch (Exception ex) {

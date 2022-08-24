@@ -78,7 +78,9 @@ namespace Shift.Bussiness {
 
 				var shiftLocation = new ShiftLocation { Title = model.Title, IsDeleted = false };
 
-				var res = await _shiftLocationStore.InsertAsync(shiftLocation);
+				_shiftLocationStore.Insert(shiftLocation);
+
+				var res = await _shiftLocationStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to insert shiftLocation\r\n\r\n" + JsonSerializer.Serialize(shiftLocation, new JsonSerializerOptions() {
@@ -122,7 +124,9 @@ namespace Shift.Bussiness {
 
 				found.Title = model.Title;
 
-				var res = await _shiftLocationStore.UpdateAsync(found);
+				_shiftLocationStore.Update(found);
+
+				var res = await _shiftLocationStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to update shiftLocation\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
@@ -157,7 +161,9 @@ namespace Shift.Bussiness {
 
 				found.IsDeleted = true;
 
-				var res = await _shiftLocationStore.UpdateAsync(found);
+				_shiftLocationStore.Update(found);
+
+				var res = await _shiftLocationStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to delete shiftLocation\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {

@@ -142,7 +142,7 @@ namespace Shift.Bussiness {
 					shiftMonetarySetting.MandatoryShiftCount = model.MandatoryShiftCount;
 					shiftMonetarySetting.NonMandatoryShiftWage = model.NonMandatoryShiftWage;
 
-					res = await _shiftMonetarySettingStore.UpdateAsync(shiftMonetarySetting);
+					_shiftMonetarySettingStore.Update(shiftMonetarySetting);
 				} else {
 					shiftMonetarySetting = new ShiftMonetarySetting {
 						PortalId = model.PortalId,
@@ -153,8 +153,10 @@ namespace Shift.Bussiness {
 						IsDeleted = false
 					};
 
-					res = await _shiftMonetarySettingStore.InsertAsync(shiftMonetarySetting);
+					_shiftMonetarySettingStore.Insert(shiftMonetarySetting);
 				}
+
+				res = await _shiftMonetarySettingStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to insert/update shiftMonetarySetting\r\n\r\n" + JsonSerializer.Serialize(shiftMonetarySetting, new JsonSerializerOptions() {
@@ -196,7 +198,9 @@ namespace Shift.Bussiness {
 
 				found.IsDeleted = true;
 
-				var res = await _shiftMonetarySettingStore.UpdateAsync(found);
+				_shiftMonetarySettingStore.Update(found);
+
+				var res = await _shiftMonetarySettingStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to delete shiftMonetarySetting\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
@@ -237,15 +241,17 @@ namespace Shift.Bussiness {
 
 					found.IsDeleted = true;
 
-					var res = await _shiftMonetarySettingStore.UpdateAsync(found);
+					_shiftMonetarySettingStore.Update(found);
+				}
 
-					if (res < 0) {
-						BaseResult = await LogError(new Exception("Failed to delete shiftMonetarySetting\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
-							ReferenceHandler = ReferenceHandler.IgnoreCycles,
-							WriteIndented = true
-						})));
-						return BaseResult;
-					}
+				var res = await _shiftMonetarySettingStore.SaveChangesAsync();
+
+				if (res < 0) {
+					BaseResult = await LogError(new Exception("Failed to delete shiftMonetarySettings\r\n\r\n" + JsonSerializer.Serialize(foundMonetarySettings.Result, new JsonSerializerOptions() {
+						ReferenceHandler = ReferenceHandler.IgnoreCycles,
+						WriteIndented = true
+					})));
+					return BaseResult;
 				}
 
 			} catch (Exception ex) {

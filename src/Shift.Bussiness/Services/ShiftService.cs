@@ -116,7 +116,9 @@ namespace Shift.Bussiness {
 
 				var shiftShift = new ShiftShift { Title = model.Title, PortalId = model.PortalId, ShiftTypeId = model.ShiftTypeId, StartTime = model.StartTime, EndTime = model.EndTime, IsDeleted = false };
 
-				var res = await _shiftShiftStore.InsertAsync(shiftShift);
+				_shiftShiftStore.Insert(shiftShift);
+
+				var res = await _shiftShiftStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to insert shiftShift\r\n\r\n" + JsonSerializer.Serialize(shiftShift, new JsonSerializerOptions() {
@@ -209,7 +211,9 @@ namespace Shift.Bussiness {
 				found.ShiftTypeId = model.ShiftTypeId;
 				found.PortalId = model.PortalId;
 
-				var res = await _shiftShiftStore.UpdateAsync(found);
+				_shiftShiftStore.Update(found);
+
+				var res = await _shiftShiftStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to update shiftShift\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
@@ -246,7 +250,9 @@ namespace Shift.Bussiness {
 
 				found.IsDeleted = true;
 
-				var res = await _shiftShiftStore.UpdateAsync(found);
+				_shiftShiftStore.Update(found);
+
+				var res = await _shiftShiftStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to delete shiftShift\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
@@ -389,7 +395,9 @@ namespace Shift.Bussiness {
 					IsDeleted = false,
 				};
 
-				var res = await _shiftShiftTemplateStore.InsertAsync(shiftShiftTemplate);
+				_shiftShiftTemplateStore.Insert(shiftShiftTemplate);
+
+				var res = await _shiftShiftTemplateStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to insert shiftShiftTemplate\r\n\r\n" + JsonSerializer.Serialize(shiftShiftTemplate, new JsonSerializerOptions() {
@@ -454,7 +462,9 @@ namespace Shift.Bussiness {
 				found.ShiftId = model.ShiftId;
 				found.JobId = model.JobId;
 
-				var res = await _shiftShiftTemplateStore.UpdateAsync(found);
+				_shiftShiftTemplateStore.Update(found);
+
+				var res = await _shiftShiftTemplateStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to update shiftShiftTemplate\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
@@ -491,7 +501,9 @@ namespace Shift.Bussiness {
 
 				found.IsDeleted = true;
 
-				var res = await _shiftShiftTemplateStore.UpdateAsync(found);
+				_shiftShiftTemplateStore.Update(found);
+
+				var res = await _shiftShiftTemplateStore.SaveChangesAsync();
 
 				if (res < 0) {
 					BaseResult = await LogError(new Exception("Failed to delete shiftShiftTemplate\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {

@@ -29,15 +29,15 @@ namespace Shift.Repository {
 			_iPrincipal = principal;
 		}
 
-		//public Task<int> SaveChangesAsync() {
-		//	var res = Task.FromResult(-1);
-		//	try {
-		//		res = _ctx.Instance.SaveChangesAsync();
-		//	} catch (Exception ex) {
-		//		_logger.Error(ex, "db error, method: 'SaveChangesAsync'");
-		//	}
-		//	return res;
-		//}
+		public virtual async Task<int> SaveChangesAsync() {
+			var res = -1;
+			try {
+				res = await _ctx.Instance.SaveChangesAsync();
+			} catch (Exception ex) {
+				_logger.Error(ex, "db error, method: 'SaveChangesAsync'");
+			}
+			return res;
+		}
 
 		//public virtual Task<int> SoftDeleteAsync(Expression<Func<T, bool>> predicate) {
 		//	var res = Task.FromResult(-1);
@@ -49,21 +49,20 @@ namespace Shift.Repository {
 		//	}
 		//	return res;
 		//}
-		public virtual async Task<int> DeleteAsync(Expression<Func<T, bool>> predicate) {
-			var res = -1;
+		//public virtual async Task<int> DeleteAsync(Expression<Func<T, bool>> predicate) {
+		//	var res = -1;
 
-			try {
-				var queryresult = TEntity.Where(predicate);
+		//	try {
+		//		var queryresult = TEntity.Where(predicate);
 
-				res = await queryresult.BatchDeleteAsync();
-			} catch (Exception ex) {
-				_logger.Error(ex, "db error, method: 'DeleteAsync'");
-			}
-			return res;
-		}
-		public virtual async Task<int> InsertAsync(T entity) {
-			var res = -1;
+		//		res = await queryresult.BatchDeleteAsync();
+		//	} catch (Exception ex) {
+		//		_logger.Error(ex, "db error, method: 'DeleteAsync'");
+		//	}
+		//	return res;
+		//}
 
+		public virtual void Insert(T entity) {
 			try {
 				var now = DateTime.Now;
 				var uId = GetUserId();
@@ -90,71 +89,69 @@ namespace Shift.Repository {
 
 				TEntity.Add(entity);
 
-				res = await _ctx.Instance.SaveChangesAsync();
 			} catch (Exception ex) {
 				_logger.Error(ex, "db error, method: 'InsertAsync'");
 			}
-
-			return res;
 		}
-		public virtual async Task<int> InsertAsync(List<T> entities) {
-			var res = -1;
 
-			try {
-				var newEntities = new List<T>();
+		//public virtual async Task<int> InsertAsync(List<T> entities) {
+		//	var res = -1;
 
-				var now = DateTime.Now;
-				var uId = GetUserId();
+		//	try {
+		//		var newEntities = new List<T>();
 
-				foreach (var entity in entities) {
-					var theType = entity.GetType();
-					var createDateTimeProp = theType.GetProperty("CreateDateTime");
-					if (createDateTimeProp != null) {
-						createDateTimeProp.SetValue(entity, now);
-					}
+		//		var now = DateTime.Now;
+		//		var uId = GetUserId();
 
-					if (null != uId) {
-						var userId = int.Parse(uId);
-						var createdByProp = theType.GetProperty("CreatedBy");
-						if (createdByProp != null) {
-							createdByProp.SetValue(entity, userId);
-						}
-					}
+		//		foreach (var entity in entities) {
+		//			var theType = entity.GetType();
+		//			var createDateTimeProp = theType.GetProperty("CreateDateTime");
+		//			if (createDateTimeProp != null) {
+		//				createDateTimeProp.SetValue(entity, now);
+		//			}
 
-					newEntities.Add(entity);
-				}
+		//			if (null != uId) {
+		//				var userId = int.Parse(uId);
+		//				var createdByProp = theType.GetProperty("CreatedBy");
+		//				if (createdByProp != null) {
+		//					createdByProp.SetValue(entity, userId);
+		//				}
+		//			}
 
-				if (entities[0] is ShiftLog) {
-					_ctx.Instance.ChangeTracker.Entries()
-						.Where(e => e.Entity != null).ToList()
-						.ForEach(e => e.State = EntityState.Detached);
-				}
+		//			newEntities.Add(entity);
+		//		}
 
-				await _ctx.Instance.BulkInsertAsync(newEntities);
-				res = newEntities.Count;
+		//		if (entities[0] is ShiftLog) {
+		//			_ctx.Instance.ChangeTracker.Entries()
+		//				.Where(e => e.Entity != null).ToList()
+		//				.ForEach(e => e.State = EntityState.Detached);
+		//		}
 
-			} catch (Exception ex) {
-				_logger.Error(ex, "db error, method: 'InsertAsync (Bulk)'");
-			}
+		//		await _ctx.Instance.BulkInsertAsync(newEntities);
+		//		res = newEntities.Count;
 
-			return res;
-		}
-		public virtual async Task<int> UpdateAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, T>> updateExpression) {
-			var res = -1;
+		//	} catch (Exception ex) {
+		//		_logger.Error(ex, "db error, method: 'InsertAsync (Bulk)'");
+		//	}
 
-			try {
-				var queryresult = TEntity.Where(predicate);
+		//	return res;
+		//}
 
-				res = await queryresult.BatchUpdateAsync(updateExpression);
-			} catch (Exception ex) {
-				_logger.Error(ex, "db error, method: 'UpdateAsync (Bulk)'");
-			}
+		//public virtual async Task<int> UpdateAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, T>> updateExpression) {
+		//	var res = -1;
 
-			return res;
-		}
-		public virtual async Task<int> UpdateAsync(T entity) {
-			var res = -1;
+		//	try {
+		//		var queryresult = TEntity.Where(predicate);
 
+		//		res = await queryresult.BatchUpdateAsync(updateExpression);
+		//	} catch (Exception ex) {
+		//		_logger.Error(ex, "db error, method: 'UpdateAsync (Bulk)'");
+		//	}
+
+		//	return res;
+		//}
+
+		public virtual void Update(T entity) {
 			try {
 				var now = DateTime.Now;
 				var uId = GetUserId();
@@ -180,13 +177,12 @@ namespace Shift.Repository {
 				}
 
 				TEntity.Update(entity);
-				res = await _ctx.Instance.SaveChangesAsync();
+				
 			} catch (Exception ex) {
 				_logger.Error(ex, "db error, method: 'UpdateAsync'");
 			}
-
-			return res;
 		}
+
 		public virtual async Task<StoreViewModel<TResult>> GetAllAsync<TResult, TKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, bool orderDirectionDesc = true) {
 			var res = new StoreViewModel<TResult>();
 
@@ -208,6 +204,7 @@ namespace Shift.Repository {
 
 			return res;
 		}
+
 		public virtual async Task<StoreViewModel<TResult>> GetAllAsync<TResult, TKey>(List<Expression<Func<T, bool>>> predicate, Expression<Func<T, TResult>> selectList, Expression<Func<T, TKey>> orderKeySelector, bool orderDirectionDesc = true) {
 			var res = new StoreViewModel<TResult>();
 

@@ -45,16 +45,23 @@ namespace Shift.Bussiness {
 		protected BaseResult BaseResult { get; set; } = new BaseResult();
 
 		public async Task<BaseResult> LogError(Exception ex) {
-
-			var shiftLog = new ShiftLog { Message = ex.Message + Environment.NewLine + ex.InnerException?.Message + Environment.NewLine + ex.StackTrace ?? "" };
-
-			await _shiftLogStore.InsertAsync(shiftLog);
-
 			var res = new BaseResult();
-
 			res.Success = false;
-			res.Message = $"خطای سیستمی شماره '{shiftLog.Id}'؛ لطفا به مدیر سیستم اطلاع دهید";
+			res.Message = $"خطای سیستمی شماره 'نامشخص'؛ لطفا به مدیر سیستم اطلاع دهید";
 
+			try {
+				var shiftLog = new ShiftLog { Message = ex.Message + Environment.NewLine + ex.InnerException?.Message + Environment.NewLine + ex.StackTrace ?? "" };
+
+				_shiftLogStore.Insert(shiftLog);
+
+				await _shiftLogStore.SaveChangesAsync();
+
+				res.Success = false;
+				res.Message = $"خطای سیستمی شماره '{shiftLog.Id}'؛ لطفا به مدیر سیستم اطلاع دهید";
+			} catch (Exception) {
+
+			}
+			
 			return res;
 		}
 	}
