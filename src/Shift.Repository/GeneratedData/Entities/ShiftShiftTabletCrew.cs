@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,16 +29,19 @@ namespace Shift.Repository
         /// <summary>
         /// Child ShiftCrewRewardFines where [Shift_CrewRewardFine].[ShiftTabletCrewId] point to this entity (FK_Shift_CrewRewardFine_Shift_ShiftTabletCrew)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftCrewRewardFine> ShiftCrewRewardFines { get; set; } // Shift_CrewRewardFine.FK_Shift_CrewRewardFine_Shift_ShiftTabletCrew
 
         /// <summary>
         /// Child ShiftShiftTabletCrewAttendances where [Shift_ShiftTabletCrewAttendance].[ShiftTabletCrewID] point to this entity (FK_Shift_ShiftTabletCrewAttendance_Shift_ShiftTabletCrew)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTabletCrewAttendance> ShiftShiftTabletCrewAttendances { get; set; } // Shift_ShiftTabletCrewAttendance.FK_Shift_ShiftTabletCrewAttendance_Shift_ShiftTabletCrew
 
         /// <summary>
         /// Child ShiftShiftTabletCrewReplacements where [Shift_ShiftTabletCrewReplacement].[ShiftTabletCrewID] point to this entity (FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements { get; set; } // Shift_ShiftTabletCrewReplacement.FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew
 
         // Foreign keys
@@ -45,16 +49,19 @@ namespace Shift.Repository
         /// <summary>
         /// Parent SamtAgent pointed by [Shift_ShiftTabletCrew].([AgentId]) (FK_Shift_ShiftTabletCrew_SAMT_Agents)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtAgent SamtAgent { get; set; } // FK_Shift_ShiftTabletCrew_SAMT_Agents
 
         /// <summary>
         /// Parent SamtResourceType pointed by [Shift_ShiftTabletCrew].([JobId]) (FK_Shift_ShiftTableCrew_SAMT_ResourceTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtResourceType SamtResourceType { get; set; } // FK_Shift_ShiftTableCrew_SAMT_ResourceTypes
 
         /// <summary>
         /// Parent ShiftShiftTablet pointed by [Shift_ShiftTabletCrew].([ShiftTabletId]) (FK_Shift_ShiftTableCrew_Shift_ShiftTablet)
         /// </summary>
+        [JsonIgnore]
         public virtual ShiftShiftTablet ShiftShiftTablet { get; set; } // FK_Shift_ShiftTableCrew_Shift_ShiftTablet
 
         public ShiftShiftTabletCrew()

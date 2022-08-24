@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,11 +20,13 @@ namespace Shift.Repository
         /// <summary>
         /// Child ShiftEmploymentDetails where [Shift_EmploymentDetail].[CooperationTypeID] point to this entity (FK_Shift_EmploymentDetail_SAMT_HRCooperationType)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail.FK_Shift_EmploymentDetail_SAMT_HRCooperationType
 
         /// <summary>
         /// Child ShiftMonetarySettings where [Shift_MonetarySettings].[CooperationTypeID] point to this entity (FK_Shift_MonetarySettings_SAMT_HRCooperationType)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftMonetarySetting> ShiftMonetarySettings { get; set; } // Shift_MonetarySettings.FK_Shift_MonetarySettings_SAMT_HRCooperationType
 
         public SamtHrCooperationType()

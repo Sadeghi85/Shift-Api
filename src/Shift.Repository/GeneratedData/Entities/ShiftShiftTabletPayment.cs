@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,11 +34,13 @@ namespace Shift.Repository
         /// <summary>
         /// Parent Portal pointed by [Shift_ShiftTabletPayments].([PortalId]) (FK_Shift_ShiftTabletPayments_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual Portal Portal { get; set; } // FK_Shift_ShiftTabletPayments_Portals
 
         /// <summary>
         /// Parent SamtAgent pointed by [Shift_ShiftTabletPayments].([AgentId]) (FK_Shift_ShiftTabletPayments_SAMT_Agents)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtAgent SamtAgent { get; set; } // FK_Shift_ShiftTabletPayments_SAMT_Agents
 
         public ShiftShiftTabletPayment()

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,11 +25,13 @@ namespace Shift.Repository
         /// <summary>
         /// Child UserTypeGroupRoleMenus where [UserTypeGroupRoleMenus].[UserTypeGroupID] point to this entity (FK_UserTypeGroupRole_UserTypeGroups)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<UserTypeGroupRoleMenu> UserTypeGroupRoleMenus { get; set; } // UserTypeGroupRoleMenus.FK_UserTypeGroupRole_UserTypeGroups
 
         /// <summary>
         /// Child UserUserTypeGroups where [UserUserTypeGroups].[UserTypeGroupID] point to this entity (FK_UserUserTypeGroup_UserTypeGroups)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<UserUserTypeGroup> UserUserTypeGroups { get; set; } // UserUserTypeGroups.FK_UserUserTypeGroup_UserTypeGroups
 
         // Foreign keys
@@ -36,6 +39,7 @@ namespace Shift.Repository
         /// <summary>
         /// Parent UserType pointed by [UserTypeGroups].([UserTypeId]) (FK_UserTypeGroup_UserTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual UserType UserType { get; set; } // FK_UserTypeGroup_UserTypes
 
         public UserTypeGroup()

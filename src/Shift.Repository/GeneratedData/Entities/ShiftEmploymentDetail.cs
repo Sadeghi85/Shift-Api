@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,11 +37,13 @@ namespace Shift.Repository
         /// <summary>
         /// Parent Portal pointed by [Shift_EmploymentDetail].([PortalId]) (FK_Shift_EmploymentDetail_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual Portal Portal { get; set; } // FK_Shift_EmploymentDetail_Portals
 
         /// <summary>
         /// Parent SamtHrCooperationType pointed by [Shift_EmploymentDetail].([CooperationTypeId]) (FK_Shift_EmploymentDetail_SAMT_HRCooperationType)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtHrCooperationType SamtHrCooperationType { get; set; } // FK_Shift_EmploymentDetail_SAMT_HRCooperationType
 
         public ShiftEmploymentDetail()

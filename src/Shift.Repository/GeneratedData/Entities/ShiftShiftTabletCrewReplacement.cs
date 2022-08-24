@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,16 +25,19 @@ namespace Shift.Repository
         /// <summary>
         /// Parent SamtAgent pointed by [Shift_ShiftTabletCrewReplacement].([NewAgentId]) (FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents1)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtAgent NewAgent { get; set; } // FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents1
 
         /// <summary>
         /// Parent SamtAgent pointed by [Shift_ShiftTabletCrewReplacement].([OldAgentId]) (FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtAgent OldAgent { get; set; } // FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents
 
         /// <summary>
         /// Parent ShiftShiftTabletCrew pointed by [Shift_ShiftTabletCrewReplacement].([ShiftTabletCrewId]) (FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew)
         /// </summary>
+        [JsonIgnore]
         public virtual ShiftShiftTabletCrew ShiftShiftTabletCrew { get; set; } // FK_Shift_ShiftTabletCrewReplacement_Shift_ShiftTabletCrew
 
         public ShiftShiftTabletCrewReplacement()

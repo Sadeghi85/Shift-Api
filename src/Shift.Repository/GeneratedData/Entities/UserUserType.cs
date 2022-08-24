@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,6 +20,7 @@ namespace Shift.Repository
         /// <summary>
         /// Parent UserType pointed by [UserUserTypes].([UserTypeId]) (FK_UserUserTypes_UserTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual UserType UserType { get; set; } // FK_UserUserTypes_UserTypes
 
         public UserUserType()

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,6 +29,7 @@ namespace Shift.Repository
         /// <summary>
         /// Parent SamtAgent pointed by [Shift_Calculations].([AgentId]) (FK_Shift_Calculations_SAMT_Agents)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtAgent SamtAgent { get; set; } // FK_Shift_Calculations_SAMT_Agents
 
         public ShiftCalculation()

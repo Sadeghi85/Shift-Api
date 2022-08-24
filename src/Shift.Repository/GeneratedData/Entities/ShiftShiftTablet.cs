@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,21 +35,25 @@ namespace Shift.Repository
         /// <summary>
         /// Child ShiftShiftTabletConductorChanges where [Shift_ShiftTabletConductorChanges].[ShiftTabletID] point to this entity (FK_Shift_ShiftTabletConductorChanges_Shift_ShiftTablet)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTabletConductorChanx> ShiftShiftTabletConductorChanges { get; set; } // Shift_ShiftTabletConductorChanges.FK_Shift_ShiftTabletConductorChanges_Shift_ShiftTablet
 
         /// <summary>
         /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[ShiftTabletID] point to this entity (FK_Shift_ShiftTableCrew_Shift_ShiftTablet)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTableCrew_Shift_ShiftTablet
 
         /// <summary>
         /// Child ShiftShiftTabletReports where [Shift_ShiftTabletReports].[ShiftTabletID] point to this entity (FK_Shift_ShiftTabletReports_Shift_ShiftTablet)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTabletReport> ShiftShiftTabletReports { get; set; } // Shift_ShiftTabletReports.FK_Shift_ShiftTabletReports_Shift_ShiftTablet
 
         /// <summary>
         /// Child ShiftShiftTabletReviewProblems where [Shift_ShiftTabletReviewProblems].[ShiftTabletID] point to this entity (FK_Shift_ShiftTabletReviewProblems_Shift_ShiftTablet)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTabletReviewProblem> ShiftShiftTabletReviewProblems { get; set; } // Shift_ShiftTabletReviewProblems.FK_Shift_ShiftTabletReviewProblems_Shift_ShiftTablet
 
         // Foreign keys
@@ -56,16 +61,19 @@ namespace Shift.Repository
         /// <summary>
         /// Parent Portal pointed by [Shift_ShiftTablet].([PortalId]) (FK_Shift_ShiftTablet_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual Portal Portal { get; set; } // FK_Shift_ShiftTablet_Portals
 
         /// <summary>
         /// Parent ShiftLocation pointed by [Shift_ShiftTablet].([LocationId]) (FK_Shift_ShiftTablet_Shift_Locations)
         /// </summary>
+        [JsonIgnore]
         public virtual ShiftLocation ShiftLocation { get; set; } // FK_Shift_ShiftTablet_Shift_Locations
 
         /// <summary>
         /// Parent ShiftShift pointed by [Shift_ShiftTablet].([ShiftId]) (FK_ShiftExecution_PortalShift)
         /// </summary>
+        [JsonIgnore]
         public virtual ShiftShift ShiftShift { get; set; } // FK_ShiftExecution_PortalShift
 
         public ShiftShiftTablet()

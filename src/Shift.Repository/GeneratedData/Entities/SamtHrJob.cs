@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,6 +20,7 @@ namespace Shift.Repository
         /// <summary>
         /// Child ShiftAgentMainPositions where [Shift_AgentMainPosition].[HRJobID] point to this entity (FK_Shift_AgentMainPosition_SAMT_HRJob)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftAgentMainPosition> ShiftAgentMainPositions { get; set; } // Shift_AgentMainPosition.FK_Shift_AgentMainPosition_SAMT_HRJob
 
         public SamtHrJob()

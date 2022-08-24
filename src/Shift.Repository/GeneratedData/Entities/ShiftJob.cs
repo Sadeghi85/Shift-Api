@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,6 +24,7 @@ namespace Shift.Repository
         /// <summary>
         /// Parent SamtResourceType pointed by [Shift_Job].([SamtResourceTypeId]) (FK_Shift_Jobs_SAMT_ResourceTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtResourceType SamtResourceType { get; set; } // FK_Shift_Jobs_SAMT_ResourceTypes
 
         public ShiftJob()

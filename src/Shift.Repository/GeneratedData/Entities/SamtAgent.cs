@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -48,31 +49,37 @@ namespace Shift.Repository
         /// <summary>
         /// Child ShiftAgentMainPositions where [Shift_AgentMainPosition].[AgentID] point to this entity (FK_Shift_AgentMainPosition_SAMT_Agents)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftAgentMainPosition> ShiftAgentMainPositions { get; set; } // Shift_AgentMainPosition.FK_Shift_AgentMainPosition_SAMT_Agents
 
         /// <summary>
         /// Child ShiftCalculations where [Shift_Calculations].[AgentId] point to this entity (FK_Shift_Calculations_SAMT_Agents)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftCalculation> ShiftCalculations { get; set; } // Shift_Calculations.FK_Shift_Calculations_SAMT_Agents
 
         /// <summary>
         /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[AgentID] point to this entity (FK_Shift_ShiftTabletCrew_SAMT_Agents)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTabletCrew_SAMT_Agents
 
         /// <summary>
         /// Child ShiftShiftTabletCrewReplacements where [Shift_ShiftTabletCrewReplacement].[NewAgentID] point to this entity (FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents1)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements_NewAgentId { get; set; } // Shift_ShiftTabletCrewReplacement.FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents1
 
         /// <summary>
         /// Child ShiftShiftTabletCrewReplacements where [Shift_ShiftTabletCrewReplacement].[OldAgentID] point to this entity (FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTabletCrewReplacement> ShiftShiftTabletCrewReplacements_OldAgentId { get; set; } // Shift_ShiftTabletCrewReplacement.FK_Shift_ShiftTabletCrewReplacement_SAMT_Agents
 
         /// <summary>
         /// Child ShiftShiftTabletPayments where [Shift_ShiftTabletPayments].[AgentID] point to this entity (FK_Shift_ShiftTabletPayments_SAMT_Agents)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTabletPayment> ShiftShiftTabletPayments { get; set; } // Shift_ShiftTabletPayments.FK_Shift_ShiftTabletPayments_SAMT_Agents
 
         public SamtAgent()

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,16 +29,19 @@ namespace Shift.Repository
         /// <summary>
         /// Parent Portal pointed by [Shift_MonetarySettings].([PortalId]) (FK_Shift_MonetarySettings_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual Portal Portal { get; set; } // FK_Shift_MonetarySettings_Portals
 
         /// <summary>
         /// Parent SamtHrCooperationType pointed by [Shift_MonetarySettings].([CooperationTypeId]) (FK_Shift_MonetarySettings_SAMT_HRCooperationType)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtHrCooperationType SamtHrCooperationType { get; set; } // FK_Shift_MonetarySettings_SAMT_HRCooperationType
 
         /// <summary>
         /// Parent SamtResourceType pointed by [Shift_MonetarySettings].([JobId]) (FK_Shift_MonetarySettings_SAMT_ResourceTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtResourceType SamtResourceType { get; set; } // FK_Shift_MonetarySettings_SAMT_ResourceTypes
 
         public ShiftMonetarySetting()

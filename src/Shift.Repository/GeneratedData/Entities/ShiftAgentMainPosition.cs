@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,21 +23,25 @@ namespace Shift.Repository
         /// <summary>
         /// Parent Portal pointed by [Shift_AgentMainPosition].([PortalId]) (FK_Shift_AgentMainPosition_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual Portal Portal { get; set; } // FK_Shift_AgentMainPosition_Portals
 
         /// <summary>
         /// Parent SamtAgent pointed by [Shift_AgentMainPosition].([AgentId]) (FK_Shift_AgentMainPosition_SAMT_Agents)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtAgent SamtAgent { get; set; } // FK_Shift_AgentMainPosition_SAMT_Agents
 
         /// <summary>
         /// Parent SamtHrJob pointed by [Shift_AgentMainPosition].([HrJobId]) (FK_Shift_AgentMainPosition_SAMT_HRJob)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtHrJob SamtHrJob { get; set; } // FK_Shift_AgentMainPosition_SAMT_HRJob
 
         /// <summary>
         /// Parent SamtResourceType pointed by [Shift_AgentMainPosition].([JobId]) (FK_Shift_AgentMainPosition_SAMT_ResourceTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtResourceType SamtResourceType { get; set; } // FK_Shift_AgentMainPosition_SAMT_ResourceTypes
 
         public ShiftAgentMainPosition()

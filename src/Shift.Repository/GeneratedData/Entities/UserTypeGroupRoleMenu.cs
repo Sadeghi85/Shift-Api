@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +21,7 @@ namespace Shift.Repository
         /// <summary>
         /// Parent UserTypeGroup pointed by [UserTypeGroupRoleMenus].([UserTypeGroupId]) (FK_UserTypeGroupRole_UserTypeGroups)
         /// </summary>
+        [JsonIgnore]
         public virtual UserTypeGroup UserTypeGroup { get; set; } // FK_UserTypeGroupRole_UserTypeGroups
 
         public UserTypeGroupRoleMenu()

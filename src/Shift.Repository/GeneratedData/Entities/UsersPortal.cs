@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,11 +25,13 @@ namespace Shift.Repository
         /// <summary>
         /// Parent Portal pointed by [UsersPortals].([PortalId]) (FK_UsersPortals_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual Portal Portal { get; set; } // FK_UsersPortals_Portals
 
         /// <summary>
         /// Parent User pointed by [UsersPortals].([UserId]) (FK_UsersPortals_Users)
         /// </summary>
+        [JsonIgnore]
         public virtual User User { get; set; } // FK_UsersPortals_Users
 
         public UsersPortal()

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,6 +45,7 @@ namespace Shift.Repository
         /// <summary>
         /// Child UsersPortals where [UsersPortals].[UserId] point to this entity (FK_UsersPortals_Users)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<UsersPortal> UsersPortals { get; set; } // UsersPortals.FK_UsersPortals_Users
 
         // Foreign keys
@@ -51,6 +53,7 @@ namespace Shift.Repository
         /// <summary>
         /// Parent Portal pointed by [Users].([PortalId]) (FK_Users_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual Portal Portal { get; set; } // FK_Users_Portals
 
         public User()

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,6 +25,7 @@ namespace Shift.Repository
         /// <summary>
         /// Parent ShiftCrewRewardFine pointed by [Shift_CrewRewardFineReason].([ShiftCrewRewardFineId]) (FK_Shift_CrewRewardFineReason_Shift_CrewRewardFine)
         /// </summary>
+        [JsonIgnore]
         public virtual ShiftCrewRewardFine ShiftCrewRewardFine { get; set; } // FK_Shift_CrewRewardFineReason_Shift_CrewRewardFine
 
         public ShiftCrewRewardFineReason()

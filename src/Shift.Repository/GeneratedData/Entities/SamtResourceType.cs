@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,26 +23,31 @@ namespace Shift.Repository
         /// <summary>
         /// Child ShiftAgentMainPositions where [Shift_AgentMainPosition].[JobID] point to this entity (FK_Shift_AgentMainPosition_SAMT_ResourceTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftAgentMainPosition> ShiftAgentMainPositions { get; set; } // Shift_AgentMainPosition.FK_Shift_AgentMainPosition_SAMT_ResourceTypes
 
         /// <summary>
         /// Child ShiftMonetarySettings where [Shift_MonetarySettings].[JobID] point to this entity (FK_Shift_MonetarySettings_SAMT_ResourceTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftMonetarySetting> ShiftMonetarySettings { get; set; } // Shift_MonetarySettings.FK_Shift_MonetarySettings_SAMT_ResourceTypes
 
         /// <summary>
         /// Child ShiftShiftTabletCrews where [Shift_ShiftTabletCrew].[JobID] point to this entity (FK_Shift_ShiftTableCrew_SAMT_ResourceTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTabletCrew> ShiftShiftTabletCrews { get; set; } // Shift_ShiftTabletCrew.FK_Shift_ShiftTableCrew_SAMT_ResourceTypes
 
         /// <summary>
         /// Child ShiftShiftTemplates where [Shift_ShiftTemplate].[JobID] point to this entity (FK_ShiftNeededResource_SAMT_ResourceTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTemplate> ShiftShiftTemplates { get; set; } // Shift_ShiftTemplate.FK_ShiftNeededResource_SAMT_ResourceTypes
 
         /// <summary>
         /// Parent (One-to-One) SamtResourceType pointed by [Shift_Job].[SamtResourceTypeID] (FK_Shift_Jobs_SAMT_ResourceTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual ShiftJob ShiftJob { get; set; } // Shift_Job.FK_Shift_Jobs_SAMT_ResourceTypes
 
         public SamtResourceType()

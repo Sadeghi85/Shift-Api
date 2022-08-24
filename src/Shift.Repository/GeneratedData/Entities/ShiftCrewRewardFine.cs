@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,6 +29,7 @@ namespace Shift.Repository
         /// <summary>
         /// Child ShiftCrewRewardFineReasons where [Shift_CrewRewardFineReason].[Shift_CrewRewardFineID] point to this entity (FK_Shift_CrewRewardFineReason_Shift_CrewRewardFine)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftCrewRewardFineReason> ShiftCrewRewardFineReasons { get; set; } // Shift_CrewRewardFineReason.FK_Shift_CrewRewardFineReason_Shift_CrewRewardFine
 
         // Foreign keys
@@ -35,6 +37,7 @@ namespace Shift.Repository
         /// <summary>
         /// Parent ShiftShiftTabletCrew pointed by [Shift_CrewRewardFine].([ShiftTabletCrewId]) (FK_Shift_CrewRewardFine_Shift_ShiftTabletCrew)
         /// </summary>
+        [JsonIgnore]
         public virtual ShiftShiftTabletCrew ShiftShiftTabletCrew { get; set; } // FK_Shift_CrewRewardFine_Shift_ShiftTabletCrew
 
         public ShiftCrewRewardFine()

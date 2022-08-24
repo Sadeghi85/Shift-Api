@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,6 +32,7 @@ namespace Shift.Repository
         /// <summary>
         /// Parent ShiftShiftTablet pointed by [Shift_ShiftTabletReviewProblems].([ShiftTabletId]) (FK_Shift_ShiftTabletReviewProblems_Shift_ShiftTablet)
         /// </summary>
+        [JsonIgnore]
         public virtual ShiftShiftTablet ShiftShiftTablet { get; set; } // FK_Shift_ShiftTabletReviewProblems_Shift_ShiftTablet
 
         public ShiftShiftTabletReviewProblem()

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,6 +25,7 @@ namespace Shift.Repository
         /// <summary>
         /// Parent ShiftShiftTabletCrew pointed by [Shift_ShiftTabletCrewAttendance].([ShiftTabletCrewId]) (FK_Shift_ShiftTabletCrewAttendance_Shift_ShiftTabletCrew)
         /// </summary>
+        [JsonIgnore]
         public virtual ShiftShiftTabletCrew ShiftShiftTabletCrew { get; set; } // FK_Shift_ShiftTabletCrewAttendance_Shift_ShiftTabletCrew
 
         public ShiftShiftTabletCrewAttendance()

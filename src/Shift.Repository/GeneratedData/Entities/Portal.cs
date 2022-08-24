@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -49,46 +50,55 @@ namespace Shift.Repository
         /// <summary>
         /// Child ShiftAgentMainPositions where [Shift_AgentMainPosition].[PortalID] point to this entity (FK_Shift_AgentMainPosition_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftAgentMainPosition> ShiftAgentMainPositions { get; set; } // Shift_AgentMainPosition.FK_Shift_AgentMainPosition_Portals
 
         /// <summary>
         /// Child ShiftEmploymentDetails where [Shift_EmploymentDetail].[portalID] point to this entity (FK_Shift_EmploymentDetail_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftEmploymentDetail> ShiftEmploymentDetails { get; set; } // Shift_EmploymentDetail.FK_Shift_EmploymentDetail_Portals
 
         /// <summary>
         /// Child ShiftMonetarySettings where [Shift_MonetarySettings].[PortalID] point to this entity (FK_Shift_MonetarySettings_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftMonetarySetting> ShiftMonetarySettings { get; set; } // Shift_MonetarySettings.FK_Shift_MonetarySettings_Portals
 
         /// <summary>
         /// Child ShiftPortalLocations where [Shift_PortalLocations].[PortalID] point to this entity (FK_Shift_ShiftTabletLocation_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations.FK_Shift_ShiftTabletLocation_Portals
 
         /// <summary>
         /// Child ShiftShifts where [Shift_Shift].[PortalID] point to this entity (FK_PortalShift_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShift> ShiftShifts { get; set; } // Shift_Shift.FK_PortalShift_Portals
 
         /// <summary>
         /// Child ShiftShiftTablets where [Shift_ShiftTablet].[PortalID] point to this entity (FK_Shift_ShiftTablet_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet.FK_Shift_ShiftTablet_Portals
 
         /// <summary>
         /// Child ShiftShiftTabletPayments where [Shift_ShiftTabletPayments].[PortalID] point to this entity (FK_Shift_ShiftTabletPayments_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTabletPayment> ShiftShiftTabletPayments { get; set; } // Shift_ShiftTabletPayments.FK_Shift_ShiftTabletPayments_Portals
 
         /// <summary>
         /// Child Users where [Users].[PortalID] point to this entity (FK_Users_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<User> Users { get; set; } // Users.FK_Users_Portals
 
         /// <summary>
         /// Child UsersPortals where [UsersPortals].[PortalId] point to this entity (FK_UsersPortals_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<UsersPortal> UsersPortals { get; set; } // UsersPortals.FK_UsersPortals_Portals
 
         public Portal()

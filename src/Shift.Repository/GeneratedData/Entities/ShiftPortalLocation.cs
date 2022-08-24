@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,11 +26,13 @@ namespace Shift.Repository
         /// <summary>
         /// Parent Portal pointed by [Shift_PortalLocations].([PortalId]) (FK_Shift_ShiftTabletLocation_Portals)
         /// </summary>
+        [JsonIgnore]
         public virtual Portal Portal { get; set; } // FK_Shift_ShiftTabletLocation_Portals
 
         /// <summary>
         /// Parent ShiftLocation pointed by [Shift_PortalLocations].([LocationId]) (FK_ShiftExecutionLocation_Location)
         /// </summary>
+        [JsonIgnore]
         public virtual ShiftLocation ShiftLocation { get; set; } // FK_ShiftExecutionLocation_Location
 
         public ShiftPortalLocation()

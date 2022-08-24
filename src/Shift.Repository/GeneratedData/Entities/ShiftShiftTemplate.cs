@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,11 +26,13 @@ namespace Shift.Repository
         /// <summary>
         /// Parent SamtResourceType pointed by [Shift_ShiftTemplate].([JobId]) (FK_ShiftNeededResource_SAMT_ResourceTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual SamtResourceType SamtResourceType { get; set; } // FK_ShiftNeededResource_SAMT_ResourceTypes
 
         /// <summary>
         /// Parent ShiftShift pointed by [Shift_ShiftTemplate].([ShiftId]) (FK_ShiftNeededResource_Shift_Shift)
         /// </summary>
+        [JsonIgnore]
         public virtual ShiftShift ShiftShift { get; set; } // FK_ShiftNeededResource_Shift_Shift
 
         public ShiftShiftTemplate()

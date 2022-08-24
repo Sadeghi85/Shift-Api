@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,11 +25,13 @@ namespace Shift.Repository
         /// <summary>
         /// Child ShiftPortalLocations where [Shift_PortalLocations].[LocationID] point to this entity (FK_ShiftExecutionLocation_Location)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftPortalLocation> ShiftPortalLocations { get; set; } // Shift_PortalLocations.FK_ShiftExecutionLocation_Location
 
         /// <summary>
         /// Child ShiftShiftTablets where [Shift_ShiftTablet].[LocationID] point to this entity (FK_Shift_ShiftTablet_Shift_Locations)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ShiftShiftTablet> ShiftShiftTablets { get; set; } // Shift_ShiftTablet.FK_Shift_ShiftTablet_Shift_Locations
 
         public ShiftLocation()

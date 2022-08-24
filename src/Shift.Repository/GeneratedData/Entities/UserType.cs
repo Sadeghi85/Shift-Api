@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,11 +25,13 @@ namespace Shift.Repository
         /// <summary>
         /// Child UserTypeGroups where [UserTypeGroups].[UserTypeID] point to this entity (FK_UserTypeGroup_UserTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<UserTypeGroup> UserTypeGroups { get; set; } // UserTypeGroups.FK_UserTypeGroup_UserTypes
 
         /// <summary>
         /// Child UserUserTypes where [UserUserTypes].[UserTypeID] point to this entity (FK_UserUserTypes_UserTypes)
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<UserUserType> UserUserTypes { get; set; } // UserUserTypes.FK_UserUserTypes_UserTypes
 
         public UserType()
