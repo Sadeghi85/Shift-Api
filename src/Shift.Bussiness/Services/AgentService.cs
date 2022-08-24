@@ -30,7 +30,7 @@ namespace Shift.Bussiness {
 				getAllExpressions.Add(x => x.Id == model.Id);
 			}
 			if (!string.IsNullOrWhiteSpace(model.Name)) {
-				getAllExpressions.Add(x => x.FirstName.Contains(model.Name) || x.LastName.Contains(model.Name));
+				getAllExpressions.Add(x => (x.FirstName + " " + x.LastName).Contains(model.Name));
 			}
 			if (model.JobId > 0) {
 				getAllExpressions.Add(x => x.TelavatAgentResourceTypes.Any(y => y.ResourceTypeId == model.JobId));

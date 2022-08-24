@@ -75,7 +75,7 @@ namespace Shift.Bussiness {
 				getAllExpressions.Add(x => x.IsReplaced == model.IsReplaced);
 			}
 			if (!string.IsNullOrWhiteSpace(model.AgentName)) {
-				getAllExpressions.Add(x => model.AgentName.Contains(x.SamtAgent.FirstName) || model.AgentName.Contains(x.SamtAgent.LastName));
+				getAllExpressions.Add(x => (x.SamtAgent.FirstName + " " + x.SamtAgent.LastName).Contains(model.AgentName));
 			}
 			if (!string.IsNullOrWhiteSpace(model.ShiftTitle)) {
 				getAllExpressions.Add(x => x.ShiftShiftTablet.ShiftShift.Title.Contains(model.ShiftTitle));
