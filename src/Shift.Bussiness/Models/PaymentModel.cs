@@ -18,9 +18,12 @@ namespace Shift.Bussiness {
 	public class PaymentSearchModel : PagerViewModel {
 		public int? Id { get; set; }
 		public int? AgentId { get; set; }
-		public int? PortalId { get; set; }
-		public string? DatePersian { get; set; }
 		public bool? IsDeleted { get; set; }
+
+		[Required(ErrorMessage = ValidationConstants.PortalIdRequired)]
+		public int PortalId { get; set; }
+		[Required(ErrorMessage = ValidationConstants.DatePersianRequired)]
+		public string? DatePersian { get; set; }
 	}
 
 	public class PaymentViewModel {

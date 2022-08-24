@@ -14,9 +14,13 @@ namespace Shift.Bussiness {
 	public class PaymentService : ServiceBase, IPaymentService {
 
 		private readonly IShiftShiftTabletPaymentStore _shiftShiftTabletPaymentStore;
+		private readonly IShiftShiftTabletCrewStore _shiftShiftTabletCrewStore;
+		private readonly IShiftShiftTabletCrewAttendanceStore _shiftShiftTabletCrewAttendanceStore;
 
-		public PaymentService(IPrincipal iPrincipal, IShiftLogStore shiftLogStore, IShiftShiftTabletPaymentStore shiftShiftTabletPaymentStore) : base(iPrincipal, shiftLogStore) {
+		public PaymentService(IPrincipal iPrincipal, IShiftLogStore shiftLogStore, IShiftShiftTabletPaymentStore shiftShiftTabletPaymentStore, IShiftShiftTabletCrewStore shiftShiftTabletCrewStore, IShiftShiftTabletCrewAttendanceStore shiftShiftTabletCrewAttendanceStore) : base(iPrincipal, shiftLogStore) {
 			_shiftShiftTabletPaymentStore = shiftShiftTabletPaymentStore;
+			_shiftShiftTabletCrewStore = shiftShiftTabletCrewStore;
+			_shiftShiftTabletCrewAttendanceStore = shiftShiftTabletCrewAttendanceStore;
 		}
 
 		public async Task<StoreViewModel<PaymentViewModel>> GetAll(PaymentSearchModel model) {
@@ -61,6 +65,58 @@ namespace Shift.Bussiness {
 
 		}
 
+		public async Task<BaseResult> CalculatePayment(PaymentSearchModel model) {
+			try {
+
+				var strDatePersian = model.DatePersian;
+				var datePersian = PersianDateTime.Parse(strDatePersian);
+				var firstDayDatePersian = datePersian.FirstDayOfMonth;
+				var lastDayDatePersian = datePersian.LastDayOfMonth;
+
+				var dateFrom = firstDayDatePersian.ToDateTime();
+				var dateTo = lastDayDatePersian.ToDateTime();
+
+				if (_shiftShiftTabletCrewAttendanceStore.IsAttendanceReportIncomplete(model.PortalId, dateFrom, dateTo)) {
+					BaseResult.Success = false;
+					BaseResult.Message = "گزارش حضور و غیاب عوامل در این بازه زمانی کامل نیست. حداقل یکی از گزارشات منشی صحنه یا ناظر پخش به ازای هر یک از عوامل لوح شیفت باید ثبت شده باشد.";
+					return BaseResult;
+				}
+
+				//var found = await _shiftShiftTabletPaymentStore.FindByIdAsync(x => x.Id == model.Id);
+
+				//if (found == null) {
+				//	BaseResult.Success = false;
+				//	BaseResult.Message = "شناسه مورد نظر یافت نشد";
+				//	return BaseResult;
+				//}
+				//if (CurrentUserPortalId > 1 && CurrentUserPortalId != found.PortalId) {
+				//	BaseResult.Success = false;
+				//	BaseResult.Message = "شما به این قسمت دسترسی ندارید";
+				//	return BaseResult;
+				//}
+
+				//found.FinalPayment = model.FinalPayment;
+
+				//var res = await _shiftShiftTabletPaymentStore.UpdateAsync(found);
+
+				//if (res < 0) {
+				//	BaseResult = await LogError(new Exception("Failed to update shiftShiftTabletPayment\r\n\r\n" + JsonSerializer.Serialize(found, new JsonSerializerOptions() {
+				//		ReferenceHandler = ReferenceHandler.IgnoreCycles,
+				//		WriteIndented = true
+				//	})));
+				//	return BaseResult;
+				//}
+
+
+			} catch (Exception ex) {
+
+				BaseResult = await LogError(ex);
+			}
+
+			return BaseResult;
+
+		}
+
 		public async Task<BaseResult> Update(PaymentInputModel model) {
 			try {
 
@@ -98,6 +154,8 @@ namespace Shift.Bussiness {
 			return BaseResult;
 
 		}
+
+		
 
 	}
 }

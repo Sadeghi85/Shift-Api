@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Shift.Repository
 {
-    public partial interface IShiftShiftTabletCrewStore : IStoreBase<ShiftShiftTabletCrew>
+    public partial interface IShiftShiftTabletCrewAttendanceStore : IStoreBase<ShiftShiftTabletCrewAttendance>
     {
-		
+		public bool IsAttendanceReportIncomplete(int portalId, DateTime dateFrom, DateTime dateTo);
 	}
 }
 // </auto-generated>

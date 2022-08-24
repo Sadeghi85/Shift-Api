@@ -15,6 +15,8 @@ namespace Shift.Repository
     public partial class ShiftShiftTabletCrewStore : StoreBase<ShiftShiftTabletCrew>, IShiftShiftTabletCrewStore
     {
 
-    }
+		
+
+	}
 }
 // </auto-generated>

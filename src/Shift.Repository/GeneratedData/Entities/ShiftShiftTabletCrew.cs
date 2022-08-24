@@ -15,6 +15,7 @@ namespace Shift.Repository
         public int AgentId { get; set; } // AgentID
         public int JobId { get; set; } // JobID
         public int ShiftTabletId { get; set; } // ShiftTabletID
+        public bool IsMandatoryByDefault { get; set; } // IsMandatoryByDefault
         public int? CreatedBy { get; set; } // CreatedBy
         public int? ModifiedBy { get; set; } // ModifiedBy
         public DateTime? CreateDateTime { get; set; } // CreateDateTime
@@ -58,6 +59,7 @@ namespace Shift.Repository
 
         public ShiftShiftTabletCrew()
         {
+            IsMandatoryByDefault = false;
             IsReplaced = false;
             IsDeleted = false;
             ShiftCrewRewardFines = new List<ShiftCrewRewardFine>();

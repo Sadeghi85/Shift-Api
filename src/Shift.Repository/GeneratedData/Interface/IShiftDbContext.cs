@@ -98,6 +98,10 @@ namespace Shift.Repository
         IQueryable<TResult> FromExpression<TResult> (Expression<Func<IQueryable<TResult>>> expression);
 
         // Stored Procedures
+        List<SpShiftCheckShiftTabletCrewAttendanceReportReturnModel> SpShiftCheckShiftTabletCrewAttendanceReport(int? portalId, DateTime? dateFrom, DateTime? dateTo);
+        List<SpShiftCheckShiftTabletCrewAttendanceReportReturnModel> SpShiftCheckShiftTabletCrewAttendanceReport(int? portalId, DateTime? dateFrom, DateTime? dateTo, out int procResult);
+        Task<List<SpShiftCheckShiftTabletCrewAttendanceReportReturnModel>> SpShiftCheckShiftTabletCrewAttendanceReportAsync(int? portalId, DateTime? dateFrom, DateTime? dateTo);
+
         List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime);
         List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime, out int procResult);
         Task<List<SpShiftCheckShiftTimeOverlapReturnModel>> SpShiftCheckShiftTimeOverlapAsync(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime);

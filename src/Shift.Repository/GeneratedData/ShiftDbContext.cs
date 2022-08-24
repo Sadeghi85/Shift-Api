@@ -131,6 +131,7 @@ namespace Shift.Repository
             modelBuilder.ApplyConfiguration(new UserUserTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserUserTypeGroupConfiguration());
 
+            modelBuilder.Entity<SpShiftCheckShiftTabletCrewAttendanceReportReturnModel>().HasNoKey();
             modelBuilder.Entity<SpShiftCheckShiftTimeOverlapReturnModel>().HasNoKey();
             modelBuilder.Entity<SpShiftPermissionsReturnModel>().HasNoKey();
 
@@ -144,6 +145,58 @@ namespace Shift.Repository
         static partial void OnCreateModelPartial(ModelBuilder modelBuilder, string schema);
 
         // Stored Procedures
+        public List<SpShiftCheckShiftTabletCrewAttendanceReportReturnModel> SpShiftCheckShiftTabletCrewAttendanceReport(int? portalId, DateTime? dateFrom, DateTime? dateTo)
+        {
+            int procResult;
+            return SpShiftCheckShiftTabletCrewAttendanceReport(portalId, dateFrom, dateTo, out procResult);
+        }
+
+        public List<SpShiftCheckShiftTabletCrewAttendanceReportReturnModel> SpShiftCheckShiftTabletCrewAttendanceReport(int? portalId, DateTime? dateFrom, DateTime? dateTo, out int procResult)
+        {
+            var portalIdParam = new SqlParameter { ParameterName = "@_portalId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = portalId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!portalId.HasValue)
+                portalIdParam.Value = DBNull.Value;
+
+            var dateFromParam = new SqlParameter { ParameterName = "@_dateFrom", SqlDbType = SqlDbType.SmallDateTime, Direction = ParameterDirection.Input, Value = dateFrom.GetValueOrDefault() };
+            if (!dateFrom.HasValue)
+                dateFromParam.Value = DBNull.Value;
+
+            var dateToParam = new SqlParameter { ParameterName = "@_dateTo", SqlDbType = SqlDbType.SmallDateTime, Direction = ParameterDirection.Input, Value = dateTo.GetValueOrDefault() };
+            if (!dateTo.HasValue)
+                dateToParam.Value = DBNull.Value;
+
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+            const string sqlCommand = "EXEC @procResult = [dbo].[SP_Shift_CheckShiftTabletCrewAttendanceReport] @_portalId, @_dateFrom, @_dateTo";
+            var procResultData = Set<SpShiftCheckShiftTabletCrewAttendanceReportReturnModel>()
+                .FromSqlRaw(sqlCommand, portalIdParam, dateFromParam, dateToParam, procResultParam)
+                .ToList();
+
+            procResult = (int) procResultParam.Value;
+            return procResultData;
+        }
+
+        public async Task<List<SpShiftCheckShiftTabletCrewAttendanceReportReturnModel>> SpShiftCheckShiftTabletCrewAttendanceReportAsync(int? portalId, DateTime? dateFrom, DateTime? dateTo)
+        {
+            var portalIdParam = new SqlParameter { ParameterName = "@_portalId", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = portalId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!portalId.HasValue)
+                portalIdParam.Value = DBNull.Value;
+
+            var dateFromParam = new SqlParameter { ParameterName = "@_dateFrom", SqlDbType = SqlDbType.SmallDateTime, Direction = ParameterDirection.Input, Value = dateFrom.GetValueOrDefault() };
+            if (!dateFrom.HasValue)
+                dateFromParam.Value = DBNull.Value;
+
+            var dateToParam = new SqlParameter { ParameterName = "@_dateTo", SqlDbType = SqlDbType.SmallDateTime, Direction = ParameterDirection.Input, Value = dateTo.GetValueOrDefault() };
+            if (!dateTo.HasValue)
+                dateToParam.Value = DBNull.Value;
+
+            const string sqlCommand = "EXEC [dbo].[SP_Shift_CheckShiftTabletCrewAttendanceReport] @_portalId, @_dateFrom, @_dateTo";
+            var procResultData = await Set<SpShiftCheckShiftTabletCrewAttendanceReportReturnModel>()
+                .FromSqlRaw(sqlCommand, portalIdParam, dateFromParam, dateToParam)
+                .ToListAsync();
+
+            return procResultData;
+        }
+
         public List<SpShiftCheckShiftTimeOverlapReturnModel> SpShiftCheckShiftTimeOverlap(int? id, int? portalId, int? shiftTypeId, TimeSpan? startTime, TimeSpan? endTime)
         {
             int procResult;

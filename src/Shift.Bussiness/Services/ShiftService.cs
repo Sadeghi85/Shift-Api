@@ -273,8 +273,8 @@ namespace Shift.Bussiness {
 
 		//}
 
-		private static string _getShiftDropdownDiplayLabel(int? CurrentUserPortalId, string shiftTitle, string portalTitle) {
-			if (CurrentUserPortalId == 1) {
+		private static string _getShiftDropdownDiplayLabel(int? currentUserPortalId, string shiftTitle, string portalTitle) {
+			if (currentUserPortalId == 1) {
 				return $"{shiftTitle} ({portalTitle})";
 			} else {
 				return shiftTitle;

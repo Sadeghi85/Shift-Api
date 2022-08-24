@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace Shift.Bussiness {
 	public static class ValidationConstants {
 
+		public const string DatePersianRequired = "تاریخ اجباری است";
+		
 
 		public const string RoleTypeIdRequired = "نوع نقش اجباری است";
 		public const string ReportDescriptionRequired = "متن گزارش اجباری است";
@@ -25,7 +27,7 @@ namespace Shift.Bussiness {
 		public const string RewardShiftpercentageRequired = "درصد پاداش یا جریمه اجباری است";
 		public const string RewardAmmountRequired = "مقدار پاداش یا جریمه اجباری است";
 		
-		public const string PortalIdRequired = "شناسه پورتال اجباری است";
+		public const string PortalIdRequired = "شناسه شبکه اجباری است";
 		public const string ShiftTypeIdRequired = "شناسه نوع شیفت باید 1)رژی یا 2)هماهنگی باشد";
 		public const string StartTimeRequired = "زمان شروع شیفت اجباری است";
 		public const string EndTimeRequired = "زمان پایان شیفت اجباری است";
